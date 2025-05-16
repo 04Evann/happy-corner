@@ -1,97 +1,156 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.5">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; -webkit-text-stroke: #ffffff}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; -webkit-text-stroke: #ffffff; min-height: 14.0px}
-    span.s1 {font-kerning: none}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HappyShop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1c1b2e, #351c4d);
+      color: white;
+      padding: 50px 20px;
+      text-align: center;
+      scroll-behavior: smooth;
+    }
+
+    header {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      animation: fadeIn 1.5s ease;
+    }
+
+    nav {
+      margin-bottom: 40px;
+    }
+
+    nav a {
+      color: white;
+      background-color: #4b0082;
+      padding: 10px 20px;
+      margin: 0 10px;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #6a0dad;
+    }
+
+    section {
+      margin-bottom: 80px;
+      animation: fadeInUp 1s ease;
+    }
+
+    h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      font-size: 1.2em;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 400px;
+      margin: auto;
+      gap: 15px;
+    }
+
+    input, textarea, select {
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      border: none;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: #6a0dad;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #8a2be2;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 0.9em;
+      color: #cccccc;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="es"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta charset="UTF-8" /&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;</span></p>
-<p class="p1"><span class="s1">&lt;title&gt;HappyShop - Bienvenido&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link href="https://fonts.googleapis.com/css2?family=Poppins&amp;display=swap" rel="stylesheet" /&gt;</span></p>
-<p class="p1"><span class="s1">&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>body {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>margin: 0; padding: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>font-family: 'Poppins', sans-serif;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>background: linear-gradient(135deg, #2e004f, #000000);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>color: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>display: flex;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>flex-direction: column;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>min-height: 100vh;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>header {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>background: #1a002f;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>padding: 1rem 2rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>position: sticky;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>top: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>display: flex;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>align-items: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>gap: 2rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>header a {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>color: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>text-decoration: none;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>font-weight: 600;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>font-size: 1.1rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>transition: color 0.3s;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>header a:hover {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>color: #8b5cf6;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>main {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>flex: 1;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>display: flex;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>flex-direction: column;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>justify-content: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>align-items: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>text-align: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>padding: 2rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>animation: fadeIn 1.2s ease forwards;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>h1 {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>font-size: 3rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>margin-bottom: 1rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>p {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>font-size: 1.3rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>margin-bottom: 2rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>max-width: 450px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>@keyframes fadeIn {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>from {opacity: 0; transform: translateY(20px);}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>to {opacity: 1; transform: translateY(0);}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
-<p class="p1"><span class="s1">&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;header&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;a href="index.html"&gt;Inicio&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;a href="catalogo.html"&gt;Catálogo&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;a href="pedido.html"&gt;Hacer Pedido&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/header&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;main&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;h1&gt;Bienvenido a HappyShop.com&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;p&gt;¿Qué quieres hacer hoy? Explora nuestro catálogo o haz tu pedido fácilmente.&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/main&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;footer style="text-align:center; padding: 1rem; font-size: 0.9rem; color: #ccc;"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>HappyShop 2025</span></p>
-<p class="p1"><span class="s1">&lt;/footer&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+
+  <header>Bienvenido a HappyShop.com</header>
+
+  <nav>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#pedido">Hacer Pedido</a>
+  </nav>
+
+  <section id="catalogo">
+    <h2>Catálogo de Productos</h2>
+    <ul>
+      <li>Oka Loka (Caja) – $3.000</li>
+      <li>Oka Loka (Bolsa) – $2.000</li>
+      <li>Gomitas – $300</li>
+      <li>Barquillos – $1.000</li>
+      <li>Bombonbunes – $700</li>
+    </ul>
+  </section>
+
+  <section id="pedido">
+    <h2>Hacer un Pedido</h2>
+    <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
+      <input type="text" name="nombre" placeholder="Tu nombre" required>
+      <input type="email" name="correo" placeholder="Tu correo" required>
+      <textarea name="pedido" rows="3" placeholder="¿Qué quieres pedir?" required></textarea>
+      <select name="pago" required>
+        <option value="">¿Método de pago?</option>
+        <option value="Nequi">Nequi</option>
+        <option value="PSE">PSE</option>
+        <option value="Efectivo">Efectivo</option>
+      </select>
+
+      <!-- Configuraciones ocultas para formsubmit -->
+      <input type="hidden" name="_next" value="https://04evann.github.io/happy-corner/gracias.html">
+      <input type="hidden" name="_captcha" value="false">
+
+      <button type="submit">Enviar pedido</button>
+    </form>
+  </section>
+
+  <footer>HappyShop 2025</footer>
+
 </body>
 </html>
