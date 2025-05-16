@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HappyShop</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: rgba(0, 0, 0, 0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    header img {
+      width: 50px;
+      height: 50px;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      color: #d1b3ff;
+    }
+
+    section {
+      display: none;
+      padding: 40px 20px;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    a.button, button {
+      background: #6a00f4;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    a.button:hover, button:hover {
+      background: #8f48ff;
+      transform: scale(1.05);
+    }
+
+    input, textarea {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .catalogo-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 30px;
+      padding: 0 20px;
+      justify-items: center;
+    }
+
+    .product-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 250px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .product-name {
+      font-size: 1.2em;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-size: 1em;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo HappyShop">
+    <nav>
+      <a onclick="showSection('inicio')">Inicio</a>
+      <a onclick="showSection('pedido')">Hacer pedido</a>
+      <a onclick="showSection('catalogo')">Catálogo</a>
+    </nav>
+  </header>
+
+  <section id="inicio" class="active">
+    <h1>Bienvenido a happyshop.com</h1>
+    <p>¡Tu tienda de dulces favorita!</p>
+    <a class="button" onclick="showSection('pedido')">Comienza tu pedido</a>
+  </section>
+
+  <section id="pedido">
+    <h1>Hacer un pedido</h1>
+    <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
+      <input type="text" name="nombre" placeholder="Tu nombre" required>
+      <input type="email" name="correo" placeholder="Tu correo electrónico" required>
+      <textarea name="pedido" placeholder="¿Qué quieres pedir? (producto, cantidad, medio de pago)" rows="4" required></textarea>
+      <button type="submit">Enviar pedido</button>
+      <input type="hidden" name="_next" value="https://tusitio.com/gracias.html">
+      <input type="hidden" name="_captcha" value="false">
+    </form>
+  </section>
+
+  <section id="catalogo">
+    <h1>Catálogo de productos</h1>
+    <div class="catalogo-container">
+      <div class="product-card">
+        <div class="product-name">Oka Loka caja</div>
+        <div class="product-price">$3,000</div>
+      </div>
+      <div class="product-card">
+        <div class="product-name">Oka Loka bolsa</div>
+        <div class="product-price">$2,000</div>
+      </div>
+      <div class="product-card">
+        <div class="product-name">Gomitas</div>
+        <div class="product-price">$300</div>
+      </div>
+      <div class="product-card">
+        <div class="product-name">Barquillos</div>
+        <div class="product-price">$1,000</div>
+      </div>
+      <div class="product-card">
+        <div class="product-name">Bombombun</div>
+        <div class="product-price">$700</div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+  </script>
+</body>
+</html>
