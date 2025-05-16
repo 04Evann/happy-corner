@@ -7,8 +7,8 @@
   <meta name="Generator" content="Cocoa HTML Writer">
   <meta name="CocoaVersion" content="2575.5">
   <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #ffffff}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; color: #000000; -webkit-text-stroke: #ffffff; min-height: 15.0px}
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; -webkit-text-stroke: #ffffff}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px 'Helvetica Neue'; -webkit-text-stroke: #ffffff; min-height: 14.0px}
     span.s1 {font-kerning: none}
   </style>
 </head>
@@ -133,7 +133,7 @@
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>gap: 15px;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
 <p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>input, textarea {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>input, textarea, select {</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding: 12px;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border-radius: 8px;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border: none;</span></p>
@@ -185,14 +185,18 @@
 <p class="p2"><span class="s1"></span><br></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;section id="pedido" class="section"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h2 class="section-title"&gt;Haz un pedido&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST" class="form"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input type="text" name="nombre" placeholder="Tu nombre" required&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input type="email" name="correo" placeholder="Tu correo electrónico" required&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;textarea name="pedido" placeholder="¿Qué quieres pedir?" required&gt;&lt;/textarea&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input type="text" name="pagina" placeholder="¿En qué página te lo pido?" required&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input type="text" name="pago" placeholder="¿Por qué medio vas a pagar?" required&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;select name="pago" required&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;option value=""&gt;Selecciona medio de pago&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;option value="Nequi"&gt;Nequi&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;option value="PSE"&gt;PSE&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;option value="Efectivo"&gt;Efectivo&lt;/option&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/select&gt;</span></p>
 <p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;!-- Redirección después de enviar --&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input type="hidden" name="_next" value="https://04evann.github.io/happy-corner/gracias.html"&gt;</span></p>
 <p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input type="hidden" name="_captcha" value="false"&gt;</span></p>
 <p class="p2"><span class="s1"></span><br></p>
