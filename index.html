@@ -2,155 +2,262 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HappyShop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Shop 2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
     }
-
-    body {
-      background: linear-gradient(135deg, #1c1b2e, #351c4d);
-      color: white;
-      padding: 50px 20px;
+    body, html {
+      height: 100%;
+      background: linear-gradient(135deg, #4b0082, #0a0a0a);
+      color: #e1dff7;
+      overflow-x: hidden;
+    }
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
       text-align: center;
-      scroll-behavior: smooth;
+      position: relative;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at center, rgba(255 255 255 / 0.15) 0%, transparent 70%),
+        linear-gradient(135deg, #4b0082, #0a0a0a);
+      box-shadow: 0 0 40px 5px rgba(255 255 255 / 0.15);
+      border-radius: 12px;
     }
-
     header {
-      font-size: 2.5em;
-      margin-bottom: 20px;
-      animation: fadeIn 1.5s ease;
+      margin-bottom: 2rem;
+      position: relative;
     }
-
+    header img {
+      width: 80px;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      filter: drop-shadow(0 0 3px #a075ff);
+    }
+    header h1 {
+      font-size: 2.8rem;
+      margin-top: 10px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #a075ff;
+    }
     nav {
-      margin-bottom: 40px;
-    }
-
-    nav a {
-      color: white;
-      background-color: #4b0082;
-      padding: 10px 20px;
-      margin: 0 10px;
-      text-decoration: none;
-      border-radius: 8px;
-      transition: background 0.3s ease;
-    }
-
-    nav a:hover {
-      background-color: #6a0dad;
-    }
-
-    section {
-      margin-bottom: 80px;
-      animation: fadeInUp 1s ease;
-    }
-
-    h2 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    ul {
-      list-style: none;
-      font-size: 1.2em;
-    }
-
-    form {
+      margin: 1.5rem 0 3rem;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 400px;
-      margin: auto;
-      gap: 15px;
+      justify-content: center;
+      gap: 30px;
     }
-
-    input, textarea, select {
-      padding: 10px;
-      width: 100%;
-      border-radius: 6px;
+    nav button {
+      background: linear-gradient(45deg, #7b3eff, #27005a);
       border: none;
-      font-size: 1em;
-    }
-
-    button {
-      background-color: #6a0dad;
-      color: white;
-      padding: 10px 25px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1em;
+      padding: 12px 25px;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 30px;
       cursor: pointer;
+      box-shadow: 0 0 8px #a075ff;
       transition: background 0.3s ease;
     }
-
-    button:hover {
-      background-color: #8a2be2;
+    nav button:hover {
+      background: linear-gradient(45deg, #a075ff, #4b0082);
     }
-
-    footer {
-      margin-top: 50px;
-      font-size: 0.9em;
-      color: #cccccc;
+    section {
+      display: none;
+      animation: fadeIn 0.7s ease forwards;
+      padding-bottom: 30px;
     }
-
+    section.active {
+      display: block;
+    }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {opacity: 0; transform: translateY(15px);}
+      to {opacity: 1; transform: translateY(0);}
     }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Estilo catálgo */
+    #catalogo ul {
+      list-style: none;
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+      font-size: 1.3rem;
+    }
+    #catalogo li {
+      padding: 10px 0;
+      border-bottom: 1px solid #6136a9;
+      display: flex;
+      justify-content: space-between;
+      color: #d6cfff;
+      text-shadow: 0 0 6px #9068ff;
+    }
+    /* Formulario */
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+      color: #d6cfff;
+      font-weight: 600;
+      text-shadow: 0 0 6px #9068ff;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      margin-top: 15px;
+    }
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      box-shadow: 0 0 6px #9068ff inset;
+      background: #230e5c;
+      color: #eee;
+      resize: vertical;
+    }
+    button[type="submit"] {
+      background: linear-gradient(45deg, #7b3eff, #27005a);
+      border: none;
+      padding: 12px 25px;
+      color: #fff;
+      font-weight: 700;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 12px #a075ff;
+      transition: background 0.3s ease;
+      margin-top: 15px;
+      display: block;
+      width: 100%;
+    }
+    button[type="submit"]:hover {
+      background: linear-gradient(45deg, #a075ff, #4b0082);
+    }
+    /* Gracias */
+    #gracias {
+      color: #cbbdff;
+      font-size: 1.8rem;
+      text-shadow: 0 0 8px #a075ff;
+    }
+    #gracias p {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+    #gracias button {
+      margin-top: 2rem;
+      background: linear-gradient(45deg, #7b3eff, #27005a);
+      border: none;
+      padding: 12px 25px;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 8px #a075ff;
+      transition: background 0.3s ease;
+    }
+    #gracias button:hover {
+      background: linear-gradient(45deg, #a075ff, #4b0082);
     }
   </style>
 </head>
 <body>
+  <div id="app">
+    <header>
+      <img src="logo.png" alt="Happy Shop Logo" />
+      <h1>Bienvenido a HappyShop.com</h1>
+    </header>
 
-  <header>Bienvenido a HappyShop.com</header>
+    <nav>
+      <button onclick="showSection('inicio')">Inicio</button>
+      <button onclick="showSection('catalogo')">Catálogo de Productos</button>
+      <button onclick="showSection('pedido')">Hacer un Pedido</button>
+    </nav>
 
-  <nav>
-    <a href="#catalogo">Catálogo</a>
-    <a href="#pedido">Hacer Pedido</a>
-  </nav>
+    <section id="inicio" class="active">
+      <h2>¿Qué quieres hacer hoy?</h2>
+      <p>Explora nuestro catálogo o haz tu pedido aquí mismo.</p>
+    </section>
 
-  <section id="catalogo">
-    <h2>Catálogo de Productos</h2>
-    <ul>
-      <li>Oka Loka (Caja) – $3.000</li>
-      <li>Oka Loka (Bolsa) – $2.000</li>
-      <li>Gomitas – $300</li>
-      <li>Barquillos – $1.000</li>
-      <li>Bombonbunes – $700</li>
-    </ul>
-  </section>
+    <section id="catalogo">
+      <h2>Catálogo de Productos</h2>
+      <ul>
+        <li>Oca Loca en caja <span>$3,000</span></li>
+        <li>Oca Loca en bolsa <span>$2,000</span></li>
+        <li>Gomitas <span>$300</span></li>
+        <li>Barquillos <span>$1,000</span></li>
+        <li>Bombonbunes <span>$700</span></li>
+      </ul>
+    </section>
 
-  <section id="pedido">
-    <h2>Hacer un Pedido</h2>
-    <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
-      <input type="text" name="nombre" placeholder="Tu nombre" required>
-      <input type="email" name="correo" placeholder="Tu correo" required>
-      <textarea name="pedido" rows="3" placeholder="¿Qué quieres pedir?" required></textarea>
-      <select name="pago" required>
-        <option value="">¿Método de pago?</option>
-        <option value="Nequi">Nequi</option>
-        <option value="PSE">PSE</option>
-        <option value="Efectivo">Efectivo</option>
-      </select>
+    <section id="pedido">
+      <h2>Hacer un Pedido</h2>
+      <form id="pedidoForm" onsubmit="return enviarPedido(event)">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" required />
 
-      <!-- Configuraciones ocultas para formsubmit -->
-      <input type="hidden" name="_next" value="https://04evann.github.io/happy-corner/gracias.html">
-      <input type="hidden" name="_captcha" value="false">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" required />
 
-      <button type="submit">Enviar pedido</button>
-    </form>
-  </section>
+        <label for="pedido">¿Qué quieres pedir?</label>
+        <textarea id="pedido" name="pedido" rows="3" placeholder="Ej: 2 Oca Loca en caja y 5 gomitas" required></textarea>
 
-  <footer>HappyShop 2025</footer>
+        <label for="pago">Método de pago</label>
+        <select id="pago" name="pago" required>
+          <option value="">Selecciona...</option>
+          <option value="PSE">PSE</option>
+          <option value="Nequi">Nequi</option>
+          <option value="Efectivo">Efectivo</option>
+        </select>
 
+        <button type="submit">Enviar Pedido</button>
+      </form>
+    </section>
+
+    <section id="gracias">
+      <h2>¡Gracias por tu pedido! 🎉</h2>
+      <p>Nos pondremos en contacto contigo pronto. 😊</p>
+      <button onclick="showSection('inicio')">Volver a Inicio</button>
+    </section>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(sec => {
+        sec.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+
+    function enviarPedido(event) {
+      event.preventDefault();
+
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const pedido = document.getElementById('pedido').value.trim();
+      const pago = document.getElementById('pago').value;
+
+      if (!nombre || !email || !pedido || !pago) {
+        alert('Por favor completa todos los campos.');
+        return false;
+      }
+
+      // Aquí podrías enviar el pedido a un servidor con fetch/AJAX si quieres
+
+      // Limpiar form
+      event.target.reset();
+
+      // Mostrar Gracias
+      showSection('gracias');
+      return false;
+    }
+  </script>
 </body>
 </html>
