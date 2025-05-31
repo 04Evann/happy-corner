@@ -1,279 +1,277 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Inicio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        /* Estilos generales y del header */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Inicio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-        body {
-            background: white;
-            color: #222;
-        }
+    body {
+      background: white;
+      color: #222;
+    }
 
-        header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    header {
+      background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
 
-        header img {
-            height: 100px;
-        }
+    header img {
+      height: 100px;
+    }
 
-        .menu-btn {
-            font-size: 2rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
+    .menu-btn {
+      font-size: 2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 20;
+    }
 
-        nav {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-        }
+    nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
 
-        nav.open {
-            display: flex;
-        }
+    nav.open {
+      display: flex;
+    }
 
-        nav a {
-            color: #222;
-            text-decoration: none;
-            padding: 0.7rem 1.5rem;
-            font-weight: 500;
-        }
+    nav a {
+      color: #222;
+      text-decoration: none;
+      padding: 0.7rem 1.5rem;
+      font-weight: 500;
+    }
 
-        nav a:hover {
-            color: #ff69b4;
-        }
+    nav a:hover {
+      color: #ff69b4;
+    }
 
-        .carousel {
-            margin: 2rem auto;
-            width: 90%;
-            height: 180px;
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+    .carousel {
+      margin: 2rem auto;
+      width: 90%;
+      height: 180px;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+    }
 
-        .carousel-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
+    .carousel-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
 
-        .carousel-image.active {
-            opacity: 1;
-        }
+    .carousel-image.active {
+      opacity: 1;
+    }
 
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 2rem;
-            color: #222;
-            background: rgba(255, 255, 255, 0.5);
-            border: none;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            z-index: 10;
-            border-radius: 5px;
-            user-select: none;
-        }
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: #222;
+      background: rgba(255, 255, 255, 0.5);
+      border: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      z-index: 10;
+      border-radius: 5px;
+      user-select: none;
+    }
 
-        .carousel-button.prev {
-            left: 10px;
-        }
+    .carousel-button.prev {
+      left: 10px;
+    }
 
-        .carousel-button.next {
-            right: 10px;
-        }
+    .carousel-button.next {
+      right: 10px;
+    }
 
-        .section-title {
-            text-align: center;
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem;
-        }
+    .section-title {
+      text-align: center;
+      font-size: 1.5rem;
+      margin: 2rem 0 1rem;
+    }
 
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            padding: 0 1rem;
-        }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      padding: 0 1rem;
+    }
 
-        .product-card {
-            background: #f9f9f9;
-            border-radius: 10px;
-            padding: 0.5rem;
-            text-align: center;
-            font-size: 0.9rem;
-        }
+    .product-card {
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
 
-        .product-img {
-            background: #ddd;
-            height: 80px;
-            border-radius: 6px;
-            margin-bottom: 0.5rem;
-            overflow: hidden; /* Asegura que la imagen no se salga */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .product-img {
+      background: #ddd;
+      height: 80px;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .product-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 6px;
-        }
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+    }
 
-        .cart-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            border: 2px solid #ff69b4;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-    </style>
+    .cart-icon {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      border: 2px solid #ff69b4;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <img src="happyshop.png" alt="logo here" />
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        <nav id="menu">
-            <a href="index.html">Inicio</a>
-            <a href="catalogo.html">Catálogo</a>
-            <a href="order.html">Happy Order</a>
-            <a href="terminos.html">Términos</a>
-        </nav>
-    </header>
 
-    <main>
-        <section>
-            <div class="carousel">
-                <img src="promo1.jpg" alt="Promoción 1" class="carousel-image active">
-                <img src="promo2.jpg" alt="Promoción 2" class="carousel-image">
-                <img src="promo3.jpg" alt="Promoción 3" class="carousel-image">
-                <button class="carousel-button prev" onclick="prevSlide()">‹</button>
-                <button class="carousel-button next" onclick="nextSlide()">›</button>
-            </div>
+  <header>
+    <img src="happyshop.png" alt="logo here" />
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <nav id="menu">
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="order.html">Happy Order</a>
+      <a href="terminos.html">Términos</a>
+    </nav>
+  </header>
 
-            <h2 class="section-title">Hot Products 🔥</h2>
-            <div class="products">
-                <div class="product-card">
-                    <div class="product-img"><img src="Okalokacaja.png" alt="Okacaja"></div>
-                    <p>Okaloka Nanos</p>
-                    <p>$2.600←HappyAhorro!</p>
-                </div>
-                <div class="product-card">
-                    <div class="product-img"><img src="Candyranch.png" alt="CandyRanch"></div>
-                    <p>Candy Ranch Cereza (EDICION LIMITADA ⚠️)</p>
-                    <p>$1.000</p>
-                </div>
-                <div class="product-card">
-                    <div class="product-img"><img src="Gomitas.png" alt="Gomitas"></div>
-                    <p>Gomitas (Se acaban como locas 😍)</p>
-                    <p>$300</p>
-                </div>
-            </div>
+  <main>
+    <section>
+      <div class="carousel">
+        <img src="promo1.jpg" alt="Promoción 1" class="carousel-image active">
+        <img src="promo2.jpg" alt="Promoción 2" class="carousel-image">
+        <img src="promo3.jpg" alt="Promoción 3" class="carousel-image">
+        <button class="carousel-button prev" onclick="prevSlide()">‹</button>
+        <button class="carousel-button next" onclick="nextSlide()">›</button>
+      </div>
 
-            <h2 class="section-title">HappyProducts</h2>
-            <div class="products">
-                <div class="product-card">
-                    <div class="product-img"><img src="Gomitas.png" alt="Gomitas"></div>
-                    <p>Gomitas</p>
-                    <p>$300</p>
-                </div>
-                <div class="product-card">
-                    <div class="product-img"><img src="Piazza.png" alt="Piazza"></div>
-                    <p>Piazza</p>
-                    <p>$1.000</p>
-                </div>
-                <div class="product-card">
-                    <div class="product-img"><img src="OkalokaCaja.png" alt="Okalokacaja"></div>
-                    <p>OkaLoka Nanos</p>
-                    <p>$2.600</p>
-                </div>
-                <div class="product-card">
-                    <div class="product-img"><img src="Okalokabolsa.png" alt="FUSION"></div>
-                    <p>OkaLoka Fusion</p>
-                    <p>$2.000</p>
-                </div>
-                <div class="product-card">
-                    <div class="product-img"><img src="BomBomBum.png" alt="BBBum"></div>
-                    <p>BomBomBum</p>
-                    <p>$700</p>
-                </div>
-            </div>
-        </section>
-    </main>
+      <h2 class="section-title">Hot Products 🔥</h2>
+      <div class="products">
+        <div class="product-card">
+          <div class="product-img"><img src="Okalokacaja.png" alt="Okaloka caja"></div>
+          <p>Okaloka Nanos</p>
+          <p>$2.600 ← HappyAhorro!</p>
+        </div>
+        <div class="product-card">
+          <div class="product-img"><img src="Candyranch.png" alt="Candy Ranch"></div>
+          <p>Candy Ranch Cereza (EDICIÓN LIMITADA ⚠️)</p>
+          <p>$1.000</p>
+        </div>
+        <div class="product-card">
+          <div class="product-img"><img src="Gomitas.png" alt="Gomitas"></div>
+          <p>Gomitas (Se acaban como locas 😍)</p>
+          <p>$300</p>
+        </div>
+      </div>
 
-    <a href="#" class="cart-icon">
-        🛒
-    </a>
+      <h2 class="section-title">HappyProducts</h2>
+      <div class="products">
+        <div class="product-card">
+          <div class="product-img"><img src="Gomitas.png" alt="Gomitas"></div>
+          <p>Gomitas</p>
+          <p>$300</p>
+        </div>
+        <div class="product-card">
+          <div class="product-img"><img src="Piazza.png" alt="Piazza"></div>
+          <p>Piazza</p>
+          <p>$1.000</p>
+        </div>
+        <div class="product-card">
+          <div class="product-img"><img src="Okalokacaja.png" alt="OkaLoka caja"></div>
+          <p>OkaLoka Nanos</p>
+          <p>$2.600</p>
+        </div>
+        <div class="product-card">
+          <div class="product-img"><img src="Okalokabolsa.png" alt="OkaLoka bolsa"></div>
+          <p>OkaLoka Fusion</p>
+          <p>$2.000</p>
+        </div>
+        <div class="product-card">
+          <div class="product-img"><img src="BomBomBum.png" alt="BomBomBum"></div>
+          <p>BomBomBum</p>
+          <p>$700</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <script>
-        function toggleMenu() {
-            document.getElementById('menu').classList.toggle('open');
-        }
+  <a href="#" class="cart-icon">🛒</a>
 
-        const carouselImages = document.querySelectorAll('.carousel-image');
-        let currentImageIndex = 0;
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.classList.toggle('open');
+    }
 
-        function showSlide(index) {
-            carouselImages.forEach(img => img.classList.remove('active'));
-            carouselImages[index].classList.add('active');
-        }
+    const carouselImages = document.querySelectorAll('.carousel-image');
+    let currentImageIndex = 0;
 
-        function nextSlide() {
-            currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
-            showSlide(currentImageIndex);
-        }
+    function showSlide(index) {
+      carouselImages.forEach(img => img.classList.remove('active'));
+      carouselImages[index].classList.add('active');
+    }
 
-        function prevSlide() {
-            currentImageIndex = (currentImageIndex - 1 + carouselImages.length) % carouselImages.length;
-            showSlide(currentImageIndex);
-        }
+    function nextSlide() {
+      currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
+      showSlide(currentImageIndex);
+    }
 
-        // Mostrar la primera imagen al cargar
-        showSlide(currentImageIndex);
+    function prevSlide() {
+      currentImageIndex = (currentImageIndex - 1 + carouselImages.length) % carouselImages.length;
+      showSlide(currentImageIndex);
+    }
 
-        // Carrusel automático (opcional)
-        // setInterval(nextSlide, 3000);
-    </script>
+    showSlide(currentImageIndex);
+  </script>
+
 </body>
 </html>

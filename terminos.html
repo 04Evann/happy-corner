@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Términos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales y del header */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: white;
+            color: #222;
+        }
+
+        header {
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header img {
+            height: 40px;
+        }
+
+        .menu-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        nav.open {
+            display: flex;
+        }
+
+        nav a {
+            color: #222;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: #ff69b4;
+        }
+
+        main {
+            padding: 1rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            line-height: 1.6;
+        }
+
+        h2 {
+            color: #ff69b4;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        h3 {
+            margin-top: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 1rem 0;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #ff69b4;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="logo here" />
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <nav id="menu">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">Happy Order</a>
+            <a href="terminos.html">Términos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>📝 Términos y Condiciones de Happy Corner</h2>
+        <p><strong>Última actualización: 19 de mayo de 2025</strong></p>
+        <hr>
+        <h3>1. 📦 Ventas y disponibilidad</h3>
+        <ul>
+            <li>Todos los productos están sujetos a disponibilidad.</li>
+            <li>Las promociones y precios pueden cambiar o terminar sin previo aviso.</li>
+            <li>No se garantiza stock constante de todos los productos.</li>
+        </ul>
+        <hr>
+        <h3>2. 💳 Pagos y Happy Card</h3>
+        <ul>
+            <li>Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, Caja Social, PSE, PayPal</li>
+            <li>No se aceptan transferencias desde bancos distintos a Nequi, Bancolombia o Caja Social.</li>
+            <li>Las personas con membresía VIP o Business recibirán una Happy Card con beneficios.</li>
+            <li>El lanzamiento oficial de la Happy Card aún no se ha realizado.</li>
+        </ul>
+        <hr>
+        <h3>3. 🚚 Entrega y compras online</h3>
+        <ul>
+            <li>Si pagas desde casa, puedes recibir el pedido al día siguiente en el colegio.</li>
+            <li>Las entregas son personales y seguras.</li>
+            <li>Envía el comprobante de pago antes de las 8:00 p.m.</li>
+        </ul>
+        <hr>
+        <h3>4. 💸 Costos por operación</h3>
+        <ul>
+            <li>Hasta $6.999 → Sin costo</li>
+            <li>$7.000 - $14.999 → $1.000 adicional</li>
+            <li>$15.000 o más → $2.000 adicional</li>
+        </ul>
+        <p>⚠️ Solo aplica para compras físicas. Las online pueden variar.</p>
+        <hr>
+        <h3>5. 🔁 Cambios y devoluciones</h3>
+        <ul>
+            <li>No se hacen devoluciones salvo productos vencidos o en mal estado.</li>
+            <li>Reclamos deben hacerse el mismo día con el producto en mano.</li>
+        </ul>
+        <hr>
+        <h3>6. 📬 Contacto</h3>
+        <ul>
+            <li>👉 Visítanos: <a href="https://bit.ly/happycornerco" target="_blank">bit.ly/happycornerco</a></li>
+            <li>📩 Escríbenos: happycorner.com@gmail.com</li>
+        </ul>
+    </main>
+
+    <a href="#" class="cart-icon">
+        🛒
+    </a>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
