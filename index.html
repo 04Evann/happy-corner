@@ -1,329 +1,279 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Corner</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Inicio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales y del header */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    body {
-      background: linear-gradient(145deg, #1d1d1d, #243f2e);
-      color: #fff;
-      overflow-x: hidden;
-    }
+        body {
+            background: white;
+            color: #222;
+        }
 
-    header {
-      position: sticky;
-      top: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 2rem;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
+        header {
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    header img {
-      height: 100px;
-    }
+        header img {
+            height: 100px;
+        }
 
-    .menu-toggle {
-      font-size: 2rem;
-      cursor: pointer;
-      border: none;
-      background: none;
-      display: block;
-      color: #fff;
-    }
+        .menu-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
 
-    nav {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background: #2e2e2e;
-      border-radius: 1rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      flex-direction: column;
-      padding: 1rem;
-    }
+        nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
 
-    nav.active {
-      display: flex;
-    }
+        nav.open {
+            display: flex;
+        }
 
-    nav a {
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
-      transition: color 0.3s;
-      padding: 0.5rem 0;
-    }
+        nav a {
+            color: #222;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            font-weight: 500;
+        }
 
-    nav a:hover {
-      color: #a8ffa1;
-    }
+        nav a:hover {
+            color: #ff69b4;
+        }
 
-    section {
-      padding: 6rem 2rem;
-      min-height: 100vh;
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      animation: fade 0.5s ease-in-out;
-    }
+        .carousel {
+            margin: 2rem auto;
+            width: 90%;
+            height: 180px;
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-    section.active {
-      display: flex;
-    }
+        .carousel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
 
-    @keyframes fade {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+        .carousel-image.active {
+            opacity: 1;
+        }
 
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 2rem;
-    }
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #222;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            z-index: 10;
+            border-radius: 5px;
+            user-select: none;
+        }
 
-    .inicio-texto {
-      font-size: 2.5rem;
-      font-weight: 600;
-      max-width: 700px;
-      animation: fade 1s ease-in-out;
-      color: #fff;
-    }
+        .carousel-button.prev {
+            left: 10px;
+        }
 
-    .catalogo-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      width: 100%;
-      max-width: 600px;
-    }
+        .carousel-button.next {
+            right: 10px;
+        }
 
-    .catalogo-item {
-      background: #2d2d2d;
-      padding: 1rem;
-      border-radius: 1rem;
-      transition: background 0.3s ease;
-      cursor: pointer;
-    }
+        .section-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+        }
 
-    .catalogo-item:hover {
-      background: linear-gradient(90deg, #6bffb1, #56d893);
-      color: #000;
-    }
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            padding: 0 1rem;
+        }
 
-    form {
-      max-width: 400px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
+        .product-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
 
-    input, textarea, select, button {
-      padding: 0.75rem;
-      border: none;
-      border-radius: 1rem;
-      font-size: 1rem;
-    }
+        .product-img {
+            background: #ddd;
+            height: 80px;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            overflow: hidden; /* Asegura que la imagen no se salga */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    button {
-      background: linear-gradient(to right, #43e97b, #38f9d7);
-      color: #000;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.3s;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
 
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.3);
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
-
-    .designer-graphic {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent 60%);
-      animation: pulseGraphic 5s infinite ease-in-out;
-    }
-
-    @keyframes pulseGraphic {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.5; }
-    }
-
-    section ul {
-      text-align: left;
-      max-width: 600px;
-      margin: 0 auto;
-      list-style: none;
-    }
-
-    section ul li::before {
-      content: "• ";
-      color: #a8ffa1;
-    }
-  </style>
+        .cart-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #ff69b4;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
-  <div class="designer-graphic"></div>
-  <header>
-    <img src="happycorner.png" alt="Happy Corner Logo">
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-    <nav id="menuNav">
-      <a href="#inicio" onclick="mostrarSeccion('inicio'); toggleMenu()">Inicio</a>
-      <a href="#catalogo" onclick="mostrarSeccion('catalogo'); toggleMenu()">Catálogo</a>
-      <a href="#pedido" onclick="mostrarSeccion('pedido'); toggleMenu()">Hacer Pedido</a>
-      <a href="#terminos" onclick="mostrarSeccion('terminos'); toggleMenu()">Términos</a>
-    </nav>
-  </header>
+    <header>
+        <img src="happyshop.png" alt="logo here" />
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <nav id="menu">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">Happy Order</a>
+            <a href="terminos.html">Términos</a>
+        </nav>
+    </header>
 
-  <main>
-    <section id="inicio" class="active">
-      <div class="inicio-texto">Bienvenido a Happy Corner <br>¿Como va tu Happy Día?</div>
-    </section>
+    <main>
+        <section>
+            <div class="carousel">
+                <img src="promo1.jpg" alt="Promoción 1" class="carousel-image active">
+                <img src="promo2.jpg" alt="Promoción 2" class="carousel-image">
+                <img src="promo3.jpg" alt="Promoción 3" class="carousel-image">
+                <button class="carousel-button prev" onclick="prevSlide()">‹</button>
+                <button class="carousel-button next" onclick="nextSlide()">›</button>
+            </div>
 
-    <section id="catalogo">
-      <h2>Catálogo</h2>
-      <div class="catalogo-grid">
-        <div class="catalogo-item">🍭 Oka Loka en caja — $3,000</div>
-        <div class="catalogo-item">🍭 Oka Loka en bolsa — $2,000</div>
-        <div class="catalogo-item">🍬 Gomitas — $300</div>
-        <div class="catalogo-item">🌀 Barquillos — $1,000</div>
-        <div class="catalogo-item">🍡 Bombombum — $700</div>
-      </div>
-    </section>
+            <h2 class="section-title">Hot Products 🔥</h2>
+            <div class="products">
+                <div class="product-card">
+                    <div class="product-img"><img src="Okalokacaja.png" alt="Okacaja"></div>
+                    <p>Okaloka Nanos</p>
+                    <p>$2.600←HappyAhorro!</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="Candyranch.png" alt="CandyRanch"></div>
+                    <p>Candy Ranch Cereza (EDICION LIMITADA ⚠️)</p>
+                    <p>$1.000</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="Gomitas.png" alt="Gomitas"></div>
+                    <p>Gomitas (Se acaban como locas 😍)</p>
+                    <p>$300</p>
+                </div>
+            </div>
 
-    <section id="pedido">
-      <h2>Haz tu pedido</h2>
-      <form action="https://formsubmit.co/happycorner.com@gmail.com" method="POST" onsubmit="return validarFormulario()">
-        <input type="text" placeholder="Nombre" name="nombre" id="nombre" required>
-        <input type="email" placeholder="Correo electrónico" name="correo" id="correo" required>
-        <textarea placeholder="Escribe tu pedido aquí..." name="detalle" id="detalle" rows="4" required></textarea>
-        <select name="pago" id="pago" required>
-          <option value="">Método de pago</option>
-          <option value="PSE">PSE</option>
-          <option value="Nequi">Nequi</option>
-          <option value="Efectivo">Efectivo</option>
-        </select>
-        <button type="submit">Enviar pedido</button>
-      </form>
-    </section>
+            <h2 class="section-title">HappyProducts</h2>
+            <div class="products">
+                <div class="product-card">
+                    <div class="product-img"><img src="Gomitas.png" alt="Gomitas"></div>
+                    <p>Gomitas</p>
+                    <p>$300</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="Piazza.png" alt="Piazza"></div>
+                    <p>Piazza</p>
+                    <p>$1.000</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="OkalokaCaja.png" alt="Okalokacaja"></div>
+                    <p>OkaLoka Nanos</p>
+                    <p>$2.600</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="Okalokabolsa.png" alt="FUSION"></div>
+                    <p>OkaLoka Fusion</p>
+                    <p>$2.000</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="BomBomBum.png" alt="BBBum"></div>
+                    <p>BomBomBum</p>
+                    <p>$700</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <section id="gracias">
-      <h2>¡Gracias por tu Happy Pedido! 💖</h2>
-      <p>Te contactaremos lo más pronto posible. 🍬</p>
-    </section>
+    <a href="#" class="cart-icon">
+        🛒
+    </a>
 
-    <section id="terminos">
-      <h2>📝 Términos y Condiciones de Happy Corner</h2>
-      <p><strong>Última actualización: 19 de mayo de 2025</strong></p>
-      <hr>
-      <h3>1. 📦 Ventas y disponibilidad</h3>
-      <ul>
-        <li>Todos los productos están sujetos a disponibilidad.</li>
-        <li>Las promociones y precios pueden cambiar o terminar sin previo aviso.</li>
-        <li>No se garantiza stock constante de todos los productos.</li>
-      </ul>
-      <hr>
-      <h3>2. 💳 Pagos y Happy Card</h3>
-      <ul>
-        <li>Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, Caja Social, PSE, PayPal</li>
-        <li>No se aceptan transferencias desde bancos distintos a Nequi, Bancolombia o Caja Social.</li>
-        <li>Las personas con membresía VIP o Business recibirán una Happy Card con beneficios.</li>
-        <li>El lanzamiento oficial de la Happy Card aún no se ha realizado.</li>
-      </ul>
-      <hr>
-      <h3>3. 🚚 Entrega y compras online</h3>
-      <ul>
-        <li>Si pagas desde casa, puedes recibir el pedido al día siguiente en el colegio.</li>
-        <li>Las entregas son personales y seguras.</li>
-        <li>Envía el comprobante de pago antes de las 8:00 p.m.</li>
-      </ul>
-      <hr>
-      <h3>4. 💸 Costos por operación</h3>
-      <ul>
-        <li>Hasta $6.999 → Sin costo</li>
-        <li>$7.000 - $14.999 → $1.000 adicional</li>
-        <li>$15.000 o más → $2.000 adicional</li>
-      </ul>
-      <p>⚠️ Solo aplica para compras físicas. Las online pueden variar.</p>
-      <hr>
-      <h3>5. 🔁 Cambios y devoluciones</h3>
-      <ul>
-        <li>No se hacen devoluciones salvo productos vencidos o en mal estado.</li>
-        <li>Reclamos deben hacerse el mismo día con el producto en mano.</li>
-      </ul>
-      <hr>
-      <h3>6. 📬 Contacto</h3>
-      <ul>
-        <li>👉 Visítanos: <a href="https://bit.ly/happycornerco" target="_blank">bit.ly/happycornerco</a></li>
-        <li>📩 Escríbenos: happycorner.com@gmail.com</li>
-      </ul>
-    </section>
-  </main>
+    <script>
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('open');
+        }
 
-  <footer>
-    © 2025 Happy Corner --- 💌 happycorner.com@gmail.com
-  </footer>
+        const carouselImages = document.querySelectorAll('.carousel-image');
+        let currentImageIndex = 0;
 
-  <script>
-    const secciones = ['inicio', 'catalogo', 'pedido', 'gracias', 'terminos'];
+        function showSlide(index) {
+            carouselImages.forEach(img => img.classList.remove('active'));
+            carouselImages[index].classList.add('active');
+        }
 
-    function mostrarSeccion(id) {
-      secciones.forEach(sec => {
-        document.getElementById(sec).classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
-    }
+        function nextSlide() {
+            currentImageIndex = (currentImageIndex + 1) % carouselImages.length;
+            showSlide(currentImageIndex);
+        }
 
-    function validarFormulario() {
-      const nombre = document.getElementById('nombre').value.trim();
-      const correo = document.getElementById('correo').value.trim();
-      const detalle = document.getElementById('detalle').value.trim();
-      const pago = document.getElementById('pago').value;
+        function prevSlide() {
+            currentImageIndex = (currentImageIndex - 1 + carouselImages.length) % carouselImages.length;
+            showSlide(currentImageIndex);
+        }
 
-      if (!nombre || !correo || !detalle || !pago) {
-        alert('Por favor completa todos los campos.');
-        return false;
-      }
+        // Mostrar la primera imagen al cargar
+        showSlide(currentImageIndex);
 
-      mostrarSeccion('gracias');
-      return true;
-    }
-
-    function toggleMenu() {
-      const nav = document.getElementById('menuNav');
-      nav.classList.toggle('active');
-    }
-  </script>
+        // Carrusel automático (opcional)
+        // setInterval(nextSlide, 3000);
+    </script>
 </body>
 </html>

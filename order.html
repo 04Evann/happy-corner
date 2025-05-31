@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Order</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales y del header */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: white;
+            color: #222;
+        }
+
+        header {
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header img {
+            height: 100px;
+        }
+
+        .menu-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        nav.open {
+            display: flex;
+        }
+
+        nav a {
+            color: #222;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: #ff69b4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 2rem auto;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            background-color: #f9f9f9;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form textarea,
+        form select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        form button[type="submit"] {
+            background: #ff69b4;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+
+        form button[type="submit"]:hover {
+            background: #e05a9e;
+        }
+
+        .detalle-pago {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .detalle-pago p {
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #ff69b4;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="happyshop.png" alt="logo here" />
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <nav id="menu">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">Happy Order</a>
+            <a href="terminos.html">Términos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>HAPPY ORDER</h1>
+        <form action="https://formsubmit.co/60010990ccdfba264d503f6c9786abf8" method="POST">
+
+            <label>Nombre completo:</label>
+            <input type="text" name="nombre" required placeholder="Tu nombre" />
+
+            <label>Email:</label>
+            <input type="email" name="email" required placeholder="tucorreo@example.com" />
+
+            <label>Resumen del pedido:</label>
+            <textarea name="pedido" required placeholder="Escribe qué vas a pedir"></textarea>
+
+            <label>Método de pago:</label>
+            <select name="metodo_pago" required onchange="document.querySelectorAll('.detalle-pago').forEach(e => e.style.display = 'none'); document.getElementById(this.value).style.display = 'block';">
+                <option value="">Selecciona una opción</option>
+                <option value="pse">PSE</option>
+                <option value="nequi">Nequi</option>
+                <option value="bancolombia">Bancolombia</option>
+                <option value="efectivo">Efectivo</option>
+            </select>
+
+            <div id="pse" class="detalle-pago" style="display: none;">
+                <p>Haz clic abajo para ir a la pagina de Nequi, Necesitaras los datos del happy dueño (al entrar en la casilla de numero de teléfono pon el de HappyCorner).</p>
+                <a href="https://recarga.nequi.com.co/" target="_blank" style="color: #ff69b4; text-decoration: underline;">Ir a Pagar por PSE</a>
+            </div>
+
+            <div id="nequi" class="detalle-pago" style="display: none; text-align: center;">
+                <p>Escanea este QR para pagar:</p>
+                <img src="NequiQR.png" alt="QR Nequi" style="width: 100%; max-width: 200px; margin: 1rem auto; display: block;" />
+            </div>
+
+            <div id="bancolombia" class="detalle-pago" style="display: none;">
+                <p>Para pagar por Bancolombia: Usa los datos a los datos de Nequi de HappyCorner. Si no los tienes, contacta con él.</p>
+            </div>
+
+            <div id="efectivo" class="detalle-pago" style="display: none;">
+                <p>Tu orden será completada cuando HappyCorner reciba el efectivo. Si ya lo entregaste, acláralo en las notas del pedido.¡HappyGracias!</p>
+            </div>
+
+            <button type="submit">
+                Happy Pay
+            </button>
+
+            <input type="hidden" name="_next" value="https://bit.ly/happycornerco" />
+            <input type="hidden" name="_captcha" value="false">
+        </form>
+    </main>
+
+    <a href="#" class="cart-icon">
+        🛒
+    </a>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('open');
+        }
+        // Asegurarse de que los detalles de pago estén ocultos al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.detalle-pago').forEach(e => e.style.display = 'none');
+        });
+    </script>
+</body>
+</html>
