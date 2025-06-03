@@ -25,6 +25,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative; /* Por si acaso el menú absoluto necesita un padre relativo */
         }
 
         header img {
@@ -36,6 +37,7 @@
             background: none;
             border: none;
             cursor: pointer;
+            z-index: 20; /* Asegurarse de que esté por encima del nav cuando está abierto */
         }
 
         nav {
@@ -213,7 +215,8 @@
 
     <script>
         function toggleMenu() {
-            document.getElementById('menu').classList.toggle('open');
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
         }
         // Asegurarse de que los detalles de pago estén ocultos al cargar la página
         document.addEventListener('DOMContentLoaded', function() {

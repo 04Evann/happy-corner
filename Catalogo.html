@@ -25,6 +25,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative; /* Añadido por si acaso el menú absoluto necesita un padre relativo */
         }
 
         header img {
@@ -36,6 +37,7 @@
             background: none;
             border: none;
             cursor: pointer;
+            z-index: 20; /* Asegurarse de que esté por encima del nav cuando está abierto */
         }
 
         nav {
@@ -97,7 +99,7 @@
         .product-card img {
             width: 100%;
             border-radius: 8px;
-            height: 120px; /* Altura fija para mantener uniformidad */
+            height: 120px;
             object-fit: cover;
             margin-bottom: 0.5rem;
         }
@@ -136,21 +138,7 @@
             width: 80%;
             border-radius: 8px;
             margin-bottom: 0.5rem;
-            height: auto; /* Ajustar altura automáticamente */
-        }
-
-        .bank-correspondent {
-            padding: 1rem;
-            text-align: center;
-            margin-top: 2rem;
-            border-top: 1px solid #eee;
-        }
-
-        .online-services {
-            padding: 1rem;
-            text-align: center;
-            margin-top: 2rem;
-            border-top: 1px solid #eee;
+            height: auto;
         }
 
         .cart-icon {
@@ -251,6 +239,7 @@
                 <button>+</button>
             </div>
         </section>
+    </main>
 
     <a href="#" class="cart-icon">
         🛒
@@ -258,7 +247,8 @@
 
     <script>
         function toggleMenu() {
-            document.getElementById('menu').classList.toggle('open');
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
         }
     </script>
 </body>
