@@ -3,34 +3,41 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Términos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Happy Corner - Términos y Condiciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Estilos generales y del header */
+        /* Base Styles & Mobile First - Unificado */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+            color: #222; /* Default text color */
         }
 
         body {
-            background: white;
-            color: #222;
+            background: #f0f2f5; /* Light grey background for a clean look */
         }
 
+        /* --- Header --- Unificado */
         header {
             background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
             padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative; /* ¡Añadido importante! */
-            z-index: 100; /* Para que esté por encima del contenido si es necesario */
+            position: relative;
+            z-index: 100;
+            min-height: 80px; /* Ensure header has enough height */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
 
         header img {
-            height: 100px;
+            height: 65px; /* Adjust logo size for mobile */
+            max-width: 80%;
+            object-fit: contain;
+            object-position: left;
         }
 
         .menu-btn {
@@ -38,7 +45,9 @@
             background: none;
             border: none;
             cursor: pointer;
-            z-index: 101; /* Para que esté por encima del nav desplegado */
+            z-index: 101;
+            color: #222;
+            display: block; /* Visible on mobile */
         }
 
         nav {
@@ -46,14 +55,14 @@
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly less transparent */
             backdrop-filter: blur(10px);
             display: none;
             flex-direction: column;
             align-items: center;
             padding: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 100; /* Para que esté por encima del contenido */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow for menu */
+            z-index: 100;
         }
 
         nav.open {
@@ -61,52 +70,152 @@
         }
 
         nav a {
-            color: #222;
+            color: #333; /* Slightly darker for better readability */
             text-decoration: none;
-            padding: 0.7rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             font-weight: 500;
+            transition: color 0.3s ease; /* Smooth transition */
         }
 
         nav a:hover {
             color: #ff69b4;
+            transform: scale(1.05); /* Subtle hover effect */
         }
 
+        /* --- Main Content Section for Terms --- */
         main {
-            padding: 1rem;
+            padding: 1.5rem 1rem; /* More padding for content */
             max-width: 800px;
             margin: 2rem auto;
-            line-height: 1.6;
-            position: relative; /* Por si acaso */
-            z-index: 1; /* Para que no tape el menú */
+            line-height: 1.8; /* Improved readability */
+            background: white; /* White background for the content area */
+            border-radius: 12px; /* Soft rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            position: relative;
+            z-index: 1;
         }
 
-        h2 {
-            color: #ff69b4;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
+        main h2 {
+            font-size: 2rem; /* Larger and more prominent */
+            font-weight: 600;
+            margin: 0 0 1.5rem; /* Adjusted margin for better spacing */
+            color: #ff69b4; /* Your brand color */
             text-align: center;
+            padding-bottom: 10px; /* Space for a potential line */
+            position: relative;
         }
 
-        h3 {
-            margin-top: 1rem;
-            margin-bottom: 0.3rem;
+        /* Optional: Add a subtle line under the main title */
+        main h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #ffa500;
+            border-radius: 2px;
         }
 
-        hr {
-            border: 0;
-            border-top: 1px solid #eee;
-            margin: 1rem 0;
-        }
-
-        ul {
-            padding-left: 1.5rem;
+        main p {
             margin-bottom: 1rem;
+            color: #444; /* Slightly darker for main text */
         }
 
-        li {
-            margin-bottom: 0.5rem;
+        main strong {
+            color: #333; /* Stronger color for bold text */
         }
 
+        main h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-top: 2rem; /* More space above sub-sections */
+            margin-bottom: 0.8rem;
+            color: #ffa500; /* Accent color for sub-titles */
+        }
+
+        main hr {
+            border: 0;
+            border-top: 1px dashed #ddd; /* Dashed line for subtle separation */
+            margin: 2rem 0; /* More space around horizontal rules */
+        }
+
+        main ul {
+            padding-left: 1.8rem; /* More indentation */
+            margin-bottom: 1.5rem;
+            list-style: disc; /* Default disc bullets */
+            color: #444;
+        }
+
+        main li {
+            margin-bottom: 0.7rem;
+        }
+
+        main a {
+            color: #ff69b4; /* Link color matching brand */
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        main a:hover {
+            color: #e6569f;
+            text-decoration: underline;
+        }
+
+        /* --- Footer --- Unificado */
+        footer {
+            background: #222;
+            color: #eee;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .footer-content p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #bbb;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #ff69b4; /* Pink hover for social icons */
+        }
+        
+        .footer-links {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            color: #eee;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ff69b4;
+        }
+
+        /* --- Cart Icon --- Unificado */
         .cart-icon {
             position: fixed;
             bottom: 20px;
@@ -114,20 +223,137 @@
             background: white;
             border: 2px solid #ff69b4;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 55px; /* Slightly larger */
+            height: 55px; /* Slightly larger */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 1.6rem; /* Larger icon */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2); /* More pronounced shadow */
             z-index: 10;
+            text-decoration: none;
+            color: #222;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cart-icon:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .cart-quantity {
+            position: absolute;
+            top: -8px; /* Adjusted position */
+            right: -8px; /* Adjusted position */
+            background-color: #ffa500;
+            color: white;
+            font-size: 0.9rem; /* Slightly larger text */
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 3px 8px; /* More padding */
+            min-width: 24px; /* Minimum width for double digits */
+            text-align: center;
+            display: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* --- Toast Notification Styles --- Unificado */
+        .toast-container {
+            position: fixed;
+            bottom: 90px; /* Above the cart icon */
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column-reverse; /* Newest toast on top */
+            gap: 10px;
+            pointer-events: none; /* Allows clicks through to elements underneath */
+        }
+
+        .toast {
+            background-color: rgba(50, 50, 50, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            min-width: 200px;
+            max-width: 300px;
+            text-align: center;
+            pointer-events: auto; /* Allows interaction with the toast itself */
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* --- Media Queries for Desktop --- Unificado */
+        @media (min-width: 768px) {
+            header {
+                padding: 0.5rem 2rem;
+                min-height: 100px;
+            }
+            header img {
+                height: 80px; /* Larger logo for desktop */
+            }
+            .menu-btn {
+                display: none; /* Hide hamburger menu */
+            }
+            nav {
+                position: static; /* Static position for desktop nav */
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                background-color: transparent;
+                backdrop-filter: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            nav a {
+                padding: 0.7rem 1.2rem;
+                color: #222; /* Text color for desktop nav */
+            }
+            nav a:hover {
+                color: #ff69b4;
+                text-decoration: underline;
+                transform: none; /* Remove scale effect */
+            }
+
+            main {
+                padding: 2.5rem 2rem; /* More padding for desktop */
+            }
+            main h2 {
+                font-size: 2.5rem;
+            }
+            main h3 {
+                font-size: 1.5rem;
+            }
+
+            .cart-icon {
+                bottom: 30px;
+                right: 30px;
+                width: 65px;
+                height: 65px;
+                font-size: 1.8rem;
+            }
+            .cart-quantity {
+                font-size: 1rem;
+                padding: 4px 9px;
+                min-width: 28px;
+            }
+
+            .toast-container {
+                bottom: 100px; /* Adjust for larger cart icon on desktop */
+                right: 30px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <img src="happyshop.png" alt="logo here" />
+        <img src="loguito.png" alt="Happy Corner Logo" />
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
         <nav id="menu">
             <a href="index.html">Inicio</a>
@@ -139,59 +365,124 @@
 
     <main>
         <h2>📝 Términos y Condiciones de Happy Corner</h2>
-        <p><strong>Última actualización: 19 de mayo de 2025</strong></p>
+        <p><strong>Última actualización: 23 de julio de 2025</strong></p>
         <hr>
+
         <h3>1. 📦 Ventas y disponibilidad</h3>
         <ul>
             <li>Todos los productos están sujetos a disponibilidad.</li>
-            <li>Las promociones y precios pueden cambiar o terminar sin previo aviso.</li>
-            <li>No se garantiza stock constante de todos los productos.</li>
+            <li>Las promociones y precios pueden cambiar o finalizar sin previo aviso.</li>
+            <li>No se garantiza un stock constante de todos los productos.</li>
         </ul>
         <hr>
+
         <h3>2. 💳 Pagos y Happy Card</h3>
         <ul>
-            <li>Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, Caja Social, PSE, PayPal</li>
-            <li>No se aceptan transferencias desde bancos distintos a Nequi, Bancolombia o Caja Social.</li>
-            <li>Las personas con membresía VIP o Business recibirán una Happy Card con beneficios.</li>
+            <li>Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, PSE, PayPal.</li>
+            <li>❌ Ya no se aceptan transferencias desde Caja Social.</li>
+            <li>Las personas con membresía VIP o Business recibirán una Happy Card con beneficios exclusivos.</li>
             <li>El lanzamiento oficial de la Happy Card aún no se ha realizado.</li>
         </ul>
         <hr>
+
         <h3>3. 🚚 Entrega y compras online</h3>
         <ul>
             <li>Si pagas desde casa, puedes recibir el pedido al día siguiente en el colegio.</li>
             <li>Las entregas son personales y seguras.</li>
-            <li>Envía el comprobante de pago antes de las 8:00 p.m.</li>
+            <li>Para pagos por la página (Nequi, Bancolombia, PSE o PayPal), debes enviar el comprobante de pago al WhatsApp.</li>
+            <li>Si vas a pagar por PSE, primero debes contactarnos para recibir el número de Nequi.</li>
+            <li>Envía el comprobante antes de las 8:00 p.m. para que tu pedido sea válido para el día siguiente.</li>
         </ul>
         <hr>
+
         <h3>4. 💸 Costos por operación</h3>
         <ul>
-            <li>Hasta $6.999 → Sin costo</li>
-            <li>$7.000 - $14.999 → $1.000 adicional</li>
-            <li>$15.000 o más → $2.000 adicional</li>
+            <li>Hasta $6.999 → Sin costo adicional</li>
+            <li>$7.000 - $14.999 → $500 adicional</li>
+            <li>$15.000 o más → $1.000 adicional</li>
         </ul>
-        <p>⚠️ Solo aplica para compras físicas. Las online pueden variar.</p>
+        <p>⚠️ Solo aplica para retiros bancarios.</p>
         <hr>
+
         <h3>5. 🔁 Cambios y devoluciones</h3>
         <ul>
-            <li>No se hacen devoluciones salvo productos vencidos o en mal estado.</li>
+            <li>No se hacen devoluciones salvo productos vencidos y otros productos.</li>
             <li>Reclamos deben hacerse el mismo día con el producto en mano.</li>
         </ul>
         <hr>
-        <h3>6. 📬 Contacto</h3>
+
+        <h3>6. 🕹️ Compras de Robux</h3>
         <ul>
-            <li>👉 Visítanos: <a href="https://bit.ly/happycornerco" target="_blank">bit.ly/happycornerco</a></li>
-            <li>📩 Escríbenos: happycorner.com@gmail.com</li>
+            <li>Pedidos de 1.000 Robux se entregan por código digital mediante tarjeta.</li>
+            <li>Pedidos de 500 Robux o menos deben hacerse iniciando sesión desde el celular del vendedor.</li>
+            <li>Después del pago, se cerrará la sesión inmediatamente frente al cliente.</li>
+        </ul>
+        <hr>
+
+        <h3>7. 📬 Contacto</h3>
+        <ul>
+            <li>👉 Visítanos: <a href="https://happycorner.lol" target="_blank">happycorner.lol</a></li>
+            <li>📩 Escríbenos: <a href="mailto:soporte@happycorner.lol">soporte@happycorner.lol</a></li>
         </ul>
     </main>
-
-    <a href="#" class="cart-icon">
-        🛒
-    </a>
 
     <script>
         function toggleMenu() {
             const menu = document.getElementById('menu');
             menu.classList.toggle('open');
+        }
+
+        // --- Cart functionality (Copied from index.html) ---
+        // Note: addToCartAndNotify is not needed here as there are no products to add.
+        // But updateCartIconQuantity and showToast are useful.
+        function updateCartIconQuantity() {
+            let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+            const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartIcon = document.querySelector('.cart-icon');
+            
+            let quantitySpan = cartIcon.querySelector('.cart-quantity');
+            if (!quantitySpan) {
+                quantitySpan = document.createElement('span');
+                quantitySpan.classList.add('cart-quantity');
+                cartIcon.appendChild(quantitySpan);
+            }
+            
+            if (totalQuantity > 0) {
+                quantitySpan.textContent = totalQuantity;
+                quantitySpan.style.display = 'block';
+            } else {
+                quantitySpan.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartIconQuantity);
+
+        // --- Toast Notification Functionality (Copied from index.html) ---
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.classList.add('toast');
+            toast.textContent = message;
+
+            // Optional: Add specific styling based on type (e.g., 'success', 'error')
+            if (type === 'success') {
+                toast.style.backgroundColor = 'rgba(76, 175, 80, 0.9)'; /* Green for success */
+            } else if (type === 'error') {
+                toast.style.backgroundColor = 'rgba(244, 67, 54, 0.9)'; /* Red for error */
+            }
+
+            toastContainer.appendChild(toast);
+
+            // Trigger the animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10); // Small delay to allow reflow
+
+            // Hide and remove the toast after a few seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000); // Toast disappears after 3 seconds
         }
     </script>
 </body>
