@@ -1,40 +1,39 @@
 export default async function handler(req, res) {
+  const { codigo } = req.query;
+  const token = process.env.LOYVERSE_API_KEY;
+
+  if (!codigo) {
+    return res.status(400).json({ error: "Falta el parámetro 'codigo'" });
+  }
+
   try {
-    const { codigo } = req.query;
-
-    if (!codigo) {
-      return res.status(400).json({ error: "Falta el código del cliente" });
-    }
-
-    // 1. Buscar cliente por Customer Code
-    const clienteResp = await fetch(
-      `https://api.loyverse.com/v1.0/customers?search=${codigo}`,
+    // Buscar el cliente en Loyverse
+    const response = await fetch(
+      `https://api.loyverse.com/v1.0/customers?customer_code=${codigo}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.LOYVERSE_API_KEY}`,
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
 
-    const clienteData = await clienteResp.json();
+    const data = await response.json();
 
-    if (!clienteData.customers || clienteData.customers.length === 0) {
+    // Si no encuentra ningún cliente
+    if (!data.customers || data.customers.length === 0) {
       return res.status(404).json({ error: "Cliente no encontrado" });
     }
 
-    const cliente = clienteData.customers[0];
+    // Si lo encuentra, extraer info
+    const cliente = data.customers[0];
 
-    // 2. Retornar datos del cliente (incluye puntos)
-    return res.status(200).json({
+    res.status(200).json({
       nombre: cliente.name,
       codigo: cliente.customer_code,
-      puntos: cliente.total_points,
-      email: cliente.email,
-      telefono: cliente.phone_number,
+      puntos: cliente.points,
+      transacciones: cliente.transactions || [], // si tienes acceso
     });
-  } catch (err) {
-    console.error("Error Loyverse:", err);
-    res.status(500).json({ error: "Error interno del servidor" });
+  } catch (error) {
+    res.status(500).json({ error: "Error al conectar con Loyverse" });
   }
 }
