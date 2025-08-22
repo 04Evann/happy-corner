@@ -11,285 +11,113 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        /* Base Styles & Mobile First */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            color: #222;
-        }
-        body {
-            background: #f0f2f5;
-        }
+        /* --- ESTILOS --- */
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; color:#222; }
+        body { background:#f0f2f5; }
+        header { background: linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); padding:1rem; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:100; min-height:80px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+        header img { height:65px; max-width:80%; object-fit:contain; object-position:left; }
+        .menu-btn { font-size:2rem; background:none; border:none; cursor:pointer; z-index:101; color:#222; display:block; }
+        nav { position:absolute; top:100%; left:0; width:100%; background-color:rgba(255,255,255,0.95); backdrop-filter:blur(10px); display:none; flex-direction:column; align-items:center; padding:1rem 0; box-shadow:0 4px 8px rgba(0,0,0,0.15); z-index:100; }
+        nav.open { display:flex; }
+        nav a { color:#333; text-decoration:none; padding:0.8rem 1.5rem; font-weight:500; transition:color 0.3s ease; }
+        nav a:hover { color:#ff69b4; transform:scale(1.05); }
+        .cart-icon { display:none; }
+        main { display:flex; flex-direction:column; align-items:center; gap:2rem; padding:1.5rem 1rem; max-width:1200px; margin:0 auto; }
+        .page-title { text-align:center; font-size:2.5rem; font-weight:700; margin:1rem 0 2rem; color:#ff69b4; position:relative; padding-bottom:15px; }
+        .page-title::after { content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:80px; height:5px; background-color:#ffa500; border-radius:3px; }
+        .puntos-container { width:100%; max-width:500px; background:white; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); padding:2rem; text-align:center; }
+        .puntos-container h2 { font-size:1.6rem; font-weight:600; color:#333; margin-bottom:1.5rem; border-bottom:2px solid #f0e68c; padding-bottom:0.8rem; }
+        .consulta-form input { width:100%; padding:12px 10px; margin-bottom:15px; border:2px solid #ddd; border-radius:8px; font-size:16px; transition:border-color 0.3s; }
+        .consulta-form input:focus { outline:none; border-color:#ff69b4; }
+        .consulta-form button { width:100%; padding:12px; background:linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); color:white; border:none; border-radius:8px; font-size:18px; font-weight:600; cursor:pointer; transition:background 0.3s; }
+        .consulta-form button:hover { background:linear-gradient(to right,#e6569f,#e09500,#d3d97f); }
+        #resultados-container { margin-top:25px; text-align:left; }
+        .info-card { background-color:#f9f9f9; border-radius:10px; padding:20px; border:1px solid #eee; }
+        .info-card h3 { color:#ff6347; margin-top:0; border-bottom:2px solid #ff6347; padding-bottom:5px; }
+        .info-card p { margin:5px 0; }
+        .info-card ul { list-style:none; padding:0; }
+        .info-card ul li { background:#fff; padding:10px; border-radius:6px; border:1px solid #eee; margin-bottom:10px; }
+        .info-card a { color:#ff69b4; text-decoration:none; font-weight:600; margin-top:15px; display:inline-block; }
+        .info-card a:hover { text-decoration:underline; }
+        .error { color:#d9534f; font-weight:600; text-align:center; }
+        .loader { border:4px solid #f3f3f3; border-radius:50%; border-top:4px solid #ff69b4; width:30px; height:30px; animation:spin 2s linear infinite; margin:0 auto 15px; }
+        @keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
+        footer { background:#222; color:#eee; padding:2rem 1rem; text-align:center; margin-top:3rem; box-shadow:0 -2px 10px rgba(0,0,0,0.1); }
+        .footer-content { max-width:900px; margin:0 auto; }
+        .social-icons a { color:white; font-size:1.5rem; margin:0 10px; transition:color 0.3s ease; }
+        .social-icons a:hover { color:#ff69b4; }
+        .footer-links { margin-top:1.5rem; display:flex; flex-wrap:wrap; justify-content:center; gap:15px; }
+        .footer-links a { color:#eee; text-decoration:none; font-size:0.95rem; transition:color 0.3s ease; }
+        .footer-links a:hover { color:#ff69b4; }
+        @media (min-width:768px){header{padding:0.5rem 2rem;min-height:100px}header img{height:80px}.menu-btn{display:none}nav{position:static;display:flex;flex-direction:row;width:auto;background-color:transparent;backdrop-filter:none;box-shadow:none;padding:0}nav a{padding:0.7rem 1.2rem;color:#222}nav a:hover{color:#ff69b4;text-decoration:underline;transform:none}main{flex-direction:column;justify-content:center;align-items:center;padding-top:3rem;padding-bottom:3rem}.puntos-container{max-width:600px}}
 
-        /* --- Header --- */
-        header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 100;
-            min-height: 80px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        header img {
-            height: 65px;
-            max-width: 80%;
-            object-fit: contain;
-            object-position: left;
-        }
-        .menu-btn {
-            font-size: 2rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 101;
-            color: #222;
-            display: block;
-        }
-        nav {
-            position: absolute;
-            top: 100%;
-            left: 0;
+        /* --- Estilos para la sección de FAQ (Acordeón) --- */
+        .faq-container {
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-        }
-        nav.open {
-            display: flex;
-        }
-        nav a {
-            color: #333;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        nav a:hover {
-            color: #ff69b4;
-            transform: scale(1.05);
-        }
-        .cart-icon {
-            display: none;
-        }
-
-        /* --- Main Content & Puntos Section Styles --- */
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            padding: 1.5rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .page-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 1rem 0 2rem;
-            color: #ff69b4;
-            position: relative;
-            padding-bottom: 15px;
-        }
-        .page-title::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 5px;
-            background-color: #ffa500;
-            border-radius: 3px;
-        }
-
-        /* Puntos Container - Styled like a main content card */
-        .puntos-container {
-            width: 100%;
-            max-width: 500px;
+            max-width: 800px;
             background: white;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             padding: 2rem;
+            margin-top: 2rem;
+        }
+        .faq-container h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ff69b4;
             text-align: center;
+            margin-bottom: 2rem;
         }
-        .puntos-container h2 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #f0e68c;
-            padding-bottom: 0.8rem;
-        }
-        .consulta-form input {
-            width: 100%;
-            padding: 12px 10px;
-            margin-bottom: 15px;
-            border: 2px solid #ddd;
+        .accordion-item {
+            border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            margin-bottom: 10px;
+            overflow: hidden;
         }
-        .consulta-form input:focus {
-            outline: none;
-            border-color: #ff69b4;
-        }
-        .consulta-form button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .consulta-form button:hover {
-            background: linear-gradient(to right, #e6569f, #e09500, #d3d97f);
-        }
-        
-        /* Resultados Card - Nested inside the main card */
-        #resultados-container {
-            margin-top: 25px;
-            text-align: left;
-        }
-        .info-card {
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background-color: #f9f9f9;
-            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .accordion-header:hover {
+            background-color: #f0f0f0;
+        }
+        .accordion-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .accordion-header i {
+            transition: transform 0.3s ease;
+        }
+        .accordion-content {
+            display: none;
             padding: 20px;
-            border: 1px solid #eee;
-        }
-        .info-card h3 {
-            color: #ff6347;
-            margin-top: 0;
-            border-bottom: 2px solid #ff6347;
-            padding-bottom: 5px;
-        }
-        .info-card p {
-            margin: 5px 0;
-        }
-        .info-card ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .info-card ul li {
             background-color: #fff;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #eee;
+            border-top: 1px solid #ddd;
+        }
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+        }
+        .accordion-content p, .accordion-content ul {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #555;
             margin-bottom: 10px;
         }
-        .info-card ul li:last-child {
-            margin-bottom: 0;
+        .accordion-content ul {
+            list-style-type: disc;
+            padding-left: 20px;
         }
-        .info-card a {
-            color: #ff69b4;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 15px;
-            display: inline-block;
-        }
-        .info-card a:hover {
-            text-decoration: underline;
-        }
-        .error {
-            color: #d9534f;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        /* --- Footer --- */
-        footer {
-            background: #222;
-            color: #eee;
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .footer-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
-            transition: color 0.3s ease;
-        }
-        .social-icons a:hover {
-            color: #ff69b4;
-        }
-        .footer-links {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-        .footer-links a {
-            color: #eee;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
-            color: #ff69b4;
-        }
-
-        /* --- Media Queries for Desktop --- */
-        @media (min-width: 768px) {
-            header {
-                padding: 0.5rem 2rem;
-                min-height: 100px;
-            }
-            header img {
-                height: 80px;
-            }
-            .menu-btn {
-                display: none;
-            }
-            nav {
-                position: static;
-                display: flex;
-                flex-direction: row;
-                width: auto;
-                background-color: transparent;
-                backdrop-filter: none;
-                box-shadow: none;
-                padding: 0;
-            }
-            nav a {
-                padding: 0.7rem 1.2rem;
-                color: #222;
-            }
-            nav a:hover {
-                color: #ff69b4;
-                text-decoration: underline;
-                transform: none;
-            }
-            main {
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                padding-top: 3rem;
-                padding-bottom: 3rem;
-            }
-            .puntos-container {
-                max-width: 600px;
-            }
+        .accordion-content li {
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -308,7 +136,7 @@
 </header>
 
 <main>
-    <h1 class="page-title">Consulta tus Puntos Happy 🥳</h1>
+    <h1 class="page-title">Consulta tus HappyPuntos 💵</h1>
     <section class="puntos-container">
         <h2>Ingresa tu Código</h2>
         <form class="consulta-form" id="consulta-form">
@@ -316,6 +144,107 @@
             <button type="submit">Consultar</button>
         </form>
         <div id="resultados-container"></div>
+    </section>
+
+    <section class="faq-container">
+        <h2>HappyPuntos - Preguntas Frecuentes</h2>
+        <div class="accordion">
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Qué es la HappyCard?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Es tu tarjeta de HappyCorner para usar HappyCréditos (1 HC = 1 peso colombiano) y comprar en la tienda. También te permite acceder a descuentos y ganar recompensas según tu nivel.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Qué niveles existen?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <ul>
+                        <li><strong>Core:</strong> $0 – $9,999 mensuales. Solo recargas y compras.</li>
+                        <li><strong>Prime:</strong> $10,000 – $49,999 mensuales. Recibes descuentos  y acceso a promociones especiales.</li>
+                        <li><strong>Elite:</strong> $50,000+ mensuales. Ganas HC extra por compra, acceso anticipado a Hot Deals y beneficios VIP.</li>
+                        <li><strong>Perú:</strong> tarjeta especial que no da beneficios. Solo existe como curiosidad / coleccionable.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Qué beneficios tiene cada nivel?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <ul>
+                        <li><strong>Core:</strong> solo compras con saldo.</li>
+                        <li><strong>Prime:</strong> descuentos en combos y productos seleccionados.</li>
+                        <li><strong>Elite:</strong> puntos extra por compra, canje flexible y acceso VIP a Hot Deals y productos exclusivos.</li>
+                        <li><strong>Perú:</strong> ninguno 😎</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Cómo subo de nivel?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Tu nivel se calcula cada mes según tus compras. Si no alcanzas el gasto mínimo, puedes bajar de nivel hasta volver a subir.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Qué beneficios tienen los asociados de HappyCorner?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Si eres asociado, recibes la tarjeta Platinum, con descuentos especiales y beneficios internos que no están disponibles para el público general.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Cómo funcionan los descuentos y puntos?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <ul>
+                        <li><strong>Prime:</strong> 5% descuento, días especiales con hasta 10% en productos seleccionados.</li>
+                        <li><strong>Elite:</strong> 5–10% de tus compras se acumula como HappyCréditos extra. Los puntos pueden canjearse por productos o descuentos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Los puntos o descuentos tienen límite?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <ul>
+                        <li>Máximo $1,500  de descuento por compra.</li>
+                        <li>Puntos expiran en 3–6 meses.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Habrá más tarjetas en el futuro?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>¡Quizá sí! Estamos pensando en nuevas tarjetas y beneficios, así que siempre hay algo nuevo por descubrir. 🔮</p>
+                </div>
+            </div>
+        </div>
     </section>
 </main>
 
@@ -340,59 +269,68 @@
         menu.classList.toggle('open');
     }
 
-    const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
+    // Código JavaScript para el formulario de consulta de puntos (sin PIN)
+    const API_URL = 'https://happy-corner.vercel.app/api/get-customer-data';
     const form = document.getElementById('consulta-form');
-    const input = document.getElementById('happy-code-input');
+    const codeInput = document.getElementById('happy-code-input');
     const resultsContainer = document.getElementById('resultados-container');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const codigo = input.value.trim();
-        if (!codigo) {
+        const customerCode = codeInput.value.trim();
+
+        if (!customerCode) {
             resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo.</p>`;
             return;
         }
 
-        resultsContainer.innerHTML = `<p>Consultando...</p>`;
+        resultsContainer.innerHTML = `<div class="loader"></div><p style="text-align: center;">Consultando...</p>`;
 
         try {
-            const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ customerCode }),
+            });
+
             const data = await response.json();
 
             if (!response.ok) {
-                resultsContainer.innerHTML = `<p class="error">${data.error || 'Error desconocido al buscar tu código.'}</p>`;
+                resultsContainer.innerHTML = `<p class="error">${data.message || 'Error desconocido al buscar tu código.'}</p>`;
                 return;
             }
-
-            const transaccionesHTML = data.ultimas_transacciones.length > 0
-                ? '<h4>Últimas Compras:</h4>' +
-                  '<ul>' +
-                  data.ultimas_transacciones.map(t => `
-                    <li>
-                        <strong>Recibo #${t.recibo}</strong><br>
-                        Fecha: ${t.fecha}<br>
-                        Total: $${t.total.toFixed(2)}
-                    </li>
-                  `).join('') +
-                  '</ul>'
-                : '<p>No hay compras recientes.</p>';
+            
+            const customer = data.customer;
 
             resultsContainer.innerHTML = `
                 <div class="info-card">
-                    <h3>¡Hola, ${data.nombre}!</h3>
-                    <p><strong>Correo:</strong> ${data.correo}</p>
-                    <p><strong>HappyCódigo:</strong> ${data.happyCodigo}</p>
-                    <p><strong>Puntos HappyCorner:</strong> ${data.puntos}</p>
-                    ${transaccionesHTML}
-                    <a href="https://wa.me/57TU_NUMERO?text=${encodeURIComponent('Hola, tengo un problema con mi HappyCódigo: ' + data.happyCodigo)}" target="_blank" rel="noopener">
-                        <i class="fab fa-whatsapp"></i> ¿Problemas con mi compra?
-                    </a>
+                    <h3>¡Hola, ${customer.name}!</h3>
+                    <p><strong>HappyCódigo:</strong> ${customer.customer_code}</p>
+                    <p><strong>Puntos Happy:</strong> ${customer.total_points}</p>
+                    <p><strong>Correo:</strong> ${customer.email}</p>
                 </div>
             `;
         } catch (error) {
             console.error(error);
             resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
         }
+    });
+
+    // Código JavaScript para el acordeón (FAQ)
+    const accordionItems = document.querySelectorAll('.accordion-item');
+
+    accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        header.addEventListener('click', () => {
+            accordionItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                }
+            });
+            item.classList.toggle('active');
+        });
     });
 </script>
 
