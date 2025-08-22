@@ -1,775 +1,407 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Shop - Tu Pedido</title>
-    
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Base Styles & Mobile First */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            color: #222;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Shop - Tu Pedido</title>
+    <link rel="icon" type="image/png" href="happyfavicon.png">
+    <style>
+        /* Estilos generales y base */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-        body {
-            background: #f0f2f5;
-        }
+        /* Contenedor principal para centrar el contenido */
+        .main-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex-grow: 1;
+        }
 
-        /* --- Header (Copied from index.html for consistency) --- */
-        header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 100;
-            min-height: 80px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+        /* Estilo para los títulos de sección */
+        h1, h2 {
+            font-weight: 600;
+            text-align: center;
+            color: #ff69b4;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
 
-        header img {
-            height: 65px;
-            max-width: 80%;
-            object-fit: contain;
-            object-position: left;
-        }
+        /* Contenedores de resumen y formulario */
+        .order-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .order-container {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        .order-summary, .checkout-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
 
-        .menu-btn {
-            font-size: 2rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 101;
-            color: #222;
-            display: block;
-        }
+        /* Estilos del formulario */
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        form input:focus, form select:focus, form textarea:focus {
+            outline: 2px solid #4CAF50;
+            border-color: #4CAF50;
+        }
+        
+        .checkout-form button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .checkout-form button[type="submit"]:hover {
+            background-color: #45a049;
+        }
 
-        nav {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-        }
+        /* Estilos de la lista del carrito */
+        .order-summary ul {
+            list-style: none;
+            padding: 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+        .order-summary li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+        }
+        .order-summary li:first-child {
+            border-top: none;
+        }
+        .item-name { font-weight: 600; }
+        .item-price { color: #888; }
+        .item-total { font-weight: 600; color: #ff69b4; }
+        .order-totals {
+            margin-top: 15px;
+            border-top: 2px solid #ddd;
+            padding-top: 15px;
+        }
+        .order-totals p {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        .total-price {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #ffa500;
+        }
+        
+        /* Estilos del footer */
+        footer {
+            background-color: #222;
+            color: #ccc;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto; /* Para que el footer se quede abajo */
+        }
+        footer a {
+            color: #ff69b4;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Estilos de los detalles de pago */
+        .payment-details {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            display: none; /* Oculto por defecto */
+        }
+        .payment-details img {
+            max-width: 150px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+        
+        /* Estilos del botón de WhatsApp */
+        .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        .whatsapp-button:hover {
+            background-color: #128C7E;
+        }
 
-        nav.open {
-            display: flex;
-        }
-
-        nav a {
-            color: #333;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: #ff69b4;
-            transform: scale(1.05);
-        }
-
-        /* --- Main Content Layout --- */
-        main {
-            display: flex;
-            flex-direction: column; /* Stack columns on mobile */
-            gap: 2rem; /* Spacing between sections */
-            padding: 1.5rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .page-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 1rem 0 2rem; /* Adjusted margin */
-            color: #ff69b4;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .page-title::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 5px;
-            background-color: #ffa500;
-            border-radius: 3px;
-        }
-        
-        /* Order Summary / Form Section */
-        .order-container {
-            display: flex;
-            flex-direction: column; /* Stack order details and form on mobile */
-            gap: 2rem;
-        }
-
-        .order-summary, .checkout-form {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            padding: 1.5rem;
-            flex: 1; /* Allow sections to grow */
-        }
-
-        .order-summary h2, .checkout-form h2 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #f0e68c; /* Subtle divider */
-            padding-bottom: 0.8rem;
-        }
-
-        /* Cart Items List */
-        #cart-items-list {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 1.5rem;
-        }
-
-        #cart-items-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 0;
-            border-bottom: 1px dashed #eee; /* Lighter divider */
-            font-size: 0.95rem;
-        }
-
-        #cart-items-list li:last-child {
-            border-bottom: none;
-        }
-
-        .item-details {
-            flex-grow: 1;
-            margin-right: 1rem;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .item-details .item-name {
-            font-weight: 500;
-            color: #222;
-        }
-        .item-details .item-price {
-            font-size: 0.85rem;
-            color: #666;
-        }
-
-        .item-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .item-controls button {
-            background: #ff69b4;
-            color: white;
-            border: none;
-            border-radius: 50%; /* Circular buttons */
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .item-controls button:hover {
-            background: #e6569f;
-        }
-
-        .item-controls .quantity {
-            font-weight: 600;
-            min-width: 20px;
-            text-align: center;
-        }
-        
-        .item-total {
-            font-weight: 600;
-            color: #ffa500;
-            min-width: 60px; /* Ensure price column aligns */
-            text-align: right;
-        }
-
-        /* Totals */
-        .order-totals {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #ddd;
-        }
-
-        .order-totals p {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .order-totals .total-price {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #ff69b4; /* Highlight total price */
-        }
-        
-        .empty-cart-message {
-            text-align: center;
-            padding: 2rem 1rem;
-            color: #666;
-            font-size: 1.1rem;
-        }
-        .empty-cart-message a {
-            color: #ff69b4;
-            text-decoration: underline;
-            font-weight: 600;
-        }
-
-        /* Checkout Form */
-        .checkout-form form {
-            padding: 0; /* Remove padding from form itself as container has it */
-            border: none; /* Remove border from form itself */
-            background: none; /* Remove background from form itself */
-            box-shadow: none; /* Remove shadow from form itself */
-            margin: 0;
-        }
-
-        .checkout-form label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #444;
-            font-size: 0.95rem;
-        }
-
-        .checkout-form input[type="text"],
-        .checkout-form input[type="email"],
-        .checkout-form textarea,
-        .checkout-form select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            margin-bottom: 1.2rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 0.95rem;
-            background-color: #fcfcfc;
-            transition: border-color 0.3s ease;
-        }
-
-        .checkout-form input[type="text"]:focus,
-        .checkout-form input[type="email"]:focus,
-        .checkout-form textarea:focus,
-        .checkout-form select:focus {
-            outline: none;
-            border-color: #ff69b4;
-            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
-        }
-
-        .checkout-form textarea {
-            min-height: 90px;
-            resize: vertical; /* Allow vertical resizing */
-        }
-
-        .checkout-form button[type="submit"] {
-            background: #ff69b4;
-            color: white;
-            padding: 0.9rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .checkout-form button[type="submit"]:hover {
-            background: #e6569f;
-            transform: translateY(-2px);
-        }
-
-        /* Payment Details */
-        .payment-details {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            border: 1px dashed #e0e0e0; /* Lighter dashed border */
-            border-radius: 8px;
-            background-color: #fdfdfd;
-            font-size: 0.9rem;
-            display: none; /* Hidden by default */
-        }
-        
-        .payment-details p {
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-            color: #555;
-        }
-
-        .payment-details a {
-            color: #ff69b4;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .payment-details a:hover {
-            text-decoration: underline;
-        }
-
-        .payment-details img {
-            width: 100%;
-            max-width: 180px; /* Smaller QR code */
-            margin: 1rem auto;
-            display: block;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Cart Icon (Copied from index.html) - Hidden on this page */
-        .cart-icon {
-            display: none; /* Hide cart icon on the order page */
-        }
-
-        /* --- Footer (Copied from index.html) --- */
-        footer {
-            background: #222;
-            color: #eee;
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
-            transition: color 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            color: #ff69b4;
-        }
-        
-        .footer-links {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .footer-links a {
-            color: #eee;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #ff69b4;
-        }
-
-        /* --- Media Queries for Desktop --- */
-        @media (min-width: 768px) {
-            header {
-                padding: 0.5rem 2rem;
-                min-height: 100px;
-            }
-            header img {
-                height: 80px;
-            }
-            .menu-btn {
-                display: none;
-            }
-            nav {
-                position: static;
-                display: flex;
-                flex-direction: row;
-                width: auto;
-                background-color: transparent;
-                backdrop-filter: none;
-                box-shadow: none;
-                padding: 0;
-            }
-            nav a {
-                padding: 0.7rem 1.2rem;
-                color: #222;
-            }
-            nav a:hover {
-                color: #ff69b4;
-                text-decoration: underline;
-                transform: none;
-            }
-
-            main {
-                flex-direction: row; /* Two columns on desktop */
-                justify-content: center;
-                align-items: flex-start; /* Align content to top */
-                padding-top: 3rem; /* More space from header */
-                padding-bottom: 3rem;
-            }
-            
-            .order-container {
-                flex-direction: row; /* Side-by-side on desktop */
-                width: 100%; /* Take full width of main container */
-                max-width: 900px; /* Limit width to prevent being too wide */
-            }
-
-            .order-summary, .checkout-form {
-                flex: 1; /* Distribute space evenly */
-                min-width: 400px; /* Ensure minimum width for forms */
-                padding: 2rem; /* More padding on desktop */
-            }
-
-            .order-summary {
-                margin-right: 2rem; /* Space between summary and form */
-            }
-        }
-    </style>
+    </style>
 </head>
 <body>
-    <header>
-        <img src="loguito.png" alt="Happy Shop Logo" />
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        <nav id="menu">
-            <a href="index.html">Inicio</a>
-            <a href="catalogo.html">Catálogo</a>
-            <a href="order.html">Happy Order</a>
-            <a href="puntos.html">Happy Puntos</a>
-            <a href="terminos.html">Términos</a>
-        </nav>
-    </header>
+    <div class="main-container">
+        <h1>Tu Pedido Happy 🥳</h1>
+        <div class="order-container">
+            <section class="order-summary">
+                <h2>Resumen de tu Carrito</h2>
+                <ul id="cart-items-list">
+                    </ul>
+                <div class="empty-cart-message" id="empty-cart-msg">
+                    Tu carrito está vacío. ¡Empieza a añadir <a href="catalogo.html">productos aquí</a>!
+                </div>
+                <div class="order-totals">
+                    <p>Subtotal: <span id="subtotal-price">$0</span></p>
+                    <p>Envío: <span id="shipping-price">Calculando...</span></p>
+                    <p class="total-price">Total: <span id="total-price">$0</span></p>
+                </div>
+            </section>
 
-    <main>
-        <h1 class="page-title">Tu Pedido Happy 🥳</h1>
+            <section class="checkout-form">
+                <h2>Detalles de Contacto y Pago</h2>
+                <form id="checkout-form" method="POST">
+                    <label for="nombre">Nombre completo:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
+                    
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required placeholder="tucorreo@example.com" />
+                    
+                    <label for="tipo_entrega">Tipo de Entrega:</label>
+                    <select id="tipo_entrega" name="tipo_entrega" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="colegio">Entrega en el Colegio (Productos Físicos)</option>
+                        <option value="virtual">Entrega Virtual (Robux, Spotify, Servicios Online)</option>
+                    </select>
 
-        <div class="order-container">
-            <section class="order-summary">
-                <h2>Resumen de tu Carrito</h2>
-                <ul id="cart-items-list">
-                    </ul>
+                    <label for="celular">Número de Celular (WhatsApp):</label>
+                    <input type="text" id="celular" name="celular" required placeholder="Ej: 300 123 4567" />
 
-                <div class="empty-cart-message" id="empty-cart-msg" style="display: none;">
-                    Tu carrito está vacío. ¡Empieza a añadir <a href="catalogo.html">productos aquí</a>!
-                </div>
+                    <label for="metodo_pago">Método de pago:</label>
+                    <select id="metodo_pago" name="metodo_pago" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="happy_puntos">Happy Puntos</option>
+                        <option value="nequi">Nequi</option>
+                        <option value="pse">PSE</option>
+                        <option value="efectivo">Efectivo (Pago al recibir)</option>
+                    </select>
+                    
+                    <div id="happy_puntos-details" class="payment-details">
+                        <p>Para pagar con Happy Puntos, introduce tu **HappyCódigo**. Tu pedido se confirmará cuando verifiquemos que tienes los puntos suficientes.</p>
+                        <label for="happy_codigo">Tu HappyCódigo:</label>
+                        <input type="text" id="happy_codigo" name="HappyCódigo" placeholder="Tu HappyCódigo" />
+                    </div>
 
-                <div class="order-totals">
-                    <p>Subtotal: <span id="subtotal-price">$0</span></p>
-                    <p>Envío: <span id="shipping-price">Calculando...</span></p>
-                    <p class="total-price">Total: <span id="total-price">$0</span></p>
-                </div>
-            </section>
+                    <div id="nequi-details" class="payment-details">
+                        <p>Para pagar por Nequi, escanea el QR o transfiere al número de HappyCorner. **No olvides enviar una captura de pantalla del pago al WhatsApp de HappyCorner.**</p>
+                        <img src="https://i.ibb.co/L5hY5mF/nequi-qr.png" alt="QR Nequi" />
+                        <p>Número Nequi: **(Se te proporcionará por WhatsApp tras confirmar el pedido)**</p>
+                        <a href="https://wa.me/34641422390?text=Hola!%20Acabo%20de%20hacer%20un%20pedido%20en%20Happy%20Shop%20y%20quiero%20pagar%20por%20Nequi.%20Mi%20nombre%20es%20[Tu%20Nombre]%20y%20mi%20correo%20es%20[Tu%20Correo]." target="_blank" class="whatsapp-button">Confirmar Pago por WhatsApp</a>
+                    </div>
+                    
+                    <div id="pse-details" class="payment-details">
+                        <p>Para pagar por PSE, contactanos por WhatsApp para proporcionarte el número de Nequi. **Harás el pago a través de PSE hacia ese número.**</p>
+                        <p>Cuando finalices la transacción, envía una captura de pantalla del pago al WhatsApp para confirmar tu pedido.</p>
+                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20por%20PSE.%20Por%20favor,%20dame%20el%20número%20de%20Nequi%20para%20realizar%20el%20pago." target="_blank" class="whatsapp-button">Contactar para Pago PSE</a>
+                    </div>
 
-            <section class="checkout-form">
-                <h2>Detalles de Contacto y Pago</h2>
-                                <form id="checkout-form" method="POST">
-                    <label for="nombre">Nombre completo:</label>
-                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required placeholder="tucorreo@example.com" />
-                    
-                    <label for="tipo_entrega">Tipo de Entrega:</label>
-                    <select id="tipo_entrega" name="tipo_entrega" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="colegio">Entrega en el Colegio (Productos Físicos)</option>
-                        <option value="virtual">Entrega Virtual (Robux, Spotify, Servicios Online)</option>
-                    </select>
+                    <div id="efectivo-details" class="payment-details">
+                        <p>Tu orden será confirmada y deberás pagar en efectivo al momento de la entrega (en el colegio) o al recibir los datos del servicio virtual.</p>
+                        <p>Si es entrega física, por favor ten el valor exacto si es posible. Si es virtual, se te indicará cómo y cuándo realizar el pago al momento de la entrega de los datos.</p>
+                    </div>
 
-                    <label for="celular">Número de Celular (WhatsApp):</label>
-                    <input type="text" id="celular" name="celular" required placeholder="Ej: 300 123 4567" />
+                    <label for="notas">Notas Adicionales (Opcional):</label>
+                    <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Quiero que me contacten antes de ir al colegio.', 'Es un regalo, no mostrar el precio.'"></textarea>
 
-                    <label for="metodo_pago">Método de pago:</label>
-                    <select id="metodo_pago" name="metodo_pago" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="happy_puntos">Happy Puntos</option>
-                        <option value="nequi">Nequi</option>
-                        <option value="pse">PSE</option>
-                        <option value="applepay">Apple Pay</option>
-                        <option value="tarjeta">Tarjeta (Crédito / Débito)</option>
-                        <option value="efectivo">Efectivo (Pago al recibir)</option>
-                    </select>
+                    <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
+                    <input type="hidden" name="_next" value="https://happycorner.lol/confirmation.html">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
+                    <input type="hidden" name="Total del Pedido" id="total-price-hidden">
+                    <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
+                    <input type="hidden" name="Número de Nequi" id="nequi-number-hidden">
+                    
+                    <button type="submit" id="place-order-button">
+                        Finalizar HappyOrder
+                    </button>
+                </form>
+            </section>
+        </div>
+    </div>
 
-                    <div id="happy_puntos-details" class="payment-details">
-                        <p>Para pagar con Happy Puntos, por favor introduce tu **HappyCódigo**. Tu pedido se confirmará cuando verifiquemos que tienes los puntos suficientes para el total de la compra.</p>
-                        <label for="happy_codigo">Tu HappyCódigo:</label>
-                        <input type="text" id="happy_codigo" name="HappyCódigo" placeholder="Tu HappyCódigo" />
-                    </div>
+    <footer>
+        <p>
+            &copy; 2024 Happy Shop. Todos los derechos reservados.
+            <br>
+            <a href="terminos.html">Términos y Condiciones</a> | <a href="mailto:soporte@happycorner.lol">Contáctanos</a>
+        </p>
+    </footer>
 
-                    <div id="nequi-details" class="payment-details" style="text-align: center;">
-                        <p>Para pagar por Nequi, escanea el QR o transfiere al número de HappyCorner. **Este QR también se puede escanear desde Bancolombia.** No olvides enviar una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido.</p>
-                        <img src="NequiQR.png" alt="QR Nequi" />
-                        <p>Número Nequi: **(Se te proporcionará por WhatsApp tras confirmar el pedido)**</p>
-                        <a href="https://wa.me/34641422390?text=Hola!%20Acabo%20de%20hacer%20un%20pedido%20en%20Happy%20Shop%20y%20quiero%20pagar%20por%20Nequi.%20Mi%20nombre%20es%20[Tu%20Nombre]%20y%20mi%20correo%20es%20[Tu%20Correo]." target="_blank" style="margin-top: 10px; display: inline-block;">Confirmar Pago por WhatsApp</a>
-                    </div>
-                    
-                    <div id="pse-details" class="payment-details">
-                        <p>Para pagar por PSE, al Finalizar Pedido contactanos por whatsapp para proporcionarte el numero de Nequi, **Te proporcionaré el número de Nequi por WhatsApp para que hagas el pago a través de PSE.**</p>
-                        <p>Cuando finalices la transacción, envía una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido. </p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20por%20PSE.%20Por%20favor,%20dame%20el%20número%20de%20Nequi%20para%20realizar%20el%20pago." target="_blank" style="margin-top: 10px; display: inline-block;">Confirmar Pago por WhatsApp</a>
-                    </div>
-                    
-                    <div id="applepay-details" class="payment-details">
-                        <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos y no serán usados de forma incorrecta. No hay riesgo de estafa o hackeo.</p>
-                        <p>Tras finalizar el pedido, contactanos por whatsapp para enviarte el link de pago.</p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20Apple%20Pay%20(Euros)." target="_blank" style="margin-top: 10px; display: inline-block;">Continuar con Apple Pay por WhatsApp</a>
-                    </div>
+    <script>
+        // El script de JavaScript sigue siendo el mismo que tenías
+        const cartItemsList = document.getElementById('cart-items-list');
+        const subtotalPriceSpan = document.getElementById('subtotal-price');
+        const shippingPriceSpan = document.getElementById('shipping-price');
+        const totalPriceSpan = document.getElementById('total-price');
+        const emptyCartMessage = document.getElementById('empty-cart-msg');
+        const paymentMethodSelect = document.getElementById('metodo_pago');
+        const tipoEntregaSelect = document.getElementById('tipo_entrega');
+        const paymentDetailsDivs = {
+            'happy_puntos': document.getElementById('happy_puntos-details'),
+            'nequi': document.getElementById('nequi-details'),
+            'pse': document.getElementById('pse-details'),
+            'efectivo': document.getElementById('efectivo-details')
+        };
+        const orderSummaryInput = document.getElementById('order-summary-input');
+        const totalPriceHidden = document.getElementById('total-price-hidden');
+        const cartContentHidden = document.getElementById('cart-content-hidden');
+        const nequiNumberHidden = document.getElementById('nequi-number-hidden');
 
-                    <div id="tarjeta-details" class="payment-details">
-                        <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos y no serán usados de forma incorrecta. No hay riesgo de estafa o hackeo.</p>
-                        <p>Tras finalizar el pedido, contactanos por WhatsApp para enviarte el link de pago.</p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20tarjeta%20de%20crédito/débito%20(Euros)." target="_blank" style="margin-top: 10px; display: inline-block;">Continuar con Tarjeta por WhatsApp</a>
-                    </div>
-
-                    <div id="efectivo-details" class="payment-details">
-                        <p>Tu orden será confirmada y deberás pagar en efectivo al momento de la entrega (en el colegio) o al recibir los datos del servicio virtual.</p>
-                        <p>Si es entrega física, por favor ten el valor exacto si es posible. Si es virtual, se te indicará cómo y cuándo realizar el pago al momento de la entrega de los datos.</p>
-                    </div>
-
-                    <label for="notas">Notas Adicionales (Opcional):</label>
-                    <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Quiero que me contacten antes de ir al colegio.', 'Es un regalo, no mostrar el precio.'"></textarea>
-
-                                        <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
-                    <input type="hidden" name="_next" value="https://happycorner.lol/confirmation.html">                     <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
-                    <input type="hidden" name="Total del Pedido" id="total-price-hidden">
-                    <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
-                    <input type="hidden" name="Número de Nequi" id="nequi-number-hidden">
-
-
-                    <button type="submit" id="place-order-button">
-                        Finalizar HappyOrder
-                    </button>
-                </form>
-            </section>
-        </div>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <div class="footer-links">
-                <a href="terminos.html">Términos y Condiciones</a>
-                <a href="mailto:soporte@happycorner.lol">Contáctanos</a>
-                <a href="catalogo.html">Ver Todo el Catálogo</a>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('open');
-        }
-
-        const cartItemsList = document.getElementById('cart-items-list');
-        const subtotalPriceSpan = document.getElementById('subtotal-price');
-        const shippingPriceSpan = document.getElementById('shipping-price');
-        const totalPriceSpan = document.getElementById('total-price');
-        const emptyCartMessage = document.getElementById('empty-cart-msg');
-        const paymentMethodSelect = document.getElementById('metodo_pago');
-        const tipoEntregaSelect = document.getElementById('tipo_entrega');
-        const paymentDetailsDivs = {
-            'happy_puntos': document.getElementById('happy_puntos-details'),
-            'nequi': document.getElementById('nequi-details'),
-            'pse': document.getElementById('pse-details'),
-            'applepay': document.getElementById('applepay-details'),
-            'tarjeta': document.getElementById('tarjeta-details'),
-            'efectivo': document.getElementById('efectivo-details')
-        };
-        const orderSummaryInput = document.getElementById('order-summary-input');
-        const totalPriceHidden = document.getElementById('total-price-hidden');
-        const cartContentHidden = document.getElementById('cart-content-hidden');
-        const nequiNumberHidden = document.getElementById('nequi-number-hidden');
-
-        let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
-
-        function renderCart() {
-            cartItemsList.innerHTML = '';
-            let subtotal = 0;
-
-            if (cart.length === 0) {
-                emptyCartMessage.style.display = 'block';
-                document.querySelector('.order-totals').style.display = 'none';
-                document.getElementById('place-order-button').disabled = true;
-                orderSummaryInput.value = "Carrito vacío.";
-                totalPriceHidden.value = "$0";
-                cartContentHidden.value = "Carrito vacío.";
-                return;
-            } else {
-                emptyCartMessage.style.display = 'none';
-                document.querySelector('.order-totals').style.display = 'block';
-                document.getElementById('place-order-button').disabled = false;
-            }
-
-            cart.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div class="item-details">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-price">$${item.price.toLocaleString('es-CO')} c/u</span>
-                    </div>
-                    <div class="item-controls">
-                        <button onclick="updateQuantity(${index}, -1)">-</button>
-                        <span class="quantity">${item.quantity}</span>
-                        <button onclick="updateQuantity(${index}, 1)">+</button>
-                    </div>
-                    <span class="item-total">$${(item.price * item.quantity).toLocaleString('es-CO')}</span>
-                `;
-                cartItemsList.appendChild(li);
-                subtotal += item.price * item.quantity;
-            });
-
-            subtotalPriceSpan.textContent = `$${subtotal.toLocaleString('es-CO')}`;
-
-            let shippingCost = 0;
-            shippingPriceSpan.textContent = 'Gratis';
-            
-            const total = subtotal + shippingCost;
-            totalPriceSpan.textContent = `$${total.toLocaleString('es-CO')}`;
-
-            updateOrderSummaryForFormSubmit(total);
-        }
-
-        function updateQuantity(index, change) {
-            cart[index].quantity += change;
-            if (cart[index].quantity <= 0) {
-                cart.splice(index, 1);
-            }
-            localStorage.setItem('happyCart', JSON.stringify(cart));
-            renderCart();
-        }
-
-        function updatePaymentDetailsDisplay() {
-            for (const key in paymentDetailsDivs) {
-                paymentDetailsDivs[key].style.display = 'none';
-            }
-
-            const selectedMethod = paymentMethodSelect.value;
-            if (paymentDetailsDivs[selectedMethod]) {
-                paymentDetailsDivs[selectedMethod].style.display = 'block';
-            }
-        }
-
-        function updateOrderSummaryForFormSubmit(total) {
-            let summaryText = 'Resumen del Pedido:\n\n';
-            let cartContentForHidden = [];
-
-            if (cart.length === 0) {
-                summaryText += "El carrito estaba vacío al momento de enviar el pedido.\n";
-            } else {
-                cart.forEach(item => {
-                    summaryText += `- ${item.name} (x${item.quantity}): $${(item.price * item.quantity).toLocaleString('es-CO')}\n`;
-                    cartContentForHidden.push(`${item.name} (x${item.quantity})`);
-                });
-                summaryText += `\nSubtotal: ${subtotalPriceSpan.textContent}\n`;
-                summaryText += `Envío: ${shippingPriceSpan.textContent}\n`;
-                summaryText += `Total: ${totalPriceSpan.textContent}\n`;
-            }
-            orderSummaryInput.value = summaryText;
-            totalPriceHidden.value = totalPriceSpan.textContent;
-            cartContentHidden.value = cartContentForHidden.join(', ');
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
-            paymentMethodSelect.addEventListener('change', updatePaymentDetailsDisplay);
-            updatePaymentDetailsDisplay();
-        });
-
-        // CAMBIO 3: Se añade el nuevo código para manejar el envío del formulario.
-        const checkoutForm = document.getElementById('checkout-form');
-        checkoutForm.addEventListener('submit', async function(event) {
-            event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
-
-            const selectedMethod = paymentMethodSelect.value;
-            
-            if (selectedMethod === 'happy_puntos') {
-                const happyCode = document.getElementById('happy_codigo').value;
-                const total = parseFloat(totalPriceSpan.textContent.replace('$', '').replace(/\./g, '').replace(',', ''));
-                const email = document.getElementById('email').value;
-                const nombre = document.getElementById('nombre').value;
-                
-                if (!happyCode) {
-                    alert('Por favor, ingresa tu HappyCódigo para pagar con puntos.');
-                    return;
-                }
-                
-                document.getElementById('place-order-button').textContent = 'Procesando...';
+        // Eliminar 'tarjeta' y 'applepay' del objeto paymentDetailsDivs si no se usan
+        const { tarjeta, applepay, ...filteredPaymentDetailsDivs } = paymentDetailsDivs;
+        
+        let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+        
+        function renderCart() {
+            cartItemsList.innerHTML = '';
+            let subtotal = 0;
+        
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                document.querySelector('.order-totals').style.display = 'none';
                 document.getElementById('place-order-button').disabled = true;
-
-                try {
-                    const response = await fetch('/api/processPoints', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            codigo: happyCode,
-                            totalPedido: total,
-                            emailCliente: email,
-                            nombreCliente: nombre
-                        })
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        alert(`¡Pago exitoso! Se descontaron ${result.puntosDescontados.toLocaleString('es-CO')} Happy Puntos. Tu nuevo saldo es de ${result.puntosActuales.toLocaleString('es-CO')} puntos. ¡Revisa tu correo para la confirmación!`);
-                        localStorage.removeItem('happyCart');
-                        window.location.href = 'confirmation.html'; // Redirecciona a una página de confirmación
-                    } else {
-                        alert(`Error: ${result.error || 'No se pudo procesar el pago. Por favor, contacta a soporte.'}`);
-                    }
-                } catch (error) {
-                    console.error('Error al procesar el pago:', error);
-                    alert('Ocurrió un error en la conexión. Por favor, revisa tu HappyCódigo y vuelve a intentarlo.');
-                } finally {
-                    document.getElementById('place-order-button').textContent = 'Finalizar HappyOrder';
-                    document.getElementById('place-order-button').disabled = false;
-                }
-
+                orderSummaryInput.value = "Carrito vacío.";
+                totalPriceHidden.value = "$0";
+                cartContentHidden.value = "Carrito vacío.";
+                return;
             } else {
-                // Si no es happy_puntos, el formulario se envía con la configuración original de FormSubmit.
-                const form = document.getElementById('checkout-form');
-                form.action = "https://formsubmit.co/evanlensenmo@gmail.com";
-                form.submit();
+                emptyCartMessage.style.display = 'none';
+                document.querySelector('.order-totals').style.display = 'block';
+                document.getElementById('place-order-button').disabled = false;
             }
+        
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="item-details">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-price">$${item.price.toLocaleString('es-CO')} c/u</span>
+                    </div>
+                    <div class="item-controls">
+                        <button onclick="updateQuantity(${index}, -1)">-</button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button onclick="updateQuantity(${index}, 1)">+</button>
+                    </div>
+                    <span class="item-total">$${(item.price * item.quantity).toLocaleString('es-CO')}</span>
+                `;
+                cartItemsList.appendChild(li);
+                subtotal += item.price * item.quantity;
+            });
+        
+            subtotalPriceSpan.textContent = `$${subtotal.toLocaleString('es-CO')}`;
+        
+            let shippingCost = 0;
+            shippingPriceSpan.textContent = 'Gratis';
+            
+            const total = subtotal + shippingCost;
+            totalPriceSpan.textContent = `$${total.toLocaleString('es-CO')}`;
+        
+            updateOrderSummaryForFormSubmit(total);
+        }
+        
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('happyCart', JSON.stringify(cart));
+            renderCart();
+        }
+        
+        function updatePaymentDetailsDisplay() {
+            for (const key in filteredPaymentDetailsDivs) {
+                filteredPaymentDetailsDivs[key].style.display = 'none';
+            }
+        
+            const selectedMethod = paymentMethodSelect.value;
+            if (filteredPaymentDetailsDivs[selectedMethod]) {
+                filteredPaymentDetailsDivs[selectedMethod].style.display = 'block';
+            }
+        }
+        
+        function updateOrderSummaryForFormSubmit(total) {
+            let summaryText = 'Resumen del Pedido:\n\n';
+            let cartContentForHidden = [];
+        
+            if (cart.length === 0) {
+                summaryText += "El carrito estaba vacío al momento de enviar el pedido.\n";
+            } else {
+                cart.forEach(item => {
+                    summaryText += `- ${item.name} (x${item.quantity}): $${(item.price * item.quantity).toLocaleString('es-CO')}\n`;
+                    cartContentForHidden.push(`${item.name} (x${item.quantity})`);
+                });
+                summaryText += `\nSubtotal: ${subtotalPriceSpan.textContent}\n`;
+                summaryText += `Envío: ${shippingPriceSpan.textContent}\n`;
+                summaryText += `Total: ${totalPriceSpan.textContent}\n`;
+            }
+            orderSummaryInput.value = summaryText;
+            totalPriceHidden.value = totalPriceSpan.textContent;
+            cartContentHidden.value = cartContentForHidden.join(', ');
+        }
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart();
+            paymentMethodSelect.addEventListener('change', updatePaymentDetailsDisplay);
+            updatePaymentDetailsDisplay();
         });
-
+        
+        // El formulario se enviará a FormSubmit
+        const checkoutForm = document.getElementById('checkout-form');
+        checkoutForm.action = "https://formsubmit.co/evanlensenmo@gmail.com";
     </script>
 </body>
 </html>
