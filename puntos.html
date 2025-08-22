@@ -209,7 +209,6 @@
             font-weight: 600;
             text-align: center;
         }
-<<<<<<< HEAD
         /* Loading spinner */
         .loader {
             border: 4px solid #f3f3f3;
@@ -269,48 +268,6 @@
             color: #ff69b4;
         }
 
-=======
-
-        /* --- Footer --- */
-        footer {
-            background: #222;
-            color: #eee;
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .footer-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
-            transition: color 0.3s ease;
-        }
-        .social-icons a:hover {
-            color: #ff69b4;
-        }
-        .footer-links {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-        .footer-links a {
-            color: #eee;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
-            color: #ff69b4;
-        }
-
->>>>>>> 0d557d8d36a21b1dc5ce9203f8b2b89b91af1b2d
         /* --- Media Queries for Desktop --- */
         @media (min-width: 768px) {
             header {
@@ -372,16 +329,10 @@
 <main>
     <h1 class="page-title">Consulta tus Puntos Happy 🥳</h1>
     <section class="puntos-container">
-<<<<<<< HEAD
         <h2>Ingresa tu Código y PIN</h2>
         <form class="consulta-form" id="consulta-form">
             <input type="text" id="happy-code-input" placeholder="Tu HappyCódigo" required>
             <input type="password" id="happy-pin-input" placeholder="Tu PIN (6 dígitos)" required minlength="6" maxlength="6">
-=======
-        <h2>Ingresa tu Código</h2>
-        <form class="consulta-form" id="consulta-form">
-            <input type="text" id="happy-code-input" placeholder="Tu HappyCódigo" required>
->>>>>>> 0d557d8d36a21b1dc5ce9203f8b2b89b91af1b2d
             <button type="submit">Consultar</button>
         </form>
         <div id="resultados-container"></div>
@@ -409,21 +360,14 @@
         menu.classList.toggle('open');
     }
 
-<<<<<<< HEAD
     const API_URL = 'https://happy-corner.vercel.app/api/get-customer-data'; // Reemplaza con la URL de tu proyecto
     const form = document.getElementById('consulta-form');
     const codeInput = document.getElementById('happy-code-input');
     const pinInput = document.getElementById('happy-pin-input');
-=======
-    const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
-    const form = document.getElementById('consulta-form');
-    const input = document.getElementById('happy-code-input');
->>>>>>> 0d557d8d36a21b1dc5ce9203f8b2b89b91af1b2d
     const resultsContainer = document.getElementById('resultados-container');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-<<<<<<< HEAD
         const customerCode = codeInput.value.trim();
         const customerPin = pinInput.value.trim();
 
@@ -458,48 +402,6 @@
                     <p><strong>HappyCódigo:</strong> ${customer.customer_code}</p>
                     <p><strong>Puntos Happy:</strong> ${customer.total_points}</p>
                     <p><strong>Correo:</strong> ${customer.email}</p>
-=======
-        const codigo = input.value.trim();
-        if (!codigo) {
-            resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo.</p>`;
-            return;
-        }
-
-        resultsContainer.innerHTML = `<p>Consultando...</p>`;
-
-        try {
-            const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                resultsContainer.innerHTML = `<p class="error">${data.error || 'Error desconocido al buscar tu código.'}</p>`;
-                return;
-            }
-
-            const transaccionesHTML = data.ultimas_transacciones.length > 0
-                ? '<h4>Últimas Compras:</h4>' +
-                  '<ul>' +
-                  data.ultimas_transacciones.map(t => `
-                    <li>
-                        <strong>Recibo #${t.recibo}</strong><br>
-                        Fecha: ${t.fecha}<br>
-                        Total: $${t.total.toFixed(2)}
-                    </li>
-                  `).join('') +
-                  '</ul>'
-                : '<p>No hay compras recientes.</p>';
-
-            resultsContainer.innerHTML = `
-                <div class="info-card">
-                    <h3>¡Hola, ${data.nombre}!</h3>
-                    <p><strong>Correo:</strong> ${data.correo}</p>
-                    <p><strong>HappyCódigo:</strong> ${data.happyCodigo}</p>
-                    <p><strong>Puntos HappyCorner:</strong> ${data.puntos}</p>
-                    ${transaccionesHTML}
-                    <a href="https://wa.me/57TU_NUMERO?text=${encodeURIComponent('Hola, tengo un problema con mi HappyCódigo: ' + data.happyCodigo)}" target="_blank" rel="noopener">
-                        <i class="fab fa-whatsapp"></i> ¿Problemas con mi compra?
-                    </a>
->>>>>>> 0d557d8d36a21b1dc5ce9203f8b2b89b91af1b2d
                 </div>
             `;
         } catch (error) {
