@@ -504,63 +504,65 @@
 
 <script>
     function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('open');
-    }
-
-    const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
-    const form = document.getElementById('consulta-form');
-    const input = document.getElementById('happy-code-input');
-    const resultsContainer = document.getElementById('resultados-container');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const codigo = input.value.trim();
-        if (!codigo) {
-            resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo.</p>`;
-            return;
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
         }
 
-        resultsContainer.innerHTML = `<p>Consultando...</p>`;
+        const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
+        const form = document.getElementById('consulta-form');
+        const input = document.getElementById('happy-code-input');
+        const resultsContainer = document.getElementById('resultados-container');
 
-        try {
-            const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                resultsContainer.innerHTML = `<p class="error">${data.error || 'Error desconocido al buscar tu código.'}</p>`;
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const codigo = input.value.trim();
+            if (!codigo) {
+                resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo.</p>`;
                 return;
             }
 
-            const transaccionesHTML = data.ultimas_transacciones.length > 0
-                ? '<h4>Últimas Compras:</h4>' +
-                  '<ul>' +
-                  data.ultimas_transacciones.map(t => `
-                    <li>
-                        <strong>Recibo #${t.recibo}</strong><br>
-                        Fecha: ${t.fecha}<br>
-                        Total: $${t.total.toFixed(2)}
-                    </li>
-                  `).join('') +
-                  '</ul>'
-                : '<p>No hay compras recientes.</p>';
+            resultsContainer.innerHTML = `<p>Consultando...</p>`;
 
-            resultsContainer.innerHTML = `
-                <div class="info-card">
-                    <h3>¡Hola, ${data.nombre}!</h3>
-                    <p><strong>Correo:</strong> ${data.correo}</p>
-                    <p><strong>HappyCódigo:</strong> ${data.happyCodigo}</p>
-                    <p><strong>Puntos HappyCorner:</strong> ${data.puntos}</p>
-                    ${transaccionesHTML}
-                    <a href="https://wa.me/34641422390?text=${encodeURIComponent('Hola, tengo un problema con mi HappyCódigo: ' + data.happyCodigo)}" target="_blank" rel="noopener">
-                        <i class="fab fa-whatsapp"></i> ¿Problemas con mi compra?
-                    </a>
-                </div>
-            `;
-        } catch (error) {
-            console.error(error);
-            resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
-        }
+            try {
+                const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    resultsContainer.innerHTML = `<p class="error">${data.error || 'Error desconocido al buscar tu código.'}</p>`;
+                    return;
+                }
+
+                const transaccionesHTML = data.ultimas_transacciones.length > 0
+                    ? '<h4>Últimas Compras:</h4>' +
+                      '<ul>' +
+                      data.ultimas_transacciones.map(t => `
+                        <li>
+                            <strong>Recibo #${t.recibo}</strong><br>
+                            Fecha: ${t.fecha}<br>
+                            Total: $${t.total.toFixed(2)}
+                        </li>
+                      `).join('') +
+                      '</ul>'
+                    : '<p>No hay compras recientes.</p>';
+
+                resultsContainer.innerHTML = `
+                    <div class="info-card">
+                        <h3>¡Hola, ${data.nombre}!</h3>
+                        <p><strong>Correo:</strong> ${data.correo}</p>
+                        <p><strong>HappyCódigo:</strong> ${data.happyCodigo}</p>
+                        <p><strong>Puntos HappyCorner:</strong> ${data.puntos}</p>
+                        ${transaccionesHTML}
+                        <a href="https://wa.me/34641422390?text=${encodeURIComponent('Hola, tengo un problema con mi HappyCódigo: ' + data.happyCodigo)}" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i> ¿Problemas con mi compra?
+                        </a>
+                    </div>
+                `;
+            } catch (error) {
+                console.error(error);
+                resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
+            }
+        });
+
         // Código JavaScript para el acordeón (FAQ)
         const accordionItems = document.querySelectorAll('.accordion-item');
 
