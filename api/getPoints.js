@@ -1,7 +1,6 @@
-// /api/getPoints.js (Reemplaza todo el código actual en Vercel)
+// /api/getPoints.js (Versión Final)
 
 export default async function handler(req, res) {
-  // CORS: Permite que tu frontend de GitHub Pages se comunique con este backend
   res.setHeader('Access-Control-Allow-Origin', 'https://happycorner.lol');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -92,7 +91,6 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       nombre: cliente.name,
-      id: cliente.id,
       happyCodigo: cliente.customer_code,
       correo: cliente.email || 'No registrado',
       puntos: cliente.total_points,
