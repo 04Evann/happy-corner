@@ -1,31 +1,40 @@
 export default async function handler(req, res) {
-  const { codigo } = req.query;
-
-  const token = process.env.LOYVERSE_API_KEY; // Variable de entorno en Vercel
-
   try {
-    // Llamada a la API de Loyverse
-    const response = await fetch(
-      `https://api.loyverse.com/v1.0/customers?customer_code=${codigo}`,
+    const { codigo } = req.query;
+
+    if (!codigo) {
+      return res.status(400).json({ error: "Falta el código del cliente" });
+    }
+
+    // 1. Buscar cliente por Customer Code
+    const clienteResp = await fetch(
+      `https://api.loyverse.com/v1.0/customers?search=${codigo}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${process.env.LOYVERSE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
       }
     );
 
-    const data = await response.json();
+    const clienteData = await clienteResp.json();
 
-    if (data.customers && data.customers.length > 0) {
-      const cliente = data.customers[0];
-      res.status(200).json({
-        nombre: cliente.name,
-        puntos: cliente.total_points
-      });
-    } else {
-      res.status(404).json({ error: "HappyCódigo no encontrado" });
+    if (!clienteData.customers || clienteData.customers.length === 0) {
+      return res.status(404).json({ error: "Cliente no encontrado" });
     }
-  } catch (error) {
-    res.status(500).json({ error: "Error consultando Loyverse" });
+
+    const cliente = clienteData.customers[0];
+
+    // 2. Retornar datos del cliente (incluye puntos)
+    return res.status(200).json({
+      nombre: cliente.name,
+      codigo: cliente.customer_code,
+      puntos: cliente.total_points,
+      email: cliente.email,
+      telefono: cliente.phone_number,
+    });
+  } catch (err) {
+    console.error("Error Loyverse:", err);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 }
