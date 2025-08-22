@@ -1,199 +1,451 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Consulta tus Puntos | HappyCorner</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consulta tus Puntos | HappyCorner</title>
+    
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Base Styles & Mobile First */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            color: #222;
+        }
+        body {
+            background: #f0f2f5;
+        }
 
-<link rel="icon" type="image/png" href="/happyfavicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        /* --- Header --- */
+        header {
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            min-height: 80px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header img {
+            height: 65px;
+            max-width: 80%;
+            object-fit: contain;
+            object-position: left;
+        }
+        .menu-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 101;
+            color: #222;
+            display: block;
+        }
+        nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+        nav.open {
+            display: flex;
+        }
+        nav a {
+            color: #333;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #ff69b4;
+            transform: scale(1.05);
+        }
+        .cart-icon {
+            display: none;
+        }
 
-<style>
-/* --- ESTILOS IGUAL A LOS QUE YA TENÍAS --- */
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; color:#222; }
-body { background:#f0f2f5; }
-header { background: linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); padding:1rem; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:100; min-height:80px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-header img { height:65px; max-width:80%; object-fit:contain; object-position:left; }
-.menu-btn { font-size:2rem; background:none; border:none; cursor:pointer; z-index:101; color:#222; display:block; }
-nav { position:absolute; top:100%; left:0; width:100%; background-color:rgba(255,255,255,0.95); backdrop-filter:blur(10px); display:none; flex-direction:column; align-items:center; padding:1rem 0; box-shadow:0 4px 8px rgba(0,0,0,0.15); z-index:100; }
-nav.open { display:flex; }
-nav a { color:#333; text-decoration:none; padding:0.8rem 1.5rem; font-weight:500; transition:color 0.3s ease; }
-nav a:hover { color:#ff69b4; transform:scale(1.05); }
-.cart-icon { display:none; }
-main { display:flex; flex-direction:column; align-items:center; gap:2rem; padding:1.5rem 1rem; max-width:1200px; margin:0 auto; }
-.page-title { text-align:center; font-size:2.5rem; font-weight:700; margin:1rem 0 2rem; color:#ff69b4; position:relative; padding-bottom:15px; }
-.page-title::after { content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:80px; height:5px; background-color:#ffa500; border-radius:3px; }
-.puntos-container { width:100%; max-width:500px; background:white; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); padding:2rem; text-align:center; }
-.puntos-container h2 { font-size:1.6rem; font-weight:600; color:#333; margin-bottom:1.5rem; border-bottom:2px solid #f0e68c; padding-bottom:0.8rem; }
-.consulta-form input { width:100%; padding:12px 10px; margin-bottom:15px; border:2px solid #ddd; border-radius:8px; font-size:16px; transition:border-color 0.3s; }
-.consulta-form input:focus { outline:none; border-color:#ff69b4; }
-.consulta-form button { width:100%; padding:12px; background:linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); color:white; border:none; border-radius:8px; font-size:18px; font-weight:600; cursor:pointer; transition:background 0.3s; }
-.consulta-form button:hover { background:linear-gradient(to right,#e6569f,#e09500,#d3d97f); }
-#resultados-container { margin-top:25px; text-align:left; }
-.info-card { background-color:#f9f9f9; border-radius:10px; padding:20px; border:1px solid #eee; }
-.info-card h3 { color:#ff6347; margin-top:0; border-bottom:2px solid #ff6347; padding-bottom:5px; }
-.info-card p { margin:5px 0; }
-.info-card ul { list-style:none; padding:0; }
-.info-card ul li { background:#fff; padding:10px; border-radius:6px; border:1px solid #eee; margin-bottom:10px; }
-.info-card a { color:#ff69b4; text-decoration:none; font-weight:600; margin-top:15px; display:inline-block; }
-.info-card a:hover { text-decoration:underline; }
-.error { color:#d9534f; font-weight:600; text-align:center; }
-.loader { border:4px solid #f3f3f3; border-radius:50%; border-top:4px solid #ff69b4; width:30px; height:30px; animation:spin 2s linear infinite; margin:0 auto 15px; }
-@keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
-footer { background:#222; color:#eee; padding:2rem 1rem; text-align:center; margin-top:3rem; box-shadow:0 -2px 10px rgba(0,0,0,0.1); }
-.footer-content { max-width:900px; margin:0 auto; }
-.social-icons a { color:white; font-size:1.5rem; margin:0 10px; transition:color 0.3s ease; }
-.social-icons a:hover { color:#ff69b4; }
-.footer-links { margin-top:1.5rem; display:flex; flex-wrap:wrap; justify-content:center; gap:15px; }
-.footer-links a { color:#eee; text-decoration:none; font-size:0.95rem; transition:color 0.3s ease; }
-.footer-links a:hover { color:#ff69b4; }
-@media (min-width:768px){header{padding:0.5rem 2rem;min-height:100px}header img{height:80px}.menu-btn{display:none}nav{position:static;display:flex;flex-direction:row;width:auto;background-color:transparent;backdrop-filter:none;box-shadow:none;padding:0}nav a{padding:0.7rem 1.2rem;color:#222}nav a:hover{color:#ff69b4;text-decoration:underline;transform:none}main{flex-direction:column;justify-content:center;align-items:center;padding-top:3rem;padding-bottom:3rem}.puntos-container{max-width:600px}}
-</style>
+        /* --- Main Content & Puntos Section Styles --- */
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1rem 0 2rem;
+            color: #ff69b4;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        .page-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 5px;
+            background-color: #ffa500;
+            border-radius: 3px;
+        }
+
+        /* Puntos Container - Styled like a main content card */
+        .puntos-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            text-align: center;
+        }
+        .puntos-container h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0e68c;
+            padding-bottom: 0.8rem;
+        }
+        .consulta-form input {
+            width: 100%;
+            padding: 12px 10px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .consulta-form input:focus {
+            outline: none;
+            border-color: #ff69b4;
+        }
+        .consulta-form button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .consulta-form button:hover {
+            background: linear-gradient(to right, #e6569f, #e09500, #d3d97f);
+        }
+        
+        /* Resultados Card - Nested inside the main card */
+        #resultados-container {
+            margin-top: 25px;
+            text-align: left;
+        }
+        .info-card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #eee;
+        }
+        .info-card h3 {
+            color: #ff6347;
+            margin-top: 0;
+            border-bottom: 2px solid #ff6347;
+            padding-bottom: 5px;
+        }
+        .info-card p {
+            margin: 5px 0;
+        }
+        .info-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .info-card ul li {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        .info-card ul li:last-child {
+            margin-bottom: 0;
+        }
+        .info-card a {
+            color: #ff69b4;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        .info-card a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #d9534f;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #222;
+            color: #eee;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        .social-icons a:hover {
+            color: #ff69b4;
+        }
+        .footer-links {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .footer-links a {
+            color: #eee;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #ff69b4;
+        }
+
+        /* --- Media Queries for Desktop --- */
+        @media (min-width: 768px) {
+            header {
+                padding: 0.5rem 2rem;
+                min-height: 100px;
+            }
+            header img {
+                height: 80px;
+            }
+            .menu-btn {
+                display: none;
+            }
+            nav {
+                position: static;
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                background-color: transparent;
+                backdrop-filter: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            nav a {
+                padding: 0.7rem 1.2rem;
+                color: #222;
+            }
+            nav a:hover {
+                color: #ff69b4;
+                text-decoration: underline;
+                transform: none;
+            }
+            main {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+            .puntos-container {
+                max-width: 600px;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <header>
-<img src="loguito.png" alt="Happy Shop Logo" />
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
-<nav id="menu">
-<a href="index.html">Inicio</a>
-<a href="catalogo.html">Catálogo</a>
-<a href="order.html">Happy Order</a>
-<a href="puntos.html">Happy Puntos</a>
-<a href="terminos.html">Términos</a>
-</nav>
+    <img src="loguito.png" alt="Happy Shop Logo" />
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <nav id="menu">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="order.html">Happy Order</a>
+        <a href="puntos.html">Happy Puntos</a>
+        <a href="terminos.html">Términos</a>
+    </nav>
 </header>
 
 <main>
-<h1 class="page-title">Consulta tus Puntos Happy 🥳</h1>
-<section class="puntos-container">
-<h2>Ingresa tu Código y PIN</h2>
-<form class="consulta-form" id="consulta-form">
-<input type="text" id="happy-code-input" placeholder="Tu HappyCódigo" required>
-<input type="password" id="happy-pin-input" placeholder="Tu PIN (6 dígitos)" required minlength="6" maxlength="6">
-<button type="submit">Consultar</button>
-</form>
-<div id="resultados-container"></div>
-</section>
+    <h1 class="page-title">Consulta tus Puntos Happy 🥳</h1>
+    <section class="puntos-container">
+        
+                <div id="happy-puntos-login">
+            <h2>Ingresa tu HappyCódigo y PIN</h2>
+            <form class="consulta-form" id="consulta-form">
+                <input type="text" id="happy-code-input" placeholder="Tu HappyCódigo" required>
+                <input type="password" id="happy-pin-input" placeholder="Tu PIN de 6 dígitos" required>
+                <button type="submit">Ver mis Puntos</button>
+            </form>
+            <p id="error-message" class="error" style="display:none;"></p>
+        </div>
+        
+                <div id="resultados-container"></div>
+    </section>
 </main>
 
 <footer>
-<div class="footer-content">
-<div class="social-icons">
-<a href="#"><i class="fab fa-instagram"></i></a>
-<a href="#"><i class="fab fa-facebook-f"></i></a>
-<a href="#"><i class="fab fa-whatsapp"></i></a>
-</div>
-<div class="footer-links">
-<a href="terminos.html">Términos y Condiciones</a>
-<a href="mailto:soporte@happycorner.lol">Contáctanos</a>
-<a href="catalogo.html">Ver Todo el Catálogo</a>
-</div>
-</div>
+    <div class="footer-content">
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <div class="footer-links">
+            <a href="terminos.html">Términos y Condiciones</a>
+            <a href="mailto:soporte@happycorner.lol">Contáctanos</a>
+            <a href="catalogo.html">Ver Todo el Catálogo</a>
+        </div>
+    </div>
 </footer>
 
 <script>
-function toggleMenu(){document.getElementById('menu').classList.toggle('open');}
+    function toggleMenu() {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('open');
+    }
 
-const API_URL = 'https://happy-corner.vercel.app/api/getPoints'; // Tu endpoint real de Vercel
+    // La URL de tu función sin servidor en Vercel
+    // Por si cambias el nombre del archivo 'get-customer-data'
+    const API_URL = '/api/get-customer-data';
 
-const form = document.getElementById('consulta-form');
-const codeInput = document.getElementById('happy-code-input');
-const pinInput = document.getElementById('happy-pin-input');
-const resultsContainer = document.getElementById('resultados-container');
+    const form = document.getElementById('consulta-form');
+    const happyCodeInput = document.getElementById('happy-code-input');
+    const happyPinInput = document.getElementById('happy-pin-input');
+    const resultsContainer = document.getElementById('resultados-container');
+    const loginSection = document.getElementById('happy-puntos-login');
+    const errorMessage = document.getElementById('error-message');
 
-form.addEventListener('submit', async e=>{
-    e.preventDefault();
-    const customerCode = codeInput.value.trim();
-    const customerPin = pinInput.value.trim();
-    if(!customerCode||!customerPin){resultsContainer.innerHTML=`<p class="error">Por favor, ingresa tu HappyCódigo y PIN.</p>`;return;}
-    resultsContainer.innerHTML=`<div class="loader"></div><p style="text-align:center;">Consultando...</p>`;
-    try{
-        const response=await fetch(API_URL,{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({customerCode,customerPin})
-        });
-        const data=await response.json();
-        resultadosContainer.innerHTML='';
-        if(data.success){
-            const customer=data.customer;
-            resultadosContainer.innerHTML=`
-            <div class="info-card">
-            <h3>¡Hola, ${customer.name}!</h3>
-            <p><strong>HappyCódigo:</strong> ${customer.customer_code}</p>
-            <p><strong>Puntos Happy:</strong> ${customer.total_points}</p>
-            <p><strong>Correo:</strong> ${customer.email}</p>
-            </div>`;
-        }else{
-            resultadosContainer.innerHTML=`<p class="error">${data.message}</p>`;
-        }
-    }catch(err){console.error(err); resultadosContainer.innerHTML=`<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;}
-});
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const codigo = happyCodeInput.value.trim();
+        const pin = happyPinInput.value.trim();
+
+        if (!codigo || !pin) {
+            errorMessage.textContent = 'Por favor, completa ambos campos.';
+            errorMessage.style.display = 'block';
+            return;
+        }
+
+        resultsContainer.innerHTML = `<p style="text-align:center;">Cargando tus puntos...</p>`;
+        resultsContainer.style.display = 'block';
+        errorMessage.style.display = 'none';
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ customerCode: codigo, customerPin: pin })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                const customer = result.customer;
+                showCustomerData(customer);
+            } else {
+                resultsContainer.innerHTML = `<p class="error" style="display:block;">${result.message || 'Error desconocido'}</p>`;
+            }
+
+        } catch (error) {
+            console.error(error);
+            resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Intenta de nuevo más tarde.</p>`;
+        }
+    });
+
+    function showCustomerData(customer) {
+        const balance = customer.balance ? customer.balance.amount : 0;
+        
+        loginSection.style.display = 'none';
+
+        // Aquí el HTML para mostrar el saldo y la opción de canje
+        resultsContainer.innerHTML = `
+            <div class="info-card">
+                <h3>¡Hola, ${customer.given_name || 'cliente'}!</h3>
+                <p><strong>Tu saldo actual es:</strong></p>
+                <p style="font-size: 1.8rem; font-weight: 700; color: #ff69b4; text-align: center;">${balance.toLocaleString('es-CO')} COP</p>
+                
+                <div id="redeem-section" style="margin-top: 20px;">
+                    <h4>Usar mis Happy Puntos:</h4>
+                    <p>Puedes usar parte o la totalidad de tu saldo para tu compra.</p>
+                    <input type="number" id="redeemAmount" value="${balance}" min="0" max="${balance}">
+                    <button onclick="applyRedemption(${balance})">Aplicar Puntos</button>
+                </div>
+                <p id="redeem-info" style="text-align:center; margin-top: 15px; font-weight: 600;"></p>
+            </div>
+        `;
+    }
+
+    function applyRedemption(maxBalance) {
+        const redeemAmountInput = document.getElementById('redeemAmount');
+        const redeemInfo = document.getElementById('redeem-info');
+        
+        const redeemAmount = parseInt(redeemAmountInput.value);
+
+        if (isNaN(redeemAmount) || redeemAmount > maxBalance || redeemAmount < 0) {
+            redeemInfo.textContent = 'La cantidad no es válida. Intenta de nuevo.';
+            redeemInfo.style.color = '#d9534f';
+            return;
+        }
+
+        redeemInfo.textContent = `¡Listo! Has decidido usar ${redeemAmount.toLocaleString('es-CO')} COP. Por favor, contáctanos por WhatsApp para finalizar tu pago.`;
+        redeemInfo.style.color = '#28a745';
+
+        // Aquí puedes construir el mensaje de WhatsApp automáticamente si quieres
+        // y redirigir al cliente
+        const whatsappMessage = `Hola, quiero hacer un pedido y usar ${redeemAmount.toLocaleString('es-CO')} de mis Happy Puntos. Mi HappyCódigo es: ${happyCodeInput.value.trim()}`;
+        const whatsappUrl = `https://wa.me/34641422390?text=${encodeURIComponent(whatsappMessage)}`;
+        
+        // Opcional: crea un botón de WhatsApp para que el cliente haga clic
+        const whatsappButton = `<a href="${whatsappUrl}" target="_blank" style="display:inline-block; margin-top:15px; padding:10px 20px; background-color:#25D366; color:white; border-radius:8px; text-decoration:none; font-weight:600;"><i class="fab fa-whatsapp"></i> Finalizar por WhatsApp</a>`;
+        redeemInfo.insertAdjacentHTML('afterend', whatsappButton);
+    }
+
 </script>
 
 </body>
 </html>
-    </div>
-</footer>
-
-<script>
-    function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('open');
-    }
-
-    const API_URL = 'https://happy-corner.vercel.app/api/get-customer-data'; // Reemplaza con la URL de tu proyecto
-    const form = document.getElementById('consulta-form');
-    const codeInput = document.getElementById('happy-code-input');
-    const pinInput = document.getElementById('happy-pin-input');
-    const resultsContainer = document.getElementById('resultados-container');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const customerCode = codeInput.value.trim();
-        const customerPin = pinInput.value.trim();
-
-        if (!customerCode || !customerPin) {
-            resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo y PIN.</p>`;
-            return;
-        }
-
-        resultsContainer.innerHTML = `<div class="loader"></div><p style="text-align: center;">Consultando...</p>`;
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ customerCode, customerPin }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                resultsContainer.innerHTML = `<p class="error">${data.message || 'Error desconocido al buscar tu código.'}</p>`;
-                return;
-            }
-            
-            const customer = data.customer;
-
-            resultsContainer.innerHTML = `
-                <div class="info-card">
-                    <h3>¡Hola, ${customer.name}!</h3>
-                    <p><strong>HappyCódigo:</strong> ${customer.customer_code}</p>
-                    <p><strong>Puntos Happy:</strong> ${customer.total_points}</p>
-                    <p><strong>Correo:</strong> ${customer.email}</p>
-                </div>
-            `;
-        } catch (error) {
-            console.error(error);
-            resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
-        }
-    });
-</script>
-
-</body>
-</html>ahlelas
