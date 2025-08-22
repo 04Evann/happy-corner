@@ -1,5 +1,7 @@
+// /api/getPoints.js (Reemplaza todo el código actual en Vercel)
+
 export default async function handler(req, res) {
-  // CORS: Permite que tu frontend en GitHub Pages se comunique con este backend en Vercel
+  // CORS: Permite que tu frontend de GitHub Pages se comunique con este backend
   res.setHeader('Access-Control-Allow-Origin', 'https://happycorner.lol');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -29,11 +31,10 @@ export default async function handler(req, res) {
     return r.json();
   }
 
-  // Búsqueda paginada: busca al cliente en todas las páginas de la API
   async function findCustomerByCode(happyCode) {
     let cursor = null;
     let pageCount = 0;
-    const MAX_PAGES = 100; // Límite de seguridad
+    const MAX_PAGES = 100;
     while (pageCount < MAX_PAGES) {
       const q = cursor ? `?cursor=${encodeURIComponent(cursor)}&limit=250` : `?limit=250`;
       const data = await lvFetch(`/customers${q}`);
@@ -51,22 +52,21 @@ export default async function handler(req, res) {
     return null;
   }
 
-  // Obtiene las últimas 5 transacciones del cliente
   async function getLastReceiptsForCustomer(customerId, max = 5) {
     const out = [];
     let cursor = null;
     let pageCount = 0;
-    const MAX_PAGES = 200; // Límite de seguridad
+    const MAX_PAGES = 200;
     while (pageCount < MAX_PAGES && out.length < max) {
       const q = cursor ? `?cursor=${encodeURIComponent(cursor)}&limit=250&order=created_at_desc` : `?limit=250&order=created_at_desc`;
       const data = await lvFetch(`/receipts${q}`);
       for (const r of (data.receipts || [])) {
         if (r.customer_id === customerId) {
           out.push({
-            receipt_number: r.receipt_number,
-            created_at: r.created_at,
-            total_money: r.total_money,
-            store_id: r.store_id
+            recibo: r.receipt_number,
+            fecha: new Date(r.created_at).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }),
+            total: r.total_money,
+            tienda: r.store_id
           });
           if (out.length === max) {
             break;
@@ -92,9 +92,10 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       nombre: cliente.name,
+      id: cliente.id,
       happyCodigo: cliente.customer_code,
+      correo: cliente.email || 'No registrado',
       puntos: cliente.total_points,
-      customer_id: cliente.id,
       ultimas_transacciones: receipts
     });
   } catch (err) {
