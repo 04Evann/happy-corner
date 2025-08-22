@@ -1,0 +1,12 @@
+{
+  "name": "happy-corner-api",
+  "version": "1.0.0",
+  "description": "API para consultar puntos de Happy Corner",
+  "main": "api/get-customer-data.js",
+  "scripts": {
+    "start": "node api/get-customer-data.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
