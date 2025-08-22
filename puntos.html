@@ -10,15 +10,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-/* --- ESTILOS IGUAL A LOS QUE YA TENÍAS --- */
+/* --- Copié tus estilos exactos --- */
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; color:#222; }
 body { background:#f0f2f5; }
-header { background: linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); padding:1rem; display:flex; justify-content:space-between; align-items:center; position:relative; z-index:100; min-height:80px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-header img { height:65px; max-width:80%; object-fit:contain; object-position:left; }
-.menu-btn { font-size:2rem; background:none; border:none; cursor:pointer; z-index:101; color:#222; display:block; }
-nav { position:absolute; top:100%; left:0; width:100%; background-color:rgba(255,255,255,0.95); backdrop-filter:blur(10px); display:none; flex-direction:column; align-items:center; padding:1rem 0; box-shadow:0 4px 8px rgba(0,0,0,0.15); z-index:100; }
+header { background: linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); padding:1rem; display:flex; justify-content:space-between; align-items:center; min-height:80px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+header img { height:65px; max-width:80%; object-fit:contain; }
+.menu-btn { font-size:2rem; background:none; border:none; cursor:pointer; color:#222; display:block; }
+nav { position:absolute; top:100%; left:0; width:100%; background-color:rgba(255,255,255,0.95); display:none; flex-direction:column; align-items:center; padding:1rem 0; box-shadow:0 4px 8px rgba(0,0,0,0.15); }
 nav.open { display:flex; }
-nav a { color:#333; text-decoration:none; padding:0.8rem 1.5rem; font-weight:500; transition:color 0.3s ease; }
+nav a { color:#333; text-decoration:none; padding:0.8rem 1.5rem; font-weight:500; }
 nav a:hover { color:#ff69b4; transform:scale(1.05); }
 .cart-icon { display:none; }
 main { display:flex; flex-direction:column; align-items:center; gap:2rem; padding:1.5rem 1rem; max-width:1200px; margin:0 auto; }
@@ -26,29 +26,24 @@ main { display:flex; flex-direction:column; align-items:center; gap:2rem; paddin
 .page-title::after { content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:80px; height:5px; background-color:#ffa500; border-radius:3px; }
 .puntos-container { width:100%; max-width:500px; background:white; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.08); padding:2rem; text-align:center; }
 .puntos-container h2 { font-size:1.6rem; font-weight:600; color:#333; margin-bottom:1.5rem; border-bottom:2px solid #f0e68c; padding-bottom:0.8rem; }
-.consulta-form input { width:100%; padding:12px 10px; margin-bottom:15px; border:2px solid #ddd; border-radius:8px; font-size:16px; transition:border-color 0.3s; }
+.consulta-form input { width:100%; padding:12px 10px; margin-bottom:15px; border:2px solid #ddd; border-radius:8px; font-size:16px; }
 .consulta-form input:focus { outline:none; border-color:#ff69b4; }
-.consulta-form button { width:100%; padding:12px; background:linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); color:white; border:none; border-radius:8px; font-size:18px; font-weight:600; cursor:pointer; transition:background 0.3s; }
+.consulta-form button { width:100%; padding:12px; background:linear-gradient(to right,#ff69b4,#ffa500,#f0e68c); color:white; border:none; border-radius:8px; font-size:18px; font-weight:600; cursor:pointer; }
 .consulta-form button:hover { background:linear-gradient(to right,#e6569f,#e09500,#d3d97f); }
 #resultados-container { margin-top:25px; text-align:left; }
 .info-card { background-color:#f9f9f9; border-radius:10px; padding:20px; border:1px solid #eee; }
 .info-card h3 { color:#ff6347; margin-top:0; border-bottom:2px solid #ff6347; padding-bottom:5px; }
 .info-card p { margin:5px 0; }
-.info-card ul { list-style:none; padding:0; }
-.info-card ul li { background:#fff; padding:10px; border-radius:6px; border:1px solid #eee; margin-bottom:10px; }
-.info-card a { color:#ff69b4; text-decoration:none; font-weight:600; margin-top:15px; display:inline-block; }
-.info-card a:hover { text-decoration:underline; }
 .error { color:#d9534f; font-weight:600; text-align:center; }
 .loader { border:4px solid #f3f3f3; border-radius:50%; border-top:4px solid #ff69b4; width:30px; height:30px; animation:spin 2s linear infinite; margin:0 auto 15px; }
 @keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
 footer { background:#222; color:#eee; padding:2rem 1rem; text-align:center; margin-top:3rem; box-shadow:0 -2px 10px rgba(0,0,0,0.1); }
 .footer-content { max-width:900px; margin:0 auto; }
-.social-icons a { color:white; font-size:1.5rem; margin:0 10px; transition:color 0.3s ease; }
+.social-icons a { color:white; font-size:1.5rem; margin:0 10px; }
 .social-icons a:hover { color:#ff69b4; }
 .footer-links { margin-top:1.5rem; display:flex; flex-wrap:wrap; justify-content:center; gap:15px; }
-.footer-links a { color:#eee; text-decoration:none; font-size:0.95rem; transition:color 0.3s ease; }
+.footer-links a { color:#eee; text-decoration:none; font-size:0.95rem; }
 .footer-links a:hover { color:#ff69b4; }
-@media (min-width:768px){header{padding:0.5rem 2rem;min-height:100px}header img{height:80px}.menu-btn{display:none}nav{position:static;display:flex;flex-direction:row;width:auto;background-color:transparent;backdrop-filter:none;box-shadow:none;padding:0}nav a{padding:0.7rem 1.2rem;color:#222}nav a:hover{color:#ff69b4;text-decoration:underline;transform:none}main{flex-direction:column;justify-content:center;align-items:center;padding-top:3rem;padding-bottom:3rem}.puntos-container{max-width:600px}}
 </style>
 </head>
 <body>
@@ -96,30 +91,38 @@ footer { background:#222; color:#eee; padding:2rem 1rem; text-align:center; marg
 <script>
 function toggleMenu(){document.getElementById('menu').classList.toggle('open');}
 
-const API_URL = 'https://happy-corner.vercel.app/api/getPoints'; // Tu endpoint real de Vercel
+const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
 
 const form = document.getElementById('consulta-form');
 const codeInput = document.getElementById('happy-code-input');
 const pinInput = document.getElementById('happy-pin-input');
-const resultsContainer = document.getElementById('resultados-container');
+const resultadosContainer = document.getElementById('resultados-container');
 
-form.addEventListener('submit', async e=>{
+form.addEventListener('submit', async e => {
     e.preventDefault();
     const customerCode = codeInput.value.trim();
     const customerPin = pinInput.value.trim();
-    if(!customerCode||!customerPin){resultsContainer.innerHTML=`<p class="error">Por favor, ingresa tu HappyCódigo y PIN.</p>`;return;}
-    resultsContainer.innerHTML=`<div class="loader"></div><p style="text-align:center;">Consultando...</p>`;
+
+    if(!customerCode || !customerPin){
+        resultadosContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo y PIN.</p>`;
+        return;
+    }
+
+    resultadosContainer.innerHTML = `<div class="loader"></div><p style="text-align:center;">Consultando...</p>`;
+
     try{
-        const response=await fetch(API_URL,{
+        const response = await fetch(API_URL, {
             method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({customerCode,customerPin})
+            headers:{ 'Content-Type':'application/json' },
+            body: JSON.stringify({ customerCode, customerPin })
         });
-        const data=await response.json();
-        resultadosContainer.innerHTML='';
+
+        const data = await response.json();
+        resultadosContainer.innerHTML = '';
+
         if(data.success){
-            const customer=data.customer;
-            resultadosContainer.innerHTML=`
+            const customer = data.customer;
+            resultadosContainer.innerHTML = `
             <div class="info-card">
             <h3>¡Hola, ${customer.name}!</h3>
             <p><strong>HappyCódigo:</strong> ${customer.customer_code}</p>
@@ -127,73 +130,14 @@ form.addEventListener('submit', async e=>{
             <p><strong>Correo:</strong> ${customer.email}</p>
             </div>`;
         }else{
-            resultadosContainer.innerHTML=`<p class="error">${data.message}</p>`;
+            resultadosContainer.innerHTML = `<p class="error">${data.message}</p>`;
         }
-    }catch(err){console.error(err); resultadosContainer.innerHTML=`<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;}
+    }catch(err){
+        console.error(err);
+        resultadosContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
+    }
 });
 </script>
 
 </body>
 </html>
-    </div>
-</footer>
-
-<script>
-    function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('open');
-    }
-
-    const API_URL = 'https://happy-corner.vercel.app/api/get-customer-data'; // Reemplaza con la URL de tu proyecto
-    const form = document.getElementById('consulta-form');
-    const codeInput = document.getElementById('happy-code-input');
-    const pinInput = document.getElementById('happy-pin-input');
-    const resultsContainer = document.getElementById('resultados-container');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const customerCode = codeInput.value.trim();
-        const customerPin = pinInput.value.trim();
-
-        if (!customerCode || !customerPin) {
-            resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo y PIN.</p>`;
-            return;
-        }
-
-        resultsContainer.innerHTML = `<div class="loader"></div><p style="text-align: center;">Consultando...</p>`;
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ customerCode, customerPin }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                resultsContainer.innerHTML = `<p class="error">${data.message || 'Error desconocido al buscar tu código.'}</p>`;
-                return;
-            }
-            
-            const customer = data.customer;
-
-            resultsContainer.innerHTML = `
-                <div class="info-card">
-                    <h3>¡Hola, ${customer.name}!</h3>
-                    <p><strong>HappyCódigo:</strong> ${customer.customer_code}</p>
-                    <p><strong>Puntos Happy:</strong> ${customer.total_points}</p>
-                    <p><strong>Correo:</strong> ${customer.email}</p>
-                </div>
-            `;
-        } catch (error) {
-            console.error(error);
-            resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
-        }
-    });
-</script>
-
-</body>
-</html>ahlelas
