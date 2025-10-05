@@ -55,7 +55,7 @@
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.95); 
+            background-color: rgba(0, 0, 0, 0.95); 
             backdrop-filter: blur(5px);
             display: none;
             flex-direction: column;
@@ -258,7 +258,7 @@
             background: #B14424; /* Naranja Quemado */
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 0.9rem 1.5rem;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
@@ -267,6 +267,7 @@
             text-decoration: none;
             text-align: center;
             display: block; /* Para que los enlaces dentro de payment-details ocupen todo el ancho */
+            width: 100%;
         }
         #place-order-button:hover, .payment-details a:hover {
             background: #D35721; /* Naranja más oscuro al pasar el ratón */
@@ -285,6 +286,7 @@
             border-radius: 8px;
             margin-top: 1rem;
             border-left: 5px solid #F17E23;
+            font-size: 0.95rem;
         }
         .payment-details p {
             color: #bbb;
@@ -357,7 +359,7 @@
             }
             nav a {
                 padding: 0.7rem 1.2rem;
-                color: #eee; 
+                color: #eee; 
             }
             nav a:hover {
                 color: #F17E23;
@@ -407,18 +409,17 @@
 
             <div class="order-totals">
                 <p>Subtotal: <span id="subtotal-price">$0</span></p>
-                <p>Envío: <span id="shipping-price">Calculando...</span></p>
+                <p>Envío: <span id="shipping-price">Gratis</span></p>
                 <p class="total-price">Total: <span id="total-price">$0</span></p>
             </div>
         </section>
 
         <section class="checkout-form">
             <h2>Detalles de Contacto y Pago</h2>
-<form target="_blank" action="https://formsubmit.co/evanlensenmo@gmail.com" method="https://happycorner.lol/confirmed.html">
+            <form action="https://formsubmit.co/somos@happycorner.lol" method="POST">
                 
-                <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
-                <input type="hidden" name="_next" value="https://happycorner.lol/confirmed.html">
-                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_next" value="https://tudominio.com/confirmed.html"> 
+                
                 <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
                 <input type="hidden" name="Total del Pedido" id="total-price-hidden">
                 <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
@@ -530,13 +531,12 @@
         'efectivo': document.getElementById('efectivo-details')
     };
 
-    // Hidden inputs para FormSubmit
+    // Hidden inputs para el formulario
     const orderSummaryInput = document.getElementById('order-summary-input');
     const totalPriceHidden = document.getElementById('total-price-hidden');
     const cartContentHidden = document.getElementById('cart-content-hidden');
     const nequiNumberHidden = document.getElementById('nequi-number-hidden');
 
-    // Usamos 'happyCart' como nos indicaste
     let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
 
     function renderCart() {
@@ -547,7 +547,6 @@
             emptyCartMessage.style.display = 'block';
             document.querySelector('.order-totals').style.display = 'none';
             document.getElementById('place-order-button').disabled = true;
-            // Actualizar campos ocultos para carrito vacío
             orderSummaryInput.value = "Carrito vacío.";
             totalPriceHidden.value = "$0";
             cartContentHidden.value = "Carrito vacío.";
@@ -597,12 +596,9 @@
     }
 
     function updatePaymentDetailsDisplay() {
-        // Oculta todos los divs de detalles de pago
         for (const key in paymentDetailsDivs) {
             paymentDetailsDivs[key].style.display = 'none';
         }
-
-        // Muestra solo el div seleccionado
         const selectedMethod = paymentMethodSelect.value;
         if (paymentDetailsDivs[selectedMethod]) {
             paymentDetailsDivs[selectedMethod].style.display = 'block';
@@ -617,9 +613,7 @@
             summaryText += "El carrito estaba vacío al momento de enviar el pedido.\n";
         } else {
             cart.forEach(item => {
-                // Usamos el formato que querías para el email
                 summaryText += `- ${item.name} (x${item.quantity}): $${(item.price * item.quantity).toLocaleString('es-CO')}\n`;
-                // Contenido simplificado para el campo oculto
                 cartContentForHidden.push(`${item.name} (x${item.quantity})`);
             });
             summaryText += `\nSubtotal: ${subtotalPriceSpan.textContent}\n`;
