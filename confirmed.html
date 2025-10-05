@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HappyCorner - Pedido Confirmado 🎉</title>
+    
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Paleta: #7B2C13 (Base Oscura), #B14424 (Acento), #F17E23 (Vibrante) */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            color: #eee;
+        }
+
+        body {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* --- Header (Estructura de Menú Mobile/Desktop Consistente) --- */
+        header {
+            background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            min-height: 80px;
+            box-shadow: 0 4px 10px rgba(123, 44, 19, 0.4);
+        }
+
+        header .logo-img {
+            height: 65px;
+            max-width: 80%;
+            object-fit: contain;
+            object-position: left;
+        }
+
+        /* Botón de Menú (Solo en móvil) */
+        .menu-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 101;
+            color: #eee;
+            display: block;
+        }
+        
+        /* Contenedor de Navegación */
+        nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(5px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+        
+        nav.open {
+            display: flex;
+        }
+        
+        /* Estilo de los Enlaces sin Icono (Mobile) */
+        nav a {
+            color: #eee;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            width: 100%; /* Ocupa el ancho completo */
+            text-align: center;
+        }
+        
+        nav a:hover {
+            color: #F17E23;
+        }
+
+        /* --- Contenido Principal --- */
+        .confirmation-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-icon {
+            font-size: 5rem;
+            color: #F17E23;
+            margin-bottom: 1.5rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #eee;
+            margin-bottom: 0.5rem;
+        }
+        
+        .main-subtitle {
+            font-size: 1.2rem;
+            color: #bbb;
+            margin-bottom: 2rem;
+        }
+
+        .payment-message {
+            background-color: #1A1A1A;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid #F17E23;
+            width: 100%;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .payment-message h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #B14424;
+            margin-bottom: 0.5rem;
+        }
+        
+        .payment-message p {
+            font-size: 1rem;
+            color: #ccc;
+            line-height: 1.4;
+        }
+        
+        /* --- Botones --- */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; 
+            width: 100%;
+            max-width: 350px;
+            margin-top: 1rem;
+        }
+
+        /* Botón Comprobante (Estilo Wow) */
+        .btn-comprobante {
+            background: linear-gradient(to right, #F17E23, #B14424);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(241, 126, 35, 0.5);
+        }
+
+        .btn-comprobante:hover {
+            box-shadow: 0 6px 20px rgba(241, 126, 35, 0.7);
+            transform: translateY(-2px);
+            background: linear-gradient(to right, #B14424, #7B2C13);
+        }
+
+        /* Botón WhatsApp */
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25D366;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+            transform: scale(1.02);
+        }
+        
+        .btn-whatsapp i {
+            color: white;
+            margin-right: 8px;
+        }
+        
+        /* --- Footer --- */
+        footer {
+            background: #141414;
+            color: #eee;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: auto;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .footer-content p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #bbb;
+        }
+        
+        /* Animación para el icono de confirmación */
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        /* Media Queries - Escritorio (Desktop) */
+        @media (min-width: 768px) {
+            .main-title {
+                font-size: 3rem;
+            }
+            
+            /* Header en Desktop */
+            header {
+                padding: 0.5rem 2rem;
+                min-height: 100px;
+            }
+            .menu-btn {
+                display: none;
+            }
+            nav {
+                position: static;
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                background-color: transparent;
+                backdrop-filter: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            nav a {
+                padding: 0.7rem 1.2rem;
+                color: #eee;
+            }
+            nav a:hover {
+                color: #F17E23;
+                text-decoration: underline;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="loguito.png" alt="Happy Corner Logo" class="logo-img" />
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <nav id="menu">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">Happy Order</a>
+            <a href="puntos.html">Happy Puntos</a>
+            <a href="terminos.html">Términos</a>
+        </nav>
+    </header>
+
+    <main class="confirmation-container">
+        <i class="fas fa-check-circle main-icon"></i>
+        <h1 class="main-title">¡Pedido Recibido!</h1>
+        <p class="main-subtitle">Tu orden ha sido procesada con éxito y está lista para ser preparada.</p>
+        
+        <div class="payment-message" id="paymentDetails">
+            <h3>Procesando Pago...</h3>
+            <p>Hemos recibido tu pedido y te contactaremos por WhatsApp o vía E-Mail con la información de confirmación.</p>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn-comprobante" onclick="showReceiptModal()">
+                <i class="fas fa-receipt"></i> Ver Comprobante
+            </button>
+            
+            <a href="#" id="whatsappLink" class="btn-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+            </a>
+        </div>
+        
+        <div id="receiptModal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+            <div style="background: #1A1A1A; padding: 30px; border-radius: 10px; max-width: 400px; width: 90%; color: #eee; text-align: left; border: 2px solid #F17E23;">
+                <h3 style="color: #F17E23; margin-bottom: 15px; text-align: center;">Comprobante de Pedido Happycorner</h3>
+                <p id="receiptContent" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.6;"></p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="closeReceiptModal()" style="background-color: #B14424; color: white; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer;">Cerrar</button>
+                    <button onclick="window.print()" style="background-color: #7B2C13; color: white; padding: 10px 20px; border: none; border-radius: 20px; cursor: pointer; margin-left: 10px;"><i class="fas fa-print"></i> Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>Gracias por tu compra. En breve recibirás un correo con todos los detalles.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Función para el menú de hamburguesa
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const paymentDetailsDiv = document.getElementById('paymentDetails');
+            const whatsappLink = document.getElementById('whatsappLink');
+            
+            // Obtener el método de pago desde la URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentMethod = urlParams.get('method'); 
+            const orderId = "HAPPY-" + Math.floor(Math.random() * 900000); // ID Simulado
+            
+            // --- Configuración de WhatsApp (🚨 RECUERDA CAMBIAR ESTE NÚMERO) ---
+            const whatsappNumber = '34641422390'; // REEMPLAZAR con tu número real (Ej: 573001234567)
+            let defaultMessage = `Hola, mi pedido ${orderId} acaba de ser confirmado. Quisiera verificar el estado.`;
+
+            let messageHTML = '';
+            
+            switch(paymentMethod) {
+                case 'nequi':
+                    messageHTML = `
+                        <h3>Pedido confirmado 📲</h3>
+                        <p>Hemos recibido tu pedido y estamos validando la transferencia. En breve te **contactaremos por WhatsApp o vía Correo** con la confirmación final y los detalles de envío.</p>
+                        <p style="margin-top: 10px; font-weight: 600;">ID de Pedido: ${orderId}</p>
+                    `;
+                    defaultMessage = `Hola, acabo de pagar por Nequi mi pedido ${orderId}. ¿Me pueden ayudar a confirmar?`;
+                    break;
+                case 'happycode':
+                    messageHTML = `
+                        <h3>Pago Vía HappyCode Confirmado 🌟</h3>
+                        <p>¡Hemos recibido tu pedido! Los puntos no han sido descontados, necesitaremos que nos **contactes por WhatsApp o vía E-Mail** para confirmar tu envío. </p>
+                        <p style="margin-top: 10px; font-weight: 600;">ID de Pedido: ${orderId}</p>
+                    `;
+                    defaultMessage = `Hola, mi pedido ${orderId} fue con HappyCode. Necesito contactarlos para confirmar mi envío.`;
+                    break;
+                case 'creditcard':
+                    messageHTML = `
+                        <h3>Pago con Tarjeta Confirmado 💳</h3>
+                        <p>El cargo a tu tarjeta ha sido aprobado. Tu pedido ya está en producción. Te **contactaremos por WhatsApp o vía E-Mail** para los detalles de entrega.</p>
+                        <p style="margin-top: 10px; font-weight: 600;">ID de Pedido: ${orderId}</p>
+                    `;
+                    break;
+                case 'efectivo':
+                    messageHTML = `
+                        <h3>Pago Contra Entrega (Efectivo) <i class="fa-solid fa-money-bill"></i></h3>
+                        <p>Hemos **recibido tu pedido** y será enviado. Te **contactaremos por WhatsApp o vía E-Mail** para confirmar el monto exacto a pagar al momento de la entrega.</p>
+                        <p style="margin-top: 10px; font-weight: 600;">ID de Pedido: ${orderId}</p>
+                    `;
+                    break;
+                case 'applepay':
+                    messageHTML = `
+                        <h3>Pago con <i class="fa-brands fa-cc-apple-pay"></i></h3>
+                        <p>Contactanos por **WhatsApp** para seguir con tu pedido.</p>
+                        <p style="margin-top: 10px; font-weight: 600;">ID de Pedido: ${orderId}</p>
+                    `;
+                    defaultMessage = `Hola, mi pedido ${orderId} lo pagué con Apple Pay. Estoy contactando para seguir con mi pedido.`;
+                    break;
+                case 'pse':
+                    messageHTML = `
+                        <h3>Orden Confirmada! 🏦</h3>
+                        <p>Hemos recibido tu pedido. Contactanos por **WhatsApp** para proceder con el pago por PSE</p>
+                        <p style="margin-top: 10px; font-weight: 600;">ID de Pedido: ${orderId}</p>
+                    `;
+                    defaultMessage = `Hola, mi pedido ${orderId} fue por PSE. Estoy contactando para proceder con el pago.`;
+                    break;
+                default:
+                    messageHTML = `
+                        <h3>Detalles de Pago</h3>
+                        <p>Hemos **recibido tu pedido**. Revisa tu correo electrónico, te **contactaremos por WhatsApp o vía E-Mail** con la información de confirmación.</p>
+                        <p style="margin-top: 10px; font-weight: 600;">ID de Pedido: ${orderId}</p>
+                    `;
+            }
+
+            paymentDetailsDiv.innerHTML = messageHTML;
+            
+            // Asignar el enlace de WhatsApp dinámicamente
+            whatsappLink.href = `https://wa.me/34641422390?text=${encodeURIComponent(defaultMessage)}`;
+        });
+
+        // --- Lógica del Modal/Comprobante WOW ---
+
+        function showReceiptModal() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentMethod = urlParams.get('method') || 'Desconocido';
+            const orderId = document.querySelector('.payment-message p:last-child').textContent.replace('ID de Pedido: ', '').trim();
+            const total = "$45.000 COP"; // Simulación 
+            const date = new Date().toLocaleDateString('es-CO');
+
+            const receiptText = 
+`-------------------------------------
+🌟 Happycorner 
+-------------------------------------
+ID de Pedido:  ${orderId}
+Método de Pago: ${paymentMethod.toUpperCase()}
+Fecha de Compra: ${date}
+Total Pagado:   ${total}
+Estado:         CONFIRMADO
+-------------------------------------
+*Este no es un documento oficial ni sera considerado una factura oficial. Los detalles finales serán enviados por correo.*
+¡Gracias por tu compra!
+`;
+            
+            document.getElementById('receiptContent').textContent = receiptText;
+            document.getElementById('receiptModal').style.display = 'flex';
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
