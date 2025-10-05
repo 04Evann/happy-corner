@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
@@ -10,34 +10,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Paleta Usada:
+           - Base Profunda/Header Start: #7B2C13 (Marrón Oscuro)
+           - Botones/Acentos: #B14424 (Naranja Quemado)
+           - Highlights/Vibrante: #F17E23 (Naranja Calabaza)
+           - Fondo: #000 (Negro Puro)
+        */
+
         /* Base Styles & Mobile First */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            color: #222; /* Default text color */
+            color: #eee; 
         }
 
         body {
-            background: #f0f2f5; /* Light grey background for a clean look */
+            /* CAMBIO CLAVE: Fondo principal en Negro Puro para contraste */
+            background: #000; 
         }
 
         /* --- Header --- */
         header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
             padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
             z-index: 100;
-            min-height: 80px; /* Ensure header has enough height */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            min-height: 80px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
         }
 
         header img {
-            height: 65px; /* Adjust logo size for mobile */
+            height: 65px; 
             max-width: 80%;
             object-fit: contain;
             object-position: left;
@@ -49,8 +57,8 @@
             border: none;
             cursor: pointer;
             z-index: 101;
-            color: #222;
-            display: block; /* Visible on mobile */
+            color: #222; 
+            display: block; 
         }
 
         nav {
@@ -58,67 +66,57 @@
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.95); /* Slightly less transparent */
-            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.95); 
+            backdrop-filter: blur(5px);
             display: none;
             flex-direction: column;
             align-items: center;
             padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow for menu */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
             z-index: 100;
         }
 
-        nav.open {
-            display: flex;
-        }
-
         nav a {
-            color: #333; /* Slightly darker for better readability */
+            color: #eee; 
             text-decoration: none;
             padding: 0.8rem 1.5rem;
             font-weight: 500;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
         }
 
         nav a:hover {
-            color: #ff69b4;
-            transform: scale(1.05); /* Subtle hover effect */
+            color: #F17E23; 
+            transform: scale(1.05); 
         }
-
-        /* --- Main Content Sections --- */
-        main {
-            padding: 1rem 0;
-        }
-
+        
         /* --- Carousel --- */
         .carousel-container {
             width: 90%;
-            max-width: 900px; /* Max width for consistency */
-            margin: 1.5rem auto; /* Adjusted top margin since hero is removed */
+            max-width: 900px;
+            margin: 1.5rem auto;
             position: relative;
-            border-radius: 15px; /* Softer rounded corners */
+            border-radius: 15px; 
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle elevation */
-            aspect-ratio: 16 / 9; /* Maintain aspect ratio for height */
-            height: auto; /* Let aspect-ratio control height */
+            /* Sombra para elevar el carrusel */
+            box-shadow: 0 4px 15px rgba(123, 44, 19, 0.5); 
+            aspect-ratio: 16 / 9;
+            height: auto; 
         }
         
-        /* Mobile specific height for carousel if aspect-ratio is not enough */
         @media (max-width: 767px) {
             .carousel-container {
-                height: 200px; /* Fixed height for smaller mobile screens */
+                height: 200px;
             }
         }
 
-
         .carousel-image {
             width: 100%;
-            height: 100%; /* Take full height of container */
+            height: 100%;
             object-fit: cover;
-            display: block; /* Remove extra space below image */
+            display: block;
             position: absolute;
             opacity: 0;
-            transition: opacity 0.8s ease-in-out; /* Faster transition for snappier feel */
+            transition: opacity 0.8s ease-in-out;
         }
 
         .carousel-image.active {
@@ -129,20 +127,19 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 2.5rem; /* Larger arrows */
-            color: #fff;
-            background: rgba(0, 0, 0, 0.4); /* Darker overlay for better contrast */
+            font-size: 2.5rem;
+            background: rgba(123, 44, 19, 0.8); /* Marrón Profundo */
             border: none;
             padding: 0.5rem 1rem;
             cursor: pointer;
             z-index: 10;
-            border-radius: 8px; /* Slightly rounded for softness */
+            border-radius: 8px;
             user-select: none;
             transition: background 0.3s ease;
         }
 
         .carousel-button:hover {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(177, 68, 36, 0.9); /* Naranja Quemado */
         }
 
         .carousel-button.prev {
@@ -158,8 +155,8 @@
             text-align: center;
             font-size: 1.8rem;
             font-weight: 600;
-            margin: 3rem 1rem 1.5rem; /* More vertical spacing */
-            color: #ff69b4; /* Your brand color */
+            margin: 3rem 1rem 1.5rem;
+            color: #B14424; /* Naranja Quemado */
             position: relative;
             padding-bottom: 10px;
         }
@@ -172,42 +169,46 @@
             transform: translateX(-50%);
             width: 60px;
             height: 4px;
-            background-color: #ffa500; /* Accent line */
+            background-color: #F17E23; /* Naranja Vibrante */
             border-radius: 2px;
         }
 
         /* --- Product Grids --- */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Larger minimum width */
-            gap: 1.5rem; /* More space between cards */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
             padding: 0 1rem;
             max-width: 1000px;
             margin: 0 auto 2rem;
         }
 
         .product-card {
-            background: white;
-            border-radius: 12px; /* Smoother corners for cards */
+            /* CAMBIO CLAVE: Fondo de tarjeta distinto al body */
+            background: #1A1A1A; /* Gris Oscuro */
+            border-radius: 12px; 
             padding: 1rem;
             text-align: center;
             font-size: 0.9rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Stronger but still subtle shadow */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover effects */
-            display: flex; /* For better content alignment */
+            /* Sombra más marcada en un fondo negro */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
         .product-card:hover {
-            transform: translateY(-5px); /* Lift effect on hover */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+            transform: translateY(-5px);
+            /* CAMBIO CLAVE: Borde exterior de Naranja Calabaza para enfatizar el "cuadrito" */
+            box-shadow: 0 0 0 2px #F17E23, /* Borde sólido */
+                        0 8px 20px rgba(0, 0, 0, 0.5); /* Sombra elevada */
         }
 
         .product-img-container {
-            background: #f9f9f9; /* Lighter background for image area */
-            height: 120px; /* Taller image area */
-            border-radius: 8px; /* Rounded corners for image container */
+            background: #333; /* Gris más oscuro para el área de la imagen */
+            height: 120px;
+            border-radius: 8px;
             margin-bottom: 0.8rem;
             overflow: hidden;
             display: flex;
@@ -218,47 +219,46 @@
         .product-img-container img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Use contain for products like Robux/Spotify logos */
-            border-radius: 8px; /* Rounded corners for image itself */
+            object-fit: contain;
+            border-radius: 8px;
         }
         
-        /* Specific image adjustments (if needed, example from catalogo) */
         .product-img-container img[alt*="RBX"],
         .product-img-container img[alt*="ALTSERVICE"],
         .product-img-container img[alt*="Spotify"] {
-            object-fit: contain; /* Ensure logos are fully visible */
-            height: 90%; /* Adjust height to give more padding inside container */
+            object-fit: contain;
+            height: 90%; 
             width: 90%;
         }
 
         .product-card h3 {
+            color: #eee; 
             font-size: 1.1rem;
             font-weight: 500;
             margin-bottom: 0.2rem;
-            color: #333;
         }
 
         .product-card .price {
             font-weight: 600;
-            color: #ffa500; /* Orange for price */
+            color: #F17E23; /* Naranja Vibrante */
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
         }
 
         .product-card .description {
             font-size: 0.85rem;
-            color: #666;
+            color: #bbb; /* Gris medio */
             margin-bottom: 0.8rem;
-            height: 40px; /* Fixed height for descriptions to keep cards uniform */
-            overflow: hidden; /* Hide overflow text */
-            text-overflow: ellipsis; /* Add ellipsis for long descriptions */
+            height: 40px; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* Limit to 2 lines */
+            -webkit-line-clamp: 2; 
             -webkit-box-orient: vertical;
         }
 
         .product-card button {
-            background: #ff69b4; /* Pink button */
+            background: #B14424; /* Naranja Quemado */
             color: white;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -266,27 +266,22 @@
             cursor: pointer;
             font-weight: 600;
             transition: background 0.3s ease, transform 0.2s ease;
-            margin-top: auto; /* Push button to bottom if card content varies */
+            margin-top: auto;
         }
 
         .product-card button:hover {
-            background: #e6569f; /* Darker pink on hover */
+            background: #D35721; /* Tono intermedio en hover */
             transform: translateY(-2px);
         }
 
         /* --- Footer --- */
         footer {
-            background: #222;
+            background: #000; /* Negro Puro */
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
             margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer-content {
-            max-width: 900px;
-            margin: 0 auto;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
         }
 
         .footer-content p {
@@ -303,7 +298,7 @@
         }
 
         .social-icons a:hover {
-            color: #ff69b4; /* Pink hover for social icons */
+            color: #F17E23; /* Naranja Vibrante hover */
         }
         
         .footer-links {
@@ -322,47 +317,47 @@
         }
 
         .footer-links a:hover {
-            color: #ff69b4;
+            color: #B14424; /* Naranja Quemado hover */
         }
 
 
-        /* --- Cart Icon (from catalogo/order) --- */
+        /* --- Cart Icon (Carrito Flotante) --- */
         .cart-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            border: 2px solid #ff69b4;
+            background: #1A1A1A;
+            border: 2px solid #F17E23;
             border-radius: 50%;
-            width: 55px; /* Slightly larger */
-            height: 55px; /* Slightly larger */
+            width: 55px; 
+            height: 55px; 
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem; /* Larger icon */
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2); /* More pronounced shadow */
+            font-size: 1.6rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5); 
             z-index: 10;
             text-decoration: none;
-            color: #222;
+            color: #eee;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
         }
 
         .cart-icon:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(241, 126, 35, 0.4); 
         }
 
         .cart-quantity {
             position: absolute;
-            top: -8px; /* Adjusted position */
-            right: -8px; /* Adjusted position */
-            background-color: #ffa500;
+            top: -8px; 
+            right: -8px; 
+            background-color: #B14424;
             color: white;
-            font-size: 0.9rem; /* Slightly larger text */
+            font-size: 0.9rem;
             font-weight: bold;
             border-radius: 50%;
-            padding: 3px 8px; /* More padding */
-            min-width: 24px; /* Minimum width for double digits */
+            padding: 3px 8px;
+            min-width: 24px;
             text-align: center;
             display: none;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
@@ -371,17 +366,17 @@
         /* --- Toast Notification Styles --- */
         .toast-container {
             position: fixed;
-            bottom: 90px; /* Above the cart icon */
+            bottom: 90px; 
             right: 20px;
             z-index: 1000;
             display: flex;
-            flex-direction: column-reverse; /* Newest toast on top */
+            flex-direction: column-reverse; 
             gap: 10px;
-            pointer-events: none; /* Allows clicks through to elements underneath */
+            pointer-events: none; 
         }
 
         .toast {
-            background-color: rgba(50, 50, 50, 0.9);
+            background-color: rgba(34, 34, 34, 0.95);
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
@@ -392,7 +387,7 @@
             min-width: 200px;
             max-width: 300px;
             text-align: center;
-            pointer-events: auto; /* Allows interaction with the toast itself */
+            pointer-events: auto;
         }
 
         .toast.show {
@@ -407,13 +402,13 @@
                 min-height: 100px;
             }
             header img {
-                height: 80px; /* Larger logo for desktop */
+                height: 80px; 
             }
             .menu-btn {
-                display: none; /* Hide hamburger menu */
+                display: none;
             }
             nav {
-                position: static; /* Static position for desktop nav */
+                position: static;
                 display: flex;
                 flex-direction: row;
                 width: auto;
@@ -424,22 +419,17 @@
             }
             nav a {
                 padding: 0.7rem 1.2rem;
-                color: #222; /* Text color for desktop nav */
+                color: #222; /* Texto en header claro es oscuro */
             }
             nav a:hover {
-                color: #ff69b4;
+                color: #F17E23;
                 text-decoration: underline;
-                transform: none; /* Remove scale effect */
+                transform: none; 
             }
-
-            /* No hero section now */
 
             .carousel-container {
-                height: 350px; /* Taller carousel for desktop */
-                margin-top: 2rem; /* Adjusted top margin for desktop after hero removal */
-            }
-            .carousel-image {
-                height: 100%;
+                height: 350px; 
+                margin-top: 2rem; 
             }
 
             .section-title {
@@ -448,7 +438,7 @@
             }
 
             .products-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Larger cards for desktop */
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 2rem;
                 padding: 0 2rem;
             }
@@ -457,7 +447,7 @@
                 padding: 1.2rem;
             }
             .product-img-container {
-                height: 150px; /* Taller image container */
+                height: 150px; 
             }
 
             .cart-icon {
@@ -474,7 +464,7 @@
             }
 
             .toast-container {
-                bottom: 100px; /* Adjust for larger cart icon on desktop */
+                bottom: 100px;
                 right: 30px;
             }
         }
@@ -519,7 +509,7 @@
                 <p class="price">$24,500</p>
                 <button onclick="addToCartAndNotify('500 RBX', 24500)">Añadir al Carrito</button>
             </div>
-                        <div class="product-card">
+            <div class="product-card">
                 <div class="product-img-container"><img src="Robux_icon.png" alt="Candy Ranch"></div>
                 <h3>1000 RBX</h3>
                 <p class="description">HAPPYSISIMA PROMO EN RBX!!</p>
@@ -551,7 +541,7 @@
                 <p class="price">$700</p>
                 <button onclick="addToCartAndNotify('BomBomBum Clásico', 700)">Añadir al Carrito</button>
             </div>
-            </section>
+        </section>
     </main>
 
     <a href="order.html" class="cart-icon">
@@ -564,25 +554,24 @@
     <footer>
         <div class="footer-content">
             <div class="social-icons">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/happycornerca/"><i class="fab fa-instagram"></i></a>
+                <a href="https://bit.ly/HappyWhats1"><i class="fab fa-whatsapp"></i></a>
             </div>
             <div class="footer-links">
                 <a href="terminos.html">Términos y Condiciones</a>
-                <a href="mailto:tuemail@example.com">Contáctanos</a>
+                <a href="mailto:support@happycorner.lol">Contáctanos</a>
                 <a href="catalogo.html">Ver Todo el Catálogo</a>
             </div>
         </div>
     </footer>
 
     <script>
+        // Funciones de JavaScript (Menu, Carousel, Cart, Toast) - Se mantienen sin cambios
         function toggleMenu() {
             const menu = document.getElementById('menu');
             menu.classList.toggle('open');
         }
 
-        // Carousel functionality
         const carouselImages = document.querySelectorAll('.carousel-image');
         let currentImageIndex = 0;
 
@@ -601,17 +590,14 @@
             showSlide(currentImageIndex);
         }
 
-        // Auto-play carousel
-        let carouselInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        let carouselInterval = setInterval(nextSlide, 5000); 
 
-        // Stop auto-play on hover (optional, for better UX)
         const carouselContainer = document.querySelector('.carousel-container');
         carouselContainer.addEventListener('mouseenter', () => clearInterval(carouselInterval));
         carouselContainer.addEventListener('mouseleave', () => carouselInterval = setInterval(nextSlide, 5000));
 
-        showSlide(currentImageIndex); // Show initial slide
+        showSlide(currentImageIndex); 
 
-        // --- Cart functionality ---
         function addToCartAndNotify(productName, productPrice) {
             let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
 
@@ -628,8 +614,8 @@
             }
 
             localStorage.setItem('happyCart', JSON.stringify(cart));
-            updateCartIconQuantity(); // Update the cart icon
-            showToast(`${productName} añadido al carrito`, 'success'); // Usa la nueva función de toast
+            updateCartIconQuantity(); 
+            showToast(`${productName} añadido al carrito`, 'success'); 
         }
 
         function updateCartIconQuantity() {
@@ -654,32 +640,28 @@
 
         document.addEventListener('DOMContentLoaded', updateCartIconQuantity);
 
-        // --- Toast Notification Functionality ---
         function showToast(message, type = 'info') {
             const toastContainer = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.classList.add('toast');
             toast.textContent = message;
 
-            // Optional: Add specific styling based on type (e.g., 'success', 'error')
             if (type === 'success') {
-                toast.style.backgroundColor = 'rgba(76, 175, 80, 0.9)'; /* Green for success */
+                toast.style.backgroundColor = 'rgba(241, 126, 35, 0.9)'; 
             } else if (type === 'error') {
-                toast.style.backgroundColor = 'rgba(244, 67, 54, 0.9)'; /* Red for error */
+                toast.style.backgroundColor = 'rgba(177, 68, 36, 0.9)'; 
             }
 
             toastContainer.appendChild(toast);
 
-            // Trigger the animation
             setTimeout(() => {
                 toast.classList.add('show');
-            }, 10); // Small delay to allow reflow
+            }, 10); 
 
-            // Hide and remove the toast after a few seconds
             setTimeout(() => {
                 toast.classList.remove('show');
                 toast.addEventListener('transitionend', () => toast.remove());
-            }, 3000); // Toast disappears after 3 seconds
+            }, 3000); 
         }
     </script>
 
