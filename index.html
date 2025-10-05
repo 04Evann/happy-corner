@@ -17,21 +17,18 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            /* CAMBIO: Color de texto claro por defecto para el fondo oscuro */
-            color: #eee; 
+            color: #eee;
         }
 
         body {
-            /* CAMBIO: Fondo negro total */
-            background: #000; 
+            background: #000;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* --- Header (Estilo de tu página) --- */
+        /* --- Header --- */
         header {
-            /* CAMBIO: Gradiente Marrón Profundo a Naranja Vibrante */
             background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
             padding: 1rem;
             display: flex;
@@ -40,8 +37,7 @@
             position: relative;
             z-index: 100;
             min-height: 80px;
-            /* Sombra en tono de la paleta */
-            box-shadow: 0 4px 10px rgba(123, 44, 19, 0.4); 
+            box-shadow: 0 4px 10px rgba(123, 44, 19, 0.4);
         }
 
         header img {
@@ -57,68 +53,96 @@
             border: none;
             cursor: pointer;
             z-index: 101;
-            /* Texto oscuro para contraste en header claro */
-            color: #222; 
+            color: #222;
             display: block;
         }
 
         nav {
-            display: none; /* Se mantiene oculto */
+            display: none;
         }
         
         /* --- Estilos específicos de "En Proceso" --- */
         .progress-container {
-            flex-grow: 1; 
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             padding: 2rem;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
         .main-title {
             font-size: 2.5rem;
             font-weight: 700;
-            /* CAMBIO: Título en Naranja Vibrante */
-            color: #F17E23; 
+            color: #F17E23;
             margin-bottom: 0.5rem;
         }
 
         .subtitle {
             font-size: 1.2rem;
-            /* CAMBIO: Color de subtítulo claro sobre fondo oscuro */
-            color: #bbb; 
+            color: #bbb;
             margin-bottom: 2rem;
         }
 
         .loader-icon {
             font-size: 4rem;
-            /* CAMBIO: Icono en Naranja Quemado */
-            color: #B14424; 
+            color: #B14424;
             margin-bottom: 2rem;
-            animation: spin 2s linear infinite; 
+            animation: spin 2s linear infinite;
         }
 
+        /* --- Estilos de Cuenta Regresiva --- */
+        .countdown-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 2rem 0 1.5rem;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #1A1A1A;
+            box-shadow: 0 0 15px rgba(241, 126, 35, 0.2);
+            max-width: 450px;
+            width: 100%;
+        }
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+        }
+        .countdown-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #F17E23;
+            line-height: 1;
+            text-shadow: 0 0 5px rgba(241, 126, 35, 0.5);
+        }
+        .countdown-label {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #B14424;
+            margin-top: 5px;
+        }
+        
         /* Estilos de la Barra de Progreso */
         .progress-bar-wrapper {
             width: 100%;
-            /* CAMBIO: Fondo de barra oscuro */
-            background-color: #141414; 
+            background-color: #141414;
             border-radius: 25px;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             overflow: hidden;
             height: 30px;
+            max-width: 450px;
         }
 
         .progress-bar {
             height: 100%;
-            width: 0; 
-            /* CAMBIO: Gradiente Naranja Vibrante a Naranja Quemado */
-            background: linear-gradient(to right, #F17E23, #B14424); 
+            width: 0;
+            background: linear-gradient(to right, #F17E23, #B14424);
             border-radius: 25px 0 0 25px;
             text-align: center;
             line-height: 30px;
@@ -127,15 +151,39 @@
             transition: width 0.5s ease-in-out;
             white-space: nowrap;
         }
+
+        /* --- Estilo de la Firma (ACTUALIZADO) --- */
+        .signature-container {
+            margin-top: 2rem;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(241, 126, 35, 0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .signature-container p {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #B14424;
+            margin-bottom: 0.5rem;
+        }
+
+        .signature-container img {
+            /* REGLAS PARA HACER LA IMAGEN PEQUEÑA */
+            max-width: 150px; /* Tamaño máximo de la firma */
+            height: auto; /* Mantiene la proporción */
+            display: block;
+            margin: 0.5rem auto 0; /* Centra la imagen */
+        }
         
-        /* --- Footer (Estilo de tu página) --- */
+        /* --- Footer --- */
         footer {
-            /* CAMBIO: Fondo oscuro para el footer */
             background: #141414;
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
-            margin-top: auto; 
+            margin-top: auto;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
         }
 
@@ -155,6 +203,9 @@
             .main-title {
                 font-size: 3.5rem;
             }
+            .countdown-value {
+                font-size: 3rem;
+            }
         }
     </style>
 </head>
@@ -166,28 +217,84 @@
 
     <main class="progress-container">
         <i class="fas fa-hammer loader-icon"></i>
-        <h1 class="main-title">Happyween 🎃</h1>
-        <p class="subtitle">Estamos trabajando arduamente para añadir esta nueva función que mejorará tu experiencia.</p>
+        <h1 class="main-title">13 OCTUBRE 2025.</h1>
+        <p class="subtitle">Holiday Drop.</p>
         
+        <div id="countdownTimer" class="countdown-wrapper">
+            <div class="countdown-item">
+                <span id="days" class="countdown-value">00</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-item">
+                <span id="hours" class="countdown-value">00</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-item">
+                <span id="minutes" class="countdown-value">00</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-item">
+                <span id="seconds" class="countdown-value">00</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
+        </div>
+
         <div class="progress-bar-wrapper">
             <div class="progress-bar" id="progressBar">25%</div>
         </div>
         
-        <p style="color: #F17E23; font-weight: 500;">¡Vuelve pronto para ver el resultado!</p>
-    </main>
+        <p style="color: #F17E23; font-weight: 500; margin-top: 1rem;">no es mucho, pero tampoco happypoco.</p>
+
+        <div class="signature-container">
+            <p>With love, happyceo. </p>
+            <img src="firma.png" alt="Happy Corner Logo" />
+        
+            <a href="mailto:evan.l@happycorner.lol">Contact CEO</a>
+
+            
+                </div>
+</div>
+        </main>
 
     <footer>
         <div class="footer-content">
-            <p>Gracias por tu paciencia. Trabajamos para ti.</p>
+            <p><a href="https://wa.me/34641422390">Contact happycorner</a></p>
         </div>
     </footer>
 
     <script>
-        // --- Lógica de la Barra de Progreso (Copiada de tu original) ---
+        // --- Lógica de la Cuenta Regresiva ---
+        const targetDate = new Date('October 13, 2025 00:00:00').getTime();
+
+        const countdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Cálculos para días, horas, minutos y segundos
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Mostrar el resultado con formato de dos dígitos
+            document.getElementById("days").textContent = days.toString().padStart(2, '0');
+            document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+            
+            // Cuando la cuenta regresiva termina
+            if (distance < 0) {
+                clearInterval(countdown);
+                document.getElementById("countdownTimer").innerHTML = '<p style="font-size: 1.5rem; color: #F17E23; font-weight: 600;">¡HAPPYHAPPYWEEEN!</p>';
+            }
+        }, 1000);
+
+
+        // --- Lógica de la Barra de Progreso ---
         const progressBar = document.getElementById('progressBar');
         
-        // Define el porcentaje final que quieres mostrar
-        const targetPercentage = 50; // He subido esto a 80 para que se vea más avanzado en la demo.
+        // El porcentaje final será 100%
+        const targetPercentage = 100;
 
         // Función para actualizar la barra de progreso
         function updateProgress(percentage) {
@@ -204,15 +311,10 @@
             } else {
                 clearInterval(interval);
             }
-        }, 30); // Actualiza cada 30 milisegundos para una animación fluida
+        }, 30); // Animación fluida
         
         // Ejecutar la animación al cargar la página
         updateProgress(currentPercentage);
-        
-        // El toggleMenu ya no es necesario ya que el nav está oculto, pero se puede mantener si se añade un botón
-        function toggleMenu() {
-             // Lógica para mostrar/ocultar menú si se implementa
-        }
     </script>
 
 </body>
