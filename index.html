@@ -3,24 +3,27 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Shop - En Proceso</title>
+    <title>Happy Shop - Happyween</title>
     
     <link rel="icon" type="image/png" href="/happyfavicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Estilos base copiados de tu archivo */
+        /* Paleta: #7B2C13 (Base Oscura), #B14424 (Acento), #F17E23 (Vibrante) */
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            color: #222;
+            /* CAMBIO: Color de texto claro por defecto para el fondo oscuro */
+            color: #eee; 
         }
 
         body {
-            background: #f0f2f5;
+            /* CAMBIO: Fondo negro total */
+            background: #000; 
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -28,7 +31,8 @@
 
         /* --- Header (Estilo de tu página) --- */
         header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            /* CAMBIO: Gradiente Marrón Profundo a Naranja Vibrante */
+            background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
             padding: 1rem;
             display: flex;
             justify-content: space-between;
@@ -36,7 +40,8 @@
             position: relative;
             z-index: 100;
             min-height: 80px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            /* Sombra en tono de la paleta */
+            box-shadow: 0 4px 10px rgba(123, 44, 19, 0.4); 
         }
 
         header img {
@@ -52,18 +57,18 @@
             border: none;
             cursor: pointer;
             z-index: 101;
-            color: #222;
+            /* Texto oscuro para contraste en header claro */
+            color: #222; 
             display: block;
         }
 
         nav {
-            /* Estilos de tu navegación */
-            display: none; /* Mantener oculto en el ejemplo */
+            display: none; /* Se mantiene oculto */
         }
         
         /* --- Estilos específicos de "En Proceso" --- */
         .progress-container {
-            flex-grow: 1; /* Permite que el contenedor ocupe el espacio restante */
+            flex-grow: 1; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -77,29 +82,33 @@
         .main-title {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #ff69b4; /* Pink */
+            /* CAMBIO: Título en Naranja Vibrante */
+            color: #F17E23; 
             margin-bottom: 0.5rem;
         }
 
         .subtitle {
             font-size: 1.2rem;
-            color: #666;
+            /* CAMBIO: Color de subtítulo claro sobre fondo oscuro */
+            color: #bbb; 
             margin-bottom: 2rem;
         }
 
         .loader-icon {
             font-size: 4rem;
-            color: #ffa500; /* Orange */
+            /* CAMBIO: Icono en Naranja Quemado */
+            color: #B14424; 
             margin-bottom: 2rem;
-            animation: spin 2s linear infinite; /* Animación de giro */
+            animation: spin 2s linear infinite; 
         }
 
         /* Estilos de la Barra de Progreso */
         .progress-bar-wrapper {
             width: 100%;
-            background-color: #ddd;
+            /* CAMBIO: Fondo de barra oscuro */
+            background-color: #141414; 
             border-radius: 25px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
             margin-bottom: 1.5rem;
             overflow: hidden;
             height: 30px;
@@ -107,8 +116,9 @@
 
         .progress-bar {
             height: 100%;
-            width: 0; /* Empieza en 0% */
-            background: linear-gradient(to right, #ffa500, #ff69b4); /* Gradiente de tu estilo */
+            width: 0; 
+            /* CAMBIO: Gradiente Naranja Vibrante a Naranja Quemado */
+            background: linear-gradient(to right, #F17E23, #B14424); 
             border-radius: 25px 0 0 25px;
             text-align: center;
             line-height: 30px;
@@ -120,12 +130,13 @@
         
         /* --- Footer (Estilo de tu página) --- */
         footer {
-            background: #222;
+            /* CAMBIO: Fondo oscuro para el footer */
+            background: #141414;
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
-            margin-top: auto; /* Empuja el footer hacia abajo */
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: auto; 
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
         }
 
         .footer-content p {
@@ -151,20 +162,18 @@
 
     <header>
         <img src="loguito.png" alt="Happy Corner Logo" />
-        
-    
-    </header>
+        </header>
 
     <main class="progress-container">
         <i class="fas fa-hammer loader-icon"></i>
-        <h1 class="main-title">Happy construccion</h1>
+        <h1 class="main-title">Happyween 🎃</h1>
         <p class="subtitle">Estamos trabajando arduamente para añadir esta nueva función que mejorará tu experiencia.</p>
         
         <div class="progress-bar-wrapper">
             <div class="progress-bar" id="progressBar">25%</div>
         </div>
         
-        <p style="color: #333; font-weight: 500;">¡Vuelve pronto para ver el resultado!</p>
+        <p style="color: #F17E23; font-weight: 500;">¡Vuelve pronto para ver el resultado!</p>
     </main>
 
     <footer>
@@ -174,16 +183,11 @@
     </footer>
 
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('open');
-        }
-
-        // --- Lógica de la Barra de Progreso ---
+        // --- Lógica de la Barra de Progreso (Copiada de tu original) ---
         const progressBar = document.getElementById('progressBar');
         
         // Define el porcentaje final que quieres mostrar
-        const targetPercentage = 10; 
+        const targetPercentage = 50; // He subido esto a 80 para que se vea más avanzado en la demo.
 
         // Función para actualizar la barra de progreso
         function updateProgress(percentage) {
@@ -191,7 +195,7 @@
             progressBar.textContent = percentage + '%';
         }
 
-        // Simulación de carga (opcional: puedes borrar esta parte si quieres un valor estático)
+        // Simulación de carga (Animación)
         let currentPercentage = 0;
         const interval = setInterval(() => {
             if (currentPercentage < targetPercentage) {
@@ -204,6 +208,11 @@
         
         // Ejecutar la animación al cargar la página
         updateProgress(currentPercentage);
+        
+        // El toggleMenu ya no es necesario ya que el nav está oculto, pero se puede mantener si se añade un botón
+        function toggleMenu() {
+             // Lógica para mostrar/ocultar menú si se implementa
+        }
     </script>
 
 </body>
