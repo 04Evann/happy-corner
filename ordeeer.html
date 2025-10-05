@@ -3,29 +3,29 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Shop - Tu Pedido</title>
+    <title>Happy Shop - Tu Pedido | Happyween Corner</title>
     
     <link rel="icon" type="image/png" href="/happyfavicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Base Styles & Mobile First */
+        /* BASE Y HAPPYWEEN (ESTILOS CORREGIDOS) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            color: #222;
+            color: #eee; /* Texto claro */
         }
-
         body {
-            background: #f0f2f5;
+            background: #000; /* Negro Puro */
         }
 
-        /* --- Header (Copied from index.html for consistency) --- */
+        /* --- Header (Degradado idéntico a Puntos.html) --- */
         header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            /* Degradado de Marrón Oscuro a Naranja Vibrante */
+            background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
             padding: 1rem;
             display: flex;
             justify-content: space-between;
@@ -33,379 +33,314 @@
             position: relative;
             z-index: 100;
             min-height: 80px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
-
         header img {
             height: 65px;
             max-width: 80%;
             object-fit: contain;
             object-position: left;
         }
-
         .menu-btn {
             font-size: 2rem;
             background: none;
             border: none;
             cursor: pointer;
             z-index: 101;
-            color: #222;
+            color: #eee;
             display: block;
         }
-
         nav {
             position: absolute;
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.95); 
+            backdrop-filter: blur(5px);
             display: none;
             flex-direction: column;
             align-items: center;
             padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             z-index: 100;
         }
-
         nav.open {
             display: flex;
         }
-
         nav a {
-            color: #333;
+            color: #eee;
             text-decoration: none;
             padding: 0.8rem 1.5rem;
             font-weight: 500;
             transition: color 0.3s ease;
         }
-
         nav a:hover {
-            color: #ff69b4;
+            color: #F17E23; /* Naranja Vibrante */
             transform: scale(1.05);
         }
 
-        /* --- Main Content Layout --- */
+        /* --- Main Content & Layout --- */
         main {
-            display: flex;
-            flex-direction: column; /* Stack columns on mobile */
-            gap: 2rem; /* Spacing between sections */
             padding: 1.5rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
+        /* Títulos de la página (Mismo estilo que Puntos.html) */
         .page-title {
             text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 1rem 0 2rem; /* Adjusted margin */
-            color: #ff69b4;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 3rem 1rem 1.5rem;
+            color: #B14424; /* Naranja Quemado */
             position: relative;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
-
         .page-title::after {
             content: '';
             position: absolute;
             left: 50%;
             bottom: 0;
             transform: translateX(-50%);
-            width: 80px;
-            height: 5px;
-            background-color: #ffa500;
-            border-radius: 3px;
+            width: 60px;
+            height: 4px;
+            background-color: #F17E23; /* Naranja Vibrante */
+            border-radius: 2px;
         }
-        
-        /* Order Summary / Form Section */
+
+        /* Contenedor Principal (Flex en Desktop) */
         .order-container {
             display: flex;
-            flex-direction: column; /* Stack order details and form on mobile */
+            flex-direction: column;
             gap: 2rem;
+            margin-top: 1rem;
         }
 
+        /* Contenedores de Resumen y Formulario (Mismo estilo que Puntos.html) */
         .order-summary, .checkout-form {
-            background: white;
+            background: #1A1A1A; /* Gris Oscuro */
             border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             padding: 1.5rem;
-            flex: 1; /* Allow sections to grow */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            flex: 1; /* Para distribución en desktop */
         }
-
         .order-summary h2, .checkout-form h2 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #333;
+            font-size: 1.5rem;
+            color: #F17E23;
             margin-bottom: 1.5rem;
-            border-bottom: 2px solid #f0e68c; /* Subtle divider */
-            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #7B2C13;
+            padding-bottom: 10px;
         }
-
-        /* Cart Items List */
+        
+        /* Lista de Ítems del Carrito */
         #cart-items-list {
             list-style: none;
             padding: 0;
-            margin-bottom: 1.5rem;
         }
-
         #cart-items-list li {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem 0;
-            border-bottom: 1px dashed #eee; /* Lighter divider */
-            font-size: 0.95rem;
+            padding: 0.7rem 0;
+            border-bottom: 1px dashed #333;
         }
-
         #cart-items-list li:last-child {
             border-bottom: none;
         }
-
         .item-details {
-            flex-grow: 1;
-            margin-right: 1rem;
-            display: flex;
-            flex-direction: column;
+            flex: 2;
         }
-        
-        .item-details .item-name {
-            font-weight: 500;
-            color: #222;
+        .item-name {
+            font-weight: 600;
+            color: #eee;
+            display: block;
         }
-        .item-details .item-price {
-            font-size: 0.85rem;
-            color: #666;
+        .item-price {
+            color: #B14424;
+            font-size: 0.9rem;
         }
-
         .item-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .item-controls button {
-            background: #ff69b4;
-            color: white;
-            border: none;
-            border-radius: 50%; /* Circular buttons */
-            width: 28px;
-            height: 28px;
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+        }
+        .item-controls button {
+            background: #333;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: background 0.2s ease;
+            font-weight: bold;
+            transition: background 0.2s;
         }
-
         .item-controls button:hover {
-            background: #e6569f;
+            background: #F17E23;
         }
-
         .item-controls .quantity {
+            margin: 0 10px;
             font-weight: 600;
-            min-width: 20px;
-            text-align: center;
+            color: #eee;
         }
-        
         .item-total {
-            font-weight: 600;
-            color: #ffa500;
-            min-width: 60px; /* Ensure price column aligns */
+            flex: 1;
             text-align: right;
-        }
-
-        /* Totals */
-        .order-totals {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #ddd;
-        }
-
-        .order-totals p {
-            display: flex;
-            justify-content: space-between;
-            font-size: 1.1rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .order-totals .total-price {
-            font-size: 1.4rem;
             font-weight: 700;
-            color: #ff69b4; /* Highlight total price */
+            color: #F17E23;
         }
         
+        /* Mensaje de Carrito Vacío */
         .empty-cart-message {
             text-align: center;
-            padding: 2rem 1rem;
-            color: #666;
+            padding: 2rem 0;
             font-size: 1.1rem;
+            color: #B14424;
+            border: 1px dashed #B14424;
+            border-radius: 8px;
         }
         .empty-cart-message a {
-            color: #ff69b4;
+            color: #F17E23;
             text-decoration: underline;
-            font-weight: 600;
         }
 
-        /* Checkout Form */
+        /* Totales del Pedido */
+        .order-totals {
+            text-align: right;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+        }
+        .order-totals p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin: 0.5rem 0;
+            color: #bbb;
+        }
+        .total-price {
+            font-size: 1.4rem !important;
+            font-weight: 700 !important;
+            color: #F17E23 !important;
+            margin-top: 1rem !important;
+        }
+        .total-price span {
+            color: #F17E23 !important;
+        }
+        
+        /* Formulario de Checkout */
         .checkout-form form {
-            padding: 0; /* Remove padding from form itself as container has it */
-            border: none; /* Remove border from form itself */
-            background: none; /* Remove background from form itself */
-            box-shadow: none; /* Remove shadow from form itself */
-            margin: 0;
+            display: flex;
+            flex-direction: column;
         }
-
-        .checkout-form label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #444;
-            font-size: 0.95rem;
+        label {
+            margin-top: 1rem;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            color: #bbb;
         }
-
-        .checkout-form input[type="text"],
-        .checkout-form input[type="email"],
-        .checkout-form textarea,
-        .checkout-form select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            margin-bottom: 1.2rem;
-            border: 1px solid #ddd;
+        input[type="text"], input[type="email"], textarea, select {
+            padding: 0.8rem;
             border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 0.95rem;
-            background-color: #fcfcfc;
-            transition: border-color 0.3s ease;
+            border: 2px solid #333;
+            background-color: #222;
+            font-size: 1rem;
+            color: #eee;
         }
-
-        .checkout-form input[type="text"]:focus,
-        .checkout-form input[type="email"]:focus,
-        .checkout-form textarea:focus,
-        .checkout-form select:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: #ff69b4;
-            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.2);
+            border-color: #F17E23;
+            box-shadow: 0 0 5px rgba(241, 126, 35, 0.5);
         }
 
-        .checkout-form textarea {
-            min-height: 90px;
-            resize: vertical; /* Allow vertical resizing */
-        }
-
-        .checkout-form button[type="submit"] {
-            background: #ff69b4;
+        /* Botones y Acciones (Mismo estilo que Puntos.html) */
+        #place-order-button, .payment-details a {
+            background: #B14424; /* Naranja Quemado */
             color: white;
-            padding: 0.9rem 1.5rem;
             border: none;
+            padding: 0.8rem 1.5rem;
             border-radius: 8px;
             cursor: pointer;
-            width: 100%;
-            margin-top: 1.5rem;
-            font-size: 1.1rem;
             font-weight: 600;
+            margin-top: 1.5rem;
             transition: background 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            display: block; /* Para que los enlaces dentro de payment-details ocupen todo el ancho */
         }
-
-        .checkout-form button[type="submit"]:hover {
-            background: #e6569f;
+        #place-order-button:hover, .payment-details a:hover {
+            background: #D35721; /* Naranja más oscuro al pasar el ratón */
             transform: translateY(-2px);
         }
+        #place-order-button:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-        /* Payment Details */
+        /* Detalles de Pago (Nequi, PSE, etc.) */
         .payment-details {
-            margin-top: 1.5rem;
+            background-color: #222;
             padding: 1rem;
-            border: 1px dashed #e0e0e0; /* Lighter dashed border */
             border-radius: 8px;
-            background-color: #fdfdfd;
-            font-size: 0.9rem;
-            display: none; /* Hidden by default */
+            margin-top: 1rem;
+            border-left: 5px solid #F17E23;
         }
-        
         .payment-details p {
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-            color: #555;
+            color: #bbb;
+            margin-bottom: 10px;
         }
-
-        .payment-details a {
-            color: #ff69b4;
-            text-decoration: none;
-            font-weight: 600;
+        .payment-details strong {
+            color: #F17E23;
         }
-
-        .payment-details a:hover {
-            text-decoration: underline;
-        }
-
         .payment-details img {
-            width: 100%;
-            max-width: 180px; /* Smaller QR code */
-            margin: 1rem auto;
+            max-width: 150px;
+            height: auto;
+            border-radius: 5px;
+            margin: 10px auto;
             display: block;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #F17E23;
         }
         
-        /* Cart Icon (Copied from index.html) - Hidden on this page */
-        .cart-icon {
-            display: none; /* Hide cart icon on the order page */
-        }
-
-        /* --- Footer (Copied from index.html) --- */
+        /* Footer (Copiado de Puntos.html) */
         footer {
-            background: #222;
+            background: #000;
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
             margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
         }
-
         .footer-content {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
-
+        .footer-content p {
+            color: #bbb;
+        }
         .social-icons a {
             color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
             transition: color 0.3s ease;
+            margin: 0 10px;
+            font-size: 1.5rem;
         }
-
-        .social-icons a:hover {
-            color: #ff69b4;
+        .social-icons a:hover,
+        .footer-links a:hover {
+            color: #F17E23;
         }
-        
-        .footer-links {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-
         .footer-links a {
             color: #eee;
+            margin: 0 10px;
             text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
+            display: inline-block;
+            margin-top: 15px;
         }
 
-        .footer-links a:hover {
-            color: #ff69b4;
-        }
-
-        /* --- Media Queries for Desktop --- */
+        /* Media Queries - Escritorio (Desktop) */
         @media (min-width: 768px) {
             header {
                 padding: 0.5rem 2rem;
                 min-height: 100px;
-            }
-            header img {
-                height: 80px;
             }
             .menu-btn {
                 display: none;
@@ -422,286 +357,286 @@
             }
             nav a {
                 padding: 0.7rem 1.2rem;
-                color: #222;
+                color: #eee; 
             }
             nav a:hover {
-                color: #ff69b4;
+                color: #F17E23;
                 text-decoration: underline;
                 transform: none;
             }
-
+            .page-title {
+                font-size: 2.5rem;
+                margin-top: 5rem;
+            }
             main {
-                flex-direction: row; /* Two columns on desktop */
-                justify-content: center;
-                align-items: flex-start; /* Align content to top */
-                padding-top: 3rem; /* More space from header */
-                padding-bottom: 3rem;
+                padding: 3rem 2rem;
             }
-            
             .order-container {
-                flex-direction: row; /* Side-by-side on desktop */
-                width: 100%; /* Take full width of main container */
-                max-width: 900px; /* Limit width to prevent being too wide */
-            }
-
-            .order-summary, .checkout-form {
-                flex: 1; /* Distribute space evenly */
-                min-width: 400px; /* Ensure minimum width for forms */
-                padding: 2rem; /* More padding on desktop */
-            }
-
-            .order-summary {
-                margin-right: 2rem; /* Space between summary and form */
+                flex-direction: row; /* Pone las dos secciones lado a lado */
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <img src="loguito.png" alt="Happy Shop Logo" />
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        <nav id="menu">
-            <a href="index.html">Inicio</a>
-            <a href="catalogo.html">Catálogo</a>
-            <a href="order.html">Happy Order</a>
-            <a href="puntos.html">Happy Puntos</a>
-            <a href="terminos.html">Términos</a>
-        </nav>
-    </header>
 
-    <main>
-        <h1 class="page-title">Tu Pedido Happy 🥳</h1>
+<header>
+    <img src="loguito.png" alt="Happy Shop Logo" />
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <nav id="menu">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="order.html">Happy Order</a>
+        <a href="puntos.html">Happy Puntos</a>
+        <a href="terminos.html">Términos</a>
+    </nav>
+</header>
 
-        <div class="order-container">
-            <section class="order-summary">
-                <h2>Resumen de tu Carrito</h2>
-                <ul id="cart-items-list">
-                    </ul>
+<main>
+    <h1 class="page-title">Tu Pedido Happy 🥳</h1>
 
-                <div class="empty-cart-message" id="empty-cart-msg" style="display: none;">
-                    Tu carrito está vacío. ¡Empieza a añadir <a href="catalogo.html">productos aquí</a>!
+    <div class="order-container">
+        
+        <section class="order-summary">
+            <h2>Resumen de tu Carrito</h2>
+            <ul id="cart-items-list">
+                </ul>
+
+            <div class="empty-cart-message" id="empty-cart-msg" style="display: none;">
+                Tu carrito está vacío. ¡Empieza a añadir <a href="catalogo.html">productos aquí</a>!
+            </div>
+
+            <div class="order-totals">
+                <p>Subtotal: <span id="subtotal-price">$0</span></p>
+                <p>Envío: <span id="shipping-price">Calculando...</span></p>
+                <p class="total-price">Total: <span id="total-price">$0</span></p>
+            </div>
+        </section>
+
+        <section class="checkout-form">
+            <h2>Detalles de Contacto y Pago</h2>
+            <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
+                
+                <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
+                <input type="hidden" name="_next" value="happycorner.lol">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
+                <input type="hidden" name="Total del Pedido" id="total-price-hidden">
+                <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
+                <input type="hidden" name="Número de Nequi" id="nequi-number-hidden">
+                
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required placeholder="tucorreo@example.com" />
+                
+                <label for="tipo_entrega">Tipo de Entrega:</label>
+                <select id="tipo_entrega" name="tipo_entrega" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="colegio">Entrega en el Colegio (Productos Físicos)</option>
+                    <option value="virtual">Entrega Virtual (Robux, Spotify, Servicios Online)</option>
+                </select>
+
+                <label for="celular">Número de Celular (WhatsApp):</label>
+                <input type="text" id="celular" name="celular" required placeholder="Ej: 300 123 4567" />
+
+                <label for="metodo_pago">Método de pago:</label>
+                <select id="metodo_pago" name="metodo_pago" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="nequi">Nequi</option>
+                    <option value="pse">PSE</option>
+                    <option value="applepay">Apple Pay</option>
+                    <option value="tarjeta">Tarjeta (Crédito / Débito)</option>
+                    <option value="efectivo">Efectivo (Pago al recibir)</option>
+                </select>
+
+                <div id="nequi-details" class="payment-details" style="display:none; text-align: center;">
+                    <p>Para pagar por Nequi, escanea el QR o transfiere al número de HappyCorner. **Este QR también se puede escanear desde Bancolombia.** No olvides enviar una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido.</p>
+                    <img src="NequiQR.png" alt="QR Nequi" />
+                    <p>Número Nequi: **(Se te proporcionará por WhatsApp tras confirmar el pedido)**</p>
+                    <a href="https://wa.me/34641422390?text=Hola!%20Acabo%20de%20hacer%20un%20pedido%20en%20Happy%20Shop%20y%20quiero%20pagar%20por%20Nequi.%20Mi%20nombre%20es%20[Tu%20Nombre]%20y%20mi%20correo%20es%20[Tu%20Correo]." target="_blank">Confirmar Pago por WhatsApp</a>
+                </div>
+                
+                <div id="pse-details" class="payment-details" style="display:none;">
+                    <p>Para pagar por PSE, al Finalizar Pedido contactanos por whatsapp para proporcionarte el numero de Nequi, **Te proporcionaré el número de Nequi por WhatsApp para que hagas el pago a través de PSE.**</p>
+                    <p>Cuando finalices la transacción, envía una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido. </p>
+                    <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20por%20PSE.%20Por%20favor,%20dame%20el%20número%20de%20Nequi%20para%20realizar%20el%20pago." target="_blank">Continuar con PSE por WhatsApp</a>
+                </div>
+                
+                <div id="applepay-details" class="payment-details" style="display:none;">
+                    <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos. No hay riesgo de estafa o hackeo.</p>
+                    <p>Tras finalizar el pedido, contactanos por whatsapp para enviarte el link de pago.</p>
+                    <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20Apple%20Pay%20(Euros)." target="_blank">Continuar con Apple Pay por WhatsApp</a>
                 </div>
 
-                <div class="order-totals">
-                    <p>Subtotal: <span id="subtotal-price">$0</span></p>
-                    <p>Envío: <span id="shipping-price">Calculando...</span></p>
-                    <p class="total-price">Total: <span id="total-price">$0</span></p>
+                <div id="tarjeta-details" class="payment-details" style="display:none;">
+                    <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos. No hay riesgo de estafa o hackeo.</p>
+                    <p>Tras finalizar el pedido, contactanos por WhatsApp para enviarte el link de pago.</p>
+                    <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20tarjeta%20de%20crédito/débito%20(Euros)." target="_blank">Continuar con Tarjeta por WhatsApp</a>
                 </div>
-            </section>
 
-            <section class="checkout-form">
-                <h2>Detalles de Contacto y Pago</h2>
-                <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
-                    <label for="nombre">Nombre completo:</label>
-                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required placeholder="tucorreo@example.com" />
-                    
-                    <label for="tipo_entrega">Tipo de Entrega:</label>
-                    <select id="tipo_entrega" name="tipo_entrega" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="colegio">Entrega en el Colegio (Productos Físicos)</option>
-                        <option value="virtual">Entrega Virtual (Robux, Spotify, Servicios Online)</option>
-                    </select>
+                <div id="efectivo-details" class="payment-details" style="display:none;">
+                    <p>Tu orden será confirmada y deberás pagar en **efectivo al momento de la entrega** (en el colegio) o al recibir los datos del servicio virtual.</p>
+                    <p>Si es entrega física, por favor ten el valor exacto si es posible.</p>
+                </div>
+                
+                <label for="notas">Notas Adicionales (Opcional):</label>
+                <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Quiero que me contacten antes de ir al colegio.', 'Es un regalo, no mostrar el precio.'"></textarea>
 
-                    <label for="celular">Número de Celular (WhatsApp):</label>
-                    <input type="text" id="celular" name="celular" required placeholder="Ej: 300 123 4567" />
+                <button type="submit" id="place-order-button">
+                    Finalizar HappyOrder
+                </button>
+            </form>
+        </section>
+    </div>
+</main>
 
-                    <label for="metodo_pago">Método de pago:</label>
-                    <select id="metodo_pago" name="metodo_pago" required>
-                        <option value="">Selecciona una opción</option>
-                        <option value="nequi">Nequi</option>
-                        <option value="pse">PSE</option>
-                        <option value="applepay">Apple Pay</option>
-                        <option value="tarjeta">Tarjeta (Crédito / Débito)</option>
-                        <option value="efectivo">Efectivo (Pago al recibir)</option>
-                    </select>
-
-                    <div id="nequi-details" class="payment-details" style="text-align: center;">
-                        <p>Para pagar por Nequi, escanea el QR o transfiere al número de HappyCorner. **Este QR también se puede escanear desde Bancolombia.** No olvides enviar una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido.</p>
-                        <img src="NequiQR.png" alt="QR Nequi" />
-                        <p>Número Nequi: **(Se te proporcionará por WhatsApp tras confirmar el pedido)**</p>
-                        <a href="https://wa.me/34641422390?text=Hola!%20Acabo%20de%20hacer%20un%20pedido%20en%20Happy%20Shop%20y%20quiero%20pagar%20por%20Nequi.%20Mi%20nombre%20es%20[Tu%20Nombre]%20y%20mi%20correo%20es%20[Tu%20Correo]." target="_blank" style="margin-top: 10px; display: inline-block;">Confirmar Pago por WhatsApp</a>
-                    </div>
-                    
-                    <div id="pse-details" class="payment-details">
-                        <p>Para pagar por PSE, al Finalizar Pedido contactanos por whatsapp para proporcionarte el numero de Nequi, **Te proporcionaré el número de Nequi por WhatsApp para que hagas el pago a través de PSE.**</p>
-                        <p>Cuando finalices la transacción, envía una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido. </p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20por%20PSE.%20Por%20favor,%20dame%20el%20número%20de%20Nequi%20para%20realizar%20el%20pago." target="_blank" style="margin-top: 10px; display: inline-block;">Confirmar Pago por WhatsApp</a>
-                    </div>
-                    
-                    <div id="applepay-details" class="payment-details">
-                        <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos y no serán usados de forma incorrecta. No hay riesgo de estafa o hackeo.</p>
-                        <p>Tras finalizar el pedido, contactanos por whatsapp para enviarte el link de pago.</p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20Apple%20Pay%20(Euros)." target="_blank" style="margin-top: 10px; display: inline-block;">Continuar con Apple Pay por WhatsApp</a>
-                    </div>
-
-                    <div id="tarjeta-details" class="payment-details">
-                        <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos y no serán usados de forma incorrecta. No hay riesgo de estafa o hackeo.</p>
-                        <p>Tras finalizar el pedido, contactanos por WhatsApp para enviarte el link de pago.</p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20tarjeta%20de%20crédito/débito%20(Euros)." target="_blank" style="margin-top: 10px; display: inline-block;">Continuar con Tarjeta por WhatsApp</a>
-                    </div>
-
-                    <div id="efectivo-details" class="payment-details">
-                        <p>Tu orden será confirmada y deberás pagar en efectivo al momento de la entrega (en el colegio) o al recibir los datos del servicio virtual.</p>
-                        <p>Si es entrega física, por favor ten el valor exacto si es posible. Si es virtual, se te indicará cómo y cuándo realizar el pago al momento de la entrega de los datos.</p>
-                    </div>
-
-                    <label for="notas">Notas Adicionales (Opcional):</label>
-                    <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Quiero que me contacten antes de ir al colegio.', 'Es un regalo, no mostrar el precio.'"></textarea>
-
-                    <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
-                    <input type="hidden" name="_next" value="happycorner.lol">
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
-                    <input type="hidden" name="Total del Pedido" id="total-price-hidden">
-                    <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
-                    <input type="hidden" name="Número de Nequi" id="nequi-number-hidden">
-
-
-                    <button type="submit" id="place-order-button">
-                        Finalizar HappyOrder
-                    </button>
-                </form>
-            </section>
+<footer>
+    <div class="footer-content">
+        <div class="social-icons">
+            <a href="https://www.instagram.com/happycornerca/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/happycornerca" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://wa.me/34641422390" target="_blank"><i class="fab fa-whatsapp"></i></a>
         </div>
-    </main>
-
-    <footer>
-        <div class="footer-content">
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <div class="footer-links">
-                <a href="terminos.html">Términos y Condiciones</a>
-                <a href="mailto:soporte@happycorner.lol">Contáctanos</a>
-                <a href="catalogo.html">Ver Todo el Catálogo</a>
-            </div>
+        <div class="footer-links">
+            <a href="terminos.html">Términos y Condiciones</a>
+            <a href="mailto:soporte@happycorner.lol">Contáctanos</a>
+            <a href="catalogo.html">Ver Todo el Catálogo</a>
         </div>
-    </footer>
+    </div>
+</footer>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('open');
+<script>
+    // Variables y Funciones Base
+    function toggleMenu() {
+        const menu = document.getElementById('menu');
+        menu.classList.toggle('open');
+    }
+
+    const cartItemsList = document.getElementById('cart-items-list');
+    const subtotalPriceSpan = document.getElementById('subtotal-price');
+    const shippingPriceSpan = document.getElementById('shipping-price');
+    const totalPriceSpan = document.getElementById('total-price');
+    const emptyCartMessage = document.getElementById('empty-cart-msg');
+    const paymentMethodSelect = document.getElementById('metodo_pago');
+    const tipoEntregaSelect = document.getElementById('tipo_entrega');
+    
+    // Contenedores de detalles de pago
+    const paymentDetailsDivs = {
+        'nequi': document.getElementById('nequi-details'),
+        'pse': document.getElementById('pse-details'),
+        'applepay': document.getElementById('applepay-details'),
+        'tarjeta': document.getElementById('tarjeta-details'),
+        'efectivo': document.getElementById('efectivo-details')
+    };
+
+    // Hidden inputs para FormSubmit
+    const orderSummaryInput = document.getElementById('order-summary-input');
+    const totalPriceHidden = document.getElementById('total-price-hidden');
+    const cartContentHidden = document.getElementById('cart-content-hidden');
+    const nequiNumberHidden = document.getElementById('nequi-number-hidden');
+
+    // Usamos 'happyCart' como nos indicaste
+    let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+
+    function renderCart() {
+        cartItemsList.innerHTML = '';
+        let subtotal = 0;
+
+        if (cart.length === 0) {
+            emptyCartMessage.style.display = 'block';
+            document.querySelector('.order-totals').style.display = 'none';
+            document.getElementById('place-order-button').disabled = true;
+            // Actualizar campos ocultos para carrito vacío
+            orderSummaryInput.value = "Carrito vacío.";
+            totalPriceHidden.value = "$0";
+            cartContentHidden.value = "Carrito vacío.";
+            return;
+        } else {
+            emptyCartMessage.style.display = 'none';
+            document.querySelector('.order-totals').style.display = 'block';
+            document.getElementById('place-order-button').disabled = false;
         }
 
-        const cartItemsList = document.getElementById('cart-items-list');
-        const subtotalPriceSpan = document.getElementById('subtotal-price');
-        const shippingPriceSpan = document.getElementById('shipping-price');
-        const totalPriceSpan = document.getElementById('total-price');
-        const emptyCartMessage = document.getElementById('empty-cart-msg');
-        const paymentMethodSelect = document.getElementById('metodo_pago');
-        const tipoEntregaSelect = document.getElementById('tipo_entrega');
-        const paymentDetailsDivs = {
-            'nequi': document.getElementById('nequi-details'),
-            'pse': document.getElementById('pse-details'),
-            'applepay': document.getElementById('applepay-details'),
-            'tarjeta': document.getElementById('tarjeta-details'),
-            'efectivo': document.getElementById('efectivo-details')
-        };
-        const orderSummaryInput = document.getElementById('order-summary-input');
-        const totalPriceHidden = document.getElementById('total-price-hidden');
-        const cartContentHidden = document.getElementById('cart-content-hidden');
-        const nequiNumberHidden = document.getElementById('nequi-number-hidden');
-
-        let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
-
-        function renderCart() {
-            cartItemsList.innerHTML = '';
-            let subtotal = 0;
-
-            if (cart.length === 0) {
-                emptyCartMessage.style.display = 'block';
-                document.querySelector('.order-totals').style.display = 'none';
-                document.getElementById('place-order-button').disabled = true;
-                orderSummaryInput.value = "Carrito vacío.";
-                totalPriceHidden.value = "$0";
-                cartContentHidden.value = "Carrito vacío.";
-                return;
-            } else {
-                emptyCartMessage.style.display = 'none';
-                document.querySelector('.order-totals').style.display = 'block';
-                document.getElementById('place-order-button').disabled = false;
-            }
-
-            cart.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div class="item-details">
-                        <span class="item-name">${item.name}</span>
-                        <span class="item-price">$${item.price.toLocaleString('es-CO')} c/u</span>
-                    </div>
-                    <div class="item-controls">
-                        <button onclick="updateQuantity(${index}, -1)">-</button>
-                        <span class="quantity">${item.quantity}</span>
-                        <button onclick="updateQuantity(${index}, 1)">+</button>
-                    </div>
-                    <span class="item-total">$${(item.price * item.quantity).toLocaleString('es-CO')}</span>
-                `;
-                cartItemsList.appendChild(li);
-                subtotal += item.price * item.quantity;
-            });
-
-            subtotalPriceSpan.textContent = `$${subtotal.toLocaleString('es-CO')}`;
-
-            let shippingCost = 0;
-            shippingPriceSpan.textContent = 'Gratis';
-            
-            const total = subtotal + shippingCost;
-            totalPriceSpan.textContent = `$${total.toLocaleString('es-CO')}`;
-
-            updateOrderSummaryForFormSubmit(total);
-        }
-
-        function updateQuantity(index, change) {
-            cart[index].quantity += change;
-            if (cart[index].quantity <= 0) {
-                cart.splice(index, 1);
-            }
-            localStorage.setItem('happyCart', JSON.stringify(cart));
-            renderCart();
-        }
-
-        function updatePaymentDetailsDisplay() {
-            for (const key in paymentDetailsDivs) {
-                paymentDetailsDivs[key].style.display = 'none';
-            }
-
-            const selectedMethod = paymentMethodSelect.value;
-            if (paymentDetailsDivs[selectedMethod]) {
-                paymentDetailsDivs[selectedMethod].style.display = 'block';
-            }
-        }
-
-        function updateOrderSummaryForFormSubmit(total) {
-            let summaryText = 'Resumen del Pedido:\n\n';
-            let cartContentForHidden = [];
-
-            if (cart.length === 0) {
-                summaryText += "El carrito estaba vacío al momento de enviar el pedido.\n";
-            } else {
-                cart.forEach(item => {
-                    summaryText += `- ${item.name} (x${item.quantity}): $${(item.price * item.quantity).toLocaleString('es-CO')}\n`;
-                    cartContentForHidden.push(`${item.name} (x${item.quantity})`);
-                });
-                summaryText += `\nSubtotal: ${subtotalPriceSpan.textContent}\n`;
-                summaryText += `Envío: ${shippingPriceSpan.textContent}\n`;
-                summaryText += `Total: ${totalPriceSpan.textContent}\n`;
-            }
-            orderSummaryInput.value = summaryText;
-            totalPriceHidden.value = totalPriceSpan.textContent;
-            cartContentHidden.value = cartContentForHidden.join(', ');
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCart();
-            paymentMethodSelect.addEventListener('change', updatePaymentDetailsDisplay);
-            updatePaymentDetailsDisplay();
+        cart.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div class="item-details">
+                    <span class="item-name">${item.name}</span>
+                    <span class="item-price">$${item.price.toLocaleString('es-CO')} c/u</span>
+                </div>
+                <div class="item-controls">
+                    <button type="button" onclick="updateQuantity(${index}, -1)">-</button>
+                    <span class="quantity">${item.quantity}</span>
+                    <button type="button" onclick="updateQuantity(${index}, 1)">+</button>
+                </div>
+                <span class="item-total">$${(item.price * item.quantity).toLocaleString('es-CO')}</span>
+            `;
+            cartItemsList.appendChild(li);
+            subtotal += item.price * item.quantity;
         });
-    </script>
+
+        subtotalPriceSpan.textContent = `$${subtotal.toLocaleString('es-CO')}`;
+
+        let shippingCost = 0;
+        shippingPriceSpan.textContent = 'Gratis';
+        
+        const total = subtotal + shippingCost;
+        totalPriceSpan.textContent = `$${total.toLocaleString('es-CO')}`;
+
+        updateOrderSummaryForFormSubmit(total);
+    }
+
+    function updateQuantity(index, change) {
+        cart[index].quantity += change;
+        if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
+        localStorage.setItem('happyCart', JSON.stringify(cart));
+        renderCart();
+    }
+
+    function updatePaymentDetailsDisplay() {
+        // Oculta todos los divs de detalles de pago
+        for (const key in paymentDetailsDivs) {
+            paymentDetailsDivs[key].style.display = 'none';
+        }
+
+        // Muestra solo el div seleccionado
+        const selectedMethod = paymentMethodSelect.value;
+        if (paymentDetailsDivs[selectedMethod]) {
+            paymentDetailsDivs[selectedMethod].style.display = 'block';
+        }
+    }
+
+    function updateOrderSummaryForFormSubmit(total) {
+        let summaryText = 'Resumen del Pedido:\n\n';
+        let cartContentForHidden = [];
+
+        if (cart.length === 0) {
+            summaryText += "El carrito estaba vacío al momento de enviar el pedido.\n";
+        } else {
+            cart.forEach(item => {
+                // Usamos el formato que querías para el email
+                summaryText += `- ${item.name} (x${item.quantity}): $${(item.price * item.quantity).toLocaleString('es-CO')}\n`;
+                // Contenido simplificado para el campo oculto
+                cartContentForHidden.push(`${item.name} (x${item.quantity})`);
+            });
+            summaryText += `\nSubtotal: ${subtotalPriceSpan.textContent}\n`;
+            summaryText += `Envío: ${shippingPriceSpan.textContent}\n`;
+            summaryText += `Total: ${totalPriceSpan.textContent}\n`;
+        }
+        orderSummaryInput.value = summaryText;
+        totalPriceHidden.value = totalPriceSpan.textContent;
+        cartContentHidden.value = cartContentForHidden.join(', ');
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCart();
+        paymentMethodSelect.addEventListener('change', updatePaymentDetailsDisplay);
+        updatePaymentDetailsDisplay();
+    });
+</script>
 </body>
 </html>
