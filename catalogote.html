@@ -3,41 +3,41 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Shop - Tu Pedido</title>
+    <title>Happy Shop - Catálogo</title>
     
     <link rel="icon" type="image/png" href="/happyfavicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Base Styles & Mobile First - Unificado */
+        /* Paleta Happyween (Negro, Marrón, Naranja) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            color: #222; /* Default text color */
+            color: #eee; /* Texto claro */
         }
 
         body {
-            background: #f0f2f5; /* Light grey background for a clean look */
+            background: #000; /* Negro Puro */
         }
 
-        /* --- Header --- Unificado */
+        /* --- Header --- */
         header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+            background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
             padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
             z-index: 100;
-            min-height: 80px; /* Ensure header has enough height */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            min-height: 80px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
         }
 
         header img {
-            height: 65px; /* Adjust logo size for mobile */
+            height: 65px; 
             max-width: 80%;
             object-fit: contain;
             object-position: left;
@@ -49,8 +49,8 @@
             border: none;
             cursor: pointer;
             z-index: 101;
-            color: #222;
-            display: block; /* Visible on mobile */
+            color: #222; 
+            display: block; 
         }
 
         nav {
@@ -58,13 +58,13 @@
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.95); /* Slightly less transparent */
-            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.95); 
+            backdrop-filter: blur(5px);
             display: none;
             flex-direction: column;
             align-items: center;
             padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow for menu */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
             z-index: 100;
         }
 
@@ -73,21 +73,16 @@
         }
 
         nav a {
-            color: #333; /* Slightly darker for better readability */
+            color: #eee; 
             text-decoration: none;
             padding: 0.8rem 1.5rem;
             font-weight: 500;
-            transition: color 0.3s ease; /* Smooth transition */
+            transition: color 0.3s ease;
         }
 
         nav a:hover {
-            color: #ff69b4;
-            transform: scale(1.05); /* Subtle hover effect */
-        }
-
-        /* --- Main Content Sections --- */
-        main {
-            padding: 1rem 0;
+            color: #F17E23; /* Naranja Vibrante */
+            transform: scale(1.05); 
         }
 
         /* --- Section Titles --- */
@@ -95,8 +90,8 @@
             text-align: center;
             font-size: 1.8rem;
             font-weight: 600;
-            margin: 3rem 1rem 1.5rem; /* More vertical spacing */
-            color: #ff69b4; /* Your brand color */
+            margin: 3rem 1rem 1.5rem;
+            color: #B14424; /* Naranja Quemado */
             position: relative;
             padding-bottom: 10px;
         }
@@ -109,42 +104,47 @@
             transform: translateX(-50%);
             width: 60px;
             height: 4px;
-            background-color: #ffa500; /* Accent line */
+            background-color: #F17E23; /* Naranja Vibrante */
             border-radius: 2px;
         }
 
         /* --- Product Grids --- */
+        main {
+            padding: 1rem 0;
+        }
+        
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Larger minimum width */
-            gap: 1.5rem; /* More space between cards */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
             padding: 0 1rem;
             max-width: 1000px;
             margin: 0 auto 2rem;
         }
 
         .product-card {
-            background: white;
-            border-radius: 12px; /* Smoother corners for cards */
+            background: #1A1A1A; /* Gris Oscuro */
+            border-radius: 12px; 
             padding: 1rem;
             text-align: center;
             font-size: 0.9rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Stronger but still subtle shadow */
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover effects */
-            display: flex; /* For better content alignment */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
         .product-card:hover {
-            transform: translateY(-5px); /* Lift effect on hover */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+            transform: translateY(-5px);
+            box-shadow: 0 0 0 2px #F17E23, 
+                        0 8px 20px rgba(0, 0, 0, 0.5); 
         }
 
         .product-img-container {
-            background: #f9f9f9; /* Lighter background for image area */
-            height: 120px; /* Taller image area */
-            border-radius: 8px; /* Rounded corners for image container */
+            background: #333; 
+            height: 120px;
+            border-radius: 8px;
             margin-bottom: 0.8rem;
             overflow: hidden;
             display: flex;
@@ -155,49 +155,47 @@
         .product-img-container img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Use contain for products like Robux/Spotify logos */
-            border-radius: 8px; /* Rounded corners for image itself */
-            padding: 5px; /* Add some padding around images */
+            object-fit: contain;
+            border-radius: 8px;
         }
         
-        /* Specific image adjustments (to ensure logos are properly displayed) */
-        .product-img-container img[alt*="Robux_icon"],
+        .product-img-container img[alt*="RBX"],
         .product-img-container img[alt*="Spotify"],
         .product-img-container img[alt*="Serviciosalt"] {
-            object-fit: contain; /* Ensure logos are fully visible */
-            height: 90%; /* Adjust height to give more padding inside container */
+            object-fit: contain;
+            height: 90%; 
             width: 90%;
         }
 
-
         .product-card h3 {
+            color: #eee; 
             font-size: 1.1rem;
             font-weight: 500;
             margin-bottom: 0.2rem;
-            color: #333;
-        }
-
-        .product-card .description {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 0.8rem;
-            height: 40px; /* Fixed height for descriptions to keep cards uniform */
-            overflow: hidden; /* Hide overflow text */
-            text-overflow: ellipsis; /* Add ellipsis for long descriptions */
-            display: -webkit-box;
-            -webkit-line-clamp: 2; /* Limit to 2 lines */
-            -webkit-box-orient: vertical;
         }
 
         .product-card .price {
             font-weight: 600;
-            color: #ffa500; /* Orange for price */
+            color: #F17E23; /* Naranja Vibrante */
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
         }
 
-        .product-card button {
-            background: #ff69b4; /* Pink button */
+        .product-card .description {
+            font-size: 0.85rem;
+            color: #bbb; 
+            margin-bottom: 0.8rem;
+            height: 40px; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            display: -webkit-box;
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical;
+        }
+
+        .product-card button,
+        .whatsapp-button {
+            background: #B14424; /* Naranja Quemado */
             color: white;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -205,121 +203,104 @@
             cursor: pointer;
             font-weight: 600;
             transition: background 0.3s ease, transform 0.2s ease;
-            margin-top: auto; /* Push button to bottom if card content varies */
+            margin-top: auto;
+            text-decoration: none; 
+            display: block;
+            margin-bottom: 5px;
+            text-align: center;
         }
 
-        .product-card button:hover {
-            background: #e6569f; /* Darker pink on hover */
+        .product-card button:hover,
+        .whatsapp-button:hover {
+            background: #D35721; 
             transform: translateY(-2px);
         }
 
-        /* --- Footer --- Unificado */
+        /* --- Footer --- */
         footer {
-            background: #222;
+            background: #000; 
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
             margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer-content {
-            max-width: 900px;
-            margin: 0 auto;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
         }
 
         .footer-content p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
             color: #bbb;
         }
 
         .social-icons a {
             color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
             transition: color 0.3s ease;
         }
 
-        .social-icons a:hover {
-            color: #ff69b4; /* Pink hover for social icons */
-        }
-        
-        .footer-links {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
+        .social-icons a:hover,
+        .footer-links a:hover {
+            color: #F17E23;
         }
 
         .footer-links a {
             color: #eee;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
         }
 
-        .footer-links a:hover {
-            color: #ff69b4;
-        }
 
-        /* --- Cart Icon --- Unificado */
+        /* --- Cart Icon --- */
         .cart-icon {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: white;
-            border: 2px solid #ff69b4;
+            background: #1A1A1A;
+            border: 2px solid #F17E23;
             border-radius: 50%;
-            width: 55px; /* Slightly larger */
-            height: 55px; /* Slightly larger */
+            width: 55px; 
+            height: 55px; 
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem; /* Larger icon */
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2); /* More pronounced shadow */
+            font-size: 1.6rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5); 
             z-index: 10;
             text-decoration: none;
-            color: #222;
+            color: #eee;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .cart-icon:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(241, 126, 35, 0.4); 
         }
 
         .cart-quantity {
             position: absolute;
-            top: -8px; /* Adjusted position */
-            right: -8px; /* Adjusted position */
-            background-color: #ffa500;
+            top: -8px; 
+            right: -8px; 
+            background-color: #B14424;
             color: white;
-            font-size: 0.9rem; /* Slightly larger text */
+            font-size: 0.9rem;
             font-weight: bold;
             border-radius: 50%;
-            padding: 3px 8px; /* More padding */
-            min-width: 24px; /* Minimum width for double digits */
+            padding: 3px 8px;
+            min-width: 24px;
             text-align: center;
             display: none;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        /* --- Toast Notification Styles --- Unificado */
+        /* --- Toast Notification Styles --- */
         .toast-container {
             position: fixed;
-            bottom: 90px; /* Above the cart icon */
+            bottom: 90px; 
             right: 20px;
             z-index: 1000;
             display: flex;
-            flex-direction: column-reverse; /* Newest toast on top */
+            flex-direction: column-reverse; 
             gap: 10px;
-            pointer-events: none; /* Allows clicks through to elements underneath */
+            pointer-events: none; 
         }
 
         .toast {
-            background-color: rgba(50, 50, 50, 0.9);
+            background-color: rgba(34, 34, 34, 0.95);
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
@@ -330,28 +311,28 @@
             min-width: 200px;
             max-width: 300px;
             text-align: center;
-            pointer-events: auto; /* Allows interaction with the toast itself */
+            pointer-events: auto;
         }
-
+        
         .toast.show {
             opacity: 1;
             transform: translateX(0);
         }
 
-        /* --- Media Queries for Desktop --- Unificado */
+        /* --- Media Queries for Desktop --- */
         @media (min-width: 768px) {
             header {
                 padding: 0.5rem 2rem;
                 min-height: 100px;
             }
             header img {
-                height: 80px; /* Larger logo for desktop */
+                height: 80px; 
             }
             .menu-btn {
-                display: none; /* Hide hamburger menu */
+                display: none;
             }
             nav {
-                position: static; /* Static position for desktop nav */
+                position: static;
                 display: flex;
                 flex-direction: row;
                 width: auto;
@@ -362,12 +343,12 @@
             }
             nav a {
                 padding: 0.7rem 1.2rem;
-                color: #222; /* Text color for desktop nav */
+                color: #222; 
             }
             nav a:hover {
-                color: #ff69b4;
+                color: #F17E23;
                 text-decoration: underline;
-                transform: none; /* Remove scale effect */
+                transform: none; 
             }
 
             .section-title {
@@ -376,7 +357,7 @@
             }
 
             .products-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Larger cards for desktop */
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 2rem;
                 padding: 0 2rem;
             }
@@ -385,7 +366,7 @@
                 padding: 1.2rem;
             }
             .product-img-container {
-                height: 150px; /* Taller image container */
+                height: 150px; 
             }
 
             .cart-icon {
@@ -400,9 +381,9 @@
                 padding: 4px 9px;
                 min-width: 28px;
             }
-
+            
             .toast-container {
-                bottom: 100px; /* Adjust for larger cart icon on desktop */
+                bottom: 100px;
                 right: 30px;
             }
         }
@@ -452,9 +433,10 @@
                 <p class="description">La versión en bolsa para compartir (o no) tus okalokas favoritas.</p>
                 <p class="price">$2.000</p>
                 <button onclick="addToCartAndNotify('Okaloka Bolsa', 2000)">Añadir al Carrito</button>
+            </div>
         </section>
 
-        <<h2 class="section-title">Roblox 💎</h2>
+        <h2 class="section-title">Roblox 💎</h2>
         <section class="products-grid">
             <div class="product-card">
                 <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 40 RBX"></div>
@@ -485,7 +467,7 @@
                 <button onclick="addToCartAndNotify('1000 RBX', 40000)">Añadir al Carrito</button>
             </div>
             <div class="product-card">
-                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 1000 RBX"></div>
+                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 4500 RBX"></div>
                 <h3>4500 RBX</h3>
                 <p class="description">SUPERHAPYPROMO!! Aprovecha YA!!</p>
                 <p class="price">$151.000</p>
@@ -522,8 +504,6 @@
             </div>
         </section>
 
-        
-    </section>
         <h2 class="section-title">Otros Servicios Online 🌐</h2>
         <section class="products-grid">
             <div class="product-card">
@@ -614,11 +594,13 @@
             toast.classList.add('toast');
             toast.textContent = message;
 
-            // Optional: Add specific styling based on type (e.g., 'success', 'error')
+            // Usamos los colores Happyween para el toast
             if (type === 'success') {
-                toast.style.backgroundColor = 'rgba(76, 175, 80, 0.9)'; /* Green for success */
+                toast.style.backgroundColor = 'rgba(241, 126, 35, 0.9)'; /* Naranja Calabaza para éxito */
             } else if (type === 'error') {
-                toast.style.backgroundColor = 'rgba(244, 67, 54, 0.9)'; /* Red for error */
+                toast.style.backgroundColor = 'rgba(177, 68, 36, 0.9)'; /* Marrón/Naranja Quemado para error */
+            } else {
+                 toast.style.backgroundColor = 'rgba(34, 34, 34, 0.95)';
             }
 
             toastContainer.appendChild(toast);
