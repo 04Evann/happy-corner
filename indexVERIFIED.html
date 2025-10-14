@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8" />
@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Paleta Usada:
-           - Base Profunda/Header Start: #7B2C13 (Marrón Oscuro)
-           - Botones/Acentos: #B14424 (Naranja Quemado)
-           - Highlights/Vibrante: #F17E23 (Naranja Calabaza)
-           - Fondo: #000 (Negro Puro)
+            - Base Profunda/Header Start: #7B2C13 (Marrón Oscuro)
+            - Botones/Acentos: #B14424 (Naranja Quemado)
+            - Highlights/Vibrante: #F17E23 (Naranja Calabaza)
+            - Fondo: #000 (Negro Puro)
         */
 
         /* Base Styles & Mobile First */
@@ -176,6 +176,7 @@
         /* --- Product Grids --- */
         .products-grid {
             display: grid;
+            /* **LA REGLA ORIGINAL (que permite una columna si no cabe 150px) se mantiene aquí.** */
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
             padding: 0 1rem;
@@ -202,7 +203,7 @@
             transform: translateY(-5px);
             /* CAMBIO CLAVE: Borde exterior de Naranja Calabaza para enfatizar el "cuadrito" */
             box-shadow: 0 0 0 2px #F17E23, /* Borde sólido */
-                        0 8px 20px rgba(0, 0, 0, 0.5); /* Sombra elevada */
+                                0 8px 20px rgba(0, 0, 0, 0.5); /* Sombra elevada */
         }
 
         .product-img-container {
@@ -394,6 +395,28 @@
             opacity: 1;
             transform: translateX(0);
         }
+        
+        /* 🚨 NUEVA REGLA PARA MÓVILES PEQUEÑOS (Menos de 600px) */
+        @media (max-width: 600px) {
+            .products-grid {
+                /* FUERZA a que siempre haya dos columnas de igual tamaño en móvil */
+                grid-template-columns: 1fr 1fr;
+            }
+            /* Opcional: Ajustar elementos de tarjeta para que quepan mejor */
+            .product-card {
+                font-size: 0.8rem;
+                padding: 0.8rem;
+            }
+            .product-img-container {
+                height: 100px;
+            }
+            .product-card h3 {
+                font-size: 0.9rem;
+            }
+            .product-card .price {
+                font-size: 1rem;
+            }
+        }
 
         /* --- Media Queries for Desktop --- */
         @media (min-width: 768px) {
@@ -496,7 +519,6 @@
         <h2 class="section-title">Hot Products 🔥</h2>
         <section class="products-grid">
             <div class="product-card">
-                <<div class="product-card">
                 <div class="product-img-container"><img src="Piazza.png" alt="piazzita"></div>
                 <h3>Piazzaween</h3>
                 <p class="description">VOLVIO LA PIAZZA, AREQUIPE Y CHOCOLATE!</p>
@@ -522,6 +544,7 @@
                 <h3>???</h3>
                 <p class="description">Producto en camino.</p>
                 <p class="price">$???</p>
+                <button onclick="addToCartAndNotify('Producto Desconocido', 0)">Añadir al Carrito</button>
            </div>
         </section>
 
@@ -569,7 +592,7 @@
         // Funciones de JavaScript (Menu, Carousel, Cart, Toast) - Se mantienen sin cambios
         function toggleMenu() {
             const menu = document.getElementById('menu');
-            menu.classList.toggle('open');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
 
         const carouselImages = document.querySelectorAll('.carousel-image');
@@ -577,7 +600,9 @@
 
         function showSlide(index) {
             carouselImages.forEach(img => img.classList.remove('active'));
-            carouselImages[index].classList.add('active');
+            if (carouselImages.length > 0) {
+                 carouselImages[index].classList.add('active');
+            }
         }
 
         function nextSlide() {
@@ -590,13 +615,18 @@
             showSlide(currentImageIndex);
         }
 
-        let carouselInterval = setInterval(nextSlide, 5000); 
+        if (carouselImages.length > 1) {
+             let carouselInterval = setInterval(nextSlide, 5000); 
 
-        const carouselContainer = document.querySelector('.carousel-container');
-        carouselContainer.addEventListener('mouseenter', () => clearInterval(carouselInterval));
-        carouselContainer.addEventListener('mouseleave', () => carouselInterval = setInterval(nextSlide, 5000));
+             const carouselContainer = document.querySelector('.carousel-container');
+             carouselContainer.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+             carouselContainer.addEventListener('mouseleave', () => carouselInterval = setInterval(nextSlide, 5000));
+             showSlide(currentImageIndex); 
+        } else if (carouselImages.length === 1) {
+             showSlide(0);
+        }
+        
 
-        showSlide(currentImageIndex); 
 
         function addToCartAndNotify(productName, productPrice) {
             let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
