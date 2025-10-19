@@ -27,7 +27,6 @@
         }
 
         body {
-            /* CAMBIO CLAVE: Fondo principal en Negro Puro para contraste */
             background: #000; 
         }
 
@@ -97,7 +96,6 @@
             position: relative;
             border-radius: 15px; 
             overflow: hidden;
-            /* Sombra para elevar el carrusel */
             box-shadow: 0 4px 15px rgba(123, 44, 19, 0.5); 
             aspect-ratio: 16 / 9;
             height: auto; 
@@ -128,7 +126,7 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 2.5rem;
-            background: rgba(123, 44, 19, 0.8); /* Marrón Profundo */
+            background: rgba(123, 44, 19, 0.8); 
             border: none;
             padding: 0.5rem 1rem;
             cursor: pointer;
@@ -139,7 +137,7 @@
         }
 
         .carousel-button:hover {
-            background: rgba(177, 68, 36, 0.9); /* Naranja Quemado */
+            background: rgba(177, 68, 36, 0.9); 
         }
 
         .carousel-button.prev {
@@ -149,6 +147,28 @@
         .carousel-button.next {
             right: 10px;
         }
+        
+        /* --- ESTILOS PARA EL BANNER DE TRABAJO (ACTUALIZADO) --- */
+        .job-banner {
+            background: #B14424; /* Naranja Quemado */
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin: 1.5rem auto;
+            width: 90%;
+            max-width: 900px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-decoration: none; /* Como ahora es un <a> */
+            display: block;
+        }
+        .job-banner:hover {
+            background: #F17E23; /* Naranja Calabaza */
+            transform: translateY(-2px);
+        }
+        /* --- FIN ESTILOS BANNER --- */
 
         /* --- Section Titles --- */
         .section-title {
@@ -156,7 +176,7 @@
             font-size: 1.8rem;
             font-weight: 600;
             margin: 3rem 1rem 1.5rem;
-            color: #B14424; /* Naranja Quemado */
+            color: #B14424; 
             position: relative;
             padding-bottom: 10px;
         }
@@ -169,14 +189,13 @@
             transform: translateX(-50%);
             width: 60px;
             height: 4px;
-            background-color: #F17E23; /* Naranja Vibrante */
+            background-color: #F17E23; 
             border-radius: 2px;
         }
 
         /* --- Product Grids --- */
         .products-grid {
             display: grid;
-            /* **LA REGLA ORIGINAL (que permite una columna si no cabe 150px) se mantiene aquí.** */
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
             padding: 0 1rem;
@@ -185,13 +204,11 @@
         }
 
         .product-card {
-            /* CAMBIO CLAVE: Fondo de tarjeta distinto al body */
-            background: #1A1A1A; /* Gris Oscuro */
+            background: #1A1A1A; 
             border-radius: 12px; 
             padding: 1rem;
             text-align: center;
             font-size: 0.9rem;
-            /* Sombra más marcada en un fondo negro */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
@@ -201,13 +218,12 @@
 
         .product-card:hover {
             transform: translateY(-5px);
-            /* CAMBIO CLAVE: Borde exterior de Naranja Calabaza para enfatizar el "cuadrito" */
-            box-shadow: 0 0 0 2px #F17E23, /* Borde sólido */
-                                0 8px 20px rgba(0, 0, 0, 0.5); /* Sombra elevada */
+            box-shadow: 0 0 0 2px #F17E23, 
+                                0 8px 20px rgba(0, 0, 0, 0.5); 
         }
 
         .product-img-container {
-            background: #333; /* Gris más oscuro para el área de la imagen */
+            background: #333; 
             height: 120px;
             border-radius: 8px;
             margin-bottom: 0.8rem;
@@ -241,14 +257,14 @@
 
         .product-card .price {
             font-weight: 600;
-            color: #F17E23; /* Naranja Vibrante */
+            color: #F17E23; 
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
         }
 
         .product-card .description {
             font-size: 0.85rem;
-            color: #bbb; /* Gris medio */
+            color: #bbb; 
             margin-bottom: 0.8rem;
             height: 40px; 
             overflow: hidden; 
@@ -259,7 +275,7 @@
         }
 
         .product-card button {
-            background: #B14424; /* Naranja Quemado */
+            background: #B14424; 
             color: white;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -271,13 +287,13 @@
         }
 
         .product-card button:hover {
-            background: #D35721; /* Tono intermedio en hover */
+            background: #D35721; 
             transform: translateY(-2px);
         }
 
         /* --- Footer --- */
         footer {
-            background: #000; /* Negro Puro */
+            background: #000; 
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
@@ -299,7 +315,7 @@
         }
 
         .social-icons a:hover {
-            color: #F17E23; /* Naranja Vibrante hover */
+            color: #F17E23; 
         }
         
         .footer-links {
@@ -318,9 +334,8 @@
         }
 
         .footer-links a:hover {
-            color: #B14424; /* Naranja Quemado hover */
+            color: #B14424; 
         }
-
 
         /* --- Cart Icon (Carrito Flotante) --- */
         .cart-icon {
@@ -337,7 +352,6 @@
             z-index: 10;
             text-decoration: none;
             color: #eee;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -396,13 +410,11 @@
             transform: translateX(0);
         }
         
-        /* 🚨 NUEVA REGLA PARA MÓVILES PEQUEÑOS (Menos de 600px) */
+        /* 🚨 REGLA PARA MÓVILES PEQUEÑOS (Menos de 600px) */
         @media (max-width: 600px) {
             .products-grid {
-                /* FUERZA a que siempre haya dos columnas de igual tamaño en móvil */
                 grid-template-columns: 1fr 1fr;
             }
-            /* Opcional: Ajustar elementos de tarjeta para que quepan mejor */
             .product-card {
                 font-size: 0.8rem;
                 padding: 0.8rem;
@@ -442,7 +454,7 @@
             }
             nav a {
                 padding: 0.7rem 1.2rem;
-                color: #222; /* Texto en header claro es oscuro */
+                color: #222; 
             }
             nav a:hover {
                 color: #F17E23;
@@ -515,22 +527,25 @@
             <button class="carousel-button prev" onclick="prevSlide()">‹</button>
             <button class="carousel-button next" onclick="nextSlide()">›</button>
         </section>
-
+        
+        <a href="manager.html" class="job-banner">
+            <p>¡OPORTUNIDAD! Estamos Buscando **Manager Voluntario**. <span>&#9989;</span> **Haz clic aquí para aplicar**</p>
+        </a>
         <h2 class="section-title">Hot Products 🔥</h2>
         <section class="products-grid">
             <div class="product-card">
                 <div class="product-img-container"><img src="Piazza.png" alt="piazzita"></div>
                 <h3>Piazzaween</h3>
                 <p class="description">VOLVIO LA PIAZZA, AREQUIPE Y CHOCOLATE!</p>
-                <p class="price">$600</p>
-                <button onclick="addToCartAndNotify('Piazzaween', 600)">Añadir al Carrito</button>
+                <p class="price">$1000</p>
+                <button onclick="addToCartAndNotify('Piazzaween', 1000)">Añadir al Carrito</button>
             </div>
             <div class="product-card">
                 <div class="product-img-container"><img src="bbbc.png" alt="bombombum clasico"></div>
                 <h3>BomBomBum Clasico</h3>
                 <p class="description">LO MAS CALIENTE DEL MOMENTO!</p>
-                <p class="price">$1000</p>
-                <button onclick="addToCartAndNotify('BomBomBum Clasico', 1000)">Añadir al Carrito</button>
+                <p class="price">$700</p>
+                <button onclick="addToCartAndNotify('BomBomBum Clasico', 700)">Añadir al Carrito</button>
             </div>
             <div class="product-card">
                 <div class="product-img-container"><img src="Robux_icon.png" alt="Candy Ranch"></div>
@@ -589,7 +604,7 @@
     </footer>
 
     <script>
-        // Funciones de JavaScript (Menu, Carousel, Cart, Toast) - Se mantienen sin cambios
+        // Funciones de JavaScript (Menu, Carousel, Cart, Toast)
         function toggleMenu() {
             const menu = document.getElementById('menu');
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
@@ -626,7 +641,6 @@
              showSlide(0);
         }
         
-
 
         function addToCartAndNotify(productName, productPrice) {
             let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
