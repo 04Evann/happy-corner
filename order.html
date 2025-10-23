@@ -612,6 +612,7 @@
             menu.classList.toggle('open');
         }
 
+        // ... (Todas las referencias a elementos HTML) ...
         const cartItemsList = document.getElementById('cart-items-list');
         const subtotalPriceSpan = document.getElementById('subtotal-price');
         const shippingPriceSpan = document.getElementById('shipping-price');
@@ -622,7 +623,7 @@
         
         // Referencias para Happy Puntos y el Formulario
         const puntosCodeInput = document.getElementById('puntos_code');
-        const consultarPuntosBtn = document.getElementById('consultar-puntos-btn'); // NUEVA REFERENCIA
+        const consultarPuntosBtn = document.getElementById('consultar-puntos-btn');
         const checkoutForm = document.getElementById('checkout-form');
         const orderNumberHidden = document.getElementById('order-number-hidden');
 
@@ -638,61 +639,78 @@
         const totalPriceHidden = document.getElementById('total-price-hidden');
         const cartContentHidden = document.getElementById('cart-content-hidden');
         const nequiNumberHidden = document.getElementById('nequi-number-hidden');
-
-        // DUMMY DATABASE PARA HAPPY PUNTOS (Códigos para que pruebes)
-        const happyPuntosDB = {
-            'VIP123': { 
-                nombre: 'Cliente VIP', 
-                email: 'cliente.vip@happy.com', 
-                celular: '3001112233',
-                puntos: 1500 // Puntos de ejemplo
-            },
-            'GOLD45': { 
-                nombre: 'Socio Gold', 
-                email: 'socio.gold@happy.com', 
-                celular: '3109998877',
-                puntos: 450 // Puntos de ejemplo
-            }
-        };
-
+        
+        // *******************************************************************
+        // MODIFICACIÓN CLAVE: URL de tu API de Vercel
+        // Asegúrate de cambiar `happycorner.lol` si tu dominio es diferente
+        // *******************************************************************
+        const VERCEL_API_BASE_URL = 'https://happycorner.lol/api'; 
+        
         let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
 
         // Generar Número de Pedido único
         function generateOrderNumber() {
-            // Genera una combinación de fecha (sin guiones) y 3 dígitos aleatorios (Ej: HP-20251022-123)
             const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
             const randomPart = Math.floor(100 + Math.random() * 900);
             return `HP-${datePart}-${randomPart}`;
         }
         
-        // Lógica para rellenar campos con Happy Puntos (activada por el botón)
-        function applyHappyPuntos() {
+        // NUEVA LÓGICA: Consultar la API de Vercel para obtener los datos
+        async function applyHappyPuntos() {
             const code = puntosCodeInput.value.trim().toUpperCase();
-            const data = happyPuntosDB[code];
 
-            if (data) {
+            if (!code) {
+                alert('Por favor, introduce tu HappyCódigo.');
+                return;
+            }
+            
+            // Deshabilita el botón mientras carga
+            consultarPuntosBtn.disabled = true;
+            consultarPuntosBtn.textContent = 'Consultando...';
+
+            try {
+                // Llama a tu función getpoints.js en Vercel
+                const response = await fetch(`${VERCEL_API_BASE_URL}/getpoints?codigo=${code}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Maneja errores de API (ej: 404 HappyCódigo no encontrado)
+                    alert(`Error: ${data.error || 'No se pudo contactar al servidor de puntos.'}`);
+                    return;
+                }
+
+                const cliente = data;
+                
                 // Muestra la información de puntos y pide confirmación
                 const confirmMessage = 
-                    `¡Código de Happy Puntos Encontrado!\n\n` +
-                    `👤 Cliente: ${data.nombre}\n` +
-                    `🌟 Puntos Disponibles: ${data.puntos.toLocaleString('es-CO')}\n\n` +
-                    `Se rellenarán los campos de contacto con estos datos.\n\n` +
-                    `¿Deseas continuar y aplicar estos datos?`;
-
+                    `¡HappyCódigo Encontrado!\n\n` +
+                    `👤 Cliente: ${cliente.nombre}\n` +
+                    `🌟 Puntos Disponibles: ${cliente.puntos.toLocaleString('es-CO')}\n\n` +
+                    `Se rellenarán los campos de contacto con:\n` +
+                    `Email: ${cliente.correo}\n` +
+                    `Celular: ${cliente.ultimas_transacciones.length > 0 ? cliente.ultimas_transacciones[0].contacto : 'No disponible'}\n\n` +
+                    `¿Deseas aplicar estos datos?`; // Nota: Loyverse no siempre da el celular de forma fácil. Usaremos el email y el nombre.
+                
+                // Si el usuario confirma, rellena los campos
                 if (confirm(confirmMessage)) {
-                    document.getElementById('nombre').value = data.nombre;
-                    document.getElementById('email').value = data.email;
-                    document.getElementById('celular').value = data.celular;
+                    document.getElementById('nombre').value = cliente.nombre;
+                    document.getElementById('email').value = cliente.correo !== 'No registrado' ? cliente.correo : '';
+                    // Nota: El celular no está disponible directamente en tu respuesta de getpoints.js. 
+                    // Lo dejaremos vacío o intentaremos inferirlo de un campo común de Loyverse si existiera.
+                    // Por ahora, solo rellenamos nombre y email.
                     alert('¡Datos aplicados con éxito!');
                 } else {
-                    // El usuario canceló
                     alert('Relleno de datos cancelado.');
                 }
 
-            } else if (code.length > 0) {
-                alert('Código de Happy Puntos no reconocido. Por favor, verifica e intenta de nuevo.');
-            } else {
-                alert('Por favor, introduce un código de Happy Puntos para consultar.');
+
+            } catch (error) {
+                console.error('Error al consultar Happy Puntos:', error);
+                alert('Ocurrió un error al consultar el código. Verifica la conexión o el código.');
+            } finally {
+                // Restaura el botón
+                consultarPuntosBtn.disabled = false;
+                consultarPuntosBtn.textContent = 'Consultar';
             }
         }
 
@@ -715,6 +733,7 @@
 
 
         function renderCart() {
+            // ... (Lógica de renderCart que se mantiene igual) ...
             cartItemsList.innerHTML = '';
             let subtotal = 0;
 
@@ -781,7 +800,7 @@
                 paymentDetailsDivs[selectedMethod].style.display = 'block';
             }
         }
-
+        
         function updateOrderSummaryForFormSubmit(total) {
             let summaryText = 'Resumen del Pedido:\n\n';
             let cartContentForHidden = [];
@@ -813,7 +832,7 @@
             paymentMethodSelect.addEventListener('change', updatePaymentDetailsDisplay);
             updatePaymentDetailsDisplay();
             
-            // Happy Puntos Event Listener ahora es con el botón "Consultar"
+            // Conecta el botón "Consultar" a la API de Vercel
             consultarPuntosBtn.addEventListener('click', applyHappyPuntos);
             
             // Form Submission Handler para validación y actualización final
@@ -826,7 +845,6 @@
                 }
                 
                 // 2. Asegurar que el resumen y número de pedido estén actualizados antes de enviar
-                // Se usa el valor numérico del total para la función
                 const totalText = totalPriceSpan.textContent.replace('$', '').replace(/\./g, '').replace(',', '');
                 updateOrderSummaryForFormSubmit(parseFloat(totalText)); 
 
