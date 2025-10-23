@@ -1,221 +1,192 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HappyCorner | Pedido</title>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #fff;
-      color: #222;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      text-align: center;
-      margin-top: 1rem;
-    }
-    form {
-      max-width: 420px;
-      margin: 2rem auto;
-      padding: 1.5rem;
-      background: #fafafa;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    input, select, button {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    button {
-      background: #14b8a6;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background .2s;
-    }
-    button:hover {
-      background: #0d9488;
-    }
-    #consultarPuntosBtn {
-      background: #3b82f6;
-    }
-    #consultarPuntosBtn:hover {
-      background: #2563eb;
-    }
-    .hidden { display: none; }
-    @keyframes fade-in { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
-    .animate-fade-in { animation: fade-in .2s ease-in-out; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Shop - Tu Pedido</title>
+
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; color:#eee; }
+        body { background:#000; }
+
+        header { background:linear-gradient(to right,#7B2C13,#B14424,#F17E23); padding:1rem; display:flex; justify-content:space-between; align-items:center; min-height:80px; box-shadow:0 4px 10px rgba(0,0,0,0.4); }
+        header img{ height:65px; object-fit:contain; }
+        .menu-btn{ font-size:2rem; background:none; border:none; color:#eee; cursor:pointer; }
+        nav{ position:absolute; top:100%; left:0; width:100%; background:rgba(0,0,0,0.95); backdrop-filter:blur(5px); display:none; flex-direction:column; align-items:center; padding:1rem 0; }
+        nav.open{ display:flex; }
+        nav a{ color:#eee; text-decoration:none; padding:0.8rem 1.5rem; font-weight:500; transition:color .3s; }
+        nav a:hover{ color:#F17E23; transform:scale(1.05); }
+
+        main{ display:flex; flex-direction:column; gap:2rem; padding:1.5rem 1rem; max-width:1200px; margin:0 auto; }
+        .page-title{ text-align:center; font-size:2.5rem; font-weight:700; margin:1rem 0 2rem; color:#B14424; position:relative; padding-bottom:15px; }
+        .page-title::after{ content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:80px; height:5px; background:#F17E23; border-radius:3px; }
+
+        .order-container{ display:flex; flex-direction:column; gap:2rem; }
+        .order-summary, .checkout-form{ background:#1A1A1A; border-radius:12px; box-shadow:0 5px 15px rgba(0,0,0,0.5); padding:1.5rem; flex:1; }
+        .order-summary h2, .checkout-form h2{ font-size:1.6rem; font-weight:600; color:#F17E23; margin-bottom:1.5rem; border-bottom:2px solid #7B2C13; padding-bottom:0.8rem; }
+
+        #cart-items-list{ list-style:none; padding:0; margin-bottom:1.5rem; }
+        #cart-items-list li{ display:flex; justify-content:space-between; align-items:center; padding:0.8rem 0; border-bottom:1px dashed #333; font-size:0.95rem; }
+        #cart-items-list li:last-child{ border-bottom:none; }
+        .item-details{ flex-grow:1; margin-right:1rem; display:flex; flex-direction:column; }
+        .item-details .item-name{ font-weight:500; color:#eee; }
+        .item-details .item-price{ font-size:0.85rem; color:#bbb; }
+        .item-controls{ display:flex; align-items:center; gap:0.5rem; }
+        .item-controls button{ background:#B14424; color:white; border:none; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; cursor:pointer; transition:background .2s; }
+        .item-controls button:hover{ background:#7B2C13; }
+        .item-total{ font-weight:600; color:#F17E23; min-width:60px; text-align:right; }
+
+        .order-totals{ margin-top:1.5rem; padding-top:1rem; border-top:1px solid #333; }
+        .order-totals p{ display:flex; justify-content:space-between; font-size:1.1rem; margin-bottom:0.8rem; }
+        .order-totals .total-price{ font-size:1.4rem; font-weight:700; color:#F17E23; }
+
+        footer{ background:#000; color:#eee; padding:2rem 1rem; text-align:center; margin-top:3rem; box-shadow:0 -2px 10px rgba(0,0,0,0.4); }
+        .social-icons a{ color:white; font-size:1.5rem; margin:0 10px; transition:color .3s; }
+        .social-icons a:hover{ color:#F17E23; }
+
+        @media(min-width:768px){
+            .menu-btn{ display:none; }
+            nav{ position:static; display:flex; flex-direction:row; width:auto; background:none; }
+            .order-container{ flex-direction:row; max-width:900px; }
+            .order-summary{ margin-right:2rem; }
+        }
+    </style>
 </head>
 <body>
+    <header>
+        <img src="loguito.png" alt="Happy Shop Logo" />
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <nav id="menu">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">Happy Order</a>
+            <a href="puntos.html">Happy Puntos</a>
+            <a href="terminos.html">Términos</a>
+        </nav>
+    </header>
 
-  <h1>🍕 Pedido HappyCorner</h1>
+    <main>
+        <h1 class="page-title">Tu Pedido Happy 🥳</h1>
 
-  <form id="checkoutForm" action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
-    <input type="text" id="nombre" name="Nombre" placeholder="Tu nombre" required>
-    <input type="email" id="email" name="Correo" placeholder="Tu correo" required>
-    <input type="tel" id="celular" name="Celular" placeholder="Tu número de contacto" required>
+        <div class="order-container">
+            <section class="order-summary">
+                <h2>Resumen de tu Carrito</h2>
+                <ul id="cart-items-list"></ul>
 
-    <div style="display:flex; gap:8px;">
-      <input type="text" id="puntosCodeInput" placeholder="HappyCódigo" style="flex:1;">
-      <button type="button" id="consultarPuntosBtn" onclick="applyHappyPuntos()">Consultar</button>
-    </div>
+                <div class="order-totals">
+                    <p>Subtotal: <span id="subtotal-price">$0</span></p>
+                    <p>Envío: <span id="shipping-price">Gratis</span></p>
+                    <p class="total-price">Total: <span id="total-price">$0</span></p>
+                </div>
+            </section>
 
-    <select id="producto" name="Producto" required>
-      <option value="">Selecciona tu producto</option>
-      <option value="Oka Loka (caja)">Oka Loka (caja)</option>
-      <option value="Oka Loka (bolsa)">Oka Loka (bolsa)</option>
-      <option value="Gomitas">Gomitas</option>
-      <option value="Barquillos">Barquillos</option>
-      <option value="Bombombum">Bombombum</option>
-      <option value="HappyPizza Normal">HappyPizza Normal</option>
-      <option value="HappyPizza X2 Queso">HappyPizza X2 Queso</option>
-      <option value="80 RBX">80 RBX</option>
-    </select>
+            <section class="checkout-form">
+                <h2>Detalles de Contacto y Pago</h2>
+                <form id="checkout-form" action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
+                    <label>Nombre completo:</label>
+                    <input type="text" name="nombre" required>
 
-    <input type="number" id="cantidad" name="Cantidad" placeholder="Cantidad" min="1" required>
+                    <label>Email:</label>
+                    <input type="email" name="email" required>
 
-    <textarea id="notas" name="Notas" rows="2" placeholder="Notas adicionales (opcional)"></textarea>
+                    <label>Método de pago:</label>
+                    <select name="metodo_pago" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="nequi">Nequi</option>
+                        <option value="efectivo">Efectivo</option>
+                    </select>
 
-    <input type="hidden" name="_next" value="https://happycorner.lol/confirmed.html">
-    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
+                    <input type="hidden" name="_next" value="https://happycorner.lol/confirmed.html">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="Resumen_del_Pedido" id="order-summary-input">
+                    <input type="hidden" name="Total_del_Pedido" id="total-price-hidden">
+                    <input type="hidden" name="Contenido_del_Carrito" id="cart-content-hidden">
+                    <input type="hidden" name="Número_de_Pedido" id="order-number-hidden">
+                    <input type="hidden" name="HappyCódigo" value="EvanLensen22">
 
-    <button type="submit" id="enviarPedidoBtn">Enviar pedido</button>
-  </form>
+                    <button type="submit" id="place-order-button">Finalizar HappyOrder</button>
+                </form>
+            </section>
+        </div>
+    </main>
 
-  <!-- MODAL -->
-  <div id="happy-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-lg p-6 w-[90%] max-w-md text-center animate-fade-in">
-      <h2 class="text-xl font-semibold mb-2">🎉 HappyCódigo válido</h2>
-      <p id="happy-modal-msg" class="text-gray-700 whitespace-pre-line mb-4"></p>
-      <div class="flex justify-center gap-3">
-        <button id="happy-modal-apply" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Aplicar</button>
-        <button id="happy-modal-cancel" class="px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400 transition">Cancelar</button>
-      </div>
-    </div>
-  </div>
+    <footer>
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+        </div>
+    </footer>
 
-  <script>
-  const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api';
-  const checkoutForm = document.getElementById('checkoutForm');
-  const puntosCodeInput = document.getElementById('puntosCodeInput');
-  const consultarPuntosBtn = document.getElementById('consultarPuntosBtn');
-  const cantidadInput = document.getElementById('cantidad');
-  const productoSelect = document.getElementById('producto');
+    <script>
+        const cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+        const cartList = document.getElementById('cart-items-list');
+        const subtotalEl = document.getElementById('subtotal-price');
+        const totalEl = document.getElementById('total-price');
+        const orderSummaryInput = document.getElementById('order-summary-input');
+        const totalPriceHidden = document.getElementById('total-price-hidden');
+        const cartContentHidden = document.getElementById('cart-content-hidden');
+        const orderNumberHidden = document.getElementById('order-number-hidden');
 
-  function showToast(msg) {
-    const toast = document.createElement('div');
-    toast.textContent = msg;
-    toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-black text-white text-sm px-4 py-2 rounded-lg shadow-md opacity-0 transition';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.style.opacity = '1', 10);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      setTimeout(() => toast.remove(), 500);
-    }, 2500);
-  }
+        function generateOrderNumber() {
+            const d = new Date();
+            return `HP-${d.getFullYear()}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getDate().toString().padStart(2,'0')}-${Math.floor(100 + Math.random() * 900)}`;
+        }
 
-  async function applyHappyPuntos() {
-    const code = puntosCodeInput.value.trim();
-    if (!code) {
-      showToast('⚠️ Ingresa tu HappyCódigo primero.');
-      return;
-    }
+        function renderCart() {
+            cartList.innerHTML = '';
+            let subtotal = 0;
 
-    consultarPuntosBtn.disabled = true;
-    consultarPuntosBtn.textContent = 'Consultando...';
+            cart.forEach((item, i) => {
+                // límite de pizzas
+                if ((item.name === "HappyPizza Normal" || item.name === "HappyPizza X2 Queso") && item.quantity > 5) {
+                    item.quantity = 5;
+                }
 
-    try {
-      const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${encodeURIComponent(code)}`);
-      const data = await res.json();
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${item.name} (x${item.quantity})</span>
+                    <span>$${(item.price * item.quantity).toLocaleString('es-CO')}</span>
+                `;
+                cartList.appendChild(li);
+                subtotal += item.price * item.quantity;
+            });
 
-      if (!res.ok) {
-        showToast(`❌ ${data.error || 'No se pudo verificar el código.'}`);
-        return;
-      }
+            subtotalEl.textContent = `$${subtotal.toLocaleString('es-CO')}`;
+            totalEl.textContent = `$${subtotal.toLocaleString('es-CO')}`;
 
-      const msgLines = [
-        `👤 ${data.nombre}`,
-        `📧 ${data.correo}`,
-        `💎 Puntos: ${data.puntos.toLocaleString('es-CO')}`,
-        '',
-        data.ultimas_transacciones?.length
-          ? '🛍️ Últimos pedidos:\n' +
-            data.ultimas_transacciones.slice(0, 3).map(
-              (r, i) => `${i + 1}. ${r.fecha} — $${r.total.toLocaleString('es-CO')}`
-            ).join('\n')
-          : 'No se encontraron pedidos recientes.'
-      ];
-      document.getElementById('happy-modal-msg').textContent = msgLines.join('\n');
+            // Formato de resumen para el correo
+            const orderNumber = generateOrderNumber();
+            orderNumberHidden.value = orderNumber;
+            let summary = `Resumen del Pedido:\n\nNúmero de Pedido: ${orderNumber}\n\n`;
+            cart.forEach(item => {
+                summary += `- ${item.name} (x${item.quantity}): $${(item.price * item.quantity).toLocaleString('es-CO')}\n`;
+            });
+            summary += `\nSubtotal: $${subtotal.toLocaleString('es-CO')}\nEnvío: Gratis\nTotal: $${subtotal.toLocaleString('es-CO')}`;
 
-      const modal = document.getElementById('happy-modal');
-      modal.classList.remove('hidden');
+            orderSummaryInput.value = summary;
+            totalPriceHidden.value = `$${subtotal.toLocaleString('es-CO')}`;
+            cartContentHidden.value = cart.map(i => `${i.name} (x${i.quantity})`).join(', ');
+        }
 
-      const applyBtn = document.getElementById('happy-modal-apply');
-      const cancelBtn = document.getElementById('happy-modal-cancel');
-      applyBtn.onclick = null;
-      cancelBtn.onclick = null;
+        document.getElementById('checkout-form').addEventListener('submit', (e) => {
+            const pizzaNormal = cart.find(i => i.name === "HappyPizza Normal");
+            const pizzaX2 = cart.find(i => i.name === "HappyPizza X2 Queso");
+            if ((pizzaNormal && pizzaNormal.quantity > 5) || (pizzaX2 && pizzaX2.quantity > 5)) {
+                e.preventDefault();
+                alert("⚠️ Límite máximo de 5 HappyPizzas por orden.");
+                return;
+            }
+        });
 
-      applyBtn.onclick = () => {
-        document.getElementById('nombre').value = data.nombre || '';
-        document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
-        document.getElementById('celular').value = '';
-        modal.classList.add('hidden');
-        showToast('✅ Datos aplicados con éxito.');
+        function toggleMenu() {
+            document.getElementById('menu').classList.toggle('open');
+        }
 
-        const hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'HappyCódigo';
-        hiddenInput.value = data.happyCodigo;
-        checkoutForm.appendChild(hiddenInput);
-      };
-
-      cancelBtn.onclick = () => {
-        modal.classList.add('hidden');
-        showToast('Operación cancelada.');
-      };
-
-    } catch (err) {
-      console.error('Error al consultar Happy Puntos:', err);
-      showToast('❌ Error al conectar con el servidor.');
-    } finally {
-      consultarPuntosBtn.disabled = false;
-      consultarPuntosBtn.textContent = 'Consultar';
-    }
-  }
-
-  // VALIDAR ANTES DE ENVIAR
-  checkoutForm.addEventListener('submit', function(e) {
-    const producto = productoSelect.value;
-    const cantidad = parseInt(cantidadInput.value);
-
-    // Límite para pizzas traviesas
-    if ((producto === 'HappyPizza Normal' || producto === 'HappyPizza X2 Queso') && cantidad > 5) {
-      e.preventDefault();
-      showToast('🍕 Límite: máximo 5 por tipo de HappyPizza.');
-      return;
-    }
-
-    // Ajustar formato bonito del correo (sin \n\n)
-    const resumen = 
-`Resumen del Pedido:
-Producto: ${producto}
-Cantidad: ${cantidad}
-Notas: ${document.getElementById('notas').value || 'Sin notas.'}`;
-
-    const resumenInput = document.createElement('input');
-    resumenInput.type = 'hidden';
-    resumenInput.name = 'Resumen_del_Pedido';
-    resumenInput.value = resumen;
-    checkoutForm.appendChild(resumenInput);
-  });
-  </script>
+        renderCart();
+    </script>
 </body>
 </html>
