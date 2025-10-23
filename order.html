@@ -230,74 +230,70 @@
             return `HP-${datePart}-${randomPart}`;
         }
 
-        /* ------------------ Función de consulta de Happy Puntos ------------------ */
-        async function applyHappyPuntos(){
-            const code = puntosCodeInput.value.trim().toUpperCase();
-            const pedidosDiv = document.getElementById('ultimos-pedidos');
+        // NUEVA FUNCIÓN: Consultar el HappyCódigo y rellenar datos
+async function applyHappyPuntos() {
+    const code = puntosCodeInput.value.trim();
 
-            if(!code){
-                alert('Por favor, introduce tu HappyCódigo.');
-                return;
-            }
+    if (!code) {
+        alert('Por favor, introduce tu HappyCódigo.');
+        return;
+    }
 
-            consultarPuntosBtn.disabled = true;
-            consultarPuntosBtn.textContent = 'Consultando...';
-            pedidosDiv.style.display = 'none';
-            pedidosDiv.innerHTML = '';
+    consultarPuntosBtn.disabled = true;
+    consultarPuntosBtn.textContent = 'Consultando...';
 
-            try{
-                const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${encodeURIComponent(code)}`);
-                const data = await res.json();
-
-                if(!res.ok){
-                    alert(`❌ Error: ${data.error || 'No se pudo contactar al servidor de puntos.'}`);
-                    return;
-                }
-
-                // Guardar el happycodigo para FormSubmit
-                happyCodeHidden.value = code;
-
-                const nombre = data.nombre || '';
-                const correo = data.correo && data.correo !== 'No registrado' ? data.correo : '';
-                const puntos = data.puntos || 0;
-                const transacciones = data.ultimas_transacciones || [];
-
-                const confirmMsg = `✅ HappyCódigo válido!\n\n👤 Cliente: ${nombre}\n🌟 Puntos disponibles: ${puntos.toLocaleString('es-CO')}\n\n¿Deseas aplicar estos datos a tu pedido?`;
-
-                if(confirm(confirmMsg)){
-                    if(nombre) document.getElementById('nombre').value = nombre;
-                    if(correo) document.getElementById('email').value = correo;
-                    alert('🎉 Datos aplicados exitosamente!');
-                }
-
-                // Mostrar últimos 3 pedidos (si hay)
-                if(transacciones.length > 0){
-                    pedidosDiv.style.display = 'block';
-                    let html = `<h3 style="color:#F17E23; font-size:1rem; margin-bottom:0.6rem;">🧾 Últimos pedidos</h3>`;
-                    html += `<ul style="list-style:none; padding:0; margin:0; font-size:0.95rem;">`;
-                    transacciones.slice(0,3).forEach(t => {
-                        // Asegurarse de campos
-                        const recibo = t.recibo || '—';
-                        const fecha = t.fecha || '—';
-                        const total = (t.total || 0);
-                        html += `<li style="margin-bottom:0.6rem; border-bottom:1px dashed #333; padding-bottom:0.4rem;">
-                                    <strong>Recibo:</strong> ${recibo}<br>
-                                    <strong>Fecha:</strong> ${fecha}<br>
-                                    <strong>Total:</strong> $${Number(total).toLocaleString('es-CO')}
-                                 </li>`;
-                    });
-                    html += `</ul>`;
-                    pedidosDiv.innerHTML = html;
-                }
-
-            }catch(err){
-                console.error('Error al consultar Happy Puntos:', err);
-                alert('❌ Ocurrió un error al consultar el código. Verifica la conexión o inténtalo luego.');
-            }finally{
-                consultarPuntosBtn.disabled = false;
-                consultarPuntosBtn.textContent = 'Consultar';
-            }
+    try {
+        const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${encodeURIComponent(code)}`);
+        if (!res.ok) {
+            const err = await res.json();
+            alert(`⚠️ Error: ${err.error || 'No se pudo verificar el código.'}`);
+            return;
         }
+
+        const data = await res.json();
+        console.log('Respuesta API Happy Corner:', data);
+
+        // Mostrar confirmación bonita
+        let mensaje = `🎉 ¡HappyCódigo válido!\n\n👤 Cliente: ${data.nombre}\n📧 Correo: ${data.correo}\n💎 Puntos disponibles: ${data.puntos.toLocaleString('es-CO')}\n\n`;
+
+        if (data.ultimas_transacciones && data.ultimas_transacciones.length > 0) {
+            mensaje += '🛍️ Últimos pedidos:\n';
+            data.ultimas_transacciones.slice(0, 3).forEach((r, i) => {
+                mensaje += `   ${i + 1}. ${r.fecha} — $${r.total.toLocaleString('es-CO')}\n`;
+            });
+        } else {
+            mensaje += 'No se encontraron pedidos recientes.\n';
+        }
+
+        mensaje += '\n¿Deseas aplicar estos datos al formulario?';
+
+        if (confirm(mensaje)) {
+            document.getElementById('nombre').value = data.nombre || '';
+            document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
+            // Si tenés campo de teléfono en Loyverse lo podés agregar en la API luego
+            // por ahora queda vacío
+            document.getElementById('celular').value = '';
+
+            // Guarda el código del cliente para enviarlo al formsubmit
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'HappyCódigo';
+            hiddenInput.value = data.happyCodigo;
+            checkoutForm.appendChild(hiddenInput);
+
+            alert('✅ Datos aplicados con éxito.');
+        } else {
+            alert('❌ No se aplicaron los datos.');
+        }
+
+    } catch (err) {
+        console.error('Error al consultar Happy Puntos:', err);
+        alert('❌ Error al conectar con el servidor. Verifica tu conexión o inténtalo más tarde.');
+    } finally {
+        consultarPuntosBtn.disabled = false;
+        consultarPuntosBtn.textContent = 'Consultar';
+    }
+}
 
         /* ------------------ Render / Actualización de Carrito ------------------ */
         function renderCart(){
