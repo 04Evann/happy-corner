@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HappyCorner 🛍️ — Tu Tienda Favorita</title>
+
+  <link rel="icon" type="image/png" href="/happyfavicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: #fff;
+      color: #111;
+    }
+
+    /* HEADER */
+    header {
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    header img {
+      height: 65px;
+      object-fit: contain;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #ff69b4;
+    }
+
+    .cart-icon {
+      position: relative;
+      font-size: 1.5rem;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: linear-gradient(to right, #ff69b4, #ffa500);
+      color: white;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 600;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      text-align: center;
+      padding: 4rem 1.5rem 3rem;
+      background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
+      color: white;
+      border-radius: 0 0 40px 40px;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    /* PRODUCT GRID */
+    .products-section {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .products-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 2rem;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .product-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: contain;
+      margin-bottom: 1rem;
+    }
+
+    .product-card h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-card p {
+      font-size: 0.95rem;
+      color: #777;
+      margin-bottom: 1rem;
+    }
+
+    .product-price {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #ff69b4;
+      margin-bottom: 0.8rem;
+    }
+
+    .add-btn {
+      background: linear-gradient(to right, #ff69b4, #ffa500);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.3s ease;
+    }
+
+    .add-btn:hover {
+      opacity: 0.8;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #fafafa;
+      text-align: center;
+      padding: 2rem 1rem;
+      border-top: 1px solid #eee;
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #ff69b4;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.1rem; }
+      .hero p { font-size: 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="loguito.png" alt="HappyCorner Logo" />
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="order.html">Pedidos</a>
+      <a href="puntos.html">Puntos</a>
+      <a href="terminos.html">Términos</a>
+      <a href="https://wa.me/34641422390" target="_blank" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+      <div class="cart-icon">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span class="cart-count" id="cart-count">0</span>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Bienvenido a HappyCorner 🛍️</h1>
+    <p>Endulzamos tu día con productos únicos y ofertas felices 💖</p>
+  </section>
+
+  <main class="products-section">
+    <h2>Hot Deals de la Semana 🔥</h2>
+    <div class="product-grid" id="product-grid">
+      <div class="product-card">
+        <img src="oka-loka.png" alt="Oka Loka">
+        <h3>Oka Loka (Caja)</h3>
+        <p>El clásico dulce ácido más pedido 😋</p>
+        <span class="product-price">$3.000</span>
+        <button class="add-btn">Añadir al carrito</button>
+      </div>
+      <div class="product-card">
+        <img src="gomitas.png" alt="Gomitas">
+        <h3>Gomitas</h3>
+        <p>Deliciosas gomitas variadas para endulzar tu día.</p>
+        <span class="product-price">$300</span>
+        <button class="add-btn">Añadir al carrito</button>
+      </div>
+      <div class="product-card">
+        <img src="barquillo.png" alt="Barquillo">
+        <h3>Barquillo</h3>
+        <p>Crujiente y dulce, el snack perfecto.</p>
+        <span class="product-price">$1.000</span>
+        <button class="add-btn">Añadir al carrito</button>
+      </div>
+      <div class="product-card">
+        <img src="bombombum.png" alt="Bombombum">
+        <h3>Bombombum Clásico</h3>
+        <p>El infaltable de todos los recreos 🍭</p>
+        <span class="product-price">$700</span>
+        <button class="add-btn">Añadir al carrito</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 HappyCorner. Todos los derechos reservados. | <a href="https://wa.me/34641422390" target="_blank">Contáctanos por WhatsApp</a></p>
+  </footer>
+
+  <script>
+    // Simulación de carrito local
+    let cartCount = 0;
+    const buttons = document.querySelectorAll('.add-btn');
+    const cartCountSpan = document.getElementById('cart-count');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        cartCount++;
+        cartCountSpan.textContent = cartCount;
+        btn.textContent = "Agregado ✅";
+        setTimeout(() => btn.textContent = "Añadir al carrito", 1500);
+      });
+    });
+  </script>
+</body>
+</html>
