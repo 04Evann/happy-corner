@@ -3,41 +3,41 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Shop - Catálogo</title>
+    <title>Happy Shop - Tu Pedido</title>
     
     <link rel="icon" type="image/png" href="/happyfavicon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Paleta Happyween (Negro, Marrón, Naranja) */
+        /* Base Styles & Mobile First - Unificado */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            color: #eee; /* Texto claro */
+            color: #222; /* Default text color */
         }
 
         body {
-            background: #000; /* Negro Puro */
+            background: #f0f2f5; /* Light grey background for a clean look */
         }
 
-        /* --- Header --- */
+        /* --- Header --- Unificado */
         header {
-            background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
             padding: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: relative;
             z-index: 100;
-            min-height: 80px; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+            min-height: 80px; /* Ensure header has enough height */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
 
         header img {
-            height: 65px; 
+            height: 65px; /* Adjust logo size for mobile */
             max-width: 80%;
             object-fit: contain;
             object-position: left;
@@ -49,8 +49,8 @@
             border: none;
             cursor: pointer;
             z-index: 101;
-            color: #222; 
-            display: block; 
+            color: #222;
+            display: block; /* Visible on mobile */
         }
 
         nav {
@@ -58,13 +58,13 @@
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.95); 
-            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly less transparent */
+            backdrop-filter: blur(10px);
             display: none;
             flex-direction: column;
             align-items: center;
             padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* More pronounced shadow for menu */
             z-index: 100;
         }
 
@@ -73,16 +73,21 @@
         }
 
         nav a {
-            color: #eee; 
+            color: #333; /* Slightly darker for better readability */
             text-decoration: none;
             padding: 0.8rem 1.5rem;
             font-weight: 500;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease; /* Smooth transition */
         }
 
         nav a:hover {
-            color: #F17E23; /* Naranja Vibrante */
-            transform: scale(1.05); 
+            color: #ff69b4;
+            transform: scale(1.05); /* Subtle hover effect */
+        }
+
+        /* --- Main Content Sections --- */
+        main {
+            padding: 1rem 0;
         }
 
         /* --- Section Titles --- */
@@ -90,8 +95,8 @@
             text-align: center;
             font-size: 1.8rem;
             font-weight: 600;
-            margin: 3rem 1rem 1.5rem;
-            color: #B14424; /* Naranja Quemado */
+            margin: 3rem 1rem 1.5rem; /* More vertical spacing */
+            color: #ff69b4; /* Your brand color */
             position: relative;
             padding-bottom: 10px;
         }
@@ -104,47 +109,42 @@
             transform: translateX(-50%);
             width: 60px;
             height: 4px;
-            background-color: #F17E23; /* Naranja Vibrante */
+            background-color: #ffa500; /* Accent line */
             border-radius: 2px;
         }
 
         /* --- Product Grids --- */
-        main {
-            padding: 1rem 0;
-        }
-        
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Larger minimum width */
+            gap: 1.5rem; /* More space between cards */
             padding: 0 1rem;
             max-width: 1000px;
             margin: 0 auto 2rem;
         }
 
         .product-card {
-            background: #1A1A1A; /* Gris Oscuro */
-            border-radius: 12px; 
+            background: white;
+            border-radius: 12px; /* Smoother corners for cards */
             padding: 1rem;
             text-align: center;
             font-size: 0.9rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); 
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Stronger but still subtle shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hover effects */
+            display: flex; /* For better content alignment */
             flex-direction: column;
             justify-content: space-between;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 0 2px #F17E23, 
-                        0 8px 20px rgba(0, 0, 0, 0.5); 
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
         }
 
         .product-img-container {
-            background: #333; 
-            height: 120px;
-            border-radius: 8px;
+            background: #f9f9f9; /* Lighter background for image area */
+            height: 120px; /* Taller image area */
+            border-radius: 8px; /* Rounded corners for image container */
             margin-bottom: 0.8rem;
             overflow: hidden;
             display: flex;
@@ -155,47 +155,49 @@
         .product-img-container img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            border-radius: 8px;
+            object-fit: contain; /* Use contain for products like Robux/Spotify logos */
+            border-radius: 8px; /* Rounded corners for image itself */
+            padding: 5px; /* Add some padding around images */
         }
         
-        .product-img-container img[alt*="RBX"],
+        /* Specific image adjustments (to ensure logos are properly displayed) */
+        .product-img-container img[alt*="Robux_icon"],
         .product-img-container img[alt*="Spotify"],
         .product-img-container img[alt*="Serviciosalt"] {
-            object-fit: contain;
-            height: 90%; 
+            object-fit: contain; /* Ensure logos are fully visible */
+            height: 90%; /* Adjust height to give more padding inside container */
             width: 90%;
         }
 
+
         .product-card h3 {
-            color: #eee; 
             font-size: 1.1rem;
             font-weight: 500;
             margin-bottom: 0.2rem;
-        }
-
-        .product-card .price {
-            font-weight: 600;
-            color: #F17E23; /* Naranja Vibrante */
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
+            color: #333;
         }
 
         .product-card .description {
             font-size: 0.85rem;
-            color: #bbb; 
+            color: #666;
             margin-bottom: 0.8rem;
-            height: 40px; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
+            height: 40px; /* Fixed height for descriptions to keep cards uniform */
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis; /* Add ellipsis for long descriptions */
             display: -webkit-box;
-            -webkit-line-clamp: 2; 
+            -webkit-line-clamp: 2; /* Limit to 2 lines */
             -webkit-box-orient: vertical;
         }
 
-        .product-card button,
-        .whatsapp-button {
-            background: #B14424; /* Naranja Quemado */
+        .product-card .price {
+            font-weight: 600;
+            color: #ffa500; /* Orange for price */
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card button {
+            background: #ff69b4; /* Pink button */
             color: white;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -203,104 +205,121 @@
             cursor: pointer;
             font-weight: 600;
             transition: background 0.3s ease, transform 0.2s ease;
-            margin-top: auto;
-            text-decoration: none; 
-            display: block;
-            margin-bottom: 5px;
-            text-align: center;
+            margin-top: auto; /* Push button to bottom if card content varies */
         }
 
-        .product-card button:hover,
-        .whatsapp-button:hover {
-            background: #D35721; 
+        .product-card button:hover {
+            background: #e6569f; /* Darker pink on hover */
             transform: translateY(-2px);
         }
 
-        /* --- Footer --- */
+        /* --- Footer --- Unificado */
         footer {
-            background: #000; 
+            background: #222;
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
             margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .footer-content p {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
             color: #bbb;
         }
 
         .social-icons a {
             color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
             transition: color 0.3s ease;
         }
 
-        .social-icons a:hover,
-        .footer-links a:hover {
-            color: #F17E23;
+        .social-icons a:hover {
+            color: #ff69b4; /* Pink hover for social icons */
+        }
+        
+        .footer-links {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
 
         .footer-links a {
             color: #eee;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
         }
 
+        .footer-links a:hover {
+            color: #ff69b4;
+        }
 
-        /* --- Cart Icon --- */
+        /* --- Cart Icon --- Unificado */
         .cart-icon {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: #1A1A1A;
-            border: 2px solid #F17E23;
+            background: white;
+            border: 2px solid #ff69b4;
             border-radius: 50%;
-            width: 55px; 
-            height: 55px; 
+            width: 55px; /* Slightly larger */
+            height: 55px; /* Slightly larger */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.5); 
+            font-size: 1.6rem; /* Larger icon */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2); /* More pronounced shadow */
             z-index: 10;
             text-decoration: none;
-            color: #eee;
+            color: #222;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .cart-icon:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(241, 126, 35, 0.4); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
         .cart-quantity {
             position: absolute;
-            top: -8px; 
-            right: -8px; 
-            background-color: #B14424;
+            top: -8px; /* Adjusted position */
+            right: -8px; /* Adjusted position */
+            background-color: #ffa500;
             color: white;
-            font-size: 0.9rem;
+            font-size: 0.9rem; /* Slightly larger text */
             font-weight: bold;
             border-radius: 50%;
-            padding: 3px 8px;
-            min-width: 24px;
+            padding: 3px 8px; /* More padding */
+            min-width: 24px; /* Minimum width for double digits */
             text-align: center;
             display: none;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        /* --- Toast Notification Styles --- */
+        /* --- Toast Notification Styles --- Unificado */
         .toast-container {
             position: fixed;
-            bottom: 90px; 
+            bottom: 90px; /* Above the cart icon */
             right: 20px;
             z-index: 1000;
             display: flex;
-            flex-direction: column-reverse; 
+            flex-direction: column-reverse; /* Newest toast on top */
             gap: 10px;
-            pointer-events: none; 
+            pointer-events: none; /* Allows clicks through to elements underneath */
         }
 
         .toast {
-            background-color: rgba(34, 34, 34, 0.95);
+            background-color: rgba(50, 50, 50, 0.9);
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
@@ -311,28 +330,28 @@
             min-width: 200px;
             max-width: 300px;
             text-align: center;
-            pointer-events: auto;
+            pointer-events: auto; /* Allows interaction with the toast itself */
         }
-        
+
         .toast.show {
             opacity: 1;
             transform: translateX(0);
         }
 
-        /* --- Media Queries for Desktop --- */
+        /* --- Media Queries for Desktop --- Unificado */
         @media (min-width: 768px) {
             header {
                 padding: 0.5rem 2rem;
                 min-height: 100px;
             }
             header img {
-                height: 80px; 
+                height: 80px; /* Larger logo for desktop */
             }
             .menu-btn {
-                display: none;
+                display: none; /* Hide hamburger menu */
             }
             nav {
-                position: static;
+                position: static; /* Static position for desktop nav */
                 display: flex;
                 flex-direction: row;
                 width: auto;
@@ -343,12 +362,12 @@
             }
             nav a {
                 padding: 0.7rem 1.2rem;
-                color: #222; 
+                color: #222; /* Text color for desktop nav */
             }
             nav a:hover {
-                color: #F17E23;
+                color: #ff69b4;
                 text-decoration: underline;
-                transform: none; 
+                transform: none; /* Remove scale effect */
             }
 
             .section-title {
@@ -357,7 +376,7 @@
             }
 
             .products-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Larger cards for desktop */
                 gap: 2rem;
                 padding: 0 2rem;
             }
@@ -366,7 +385,7 @@
                 padding: 1.2rem;
             }
             .product-img-container {
-                height: 150px; 
+                height: 150px; /* Taller image container */
             }
 
             .cart-icon {
@@ -381,9 +400,9 @@
                 padding: 4px 9px;
                 min-width: 28px;
             }
-            
+
             .toast-container {
-                bottom: 100px;
+                bottom: 100px; /* Adjust for larger cart icon on desktop */
                 right: 30px;
             }
         }
@@ -404,147 +423,147 @@
     </header>
 
     <main>
-        <h2 class="section-title">Comida 🍔</h2>
-        <section class="products-grid">
-           <div class="product-card">
-                <div class="product-img-container"><img src="Piazza.png" alt="piazzita"></div>
-                <h3>Piazzaween</h3>
-                <p class="description">VOLVIO LA PIAZZA, AREQUIPE Y CHOCOLATE!</p>
-                <p class="price">$600</p>
-                <button onclick="addToCartAndNotify('Piazzaween', 600)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="bbbc.png" alt="bombombum clasico"></div>
-                <h3>BomBomBum Clasico</h3>
-                <p class="description">LO MAS CALIENTE DEL MOMENTO!</p>
-                <p class="price">$1000</p>
-                <button onclick="addToCartAndNotify('BomBomBum Clasico', 1000)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="Gomitas.png" alt="Gomitas"></div>
-                <h3>Gomitas</h3>
-                <p class="description">Deliciosas gomitas de sabores variados para endulzar tu día.</p>
-                <p class="price">$300</p>
-                <button onclick="addToCartAndNotify('Gomitas', 300)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="olc.png" alt="Okaloka Caja"></div>
-                <h3>Okaloka Caja</h3>
-                <p class="description">Una caja llena de sabores intensos para los amantes de lo extremo.</p>
-                <p class="price">$3.000</p>
-                <button onclick="addToCartAndNotify('Okaloka Caja', 3000)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="BomBomBum.png" alt="BomBomBum"></div>
-                <h3>Bombombum barra</h3>
-                <p class="description">El mas happyfamoso que nunca falla.</p>
-                <p class="price">$700</p>
-                <button onclick="addToCartAndNotify('Bombombum', 700)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="olb.png" alt="olb"></div>
-                <h3>Okaloka Bolsa</h3>
-                <p class="description">La versión en bolsa para compartir (o no) tus okalokas favoritas.</p>
-                <p class="price">$2.000</p>
-                <button onclick="addToCartAndNotify('Okaloka Bolsa', 2000)">Añadir al Carrito</button>
-            </div>
-             </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="pizza.png" alt="?"></div>
-                <h3>HappyPizza Normal</h3>
-                <p class="description">HappyPizza.</p>
-                <p class="price">$11.000</p>
-                <button onclick="addToCartAndNotify('HappyPizza Normal', 11000)">Añadir al Carrito</button>
-           </div>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="pizza.png" alt="?"></div>
-                <h3>HappyPizza X2 Queso</h3>
-                <p class="description">HappyPizza.</p>
-                <p class="price">$13.000</p>
-                <button onclick="addToCartAndNotify('HappyPizza X2 Queso', 13000)">Añadir al Carrito</button>
-           </div>
-        </section>
+            <h2 class="section-title">Comida 🍔</h2>
+            <section class="products-grid">
+               <div class="product-card">
+                    <div class="product-img-container"><img src="Piazza.png" alt="piazzita"></div>
+                    <h3>Piazzaween</h3>
+                    <p class="description">VOLVIO LA PIAZZA, AREQUIPE Y CHOCOLATE!</p>
+                    <p class="price">$600</p>
+                    <button onclick="addToCartAndNotify('Piazzaween', 600)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="bbbc.png" alt="bombombum clasico"></div>
+                    <h3>BomBomBum Clasico</h3>
+                    <p class="description">LO MAS CALIENTE DEL MOMENTO!</p>
+                    <p class="price">$1000</p>
+                    <button onclick="addToCartAndNotify('BomBomBum Clasico', 1000)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Gomitas.png" alt="Gomitas"></div>
+                    <h3>Gomitas</h3>
+                    <p class="description">Deliciosas gomitas de sabores variados para endulzar tu día.</p>
+                    <p class="price">$300</p>
+                    <button onclick="addToCartAndNotify('Gomitas', 300)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="olc.png" alt="Okaloka Caja"></div>
+                    <h3>Okaloka Caja</h3>
+                    <p class="description">Una caja llena de sabores intensos para los amantes de lo extremo.</p>
+                    <p class="price">$3.000</p>
+                    <button onclick="addToCartAndNotify('Okaloka Caja', 3000)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="BomBomBum.png" alt="BomBomBum"></div>
+                    <h3>Bombombum barra</h3>
+                    <p class="description">El mas happyfamoso que nunca falla.</p>
+                    <p class="price">$700</p>
+                    <button onclick="addToCartAndNotify('Bombombum', 700)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="olb.png" alt="olb"></div>
+                    <h3>Okaloka Bolsa</h3>
+                    <p class="description">La versión en bolsa para compartir (o no) tus okalokas favoritas.</p>
+                    <p class="price">$2.000</p>
+                    <button onclick="addToCartAndNotify('Okaloka Bolsa', 2000)">Añadir al Carrito</button>
+                </div>
+                 </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="pizza.png" alt="?"></div>
+                    <h3>HappyPizza Normal</h3>
+                    <p class="description">HappyPizza.</p>
+                    <p class="price">$11.000</p>
+                    <button onclick="addToCartAndNotify('HappyPizza Normal', 11000)">Añadir al Carrito</button>
+               </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="pizza.png" alt="?"></div>
+                    <h3>HappyPizza X2 Queso</h3>
+                    <p class="description">HappyPizza.</p>
+                    <p class="price">$13.000</p>
+                    <button onclick="addToCartAndNotify('HappyPizza X2 Queso', 13000)">Añadir al Carrito</button>
+               </div>
+            </section>
 
-        <h2 class="section-title">Roblox 💎</h2>
-        <section class="products-grid">
-            <div class="product-card">
-                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 40 RBX"></div>
-                <h3>40 RBX</h3>
-                <p class="description">Pequeño impulso de Robux para tus compras más rápidas.</p>
-                <p class="price">$4.000</p>
-                <button onclick="addToCartAndNotify('40 RBX', 4000)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 80 RBX"></div>
-                <h3>80 RBX</h3>
-                <p class="description">Más Robux para seguir disfrutando de tus juegos favoritos.</p>
-                <p class="price">$6.500</p>
-                <button onclick="addToCartAndNotify('80 RBX', 6500)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 500 RBX"></div>
-                <h3>500 RBX</h3>
-                <p class="description">¡La cantidad perfecta para esas skins y pases de juego!</p>
-                <p class="price">$24.500</p>
-                <button onclick="addToCartAndNotify('500 RBX', 24500)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 1000 RBX"></div>
-                <h3>1000 RBX</h3>
-                <p class="description">SUPERHAPYPROMO!! Aprovecha YA!!</p>
-                <p class="price">$40.000</p>
-                <button onclick="addToCartAndNotify('1000 RBX', 40000)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 4500 RBX"></div>
-                <h3>4500 RBX</h3>
-                <p class="description">SUPERHAPYPROMO!! Aprovecha YA!!</p>
-                <p class="price">$151.000</p>
-                <button onclick="addToCartAndNotify('4500 RBX', 151000)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="stealabr.png" alt="stealabrainrot"></div>
-                <h3>Steal a brainrot</h3>
-                <p class="description">Mas info en whatsapp.</p>
-                <a href="https://wa.me/34641422390" target="_blank" class="whatsapp-button">
-                    <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
-                </a>
-                <button onclick="addToCartAndNotify('Steal a brainrot (Contactanos al whatsapp)', 0)">Añadir al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-img-container"><img src="Otrosjuegos.png" alt="OtrosJuegos"></div>
-                <h3>Otros Juegos de Roblox</h3>
-                <p class="description">mm2,grow a garden,etc</p>
-                <a href="https://wa.me/34641422390" target="_blank" class="whatsapp-button">
-                    <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
-                </a>
-                <button onclick="addToCartAndNotify('Otros Juegos (Contactanos al whatsapp)', 0)">Añadir al Carrito</button>
-            </div>
-        </section>
+            <h2 class="section-title">Roblox 💎</h2>
+            <section class="products-grid">
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 40 RBX"></div>
+                    <h3>40 RBX</h3>
+                    <p class="description">Pequeño impulso de Robux para tus compras más rápidas.</p>
+                    <p class="price">$4.000</p>
+                    <button onclick="addToCartAndNotify('40 RBX', 4000)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 80 RBX"></div>
+                    <h3>80 RBX</h3>
+                    <p class="description">Más Robux para seguir disfrutando de tus juegos favoritos.</p>
+                    <p class="price">$6.500</p>
+                    <button onclick="addToCartAndNotify('80 RBX', 6500)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 500 RBX"></div>
+                    <h3>500 RBX</h3>
+                    <p class="description">¡La cantidad perfecta para esas skins y pases de juego!</p>
+                    <p class="price">$24.500</p>
+                    <button onclick="addToCartAndNotify('500 RBX', 24500)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 1000 RBX"></div>
+                    <h3>1000 RBX</h3>
+                    <p class="description">SUPERHAPYPROMO!! Aprovecha YA!!</p>
+                    <p class="price">$40.000</p>
+                    <button onclick="addToCartAndNotify('1000 RBX', 40000)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 4500 RBX"></div>
+                    <h3>4500 RBX</h3>
+                    <p class="description">SUPERHAPYPROMO!! Aprovecha YA!!</p>
+                    <p class="price">$151.000</p>
+                    <button onclick="addToCartAndNotify('4500 RBX', 151000)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="stealabr.png" alt="stealabrainrot"></div>
+                    <h3>Steal a brainrot</h3>
+                    <p class="description">Mas info en whatsapp.</p>
+                    <a href="https://wa.me/34641422390" target="_blank" class="whatsapp-button">
+                        <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+                    </a>
+                    <button onclick="addToCartAndNotify('Steal a brainrot (Contactanos al whatsapp)', 0)">Añadir al Carrito</button>
+                </div>
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Otrosjuegos.png" alt="OtrosJuegos"></div>
+                    <h3>Otros Juegos de Roblox</h3>
+                    <p class="description">mm2,grow a garden,etc</p>
+                    <a href="https://wa.me/34641422390" target="_blank" class="whatsapp-button">
+                        <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+                    </a>
+                    <button onclick="addToCartAndNotify('Otros Juegos (Contactanos al whatsapp)', 0)">Añadir al Carrito</button>
+                </div>
+            </section>
 
-        <h2 class="section-title">Spotify 🎵</h2>
-        <section class="products-grid">
-            <div class="product-card">
-                <div class="product-img-container"><img src="musica.png" alt="Spotify Premium"></div>
-                <h3>1 Mes Individual Spotify</h3>
-                <p class="description">Escucha tu música sin interrupciones con Spotify Premium por un mes.</p>
-                <p class="price">$18.900</p>
-                <button onclick="addToCartAndNotify('1 Mes Individual Spotify', 18900)">Añadir al Carrito</button>
-            </div>
-        </section>
+            <h2 class="section-title">Spotify 🎵</h2>
+            <section class="products-grid">
+                <div class="product-card">
+                    <div class="product-img-container"><img src="musica.png" alt="Spotify Premium"></div>
+                    <h3>1 Mes Individual Spotify</h3>
+                    <p class="description">Escucha tu música sin interrupciones con Spotify Premium por un mes.</p>
+                    <p class="price">$18.900</p>
+                    <button onclick="addToCartAndNotify('1 Mes Individual Spotify', 18900)">Añadir al Carrito</button>
+                </div>
+            </section>
 
-        <h2 class="section-title">Otros Servicios Online 🌐</h2>
-        <section class="products-grid">
-            <div class="product-card">
-                <div class="product-img-container"><img src="Serviciosalt.png" alt="Servicios Online"></div>
-                <h3>Servicios Online</h3>
-                <p class="description">Variedad de servicios online (Shein, apps, suscripciones, etc.).</p>
-                <p class="price">$2.000</p>
-                <button onclick="addToCartAndNotify('Servicios Online', 2000)">Añadir al Carrito</button>
-            </div>
-        </section>
-    </main>
+            <h2 class="section-title">Otros Servicios Online 🌐</h2>
+            <section class="products-grid">
+                <div class="product-card">
+                    <div class="product-img-container"><img src="Serviciosalt.png" alt="Servicios Online"></div>
+                    <h3>Servicios Online</h3>
+                    <p class="description">Variedad de servicios online (Shein, apps, suscripciones, etc.).</p>
+                    <p class="price">$2.000</p>
+                    <button onclick="addToCartAndNotify('Servicios Online', 2000)">Añadir al Carrito</button>
+                </div>
+            </section>
+        </main>
 
     <a href="order.html" class="cart-icon">
         🛒
@@ -562,7 +581,7 @@
             </div>
             <div class="footer-links">
                 <a href="terminos.html">Términos y Condiciones</a>
-                <a href="mailto:somos@happycorner.lol">Contáctanos</a>
+                <a href="mailto:tuemail@example.com">Contáctanos</a>
                 <a href="catalogo.html">Ver Todo el Catálogo</a>
             </div>
         </div>
@@ -624,13 +643,11 @@
             toast.classList.add('toast');
             toast.textContent = message;
 
-            // Usamos los colores Happyween para el toast
+            // Optional: Add specific styling based on type (e.g., 'success', 'error')
             if (type === 'success') {
-                toast.style.backgroundColor = 'rgba(241, 126, 35, 0.9)'; /* Naranja Calabaza para éxito */
+                toast.style.backgroundColor = 'rgba(76, 175, 80, 0.9)'; /* Green for success */
             } else if (type === 'error') {
-                toast.style.backgroundColor = 'rgba(177, 68, 36, 0.9)'; /* Marrón/Naranja Quemado para error */
-            } else {
-                 toast.style.backgroundColor = 'rgba(34, 34, 34, 0.95)';
+                toast.style.backgroundColor = 'rgba(244, 67, 54, 0.9)'; /* Red for error */
             }
 
             toastContainer.appendChild(toast);
