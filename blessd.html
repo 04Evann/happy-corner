@@ -491,12 +491,25 @@
 
             <section class="checkout-form">
                 <h2>Detalles de Contacto y Pago</h2>
-                <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST">
+                <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST" id="checkout-form">
+                    
+                    <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:1.2rem;">
+                        <div style="flex-grow:1;">
+                            <label for="puntos_code">Código Happy Puntos (Opcional):</label>
+                            <input type="text" id="puntos_code" name="puntos_code" placeholder="Introduce tu código" style="margin-bottom:0;" />
+                        </div>
+                        <button type="button" id="consultar-puntos-btn" style="background:#F17E23;color:#000;padding:0.8rem 1rem;border:none;border-radius:8px;cursor:pointer;font-size:0.95rem;font-weight:600;height:44px;transition:background 0.3s;">Consultar</button>
+                    </div>
+
+                    <div id="ultimos-pedidos" style="display:none;margin-top:1rem;background:#222;border:1px dashed #7B2C13;padding:1rem;border-radius:8px;"></div>
+                    <input type="hidden" name="HappyCodigo" id="happycode-hidden">
+
                     <label for="nombre">Nombre completo:</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
+
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required placeholder="tucorreo@example.com" />
-                    
+
                     <label for="tipo_entrega">Tipo de Entrega:</label>
                     <select id="tipo_entrega" name="tipo_entrega" required>
                         <option value="">Selecciona una opción</option>
@@ -517,56 +530,49 @@
                         <option value="efectivo">Efectivo (Pago al recibir)</option>
                     </select>
 
-                    <div id="nequi-details" class="payment-details" style="text-align: center;">
-                        <p>Para pagar por Nequi, escanea el QR o transfiere al número de HappyCorner. **Este QR también se puede escanear desde Bancolombia.** No olvides enviar una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido.</p>
-                        <img src="NequiQR.png" alt="QR Nequi" />
-                        <p>Número Nequi: **(Se te proporcionará por WhatsApp tras confirmar el pedido)**</p>
-                        <a href="https://wa.me/34641422390?text=Hola!%20Acabo%20de%20hacer%20un%20pedido%20en%20Happy%20Shop%20y%20quiero%20pagar%20por%20Nequi.%20Mi%20nombre%20es%20[Tu%20Nombre]%20y%20mi%20correo%20es%20[Tu%20Correo]." target="_blank" style="margin-top: 10px; display: inline-block;">Confirmar Pago por WhatsApp</a>
-                    </div>
-                    
-                    <div id="pse-details" class="payment-details">
-                        <p>Para pagar por PSE, al Finalizar Pedido contactanos por whatsapp para proporcionarte el numero de Nequi, **Te proporcionaré el número de Nequi por WhatsApp para que hagas el pago a través de PSE.**</p>
-                        <p>Cuando finalices la transacción, envía una captura de pantalla del pago al WhatsApp de HappyCorner para confirmar tu pedido. </p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20por%20PSE.%20Por%20favor,%20dame%20el%20número%20de%20Nequi%20para%20realizar%20el%20pago." target="_blank" style="margin-top: 10px; display: inline-block;">Confirmar Pago por WhatsApp</a>
-                    </div>
-                    
-                    <div id="applepay-details" class="payment-details">
-                        <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos y no serán usados de forma incorrecta. No hay riesgo de estafa o hackeo.</p>
-                        <p>Tras finalizar el pedido, contactanos por whatsapp para enviarte el link de pago.</p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20Apple%20Pay%20(Euros)." target="_blank" style="margin-top: 10px; display: inline-block;">Continuar con Apple Pay por WhatsApp</a>
+                    <div id="nequi-details" class="payment-details" style="text-align:center; display:none;">
+                        <p>Para pagar por Nequi, escanea el QR o transfiere al número de HappyCorner. Envía captura a WhatsApp para confirmar.</p>
+                        <img src="NequiQR.png" alt="QR Nequi" style="max-width:180px; display:block; margin:0.5rem auto;" />
+                        <p>Número Nequi: (Se te proporcionará por WhatsApp)</p>
+                        <a href="https://wa.me/34641422390?text=Hola!%20Acabo%20de%20hacer%20un%20pedido%20en%20Happy%20Shop%20y%20quiero%20pagar%20por%20Nequi." target="_blank" style="display:inline-block;margin-top:10px;color:#F17E23;text-decoration:none;">Confirmar Pago por WhatsApp</a>
                     </div>
 
-                    <div id="tarjeta-details" class="payment-details">
-                        <p>El pago se realizará a través de un link de pago proporcionado por el banco europeo **REVOLUT** y se hará en **Euros**. Tus datos estarán 100% protegidos y no serán usados de forma incorrecta. No hay riesgo de estafa o hackeo.</p>
-                        <p>Tras finalizar el pedido, contactanos por WhatsApp para enviarte el link de pago.</p>
-                        <a href="https://wa.me/34641422390?text=Hola,%20acabo%20de%20hacer%20un%20pedido%20y%20quiero%20pagar%20con%20tarjeta%20de%20crédito/débito%20(Euros)." target="_blank" style="margin-top: 10px; display: inline-block;">Continuar con Tarjeta por WhatsApp</a>
+                    <div id="pse-details" class="payment-details" style="display:none;">
+                        <p>Para PSE: te damos número de Nequi por WhatsApp y envías captura para confirmar.</p>
+                        <a href="https://wa.me/34641422390" target="_blank" style="display:inline-block;margin-top:10px;color:#F17E23;text-decoration:none;">Confirmar Pago por WhatsApp</a>
                     </div>
 
-                    <div id="efectivo-details" class="payment-details">
-                        <p>Tu orden será confirmada y deberás pagar en efectivo al momento de la entrega (en el colegio) o al recibir los datos del servicio virtual.</p>
-                        <p>Si es entrega física, por favor ten el valor exacto si es posible. Si es virtual, se te indicará cómo y cuándo realizar el pago al momento de la entrega de los datos.</p>
+                    <div id="applepay-details" class="payment-details" style="display:none;">
+                        <p>Pago con Apple Pay vía link (REVOLUT). Contacta por WhatsApp para recibir link.</p>
+                        <a href="https://wa.me/34641422390" target="_blank" style="display:inline-block;margin-top:10px;color:#F17E23;text-decoration:none;">Continuar por WhatsApp</a>
+                    </div>
+
+                    <div id="tarjeta-details" class="payment-details" style="display:none;">
+                        <p>Pago con tarjeta vía link (REVOLUT). Contacta por WhatsApp para recibir link.</p>
+                        <a href="https://wa.me/34641422390" target="_blank" style="display:inline-block;margin-top:10px;color:#F17E23;text-decoration:none;">Continuar por WhatsApp</a>
+                    </div>
+
+                    <div id="efectivo-details" class="payment-details" style="display:none;">
+                        <p>Paga en efectivo al recibir (si aplica). Ten el valor exacto si puedes.</p>
                     </div>
 
                     <label for="notas">Notas Adicionales (Opcional):</label>
-                    <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Quiero que me contacten antes de ir al colegio.', 'Es un regalo, no mostrar el precio.'"></textarea>
+                    <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Contáctenme antes de entregar.'"></textarea>
 
                     <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
-                    <input type="hidden" name="_next" value="happycorner.lol">
+                    <input type="hidden" name="_next" value="https://happycorner.lol">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
                     <input type="hidden" name="Total del Pedido" id="total-price-hidden">
                     <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
-                    <input type="hidden" name="Número de Nequi" id="nequi-number-hidden">
+                    <input type="hidden" name="Número de Pedido" id="order-number-hidden">
 
-
-                    <button type="submit" id="place-order-button">
-                        Finalizar HappyOrder
-                    </button>
+                    <button type="submit" id="place-order-button">Finalizar HappyOrder</button>
                 </form>
             </section>
         </div>
     </main>
-
+    
     <footer>
         <div class="footer-content">
             <div class="social-icons">
