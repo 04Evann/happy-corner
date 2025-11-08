@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Consulta tus Puntos | Happyween Corner</title>
+    <title>Consulta tus Puntos | HappyCorner</title>
     
     <link rel="icon" type="image/png" href="/happyfavicon.png">
     
@@ -11,22 +11,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        /* Base y Happyween (Inspirado en Catálogo) */
+        /* Base Styles & Mobile First */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            color: #eee; /* Texto claro */
+            color: #222;
         }
         body {
-            background: #000; /* Negro Puro */
+            background: #f0f2f5;
         }
 
-        /* --- Header (Degradado Catálogo) --- */
+        /* --- Header --- */
         header {
-            /* Degradado de Marrón Oscuro a Naranja Vibrante */
-            background: linear-gradient(to right, #7B2C13, #B14424, #F17E23);
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
             padding: 1rem;
             display: flex;
             justify-content: space-between;
@@ -34,7 +33,7 @@
             position: relative;
             z-index: 100;
             min-height: 80px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         header img {
             height: 65px;
@@ -48,7 +47,7 @@
             border: none;
             cursor: pointer;
             z-index: 101;
-            color: #eee; /* Aseguramos que el botón sea claro */
+            color: #222;
             display: block;
         }
         nav {
@@ -56,29 +55,31 @@
             top: 100%;
             left: 0;
             width: 100%;
-            /* Fondo del menú móvil oscuro */
-            background-color: rgba(0, 0, 0, 0.95); 
-            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             display: none;
             flex-direction: column;
             align-items: center;
             padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             z-index: 100;
         }
         nav.open {
             display: flex;
         }
         nav a {
-            color: #eee; /* Texto de enlace claro */
+            color: #333;
             text-decoration: none;
             padding: 0.8rem 1.5rem;
             font-weight: 500;
             transition: color 0.3s ease;
         }
         nav a:hover {
-            color: #F17E23; /* Naranja Vibrante */
+            color: #ff69b4;
             transform: scale(1.05);
+        }
+        .cart-icon {
+            display: none;
         }
 
         /* --- Main Content & Puntos Section Styles --- */
@@ -88,236 +89,174 @@
             align-items: center;
             gap: 2rem;
             padding: 1.5rem 1rem;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        
-        /* Título Principal */
         .page-title {
             text-align: center;
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin: 3rem 1rem 1.5rem;
-            color: #B14424; /* Naranja Quemado */
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1rem 0 2rem;
+            color: #ff69b4;
             position: relative;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
         }
-
         .page-title::after {
             content: '';
             position: absolute;
             left: 50%;
             bottom: 0;
             transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background-color: #F17E23; /* Naranja Vibrante */
-            border-radius: 2px;
-        }
-        
-        /* Contenedores de Tarjetas (Puntos y FAQ) */
-        .puntos-container, .faq-container {
-            background: #1A1A1A; /* Gris Oscuro */
-            border-radius: 12px; /* Redondeado, como las tarjetas del Catálogo */
-            padding: 1.5rem;
-            width: 100%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-        
-        .puntos-container h2, .faq-container h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #F17E23; /* Naranja Vibrante */
-            margin-bottom: 1.5rem;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #7B2C13; /* Marrón Oscuro */
+            width: 80px;
+            height: 5px;
+            background-color: #ffa500;
+            border-radius: 3px;
         }
 
-        /* Formulario */
-        .consulta-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        /* Puntos Container - Styled like a main content card */
+        .puntos-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            text-align: center;
+        }
+        .puntos-container h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f0e68c;
+            padding-bottom: 0.8rem;
         }
         .consulta-form input {
-            padding: 0.8rem;
-            border-radius: 8px; /* Redondeado */
-            border: 2px solid #333;
-            background-color: #222;
-            font-size: 1rem;
-            color: #eee;
+            width: 100%;
+            padding: 12px 10px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
         .consulta-form input:focus {
             outline: none;
-            border-color: #F17E23;
-            box-shadow: 0 0 5px rgba(241, 126, 35, 0.5);
+            border-color: #ff69b4;
         }
         .consulta-form button {
-            background: #B14424; /* Naranja Quemado */
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
             border-radius: 8px;
-            cursor: pointer;
+            font-size: 18px;
             font-weight: 600;
-            transition: background 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            transition: background 0.3s;
         }
         .consulta-form button:hover {
-            background: #D35721;
-            transform: translateY(-2px);
-        }
-
-        /* Tarjeta de Resultados (Resultados Container) */
-        #resultados-container {
-            margin-top: 2rem;
-            min-height: 100px;
-        }
-        .info-card {
-            background-color: #222; /* Un poco más claro que el fondo del contenedor */
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid #7B2C13;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        .info-card h3 {
-            color: #F17E23;
-            font-size: 1.3rem;
-            border-bottom: 2px dashed #7B2C13;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .info-card p {
-            margin-bottom: 0.5rem;
-            color: #bbb;
-        }
-        .info-card strong {
-            color: #eee;
-        }
-        .info-card ul {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 1rem;
-        }
-        .info-card li {
-            background-color: #1A1A1A;
-            padding: 0.5rem;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            border-left: 3px solid #F17E23;
-        }
-        .info-card a {
-            color: #F17E23;
-            text-decoration: none;
-            display: block;
-            margin-top: 1rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .info-card a:hover {
-            color: #fff;
-        }
-
-        /* Acordeón (FAQ) */
-        .accordion-item {
-            border-bottom: 1px solid #333;
-        }
-        .accordion-header {
-            background-color: #222;
-            padding: 1rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-        .accordion-header:hover {
-            background-color: #333;
-        }
-        .accordion-item:first-child .accordion-header {
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        .accordion-item:last-child .accordion-header {
-             border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-        .accordion-item.active .accordion-header {
-            background-color: #B14424; /* Naranja Quemado al abrir */
-        }
-        .accordion-header h3 {
-            color: #eee;
-            font-size: 1rem;
-        }
-        .accordion-header i {
-            transition: transform 0.3s ease;
-            color: #F17E23;
-        }
-        .accordion-item.active .accordion-header i {
-            transform: rotate(180deg);
-            color: #eee;
-        }
-        .accordion-content {
-            background-color: #1A1A1A;
-            padding: 0 1rem;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
-            color: #bbb;
-        }
-        .accordion-item.active .accordion-content {
-            max-height: 500px; /* Suficiente para expandir */
-            padding: 1rem;
-        }
-        .accordion-content p, .accordion-content ul {
-            color: #bbb;
-            margin-bottom: 10px;
-        }
-        .accordion-content li {
-            margin-left: 20px;
-            list-style: disc;
+            background: linear-gradient(to right, #e6569f, #e09500, #d3d97f);
         }
         
-        /* --- Footer (del Catálogo) --- */
+        /* Resultados Card - Nested inside the main card */
+        #resultados-container {
+            margin-top: 25px;
+            text-align: left;
+        }
+        .info-card {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #eee;
+        }
+        .info-card h3 {
+            color: #ff6347;
+            margin-top: 0;
+            border-bottom: 2px solid #ff6347;
+            padding-bottom: 5px;
+        }
+        .info-card p {
+            margin: 5px 0;
+        }
+        .info-card ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .info-card ul li {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+        .info-card ul li:last-child {
+            margin-bottom: 0;
+        }
+        .info-card a {
+            color: #ff69b4;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        .info-card a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #d9534f;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* --- Footer --- */
         footer {
-            background: #000;
+            background: #222;
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
             margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
         .footer-content {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
-        }
-        .footer-content p {
-            color: #bbb;
         }
         .social-icons a {
             color: white;
-            transition: color 0.3s ease;
-            margin: 0 10px;
             font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
         }
-        .social-icons a:hover,
-        .footer-links a:hover {
-            color: #F17E23;
+        .social-icons a:hover {
+            color: #ff69b4;
+        }
+        .footer-links {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
         .footer-links a {
             color: #eee;
-            margin: 0 10px;
             text-decoration: none;
-            display: inline-block;
-            margin-top: 15px;
+            font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: #ff69b4;
         }
 
-        /* Media Queries - Escritorio (Desktop) */
+        /* --- Media Queries for Desktop --- */
         @media (min-width: 768px) {
             header {
                 padding: 0.5rem 2rem;
                 min-height: 100px;
+            }
+            header img {
+                height: 80px;
             }
             .menu-btn {
                 display: none;
@@ -334,24 +273,91 @@
             }
             nav a {
                 padding: 0.7rem 1.2rem;
-                /* Eliminamos el color negro para que herede el color general o el hover */
-                color: #eee; 
+                color: #222;
             }
             nav a:hover {
-                color: #F17E23;
+                color: #ff69b4;
                 text-decoration: underline;
                 transform: none;
             }
-
-            .page-title {
-                font-size: 2.5rem;
-                margin-top: 5rem;
+            main {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding-top: 3rem;
+                padding-bottom: 3rem;
             }
-            
-            .puntos-container, .faq-container {
-                padding: 2.5rem;
-                width: 80%;
+            .puntos-container {
+                max-width: 600px;
             }
+        }
+        /* --- Estilos para la sección de FAQ (Acordeón) --- */
+        .faq-container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .faq-container h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ff69b4;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .accordion-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .accordion-header:hover {
+            background-color: #f0f0f0;
+        }
+        .accordion-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        .accordion-header i {
+            transition: transform 0.3s ease;
+        }
+        .accordion-content {
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+        }
+        .accordion-content p, .accordion-content ul {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .accordion-content ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        .accordion-content li {
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -370,19 +376,18 @@
 </header>
 
 <main>
-    <h1 class="page-title">Consulta tus Puntos Happy 🎃</h1>
-    
+    <h1 class="page-title">Consulta tus Puntos Happy 🥳</h1>
     <section class="puntos-container">
-        <h2>Ingresa tu Código de Miedo 👻</h2>
+        <h2>Ingresa tu Código</h2>
         <form class="consulta-form" id="consulta-form">
-            <input type="text" id="happy-code-input" placeholder="Tu HappyCódigo de Brujas" required>
+            <input type="text" id="happy-code-input" placeholder="Tu HappyCódigo" required>
             <button type="submit">Consultar</button>
         </form>
         <div id="resultados-container"></div>
     </section>
 
     <section class="faq-container">
-        <h2>HappyPuntos - Secretos Terroríficos 🦇</h2>
+        <h2>HappyPuntos - Preguntas Frecuentes</h2>
         <div class="accordion">
             <div class="accordion-item">
                 <div class="accordion-header">
@@ -404,10 +409,26 @@
                         <li><strong>Core:</strong> $0 – $9,999 mensuales. Solo recargas y compras.</li>
                         <li><strong>Prime:</strong> $10,000 – $49,999 mensuales. Recibes descuentos del 5–10% y acceso a promociones especiales.</li>
                         <li><strong>Elite:</strong> $50,000+ mensuales. Ganas HC extra por compra, acceso anticipado a Hot Deals y beneficios VIP.</li>
+                        <li><strong>Perú:</strong> tarjeta especial que no da beneficios. Solo existe como curiosidad / coleccionable.</li>
                     </ul>
                 </div>
             </div>
-            
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Qué beneficios tiene cada nivel?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <ul>
+                        <li><strong>Core:</strong> solo compras con saldo.</li>
+                        <li><strong>Prime:</strong> descuentos en combos y productos seleccionados.</li>
+                        <li><strong>Elite:</strong> puntos extra por compra, canje flexible y acceso VIP a Hot Deals y productos exclusivos.</li>
+                        <li><strong>Perú:</strong> ninguno 😎</li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="accordion-item">
                 <div class="accordion-header">
                     <h3>¿Cómo subo de nivel?</h3>
@@ -415,6 +436,16 @@
                 </div>
                 <div class="accordion-content">
                     <p>Tu nivel se calcula cada mes según tus compras. Si no alcanzas el gasto mínimo, puedes bajar de nivel hasta volver a subir.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Qué beneficios tienen los asociados de HappyCorner?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>Si eres asociado, recibes la tarjeta Platinum, con descuentos especiales y beneficios internos que no están disponibles para el público general.</p>
                 </div>
             </div>
 
@@ -430,6 +461,29 @@
                     </ul>
                 </div>
             </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Los puntos o descuentos tienen límite?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <ul>
+                        <li>Máximo $2,000 HC de descuento por compra.</li>
+                        <li>Puntos expiran en 3–6 meses.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h3>¿Habrá más tarjetas en el futuro?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="accordion-content">
+                    <p>¡Quizá sí! Estamos pensando en nuevas tarjetas y beneficios, así que siempre hay algo nuevo por descubrir. 🔮</p>
+                </div>
+            </div>
         </div>
     </section>
 </main>
@@ -437,8 +491,8 @@
 <footer>
     <div class="footer-content">
         <div class="social-icons">
-            <a href="https://www.instagram.com/happycornerca/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/34641422390" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://www.instagram.com/happycornerca/"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/34641422390"><i class="fab fa-whatsapp"></i></a>
         </div>
         <div class="footer-links">
             <a href="terminos.html">Términos y Condiciones</a>
@@ -450,83 +504,81 @@
 
 <script>
     function toggleMenu() {
-        const menu = document.getElementById('menu');
-        menu.classList.toggle('open');
-    }
-
-    // Lógica de Consulta de Puntos
-    const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
-    const form = document.getElementById('consulta-form');
-    const input = document.getElementById('happy-code-input');
-    const resultsContainer = document.getElementById('resultados-container');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const codigo = input.value.trim();
-        if (!codigo) {
-            resultsContainer.innerHTML = `<p class="error" style="color:#B14424;">Por favor, ingresa tu HappyCódigo.</p>`;
-            return;
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
         }
 
-        resultsContainer.innerHTML = `<p style="color:#F17E23;">Consultando...</p>`;
+        const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
+        const form = document.getElementById('consulta-form');
+        const input = document.getElementById('happy-code-input');
+        const resultsContainer = document.getElementById('resultados-container');
 
-        try {
-            const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
-            const data = await response.json();
-
-            if (!response.ok) {
-                resultsContainer.innerHTML = `<p class="error info-card" style="color:#eee; background-color:#B14424;">${data.error || 'Error desconocido al buscar tu código.'}</p>`;
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const codigo = input.value.trim();
+            if (!codigo) {
+                resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo.</p>`;
                 return;
             }
 
-            const transaccionesHTML = data.ultimas_transacciones.length > 0
-                ? '<h4>Últimas Compras:</h4>' +
-                  '<ul>' +
-                  data.ultimas_transacciones.map(t => `
-                    <li>
-                        <strong>Recibo #${t.recibo}</strong><br>
-                        Fecha: ${t.fecha}<br>
-                        Total: $${parseFloat(t.total).toLocaleString('es-CO')}
-                    </li>
-                  `).join('') +
-                  '</ul>'
-                : '<p style="color:#bbb;">No hay compras recientes.</p>';
+            resultsContainer.innerHTML = `<p>Consultando...</p>`;
 
-            resultsContainer.innerHTML = `
-                <div class="info-card">
-                    <h3>¡Hola, ${data.nombre}!</h3>
-                    <p><strong>Correo:</strong> ${data.correo}</p>
-                    <p><strong>HappyCódigo:</strong> ${data.happyCodigo}</p>
-                    <p><strong>Puntos HappyCorner:</strong> ${parseFloat(data.puntos).toLocaleString('es-CO')}</p>
-                    <hr style="border-color: #333; margin: 1rem 0;">
-                    ${transaccionesHTML}
-                    <a href="https://wa.me/34641422390?text=${encodeURIComponent('Hola, tengo un problema con mi HappyCódigo: ' + data.happyCodigo)}" target="_blank" rel="noopener">
-                        <i class="fab fa-whatsapp"></i> ¿Problemas con mi compra?
-                    </a>
-                </div>
-            `;
-        } catch (error) {
-            console.error(error);
-            resultsContainer.innerHTML = `<p class="error info-card" style="color:#eee; background-color:#B14424;">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
-        }
-    });
+            try {
+                const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
+                const data = await response.json();
 
-    // Código JavaScript para el acordeón (FAQ)
-    const accordionItems = document.querySelectorAll('.accordion-item');
-
-    accordionItems.forEach(item => {
-        const header = item.querySelector('.accordion-header');
-        header.addEventListener('click', () => {
-            // Cierra todos los otros ítems
-            accordionItems.forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove('active');
+                if (!response.ok) {
+                    resultsContainer.innerHTML = `<p class="error">${data.error || 'Error desconocido al buscar tu código.'}</p>`;
+                    return;
                 }
-            });
-            // Expande o colapsa el ítem actual
-            item.classList.toggle('active');
+
+                const transaccionesHTML = data.ultimas_transacciones.length > 0
+                    ? '<h4>Últimas Compras:</h4>' +
+                      '<ul>' +
+                      data.ultimas_transacciones.map(t => `
+                        <li>
+                            <strong>Recibo #${t.recibo}</strong><br>
+                            Fecha: ${t.fecha}<br>
+                            Total: $${t.total.toFixed(2)}
+                        </li>
+                      `).join('') +
+                      '</ul>'
+                    : '<p>No hay compras recientes.</p>';
+
+                resultsContainer.innerHTML = `
+                    <div class="info-card">
+                        <h3>¡Hola, ${data.nombre}!</h3>
+                        <p><strong>Correo:</strong> ${data.correo}</p>
+                        <p><strong>HappyCódigo:</strong> ${data.happyCodigo}</p>
+                        <p><strong>Puntos HappyCorner:</strong> ${data.puntos}</p>
+                        ${transaccionesHTML}
+                        <a href="https://wa.me/34641422390?text=${encodeURIComponent('Hola, tengo un problema con mi HappyCódigo: ' + data.happyCodigo)}" target="_blank" rel="noopener">
+                            <i class="fab fa-whatsapp"></i> ¿Problemas con mi compra?
+                        </a>
+                    </div>
+                `;
+            } catch (error) {
+                console.error(error);
+                resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
+            }
         });
-    });
+
+        // Código JavaScript para el acordeón (FAQ)
+        const accordionItems = document.querySelectorAll('.accordion-item');
+
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                // Cierra todos los otros ítems
+                accordionItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                // Expande o colapsa el ítem actual
+                item.classList.toggle('active');
+            });
+        });
 </script>
 
 </body>
