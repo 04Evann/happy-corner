@@ -479,7 +479,6 @@
                     </div>
 
                     <div id="ultimos-pedidos" style="display:none;margin-top:1rem;background:rgba(27, 133, 184, 0.05);border:1px dashed var(--navidad-azul-claro);padding:1rem;border-radius:8px;"></div>
-                    <input type="hidden" name="HappyCodigo" id="happycode-hidden">
 
                     <label for="nombre">Nombre completo:</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
@@ -537,13 +536,15 @@
                     <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Contáctenme antes de entregar.'"></textarea>
 
                     <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
-                    <input type="hidden" name="_next" value="https://happycorner.lol">
                     <input type="hidden" name="_captcha" value="false">
                     <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
                     <input type="hidden" name="Total del Pedido" id="total-price-hidden">
                     <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
                     <input type="hidden" name="Número de Pedido" id="order-number-hidden">
-                    <input type="hidden" name="Happy Code" id="happycode-hidden-final"> <button type="submit" id="place-order-button" disabled>
+                    <input type="hidden" name="Happy Code" id="happycode-hidden-final">
+
+
+                    <button type="submit" id="place-order-button" disabled>
                         <i class="fas fa-box-open"></i>
                         Finalizar HappyOrder
                     </button>
@@ -561,9 +562,9 @@
             <h4>🎉 ¡Pedido Generado con Éxito! 🎉</h4>
             <p>Hemos recibido tu Happy Order. Utiliza este código para hacer seguimiento y pagar tu compra:</p>
             <span id="happy-code-display"></span>
-            <p style="font-size:0.9rem; margin-top:20px;">Los detalles se enviarán a tu correo. Por favor, revisa la bandeja de entrada.</p>
+            <p style="font-size:0.9rem; margin-top:20px;">Serás redirigido para ver el resumen.</p>
             <button id="close-modal-btn" class="modal-close-btn">
-                Entendido
+                Ver Resumen
             </button>
         </div>
     </div>
@@ -604,11 +605,12 @@
         const cartContentHidden = document.getElementById('cart-content-hidden');
         const happyCodeHiddenFinal = document.getElementById('happycode-hidden-final');
 
-        const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api';
+        const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api'; // URL de ejemplo
 
         let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
 
         function formatCurrency(amount) {
+            // Formato de moneda colombiana: $1.000.000
             return '$' + amount.toLocaleString('es-CO'); 
         }
 
@@ -627,7 +629,7 @@
             return 'HO-' + code; // HO = Happy Order
         }
 
-        // NUEVA FUNCIÓN: Consultar el HappyCódigo y rellenar datos (Mantenida)
+        // Función de consulta de Happy Puntos (Mantenida)
         async function applyHappyPuntos() {
             const code = puntosCodeInput.value.trim();
 
@@ -649,20 +651,8 @@
                 }
 
                 const data = await res.json();
-                console.log('Respuesta API Happy Corner:', data);
-
+                
                 let mensaje = `🎉 ¡HappyCódigo válido!\n\n👤 Cliente: ${data.nombre}\n📧 Correo: ${data.correo}\n💎 Puntos disponibles: ${data.puntos.toLocaleString('es-CO')}\n\n`;
-
-                if (data.ultimas_transacciones && data.ultimas_transacciones.length > 0) {
-                    mensaje += '🛍️ Últimos pedidos:\n';
-                    data.ultimas_transacciones.slice(0, 3).forEach((r, i) => {
-                        mensaje += `   ${i + 1}. ${r.fecha} — ${formatCurrency(r.total)}\n`;
-                    });
-                } else {
-                    mensaje += 'No se encontraron pedidos recientes.\n';
-                }
-
-                mensaje += '\n¿Deseas aplicar estos datos al formulario?';
 
                 if (confirm(mensaje)) {
                     document.getElementById('nombre').value = data.nombre || '';
@@ -676,9 +666,7 @@
                     checkoutForm.appendChild(hiddenInput);
 
                     alert('✅ Datos aplicados con éxito.');
-                } else {
-                    alert('❌ No se aplicaron los datos.');
-                }
+                } 
 
             } catch (err) {
                 console.error('Error al consultar Happy Puntos:', err);
@@ -738,7 +726,8 @@
 
             subtotalPriceSpan.textContent = formatCurrency(subtotal);
 
-            const shippingCost = 0;
+            // Costo de envío
+            const shippingCost = 0; // O la lógica que tengas para el envío
             shippingPriceSpan.textContent = 'Gratis';
 
             const total = subtotal + shippingCost;
@@ -821,7 +810,7 @@
             return true;
         }
 
-        /* ------------------ Event Listeners (MODIFICADO PARA HAPPY CODE) ------------------ */
+        /* ------------------ Event Listeners (USANDO FETCH ASÍNCRONO Y LOCALSTORAGE) ------------------ */
         document.addEventListener('DOMContentLoaded', () => {
             renderCart();
             paymentMethodSelect.addEventListener('change', updatePaymentDetailsDisplay);
@@ -834,51 +823,88 @@
             const happyCodeDisplay = document.getElementById('happy-code-display');
 
 
-            checkoutForm.addEventListener('submit', function(e){
+            checkoutForm.addEventListener('submit', async function(e){ 
+                e.preventDefault(); 
+                
                 // 1. Validar el carrito
                 if(!validateCartForSubmission()){
-                    e.preventDefault();
                     return;
                 }
 
-                // 2. Generar el Happy Código
+                // 2. Generar datos del pedido
                 const happyCode = generateHappyCode();
-                happyCodeHiddenFinal.value = happyCode; // Lo guarda en el campo oculto para FormSubmit
-
-                // 3. Actualizar resumen final y número de pedido
-                const totalText = totalPriceSpan.textContent.replace('$','').replace(/\./g,'').replace(',','.');
-                const parsed = parseFloat(totalText.replace(',', '.')) || 0; // Manejar formato CO
-                updateOrderSummaryForFormSubmit(parsed);
-
-                // 4. Mostrar el modal y capturar el envío
-                e.preventDefault(); 
+                happyCodeHiddenFinal.value = happyCode; 
                 
-                // 5. Mostrar el código y el modal
+                // Actualizar resumen para FormSubmit
+                const totalText = totalPriceSpan.textContent.replace('$','').replace(/\./g,'').replace(/,/g, '');
+                const parsedTotal = parseFloat(totalText) || 0; 
+                updateOrderSummaryForFormSubmit(parsedTotal);
+                
+                // Recoger todos los datos del formulario, incluyendo los ocultos
+                const formData = new FormData(checkoutForm);
+                
+                // 3. Crear el objeto de resumen del pedido para confirmed.html
+                const finalOrderSummary = {
+                    happyCode: happyCode,
+                    total: totalPriceSpan.textContent,
+                    subtotal: subtotalPriceSpan.textContent,
+                    shipping: shippingPriceSpan.textContent,
+                    paymentMethod: document.getElementById('metodo_pago').value,
+                    deliveryType: document.getElementById('tipo_entrega').value,
+                    itemsSummary: cartContentHidden.value,
+                    // Incluir nombre del cliente para confirmación
+                    customerName: document.getElementById('nombre').value
+                };
+
+                // 4. Guardar los datos del pedido en localStorage
+                localStorage.setItem('lastHappyOrder', JSON.stringify(finalOrderSummary));
+                
+                // 5. Mostrar el código en el modal
                 happyCodeDisplay.textContent = happyCode;
                 modal.style.display = 'flex';
                 
-                // 6. Enviar el formulario a FormSubmit y vaciar carrito
-                // Usamos un pequeño delay para que el modal se vea antes de la redirección de FormSubmit
+                // Deshabilitar botón para evitar doble click
+                document.getElementById('place-order-button').disabled = true;
+
+                // 6. Enviar el formulario a FormSubmit usando FETCH (asíncrono)
+                try {
+                    const response = await fetch(checkoutForm.action, {
+                        method: checkoutForm.method,
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json' 
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                         console.warn("El envío a FormSubmit falló pero continuamos el flujo a confirmed.html.");
+                    }
+
+                } catch (error) {
+                    console.error("Error crítico al enviar el formulario (Fetch):", error);
+                }
+                
+                // 7. Vaciar carrito y Redirigir
+                localStorage.removeItem('happyCart');
+                
+                // Esperamos 1.5s para que el usuario vea el Happy Código antes de redirigir
                 setTimeout(() => {
-                    // 6a. Vaciar carrito
-                    localStorage.removeItem('happyCart'); 
-                    
-                    // 6b. Enviar el formulario a FormSubmit
-                    checkoutForm.submit(); 
-                    
-                }, 300); 
+                    window.location.href = 'confirmed.html';
+                }, 1500); 
 
             });
             
-            // Event listener para cerrar el modal
+            // Event listener para cerrar el modal y redirigir
             closeModalBtn.addEventListener('click', () => {
                 modal.style.display = 'none';
+                window.location.href = 'confirmed.html';
             });
 
-            // Cerrar el modal haciendo clic fuera de la ventana
+            // Cerrar el modal haciendo clic fuera de la ventana y redirigir
             window.addEventListener('click', (event) => {
                 if (event.target === modal) {
                     modal.style.display = 'none';
+                    window.location.href = 'confirmed.html';
                 }
             });
         });
