@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Shop - Catálogo ❄️ Navidad Azulita</title>
+    
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Base Styles & Mobile First */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            color: #222; /* Default text color */
+        }
+
+        /* PALETA NAVIDEÑA AZULITA */
+        :root {
+            --navidad-azul-oscuro: #0a3d62; /* Header, Footer, Botones (hover) */
+            --navidad-azul-claro: #1b85b8; /* Acentos, Títulos, Botón principal */
+            --navidad-plata: #c0c0c0; /* Detalles, Borde */
+            --navidad-blanco-nieve: #f0f8ff; /* Fondo principal */
+            --navidad-oro: #ffd700; /* Toque especial, Precio */
+        }
+        
+        /* ANIMACIÓN DE NIEVE - Menos intensa que en el index */
+        @keyframes snowfall-soft {
+            0% { background-position: 0 0; }
+            100% { background-position: 250px 250px; }
+        }
+
+        body {
+            background-color: var(--navidad-blanco-nieve);
+            /* Fondo con puntos blancos que simulan nieve cayendo */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' viewBox='0 0 5 5'%3E%3Ccircle cx='2.5' cy='2.5' r='0.5' fill='%23ffffff60'/%3E%3C/svg%3E");
+            background-size: 5px 5px;
+            animation: snowfall-soft 20s linear infinite; /* Animación de nieve suave y lenta */
+        }
+
+        /* --- Header --- */
+        header {
+            /* Gradient azul invernal */
+            background: linear-gradient(to right, var(--navidad-azul-oscuro), var(--navidad-azul-claro)); 
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            min-height: 80px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
+        }
+
+        header img {
+            height: 65px;
+            max-width: 80%;
+            object-fit: contain;
+            object-position: left;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); /* Logo más visible en azul */
+        }
+
+        .menu-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 101;
+            color: var(--navidad-blanco-nieve); /* Icono blanco para contraste */
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .menu-btn:hover {
+            color: var(--navidad-oro);
+        }
+
+        nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        nav.open {
+            display: flex;
+        }
+
+        nav a {
+            color: var(--navidad-azul-oscuro);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--navidad-azul-claro);
+            background-color: rgba(27, 133, 184, 0.1);
+        }
+
+        /* --- Main Content Sections --- */
+        main {
+            padding: 1rem 0;
+        }
+
+        /* --- Section Titles --- */
+        .section-title {
+            text-align: center;
+            font-size: 2rem; /* Adjusted for Catálogo page */
+            font-weight: 700;
+            margin: 3rem 1rem 1.5rem;
+            color: var(--navidad-azul-claro); /* Título azul claro */
+            position: relative;
+            padding-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title::after {
+            content: '❄️'; /* Icono de copo de nieve */
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: var(--navidad-oro); /* Color oro */
+            bottom: -10px;
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border-radius: 0;
+        }
+        /* La línea original */
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--navidad-plata); /* Línea plata */
+            border-radius: 2px;
+        }
+
+        /* --- Product Grids --- */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); /* Min width adjusted for more items per row on mobile */
+            gap: 1.5rem;
+            padding: 0 1rem;
+            max-width: 1000px;
+            margin: 0 auto 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid var(--navidad-plata); 
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(27, 133, 184, 0.2); 
+            border: 1px solid var(--navidad-azul-claro);
+        }
+
+        .product-img-container {
+            background: var(--navidad-blanco-nieve); 
+            height: 120px;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--navidad-plata); 
+        }
+
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+            padding: 5px;
+        }
+        
+        /* Specific image adjustments */
+        .product-img-container img[alt*="Robux"],
+        .product-img-container img[alt*="Spotify"],
+        .product-img-container img[alt*="Servicios"],
+        .product-img-container img[alt*="OtrosJuegos"],
+        .product-img-container img[alt*="stealabrainrot"] {
+            object-fit: contain;
+            height: 90%;
+            width: 90%;
+        }
+
+        .product-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: var(--navidad-azul-oscuro);
+        }
+
+        .product-card .price {
+            font-weight: 700;
+            color: var(--navidad-oro); /* Precio en color oro */
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card .description {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.8rem;
+            height: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .product-card button {
+            background: var(--navidad-azul-claro); /* Botón azul claro */
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            margin-top: auto;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card button:hover {
+            background: var(--navidad-azul-oscuro); /* Azul oscuro al hacer hover */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Estilo para el botón/enlace de WhatsApp */
+        .whatsapp-button {
+            display: inline-block;
+            background-color: #25D366; /* Verde WhatsApp */
+            color: white !important; /* Forzar color blanco */
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 10px; /* Separación del botón de carrito */
+            transition: background-color 0.3s ease;
+        }
+
+        .whatsapp-button:hover {
+            background-color: #128C7E; /* Verde más oscuro */
+            color: white !important;
+        }
+
+        .whatsapp-button i {
+            margin-right: 5px;
+            color: white !important; /* Asegura que el ícono sea blanco */
+        }
+        
+        /* Ajuste para tarjetas con botón de WhatsApp */
+        .product-card .whatsapp-button + button {
+            margin-top: 0; /* Si hay botón de WhatsApp, el botón de carrito se pega */
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: var(--navidad-azul-oscuro); /* Footer azul oscuro */
+            color: #eee;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-content p, .footer-links a, .social-icons a {
+            color: #bbb; /* Ajustar color de texto en footer */
+        }
+        
+        .footer-content p { color: #bbb; }
+        .social-icons a { color: var(--navidad-plata); }
+        .social-icons a:hover { color: var(--navidad-oro); }
+        .footer-links a { color: var(--navidad-plata); }
+        .footer-links a:hover { color: var(--navidad-azul-claro); }
+        
+
+        /* --- Cart Icon --- */
+        .cart-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--navidad-azul-claro); /* Ícono azul claro */
+            border: 3px solid var(--navidad-blanco-nieve); /* Borde blanco nieve */
+            border-radius: 50%;
+            width: 60px; 
+            height: 60px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem; 
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            z-index: 100;
+            text-decoration: none;
+            color: var(--navidad-blanco-nieve);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+        }
+
+        .cart-icon:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            background: var(--navidad-azul-oscuro);
+        }
+
+        .cart-quantity {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--navidad-oro); /* Círculo de cantidad en color oro */
+            color: var(--navidad-azul-oscuro); /* Texto azul oscuro */
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 3px 8px;
+            min-width: 24px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            border: 1px solid white; /* Pequeño borde blanco */
+        }
+
+        /* --- Toast Notification Styles --- */
+        .toast-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background-color: rgba(10, 61, 98, 0.9); /* Toast azul oscuro */
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            min-width: 200px;
+            max-width: 300px;
+            text-align: center;
+            pointer-events: auto;
+            border-left: 5px solid var(--navidad-oro); /* Detalle de oro */
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Colores específicos de toast */
+        .toast.success {
+            background-color: rgba(27, 133, 184, 0.9); 
+            border-left: 5px solid var(--navidad-oro); 
+        }
+        .toast.error {
+            background-color: rgba(200, 50, 50, 0.9);
+            border-left: 5px solid var(--navidad-blanco-nieve);
+        }
+
+        /* --- Media Queries for Desktop --- */
+        @media (min-width: 768px) {
+            header {
+                padding: 0.5rem 2rem;
+                min-height: 100px;
+            }
+            header img {
+                height: 80px;
+            }
+            .menu-btn {
+                display: none;
+            }
+            nav {
+                position: static;
+                display: flex;
+                flex-direction: row;
+                width: auto;
+                background-color: transparent;
+                backdrop-filter: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            nav a {
+                padding: 0.7rem 1.2rem;
+                color: var(--navidad-blanco-nieve); /* En el header azul, el texto del nav va en blanco */
+            }
+            nav a:hover {
+                color: var(--navidad-oro); /* Hover en oro */
+                text-decoration: underline;
+                transform: none;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+                margin-top: 5rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 2rem;
+                padding: 0 2rem;
+            }
+
+            .product-card {
+                padding: 1.2rem;
+            }
+            .product-img-container {
+                height: 150px;
+            }
+
+            .cart-icon {
+                bottom: 30px;
+                right: 30px;
+                width: 70px; /* Un poco más grande en desktop */
+                height: 70px;
+                font-size: 2rem;
+            }
+            .cart-quantity {
+                font-size: 1rem;
+                padding: 4px 9px;
+                min-width: 28px;
+            }
+
+            .toast-container {
+                bottom: 110px; 
+                right: 30px;
+            }
+        }
+    </style>
+    </head>
+<body>
+
+    <header>
+        <img src="loguito.png" alt="Happy Corner Logo" />
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <nav id="menu">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">Happy Order</a>
+            <a href="puntos.html">Happy Puntos</a>
+            <a href="terminos.html">Términos</a>
+        </nav>
+    </header>
+
+    <main>
+        
+        <h2 class="section-title">Comida 🍔</h2>
+        <section class="products-grid">
+            <div class="product-card">
+                <div class="product-img-container"><img src="Piazza.png" alt="piazzita"></div>
+                <h3>Piazzaween</h3>
+                <p class="description">VOLVIO LA PIAZZA, AREQUIPE Y CHOCOLATE!</p>
+                <p class="price">$600</p>
+                <button onclick="addToCartAndNotify('Piazzaween', 600)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="bbbc.png" alt="bombombum clasico"></div>
+                <h3>BomBomBum Clasico</h3>
+                <p class="description">LO MAS CALIENTE DEL MOMENTO!</p>
+                <p class="price">$1000</p>
+                <button onclick="addToCartAndNotify('BomBomBum Clasico', 1000)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="Gomitas.png" alt="Gomitas"></div>
+                <h3>Gomitas</h3>
+                <p class="description">Deliciosas gomitas de sabores variados para endulzar tu día.</p>
+                <p class="price">$300</p>
+                <button onclick="addToCartAndNotify('Gomitas', 300)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="olc.png" alt="Okaloka Caja"></div>
+                <h3>Okaloka Caja</h3>
+                <p class="description">Una caja llena de sabores intensos para los amantes de lo extremo.</p>
+                <p class="price">$3.000</p>
+                <button onclick="addToCartAndNotify('Okaloka Caja', 3000)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="BomBomBum.png" alt="BomBomBum"></div>
+                <h3>Bombombum barra</h3>
+                <p class="description">El mas happyfamoso que nunca falla.</p>
+                <p class="price">$700</p>
+                <button onclick="addToCartAndNotify('Bombombum', 700)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="olb.png" alt="olb"></div>
+                <h3>Okaloka Bolsa</h3>
+                <p class="description">La versión en bolsa para compartir (o no) tus okalokas favoritas.</p>
+                <p class="price">$2.000</p>
+                <button onclick="addToCartAndNotify('Okaloka Bolsa', 2000)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="pizza.png" alt="?"></div>
+                <h3>HappyPizza Normal</h3>
+                <p class="description">HappyPizza.</p>
+                <p class="price">$11.000</p>
+                <button onclick="addToCartAndNotify('HappyPizza Normal', 11000)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="pizza.png" alt="?"></div>
+                <h3>HappyPizza X2 Queso</h3>
+                <p class="description">HappyPizza.</p>
+                <p class="price">$13.000</p>
+                <button onclick="addToCartAndNotify('HappyPizza X2 Queso', 13000)">Añadir al Carrito</button>
+            </div>
+        </section>
+
+        <h2 class="section-title">Roblox 💎</h2>
+        <section class="products-grid">
+            <div class="product-card">
+                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 40 RBX"></div>
+                <h3>40 RBX</h3>
+                <p class="description">Pequeño impulso de Robux para tus compras más rápidas.</p>
+                <p class="price">$4.000</p>
+                <button onclick="addToCartAndNotify('40 RBX', 4000)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 80 RBX"></div>
+                <h3>80 RBX</h3>
+                <p class="description">Más Robux para seguir disfrutando de tus juegos favoritos.</p>
+                <p class="price">$6.500</p>
+                <button onclick="addToCartAndNotify('80 RBX', 6500)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 500 RBX"></div>
+                <h3>500 RBX</h3>
+                <p class="description">¡La cantidad perfecta para esas skins y pases de juego!</p>
+                <p class="price">$24.500</p>
+                <button onclick="addToCartAndNotify('500 RBX', 24500)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 1000 RBX"></div>
+                <h3>1000 RBX</h3>
+                <p class="description">SUPERHAPYPROMO!! Aprovecha YA!!</p>
+                <p class="price">$40.000</p>
+                <button onclick="addToCartAndNotify('1000 RBX', 40000)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="Robux_icon.png" alt="Robux 4500 RBX"></div>
+                <h3>4500 RBX</h3>
+                <p class="description">SUPERHAPYPROMO!! Aprovecha YA!!</p>
+                <p class="price">$151.000</p>
+                <button onclick="addToCartAndNotify('4500 RBX', 151000)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="stealabr.png" alt="stealabrainrot"></div>
+                <h3>Steal a brainrot</h3>
+                <p class="description">Mas info en whatsapp.</p>
+                <a href="https://wa.me/34641422390" target="_blank" class="whatsapp-button">
+                    <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+                </a>
+                <button onclick="addToCartAndNotify('Steal a brainrot (Contactanos al whatsapp)', 0)">Añadir al Carrito</button>
+            </div>
+            <div class="product-card">
+                <div class="product-img-container"><img src="Otrosjuegos.png" alt="OtrosJuegos"></div>
+                <h3>Otros Juegos de Roblox</h3>
+                <p class="description">mm2,grow a garden,etc</p>
+                <a href="https://wa.me/34641422390" target="_blank" class="whatsapp-button">
+                    <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+                </a>
+                <button onclick="addToCartAndNotify('Otros Juegos (Contactanos al whatsapp)', 0)">Añadir al Carrito</button>
+            </div>
+        </section>
+
+        <h2 class="section-title">Spotify 🎵</h2>
+        <section class="products-grid">
+            <div class="product-card">
+                <div class="product-img-container"><img src="musica.png" alt="Spotify Premium"></div>
+                <h3>1 Mes Individual Spotify</h3>
+                <p class="description">Escucha tu música sin interrupciones con Spotify Premium por un mes.</p>
+                <p class="price">$18.900</p>
+                <button onclick="addToCartAndNotify('1 Mes Individual Spotify', 18900)">Añadir al Carrito</button>
+            </div>
+        </section>
+
+        <h2 class="section-title">Otros Servicios Online 🌐</h2>
+        <section class="products-grid">
+            <div class="product-card">
+                <div class="product-img-container"><img src="Serviciosalt.png" alt="Servicios Online"></div>
+                <h3>Servicios Online</h3>
+                <p class="description">Variedad de servicios online (Shein, apps, suscripciones, etc.).</p>
+                <p class="price">$2.000</p>
+                <button onclick="addToCartAndNotify('Servicios Online', 2000)">Añadir al Carrito</button>
+            </div>
+        </section>
+    </main>
+
+    <a href="order.html" class="cart-icon">
+        🛒
+        <span class="cart-quantity">0</span>
+    </a>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="footer-links">
+                <a href="terminos.html">Términos y Condiciones</a>
+                <a href="mailto:tuemail@example.com">Contáctanos</a>
+                <a href="catalogo.html">Ver Todo el Catálogo</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Función para abrir/cerrar el menú móvil
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('open');
+        }
+
+        // --- Cart functionality ---
+        function addToCartAndNotify(productName, productPrice) {
+            let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+
+            const existingProductIndex = cart.findIndex(item => item.name === productName);
+
+            if (existingProductIndex !== -1) {
+                cart[existingProductIndex].quantity++;
+            } else {
+                cart.push({
+                    name: productName,
+                    price: productPrice,
+                    quantity: 1
+                });
+            }
+
+            localStorage.setItem('happyCart', JSON.stringify(cart));
+            updateCartIconQuantity(); // Update the cart icon
+            showToast(`${productName} añadido al carrito`, 'success'); 
+        }
+
+        function updateCartIconQuantity() {
+            let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+            const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartIcon = document.querySelector('.cart-icon');
+            
+            let quantitySpan = cartIcon.querySelector('.cart-quantity');
+            if (!quantitySpan) {
+                quantitySpan = document.createElement('span');
+                quantitySpan.classList.add('cart-quantity');
+                cartIcon.appendChild(quantitySpan);
+            }
+            
+            if (totalQuantity > 0) {
+                quantitySpan.textContent = totalQuantity;
+                quantitySpan.style.display = 'block';
+            } else {
+                quantitySpan.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateCartIconQuantity);
+
+        // --- Toast Notification Functionality ---
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.classList.add('toast', type); // Añade la clase de tipo
+            toast.textContent = message;
+
+            toastContainer.appendChild(toast);
+
+            // Trigger the animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10); // Small delay to allow reflow
+
+            // Hide and remove the toast after a few seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000); // Toast disappears after 3 seconds
+        }
+    </script>
+    </body>
+</html>
