@@ -3,80 +3,886 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Order - No Disponible</title>
+    <title>Happy Shop - Happy Order 🛒</title>
+    
     <link rel="icon" type="image/png" href="/happyfavicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; color:#eee; }
-        body { background:#000; min-height:100vh; display:flex; flex-direction:column; }
-
-        header { background:linear-gradient(to right,#7B2C13,#B14424,#F17E23); padding:1rem; display:flex; justify-content:space-between; align-items:center; min-height:80px; box-shadow:0 4px 10px rgba(0,0,0,0.4); }
-        header img{ height:65px; object-fit:contain; }
-        .menu-btn{ font-size:2rem; background:none; border:none; color:#eee; cursor:pointer; }
-        nav{ position:absolute; top:100%; left:0; width:100%; background:rgba(0,0,0,0.95); backdrop-filter:blur(5px); display:none; flex-direction:column; align-items:center; padding:1rem 0; }
-        nav.open{ display:flex; }
-        nav a{ color:#eee; text-decoration:none; padding:0.8rem 1.5rem; font-weight:500; transition:color .3s; }
-        nav a:hover{ color:#F17E23; transform:scale(1.05); }
-
-        main { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:2rem; }
-        h1 { font-size:2.5rem; font-weight:700; color:#F17E23; margin-bottom:1rem; }
-        p { font-size:1.1rem; color:#ccc; margin-bottom:2rem; max-width:600px; }
-        a.whatsapp-btn {
-            background:#25D366;
-            color:#000;
-            font-weight:700;
-            text-decoration:none;
-            padding:1rem 1.8rem;
-            border-radius:8px;
-            display:inline-block;
-            transition:background .3s, transform .2s;
-        }
-        a.whatsapp-btn:hover {
-            background:#1EBE5D;
-            transform:translateY(-2px);
+        /* Base Styles & Mobile First */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        footer{ background:#000; color:#eee; padding:2rem 1rem; text-align:center; box-shadow:0 -2px 10px rgba(0,0,0,0.4); margin-top:auto; }
-        .social-icons a{ color:white; font-size:1.5rem; margin:0 10px; transition:color .3s; }
-        .social-icons a:hover{ color:#F17E23; }
+        /* PALETA NAVIDEÑA AZULITA */
+        :root {
+            --navidad-azul-oscuro: #0a3d62; /* Azul Medianoche */
+            --navidad-azul-claro: #1b85b8; /* Azul Brillante */
+            --navidad-plata: #c0c0c0; /* Gris Claro/Plata */
+            --navidad-blanco-nieve: #f0f8ff; /* Blanco Nieve */
+            --navidad-oro: #ffd700; /* Oro */
+            --text-dark: #222;
+            --text-light: #f0f8ff;
+        }
+        
+        @keyframes snowfall-soft {
+            0% { background-position: 0 0; }
+            100% { background-position: 250px 250px; }
+        }
 
-        @media(min-width:768px){
-            .menu-btn{ display:none; }
-            nav{ position:static; display:flex; flex-direction:row; width:auto; background:none; }
+        body {
+            background-color: var(--navidad-blanco-nieve);
+            /* Simulación de nieve con SVG/CSS */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' viewBox='0 0 5 5'%3E%3Ccircle cx='2.5' cy='2.5' r='0.5' fill='%23ffffff60'/%3E%3C/svg%3E");
+            background-size: 5px 5px;
+            animation: snowfall-soft 20s linear infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Asegura que el texto use el color oscuro por defecto */
+        * { color: var(--text-dark); }
+        header * { color: var(--text-light); }
+        .item-price, .total-price { color: var(--navidad-oro); }
+
+
+        /* --- Header (Mismo que Catálogo) --- */
+        header {
+            background: linear-gradient(to right, var(--navidad-azul-oscuro), var(--navidad-azul-claro)); 
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            min-height: 80px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
+        }
+
+        header img {
+            height: 65px;
+            max-width: 80%;
+            object-fit: contain;
+            object-position: left;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        .menu-btn {
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 101;
+            color: var(--navidad-blanco-nieve); 
+            display: block;
+        }
+
+        nav {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 100;
+        }
+
+        nav.open { display: flex; }
+
+        nav a {
+            color: var(--navidad-azul-oscuro);
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: 600;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--navidad-azul-claro);
+            background-color: rgba(27, 133, 184, 0.1);
+        }
+
+        /* --- Main Content Layout --- */
+        main {
+            flex-grow: 1; 
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- Section Title --- */
+        .page-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 1rem 0 2rem;
+            color: var(--navidad-azul-claro);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .page-title::after {
+            content: '🛍️'; 
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: var(--navidad-oro);
+            bottom: -10px;
+            width: auto;
+            height: auto;
+            background-color: transparent;
+            border-radius: 0;
+        }
+        .page-title::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--navidad-plata);
+            border-radius: 2px;
+        }
+
+        /* --- Order/Cart Details --- */
+        .order-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .order-summary, .checkout-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--navidad-plata);
+        }
+        
+        .order-summary h2, .checkout-form h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--navidad-azul-oscuro);
+            border-bottom: 2px solid var(--navidad-plata);
+            padding-bottom: 0.5rem;
+        }
+
+        /* --- Product List (Cart) --- */
+        #cart-items-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #cart-items-list li {
+            display: flex;
+            justify-content:space-between; 
+            align-items:center;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--navidad-plata);
+            font-size: 0.95rem;
+        }
+
+        #cart-items-list li:last-child {
+            border-bottom: none;
+        }
+
+        .item-details{ flex-grow:1; margin-right:1rem; display:flex; flex-direction:column; }
+        .item-details .item-name{ font-weight: 600; color: var(--navidad-azul-oscuro); }
+        .item-details .item-price{ font-size:0.85rem; color: #666; }
+        
+        .item-controls{ display:flex; align-items:center; gap:0.5rem; }
+        .item-controls button{ 
+            background: var(--navidad-azul-oscuro);
+            color: white;
+            border:none; 
+            border-radius:50%; 
+            width:28px; 
+            height:28px; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            font-size:1.2rem; 
+            cursor:pointer; 
+            transition:background .2s; 
+        }
+        .item-controls button:hover{ background: var(--navidad-azul-claro); }
+        .item-total{ font-weight:700; color: var(--navidad-oro); min-width:60px; text-align:right; }
+
+        /* --- Cart Summary --- */
+        .order-totals {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--navidad-plata);
+        }
+        
+        .order-totals p {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark); /* Asegurar color oscuro en resumen */
+        }
+        
+        .order-totals .total-price {
+            color: var(--navidad-azul-claro);
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .empty-cart-message {
+            text-align: center;
+            padding: 3rem 0;
+            color: #666;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+        
+        /* --- Contact Form --- */
+        .checkout-form label{ display:block; margin-bottom:0.5rem; font-weight:600; color:var(--navidad-azul-oscuro); font-size:0.95rem; }
+        
+        .checkout-form input, .checkout-form textarea, .checkout-form select{ 
+            width:100%; 
+            padding:10px; 
+            margin-bottom:1.2rem; 
+            border:1px solid var(--navidad-plata); 
+            border-radius:8px; 
+            font-size:1rem; 
+            background:var(--navidad-blanco-nieve); 
+            color:var(--text-dark); 
+            transition:border-color .3s, box-shadow .3s; 
+        }
+        .checkout-form input:focus, .checkout-form textarea:focus, .checkout-form select:focus{ 
+            border-color:var(--navidad-azul-claro); 
+            box-shadow:0 0 5px rgba(27, 133, 184, 0.5); 
+            outline:none; 
+        }
+        .checkout-form textarea{ min-height:90px; resize:vertical; }
+
+        .checkout-form button[type="submit"]{ 
+            background-color: var(--navidad-azul-claro); 
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1.5rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .checkout-form button[type="submit"]:hover {
+            background-color: var(--navidad-azul-oscuro);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .checkout-form button[type="submit"]:disabled { 
+            background-color: var(--navidad-plata); 
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none; 
+        }
+
+        /* Estilos de pago */
+        .payment-details {
+            background: rgba(27, 133, 184, 0.05); /* Azul muy suave */
+            border: 1px dashed var(--navidad-azul-claro);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .payment-details p { color: var(--navidad-azul-oscuro); margin-bottom: 5px; font-size: 0.95rem; }
+        .payment-details a { text-decoration: underline; color: var(--navidad-azul-oscuro); font-weight: 600;}
+        .payment-details img { border: 2px solid var(--navidad-oro); border-radius: 10px;}
+
+        /* --- Modal de Confirmación --- */
+        .modal {
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--navidad-blanco-nieve);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease-out;
+            border: 5px solid var(--navidad-oro);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-content h4 {
+            color: var(--navidad-azul-claro);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .modal-content p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--navidad-azul-oscuro);
+        }
+
+        #happy-code-display {
+            display: inline-block;
+            background-color: var(--navidad-azul-oscuro);
+            color: var(--navidad-oro);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .modal-close-btn {
+            background-color: var(--navidad-azul-claro);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+
+        .modal-close-btn:hover {
+            background-color: var(--navidad-azul-oscuro);
+        }
+
+
+        /* --- Footer (Mismo que Catálogo) --- */
+        footer {
+            background: var(--navidad-azul-oscuro);
+            color: #eee;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        footer * { color: var(--text-light); }
+        .social-icons a { color: var(--navidad-plata); }
+        .social-icons a:hover { color: var(--navidad-oro); }
+        .footer-links a { color: var(--navidad-plata); }
+        .footer-links a:hover { color: var(--navidad-azul-claro); }
+        
+        /* --- Media Queries for Desktop --- */
+        @media (min-width: 768px) {
+            header { padding: 0.5rem 2rem; min-height: 100px; }
+            header img { height: 80px; }
+            .menu-btn { display: none; }
+            nav { position: static; display: flex; flex-direction: row; width: auto; background-color: transparent; backdrop-filter: none; box-shadow: none; padding: 0; }
+            nav a { padding: 0.7rem 1.2rem; color: var(--navidad-blanco-nieve); }
+            nav a:hover { color: var(--navidad-oro); text-decoration: underline; }
+
+            .order-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+            
+            .order-summary {
+                flex: 1.5; 
+            }
+
+            .checkout-form {
+                flex: 1; 
+                max-width: 400px;
+                position: sticky; 
+                top: 20px;
+            }
         }
     </style>
 </head>
-<body>
+<body onload="renderCart()">
     <header>
-        <img src="loguito.png" alt="Happy Shop Logo" />
+        <img src="loguito.png" alt="Happy Corner Logo" />
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
         <nav id="menu">
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">Happy Order</a>
             <a href="puntos.html">Happy Puntos</a>
             <a href="terminos.html">Términos</a>
         </nav>
     </header>
 
     <main>
-        <h1>😔 ¡Ups! Esta página no está funcionando</h1>
-        <p>El sistema de pedidos está en mantenimiento temporalmente. Pero no te preocupes, puedes hacer tu pedido directamente por WhatsApp y te ayudaremos enseguida 💬</p>
-        <a class="whatsapp-btn" href="https://wa.me/34641422390?text=Hola!%20Quiero%20hacer%20mi%20pedido%20de%20Happy%20Shop." target="_blank">
-            📱 Contactar por WhatsApp
-        </a>
+        <h1 class="page-title">Tu Happy Order 🛒</h1>
+
+        <div class="order-container">
+            <section class="order-summary">
+                <h2>Resumen de tu Carrito</h2>
+                <ul id="cart-items-list"></ul>
+
+                <div class="empty-cart-message" id="empty-cart-msg" style="display:none;">
+                    Tu carrito está vacío. ¡Explora el <a href="catalogo.html" style="color:var(--navidad-azul-claro); text-decoration: underline;">catálogo</a> para empezar a comprar!
+                </div>
+
+                <div class="order-totals">
+                    <p>Subtotal: <span id="subtotal-price">$0</span></p>
+                    <p>Envío: <span id="shipping-price">Calculando...</span></p>
+                    <p class="total-price">Total: <span id="total-price">$0</span></p>
+                </div>
+            </section>
+            
+            <section class="checkout-form">
+                <h2>Detalles de Contacto y Pago</h2>
+                <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST" id="checkout-form">
+                    
+                    <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:1.2rem;">
+                        <div style="flex-grow:1;">
+                            <label for="puntos_code">Código Happy Puntos (Opcional):</label>
+                            <input type="text" id="puntos_code" name="puntos_code" placeholder="Introduce tu código" style="margin-bottom:0;" />
+                        </div>
+                        <button type="button" id="consultar-puntos-btn" style="background:var(--navidad-oro);color:var(--text-dark);padding:0.8rem 1rem;border:none;border-radius:8px;cursor:pointer;font-size:0.95rem;font-weight:600;height:44px;transition:background 0.3s;">Consultar</button>
+                    </div>
+
+                    <div id="ultimos-pedidos" style="display:none;margin-top:1rem;background:rgba(27, 133, 184, 0.05);border:1px dashed var(--navidad-azul-claro);padding:1rem;border-radius:8px;"></div>
+                    <input type="hidden" name="HappyCodigo" id="happycode-hidden">
+
+                    <label for="nombre">Nombre completo:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" />
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required placeholder="tucorreo@example.com" />
+
+                    <label for="tipo_entrega">Tipo de Entrega:</label>
+                    <select id="tipo_entrega" name="tipo_entrega" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="colegio">Entrega en el Colegio (Productos Físicos)</option>
+                        <option value="virtual">Entrega Virtual (Robux, Spotify, Servicios Online)</option>
+                    </select>
+
+                    <label for="celular">Número de Celular (WhatsApp):</label>
+                    <input type="text" id="celular" name="celular" required placeholder="Ej: 300 123 4567" />
+
+                    <label for="metodo_pago">Método de pago:</label>
+                    <select id="metodo_pago" name="metodo_pago" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="nequi">Nequi</option>
+                        <option value="pse">PSE</option>
+                        <option value="applepay">Apple Pay</option>
+                        <option value="tarjeta">Tarjeta (Crédito / Débito)</option>
+                        <option value="efectivo">Efectivo (Pago al recibir)</option>
+                    </select>
+
+                    <div id="nequi-details" class="payment-details" style="text-align:center; display:none;">
+                        <p>Para pagar por Nequi, escanea el QR o transfiere al número de HappyCorner. Envía captura a WhatsApp para confirmar.</p>
+                        
+                        <p>Número Nequi: (Se te proporcionará por WhatsApp)</p>
+                        <a href="https://wa.me/34641422390?text=Hola!%20Acabo%20de%20hacer%20un%20pedido%20en%20Happy%20Shop%20y%20quiero%20pagar%20por%20Nequi." target="_blank">Confirmar Pago por WhatsApp</a>
+                    </div>
+
+                    <div id="pse-details" class="payment-details" style="display:none;">
+                        <p>Para PSE: te damos número de Nequi por WhatsApp y envías captura para confirmar.</p>
+                        <a href="https://wa.me/34641422390" target="_blank">Confirmar Pago por WhatsApp</a>
+                    </div>
+
+                    <div id="applepay-details" class="payment-details" style="display:none;">
+                        <p>Pago con Apple Pay vía link (REVOLUT). Contacta por WhatsApp para recibir link.</p>
+                        <a href="https://wa.me/34641422390" target="_blank">Continuar por WhatsApp</a>
+                    </div>
+
+                    <div id="tarjeta-details" class="payment-details" style="display:none;">
+                        <p>Pago con tarjeta vía link (REVOLUT). Contacta por WhatsApp para recibir link.</p>
+                        <a href="https://wa.me/34641422390" target="_blank">Continuar por WhatsApp</a>
+                    </div>
+
+                    <div id="efectivo-details" class="payment-details" style="display:none;">
+                        <p>Paga en efectivo al recibir (si aplica). Ten el valor exacto si puedes.</p>
+                    </div>
+
+                    <label for="notas">Notas Adicionales (Opcional):</label>
+                    <textarea id="notas" name="notas_adicionales" rows="2" placeholder="Ej: 'Contáctenme antes de entregar.'"></textarea>
+
+                    <input type="hidden" name="_subject" value="Nuevo Pedido Happy Shop!">
+                    <input type="hidden" name="_next" value="https://happycorner.lol">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="Resumen del Pedido" id="order-summary-input">
+                    <input type="hidden" name="Total del Pedido" id="total-price-hidden">
+                    <input type="hidden" name="Contenido del Carrito" id="cart-content-hidden">
+                    <input type="hidden" name="Número de Pedido" id="order-number-hidden">
+                    <input type="hidden" name="Happy Code" id="happycode-hidden-final"> <button type="submit" id="place-order-button" disabled>
+                        <i class="fas fa-box-open"></i>
+                        Finalizar HappyOrder
+                    </button>
+                    
+                    <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">
+                        *Tu Happy Código de pedido será generado y enviado.
+                    </p>
+                </form>
+            </section>
+        </div>
     </main>
 
-    <footer>
-        <div class="social-icons">
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
+    <div id="order-success-modal" class="modal">
+        <div class="modal-content">
+            <h4>🎉 ¡Pedido Generado con Éxito! 🎉</h4>
+            <p>Hemos recibido tu Happy Order. Utiliza este código para hacer seguimiento y pagar tu compra:</p>
+            <span id="happy-code-display"></span>
+            <p style="font-size:0.9rem; margin-top:20px;">Los detalles se enviarán a tu correo. Por favor, revisa la bandeja de entrada.</p>
+            <button id="close-modal-btn" class="modal-close-btn">
+                Entendido
+            </button>
         </div>
-        <p style="margin-top:1rem; color:#777;">© 2025 Happy Corner. Todos los derechos reservados.</p>
+    </div>
+
+
+    <footer>
+        <div class="footer-content">
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <div class="footer-links">
+                <a href="terminos.html">Términos y Condiciones</a>
+                <a href="mailto:soporte@happycorner.lol">Contáctanos</a>
+                <a href="catalogo.html">Ver Todo el Catálogo</a>
+            </div>
+        </div>
     </footer>
 
     <script>
+        /* ------------------ Utiles DOM ------------------ */
         function toggleMenu(){ document.getElementById('menu').classList.toggle('open'); }
+
+        const cartItemsList = document.getElementById('cart-items-list');
+        const subtotalPriceSpan = document.getElementById('subtotal-price');
+        const shippingPriceSpan = document.getElementById('shipping-price');
+        const totalPriceSpan = document.getElementById('total-price');
+        const emptyCartMessage = document.getElementById('empty-cart-msg');
+
+        const paymentMethodSelect = document.getElementById('metodo_pago');
+        const puntosCodeInput = document.getElementById('puntos_code');
+        const consultarPuntosBtn = document.getElementById('consultar-puntos-btn');
+        const checkoutForm = document.getElementById('checkout-form');
+        const orderNumberHidden = document.getElementById('order-number-hidden');
+        const orderSummaryInput = document.getElementById('order-summary-input');
+        const totalPriceHidden = document.getElementById('total-price-hidden');
+        const cartContentHidden = document.getElementById('cart-content-hidden');
+        const happyCodeHiddenFinal = document.getElementById('happycode-hidden-final');
+
+        const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api';
+
+        let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+
+        function formatCurrency(amount) {
+            return '$' + amount.toLocaleString('es-CO'); 
+        }
+
+        function generateOrderNumber(){
+            const datePart = new Date().toISOString().slice(0,10).replace(/-/g,'');
+            const randomPart = Math.floor(100 + Math.random() * 900);
+            return `HP-${datePart}-${randomPart}`;
+        }
+        
+        function generateHappyCode() {
+            const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return 'HO-' + code; // HO = Happy Order
+        }
+
+        // NUEVA FUNCIÓN: Consultar el HappyCódigo y rellenar datos (Mantenida)
+        async function applyHappyPuntos() {
+            const code = puntosCodeInput.value.trim();
+
+            if (!code) {
+                alert('Por favor, introduce tu HappyCódigo.');
+                return;
+            }
+
+            consultarPuntosBtn.disabled = true;
+            consultarPuntosBtn.textContent = 'Consultando...';
+
+            try {
+                // Aquí deberías cambiar a tu endpoint real si lo tienes
+                const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${encodeURIComponent(code)}`);
+                if (!res.ok) {
+                    const err = await res.json();
+                    alert(`⚠️ Error: ${err.error || 'No se pudo verificar el código.'}`);
+                    return;
+                }
+
+                const data = await res.json();
+                console.log('Respuesta API Happy Corner:', data);
+
+                let mensaje = `🎉 ¡HappyCódigo válido!\n\n👤 Cliente: ${data.nombre}\n📧 Correo: ${data.correo}\n💎 Puntos disponibles: ${data.puntos.toLocaleString('es-CO')}\n\n`;
+
+                if (data.ultimas_transacciones && data.ultimas_transacciones.length > 0) {
+                    mensaje += '🛍️ Últimos pedidos:\n';
+                    data.ultimas_transacciones.slice(0, 3).forEach((r, i) => {
+                        mensaje += `   ${i + 1}. ${r.fecha} — ${formatCurrency(r.total)}\n`;
+                    });
+                } else {
+                    mensaje += 'No se encontraron pedidos recientes.\n';
+                }
+
+                mensaje += '\n¿Deseas aplicar estos datos al formulario?';
+
+                if (confirm(mensaje)) {
+                    document.getElementById('nombre').value = data.nombre || '';
+                    document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
+                    document.getElementById('celular').value = '';
+
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'HappyCódigo_Cliente';
+                    hiddenInput.value = data.happyCodigo;
+                    checkoutForm.appendChild(hiddenInput);
+
+                    alert('✅ Datos aplicados con éxito.');
+                } else {
+                    alert('❌ No se aplicaron los datos.');
+                }
+
+            } catch (err) {
+                console.error('Error al consultar Happy Puntos:', err);
+                alert('❌ Error al conectar con el servidor. Verifica tu conexión o inténtalo más tarde.');
+            } finally {
+                consultarPuntosBtn.disabled = false;
+                consultarPuntosBtn.textContent = 'Consultar';
+            }
+        }
+
+        /* ------------------ Render / Actualización de Carrito ------------------ */
+        function renderCart(){
+            cartItemsList.innerHTML = '';
+            let subtotal = 0;
+            const placeOrderBtn = document.getElementById('place-order-button');
+
+
+            if(!cart || cart.length === 0){
+                emptyCartMessage.style.display = 'block';
+                document.querySelector('.order-totals').style.display = 'none';
+                placeOrderBtn.disabled = true;
+                orderSummaryInput.value = "Carrito vacío.";
+                totalPriceHidden.value = "$0";
+                cartContentHidden.value = "Carrito vacío.";
+                return;
+            } else {
+                emptyCartMessage.style.display = 'none';
+                document.querySelector('.order-totals').style.display = 'block';
+                placeOrderBtn.disabled = false;
+            }
+
+            cart.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="item-details">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-price">${formatCurrency(item.price)} c/u</span>
+                    </div>
+                    <div class="item-controls">
+                        <button type="button" class="qty-minus" data-index="${index}">-</button>
+                        <span class="quantity">${item.quantity}</span>
+                        <button type="button" class="qty-plus" data-index="${index}">+</button>
+                    </div>
+                    <span class="item-total">${formatCurrency(Number(item.price) * item.quantity)}</span>
+                `;
+                
+                cartItemsList.appendChild(li);
+
+                const minusBtn = li.querySelector('.qty-minus');
+                const plusBtn = li.querySelector('.qty-plus');
+
+                minusBtn.addEventListener('click', (e) => updateQuantity(Number(e.target.dataset.index), -1));
+                plusBtn.addEventListener('click', (e) => updateQuantity(Number(e.target.dataset.index), 1));
+
+                subtotal += Number(item.price) * item.quantity;
+            });
+
+            subtotalPriceSpan.textContent = formatCurrency(subtotal);
+
+            const shippingCost = 0;
+            shippingPriceSpan.textContent = 'Gratis';
+
+            const total = subtotal + shippingCost;
+            totalPriceSpan.textContent = formatCurrency(total);
+
+            updateOrderSummaryForFormSubmit(total);
+        }
+
+        function updateQuantity(index, change){
+            if(!cart[index]) return;
+            cart[index].quantity = (cart[index].quantity || 0) + change;
+            if(cart[index].quantity <= 0){
+                cart.splice(index, 1);
+            }
+            localStorage.setItem('happyCart', JSON.stringify(cart));
+            cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+            renderCart();
+        }
+
+        /* ------------------ Payment details toggles ------------------ */
+        const paymentDetailsDivs = {
+            'nequi': document.getElementById('nequi-details'),
+            'pse': document.getElementById('pse-details'),
+            'applepay': document.getElementById('applepay-details'),
+            'tarjeta': document.getElementById('tarjeta-details'),
+            'efectivo': document.getElementById('efectivo-details')
+        };
+
+        function updatePaymentDetailsDisplay(){
+            for(const k in paymentDetailsDivs){
+                if(paymentDetailsDivs[k]) paymentDetailsDivs[k].style.display = 'none';
+            }
+            const selected = paymentMethodSelect.value;
+            if(paymentDetailsDivs[selected]) paymentDetailsDivs[selected].style.display = 'block';
+        }
+
+        /* ------------------ Resumen para FormSubmit ------------------ */
+        function updateOrderSummaryForFormSubmit(total){
+            let summaryText = 'Resumen del Pedido:\n\n';
+            let cartContentForHidden = [];
+
+            const orderNumber = generateOrderNumber();
+            orderNumberHidden.value = orderNumber;
+            summaryText += `Número de Pedido: ${orderNumber}\n\n`;
+
+            if(!cart || cart.length === 0){
+                summaryText += "El carrito estaba vacío al momento de enviar el pedido.\n";
+            } else {
+                cart.forEach(item => {
+                    summaryText += `- ${item.name} (x${item.quantity}): ${formatCurrency(Number(item.price) * item.quantity)}\n`;
+                    cartContentForHidden.push(`${item.name} (x${item.quantity})`);
+                });
+                summaryText += `\nSubtotal: ${subtotalPriceSpan.textContent}\n`;
+                summaryText += `Envío: ${shippingPriceSpan.textContent}\n`;
+                summaryText += `Total: ${totalPriceSpan.textContent}\n`;
+            }
+
+            orderSummaryInput.value = summaryText;
+            totalPriceHidden.value = totalPriceSpan.textContent;
+            cartContentHidden.value = cartContentForHidden.join(', ');
+        }
+
+        /* ------------------ Validaciones antes de enviar ------------------ */
+        function validateCartForSubmission(){
+            let totalPizzas = 0;
+            if (!cart || cart.length === 0) {
+                 alert('⚠️ ¡Tu carrito está vacío! Por favor, agrega productos antes de finalizar la compra.');
+                 return false;
+            }
+             
+            cart.forEach(item => {
+                if(item.name && item.name.toLowerCase().includes('pizza')){
+                    totalPizzas += item.quantity;
+                }
+            });
+            if(totalPizzas > 5){
+                alert('⚠️ ¡Límite de Pedido Excedido! Solo puedes pedir un máximo de 5 pizzas por orden.');
+                return false;
+            }
+            return true;
+        }
+
+        /* ------------------ Event Listeners (MODIFICADO PARA HAPPY CODE) ------------------ */
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCart();
+            paymentMethodSelect.addEventListener('change', updatePaymentDetailsDisplay);
+            updatePaymentDetailsDisplay();
+            consultarPuntosBtn.addEventListener('click', applyHappyPuntos);
+            
+            // Modal Elements
+            const modal = document.getElementById('order-success-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const happyCodeDisplay = document.getElementById('happy-code-display');
+
+
+            checkoutForm.addEventListener('submit', function(e){
+                // 1. Validar el carrito
+                if(!validateCartForSubmission()){
+                    e.preventDefault();
+                    return;
+                }
+
+                // 2. Generar el Happy Código
+                const happyCode = generateHappyCode();
+                happyCodeHiddenFinal.value = happyCode; // Lo guarda en el campo oculto para FormSubmit
+
+                // 3. Actualizar resumen final y número de pedido
+                const totalText = totalPriceSpan.textContent.replace('$','').replace(/\./g,'').replace(',','.');
+                const parsed = parseFloat(totalText.replace(',', '.')) || 0; // Manejar formato CO
+                updateOrderSummaryForFormSubmit(parsed);
+
+                // 4. Mostrar el modal y capturar el envío
+                e.preventDefault(); 
+                
+                // 5. Mostrar el código y el modal
+                happyCodeDisplay.textContent = happyCode;
+                modal.style.display = 'flex';
+                
+                // 6. Enviar el formulario a FormSubmit y vaciar carrito
+                // Usamos un pequeño delay para que el modal se vea antes de la redirección de FormSubmit
+                setTimeout(() => {
+                    // 6a. Vaciar carrito
+                    localStorage.removeItem('happyCart'); 
+                    
+                    // 6b. Enviar el formulario a FormSubmit
+                    checkoutForm.submit(); 
+                    
+                }, 300); 
+
+            });
+            
+            // Event listener para cerrar el modal
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Cerrar el modal haciendo clic fuera de la ventana
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
     </script>
+
 </body>
 </html>
