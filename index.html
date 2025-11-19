@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Shop - Inicio ❄️ Navidad Azulita</title>
+    <title>HappyChristmas</title>
     
     <link rel="icon" type="image/png" href="/happyfavicon.png">
     
@@ -20,16 +20,19 @@
             color: #222; /* Default text color */
         }
 
-        /* PALETA NAVIDEÑA AZULITA */
+        /* PALETA NAVIDEÑA VERDE Y ORO/ROJO */
         :root {
-            --navidad-azul-oscuro: #0a3d62; /* Header, Footer, Botones (hover) */
-            --navidad-azul-claro: #1b85b8; /* Acentos, Títulos */
-            --navidad-plata: #c0c0c0; /* Detalles, Borde */
+            --navidad-verde-oscuro: #004d40; /* Verde Bosque, para Header, Footer, Botones (hover) */
+            --navidad-verde-claro: #388e3c; /* Verde Pino, para Acentos, Títulos */
+            --navidad-rojo-clasico: #d32f2f; /* Rojo de Baya, para Acentos y Botones */
             --navidad-blanco-nieve: #f0f8ff; /* Fondo principal */
             --navidad-oro: #ffd700; /* Toque especial */
+            --navidad-crema: #fffdf7; /* Fondo de tarjetas */
+            --text-dark: #222;
+            --text-light: #f0f8ff;
         }
 
-        /* ANIMACIÓN DE NIEVE */
+        /* ANIMACIÓN DE NIEVE - Ajustada al nuevo fondo */
         @keyframes snowfall {
             0% { background-position: 0 0; }
             100% { background-position: 500px 500px; }
@@ -42,11 +45,19 @@
             background-size: 10px 10px;
             animation: snowfall 10s linear infinite; /* Animación de nieve suave */
         }
+        
+        /* Asegurarse de que los elementos del Header y Footer usen el color claro */
+        header * { color: var(--text-light); }
+        footer * { color: var(--text-light); }
+        nav a { color: var(--navidad-verde-oscuro); } /* Menú móvil */
+        @media (min-width: 768px) {
+             nav a { color: var(--text-light); } /* Menú desktop */
+        }
 
         /* --- Header --- */
         header {
-            /* Gradient azul invernal */
-            background: linear-gradient(to right, var(--navidad-azul-oscuro), var(--navidad-azul-claro)); 
+            /* Gradient verde navideño */
+            background: linear-gradient(to right, var(--navidad-verde-oscuro), var(--navidad-verde-claro)); 
             padding: 1rem;
             display: flex;
             justify-content: space-between;
@@ -62,7 +73,7 @@
             max-width: 80%;
             object-fit: contain;
             object-position: left;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); /* Logo más visible en azul */
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); 
         }
 
         .menu-btn {
@@ -71,7 +82,7 @@
             border: none;
             cursor: pointer;
             z-index: 101;
-            color: var(--navidad-blanco-nieve); /* Icono blanco para contraste */
+            color: var(--navidad-blanco-nieve); 
             display: block;
             transition: color 0.3s;
         }
@@ -95,12 +106,10 @@
             z-index: 100;
         }
 
-        nav.open {
-            display: flex;
-        }
+        nav.open { display: flex; }
 
         nav a {
-            color: var(--navidad-azul-oscuro);
+            color: var(--navidad-verde-oscuro); /* Texto verde oscuro en menú móvil */
             text-decoration: none;
             padding: 0.8rem 1.5rem;
             font-weight: 600;
@@ -108,15 +117,13 @@
         }
 
         nav a:hover {
-            color: var(--navidad-azul-claro);
-            background-color: rgba(27, 133, 184, 0.1);
+            color: var(--navidad-rojo-clasico);
+            background-color: rgba(56, 142, 60, 0.1); /* Verde suave */
             transform: none;
         }
 
         /* --- Main Content Sections --- */
-        main {
-            padding: 1rem 0;
-        }
+        main { padding: 1rem 0; }
 
         /* --- Carousel --- */
         .carousel-container {
@@ -126,18 +133,15 @@
             position: relative;
             border-radius: 15px;
             overflow: hidden;
-            /* Borde plata/azul invernal */
-            border: 5px solid var(--navidad-plata); 
+            /* Borde Oro */
+            border: 5px solid var(--navidad-oro); 
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             aspect-ratio: 16 / 9;
             height: auto;
         }
         
-        /* Mobile specific height for carousel if aspect-ratio is not enough */
         @media (max-width: 767px) {
-            .carousel-container {
-                height: 200px;
-            }
+            .carousel-container { height: 200px; }
         }
 
         .carousel-image {
@@ -150,9 +154,7 @@
             transition: opacity 0.8s ease-in-out;
         }
 
-        .carousel-image.active {
-            opacity: 1;
-        }
+        .carousel-image.active { opacity: 1; }
 
         .carousel-button {
             position: absolute;
@@ -160,28 +162,23 @@
             transform: translateY(-50%);
             font-size: 2.5rem;
             color: var(--navidad-blanco-nieve);
-            background: rgba(10, 61, 98, 0.6); /* Azul oscuro semitransparente */
-            border: 2px solid var(--navidad-plata); /* Borde plata */
+            background: rgba(0, 77, 64, 0.6); /* Verde oscuro semitransparente */
+            border: 2px solid var(--navidad-rojo-clasico); /* Borde Rojo */
             padding: 0.5rem 1rem;
             cursor: pointer;
             z-index: 10;
-            border-radius: 50%; /* Botones circulares */
+            border-radius: 50%;
             user-select: none;
             transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .carousel-button:hover {
-            background: rgba(27, 133, 184, 0.8); /* Azul claro con más opacidad */
+            background: rgba(211, 47, 47, 0.8); /* Rojo con más opacidad */
             border-color: var(--navidad-oro);
         }
 
-        .carousel-button.prev {
-            left: 10px;
-        }
-
-        .carousel-button.next {
-            right: 10px;
-        }
+        .carousel-button.prev { left: 10px; }
+        .carousel-button.next { right: 10px; }
 
         /* --- Section Titles --- */
         .section-title {
@@ -189,26 +186,26 @@
             font-size: 2.5rem;
             font-weight: 700;
             margin: 3rem 1rem 1.5rem;
-            color: var(--navidad-azul-claro); /* Título azul claro */
+            color: var(--navidad-verde-claro); /* Título verde claro */
             position: relative;
             padding-bottom: 10px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .section-title::after {
-            content: '❄️'; /* Icono de copo de nieve */
+            content: '🎁'; /* Icono de regalo */
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
             font-size: 1.5rem;
-            color: var(--navidad-oro); /* Color oro */
+            color: var(--navidad-rojo-clasico); /* Color rojo */
             bottom: -10px;
             width: auto;
             height: auto;
             background-color: transparent;
             border-radius: 0;
         }
-        /* La línea original */
+        
         .section-title::before {
             content: '';
             position: absolute;
@@ -217,7 +214,7 @@
             transform: translateX(-50%);
             width: 80px;
             height: 3px;
-            background-color: var(--navidad-plata); /* Línea plata */
+            background-color: var(--navidad-rojo-clasico); /* Línea roja */
             border-radius: 2px;
         }
 
@@ -233,7 +230,7 @@
         }
 
         .product-card {
-            background: white;
+            background: var(--navidad-crema); /* Fondo suave para la tarjeta */
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
@@ -243,13 +240,13 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 1px solid var(--navidad-plata); /* Borde suave */
+            border: 1px solid var(--navidad-verde-claro); /* Borde verde suave */
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(27, 133, 184, 0.2); /* Sombra azul */
-            border: 1px solid var(--navidad-azul-claro);
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.2); /* Sombra roja */
+            border: 1px solid var(--navidad-rojo-clasico);
         }
 
         .product-img-container {
@@ -261,7 +258,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--navidad-plata); /* Borde de contenedor de imagen */
+            border: 2px solid var(--navidad-verde-oscuro); /* Borde de contenedor de imagen verde oscuro */
         }
 
         .product-img-container img {
@@ -271,7 +268,6 @@
             border-radius: 8px;
         }
         
-        /* Specific image adjustments (if needed, example from catalogo) */
         .product-img-container img[alt*="RBX"],
         .product-img-container img[alt*="ALTSERVICE"],
         .product-img-container img[alt*="Spotify"] {
@@ -284,12 +280,12 @@
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 0.2rem;
-            color: var(--navidad-azul-oscuro);
+            color: var(--navidad-verde-oscuro); /* Título verde oscuro */
         }
 
         .product-card .price {
             font-weight: 700;
-            color: var(--navidad-azul-claro); /* Precio en azul claro */
+            color: var(--navidad-rojo-clasico); /* Precio en rojo clásico */
             font-size: 1.2rem;
             margin-bottom: 0.5rem;
         }
@@ -307,7 +303,7 @@
         }
 
         .product-card button {
-            background: var(--navidad-azul-claro); /* Botón azul claro */
+            background: var(--navidad-rojo-clasico); /* Botón rojo */
             color: white;
             border: none;
             padding: 0.6rem 1.2rem;
@@ -320,14 +316,14 @@
         }
 
         .product-card button:hover {
-            background: var(--navidad-azul-oscuro); /* Azul oscuro al hacer hover */
+            background: var(--navidad-verde-oscuro); /* Verde oscuro al hacer hover */
             transform: translateY(-2px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
         /* --- Footer --- */
         footer {
-            background: var(--navidad-azul-oscuro); /* Footer azul oscuro */
+            background: var(--navidad-verde-oscuro); /* Footer verde oscuro */
             color: #eee;
             padding: 2rem 1rem;
             text-align: center;
@@ -335,26 +331,18 @@
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .footer-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .footer-content p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            color: #bbb;
-        }
+        .footer-content { max-width: 900px; margin: 0 auto; }
+        .footer-content p { font-size: 0.9rem; margin-bottom: 1rem; color: #bbb; }
 
         .social-icons a {
-            color: var(--navidad-plata); /* Iconos sociales color plata */
+            color: var(--navidad-oro); /* Iconos sociales color oro */
             font-size: 1.8rem;
             margin: 0 12px;
             transition: color 0.3s ease;
         }
 
         .social-icons a:hover {
-            color: var(--navidad-oro); /* Oro para resaltar al hacer hover */
+            color: var(--navidad-rojo-clasico); /* Rojo para resaltar al hacer hover */
         }
         
         .footer-links {
@@ -366,24 +354,24 @@
         }
 
         .footer-links a {
-            color: var(--navidad-plata);
+            color: var(--navidad-blanco-nieve);
             text-decoration: none;
             font-size: 0.95rem;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: var(--navidad-azul-claro);
+            color: var(--navidad-oro);
         }
 
 
-        /* --- Cart Icon (from catalogo/order) --- */
+        /* --- Cart Icon --- */
         .cart-icon {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: var(--navidad-azul-claro); /* Ícono azul claro */
-            border: 3px solid var(--navidad-blanco-nieve); /* Borde blanco nieve */
+            background: var(--navidad-rojo-clasico); /* Ícono rojo */
+            border: 3px solid var(--navidad-oro); /* Borde oro */
             border-radius: 50%;
             width: 60px; 
             height: 60px; 
@@ -401,7 +389,7 @@
         .cart-icon:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-            background: var(--navidad-azul-oscuro);
+            background: var(--navidad-verde-oscuro); /* Verde oscuro al hover */
         }
 
         .cart-quantity {
@@ -409,7 +397,7 @@
             top: -8px;
             right: -8px;
             background-color: var(--navidad-oro); /* Círculo de cantidad en color oro */
-            color: var(--navidad-azul-oscuro); /* Texto azul oscuro */
+            color: var(--navidad-verde-oscuro); /* Texto verde oscuro */
             font-size: 0.9rem;
             font-weight: bold;
             border-radius: 50%;
@@ -418,7 +406,7 @@
             text-align: center;
             display: none;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            border: 1px solid white; /* Pequeño borde blanco */
+            border: 1px solid white; 
         }
 
         /* --- Toast Notification Styles --- */
@@ -434,7 +422,7 @@
         }
 
         .toast {
-            background-color: rgba(10, 61, 98, 0.9); /* Toast azul oscuro */
+            background-color: rgba(0, 77, 64, 0.9); /* Toast verde oscuro */
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
@@ -446,7 +434,7 @@
             max-width: 300px;
             text-align: center;
             pointer-events: auto;
-            border-left: 5px solid var(--navidad-oro); /* Detalle de oro */
+            border-left: 5px solid var(--navidad-rojo-clasico); /* Detalle de rojo */
         }
 
         .toast.show {
@@ -454,61 +442,29 @@
             transform: translateX(0);
         }
 
-        /* Colores específicos de toast para mantener el tema */
         .toast.success {
-            background-color: rgba(27, 133, 184, 0.9); 
-            border-left: 5px solid var(--navidad-oro); 
+            background-color: rgba(56, 142, 60, 0.9); /* Verde claro */
+            border-left: 5px solid var(--navidad-oro); /* Detalle oro */
         }
         .toast.error {
-            /* Mantener rojo si es un error crítico */
-            background-color: rgba(200, 50, 50, 0.9);
+            background-color: rgba(211, 47, 47, 0.9); /* Rojo de error */
+            border-left: 5px solid var(--navidad-oro); 
         }
 
 
         /* --- Media Queries for Desktop --- */
         @media (min-width: 768px) {
-            header {
-                padding: 0.5rem 2rem;
-                min-height: 100px;
-            }
-            header img {
-                height: 80px;
-            }
-            .menu-btn {
-                display: none;
-            }
-            nav {
-                position: static;
-                display: flex;
-                flex-direction: row;
-                width: auto;
-                background-color: transparent;
-                backdrop-filter: none;
-                box-shadow: none;
-                padding: 0;
-            }
-            nav a {
-                padding: 0.7rem 1.2rem;
-                color: var(--navidad-blanco-nieve); /* En el header azul, el texto del nav va en blanco */
-            }
-            nav a:hover {
-                color: var(--navidad-oro); /* Hover en oro */
-                text-decoration: underline;
-                transform: none;
-            }
+            header { padding: 0.5rem 2rem; min-height: 100px; }
+            header img { height: 80px; }
+            .menu-btn { display: none; }
+            nav { position: static; display: flex; flex-direction: row; width: auto; background-color: transparent; backdrop-filter: none; box-shadow: none; padding: 0; }
+            nav a { padding: 0.7rem 1.2rem; color: var(--navidad-blanco-nieve); } /* Texto en blanco sobre fondo verde */
+            nav a:hover { color: var(--navidad-oro); text-decoration: underline; transform: none; }
 
-            .carousel-container {
-                height: 350px;
-                margin-top: 2rem;
-            }
-            .carousel-image {
-                height: 100%;
-            }
+            .carousel-container { height: 350px; margin-top: 2rem; }
+            .carousel-image { height: 100%; }
 
-            .section-title {
-                font-size: 2.5rem;
-                margin-top: 5rem;
-            }
+            .section-title { font-size: 2.5rem; margin-top: 5rem; }
 
             .products-grid {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -516,30 +472,13 @@
                 padding: 0 2rem;
             }
 
-            .product-card {
-                padding: 1.2rem;
-            }
-            .product-img-container {
-                height: 150px;
-            }
+            .product-card { padding: 1.2rem; }
+            .product-img-container { height: 150px; }
 
-            .cart-icon {
-                bottom: 30px;
-                right: 30px;
-                width: 70px; /* Un poco más grande en desktop */
-                height: 70px;
-                font-size: 2rem;
-            }
-            .cart-quantity {
-                font-size: 1rem;
-                padding: 4px 9px;
-                min-width: 28px;
-            }
+            .cart-icon { bottom: 30px; right: 30px; width: 70px; height: 70px; font-size: 2rem; }
+            .cart-quantity { font-size: 1rem; padding: 4px 9px; min-width: 28px; }
 
-            .toast-container {
-                bottom: 110px; /* Ajustar para el icono de carrito más grande */
-                right: 30px;
-            }
+            .toast-container { bottom: 110px; right: 30px; }
         }
     </style>
     </head>
@@ -673,14 +612,14 @@
         }
 
         // Auto-play carousel
-        let carouselInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        let carouselInterval = setInterval(nextSlide, 5000); 
 
         // Stop auto-play on hover (optional, for better UX)
         const carouselContainer = document.querySelector('.carousel-container');
         carouselContainer.addEventListener('mouseenter', () => clearInterval(carouselInterval));
         carouselContainer.addEventListener('mouseleave', () => carouselInterval = setInterval(nextSlide, 5000));
 
-        showSlide(currentImageIndex); // Show initial slide
+        showSlide(currentImageIndex); 
 
         // --- Cart functionality ---
         function addToCartAndNotify(productName, productPrice) {
@@ -746,13 +685,13 @@
             // Trigger the animation
             setTimeout(() => {
                 toast.classList.add('show');
-            }, 10); // Small delay to allow reflow
+            }, 10); 
 
             // Hide and remove the toast after a few seconds
             setTimeout(() => {
                 toast.classList.remove('show');
                 toast.addEventListener('transitionend', () => toast.remove());
-            }, 3000); // Toast disappears after 3 seconds
+            }, 3000); 
         }
     </script>
     </body>
