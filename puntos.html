@@ -356,6 +356,7 @@
 
 <main>
     <h1 class="page-title">Consulta tus Puntos Happy 🥳</h1>
+    
     <section class="puntos-container">
         <h2>Ingresa tu Código</h2>
         <form class="consulta-form" id="consulta-form">
@@ -503,28 +504,17 @@
             resultsContainer.innerHTML = `<p>Consultando...</p>`;
 
             try {
-                // Simulación de respuesta, reemplazar con la llamada real si es necesario
-                // const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
-                // const data = await response.json();
-                
-                // Simulación para prueba de estilo:
-                const response = { ok: true };
-                const data = {
-                    nombre: 'Happy Customer',
-                    correo: 'happy@corner.lol',
-                    happyCodigo: codigo,
-                    puntos: 5420,
-                    ultimas_transacciones: [
-                        { recibo: 'HC1005', fecha: '20/11/2025', total: 15000 },
-                        { recibo: 'HC1004', fecha: '15/11/2025', total: 8500 }
-                    ]
-                };
+                // ESTA ES LA LLAMADA REAL A TU API.
+                const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
+                const data = await response.json();
 
                 if (!response.ok) {
-                    resultsContainer.innerHTML = `<p class="error">${data.error || 'Error desconocido al buscar tu código.'}</p>`;
+                    // Maneja errores de la API (ej: código no encontrado)
+                    resultsContainer.innerHTML = `<p class="error">${data.error || 'Error al buscar el código. Asegúrate de que tu HappyCódigo sea correcto.'}</p>`;
                     return;
                 }
 
+                // Si la respuesta es exitosa
                 const transaccionesHTML = data.ultimas_transacciones.length > 0
                     ? '<h4>Últimas Compras:</h4>' +
                     '<ul>' +
@@ -551,8 +541,8 @@
                     </div>
                 `;
             } catch (error) {
-                console.error(error);
-                resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión e inténtalo de nuevo.</p>`;
+                console.error("Error de conexión o parseo:", error);
+                resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión o contacta a soporte.</p>`;
             }
         });
 
