@@ -1,106 +1,206 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <title>:c</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HC | 2026</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --neon-white: #ffffff;
+      --glow: 0 0 10px rgba(255, 255, 255, 0.4);
+      --bg: #0c0c0c;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      height: 100vh;
+      padding: 0;
+      background: var(--bg);
+      font-family: "Special Elite", sans-serif;
+      color: #ffffff;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      font-family: 'Special Elite', cursive;
-      font-size: rem;
-      color: #000;
-      background: #fff;
+      font-size: 14px;
+      border-bottom: 1px solid #222;
+    }
+
+    .container {
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: clamp(45px, 12vw, 80px); /* Tamaño dinámico para móvil */
+      margin: 0;
+      letter-spacing: -2px;
+      text-shadow: var(--glow);
+    }
+
+    h2 {
+      font-size: 18px;
+      color: #888;
+      font-weight: 300;
+      margin-top: 5px;
+    }
+
+    /* BARRA CUTE */
+    .progress-wrapper {
+      margin: 40px 0;
+      max-width: 400px;
+    }
+
+    .status-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .bar-bg {
+      width: 100%;
+      height: 24px;
+      background: #1a1a1a;
+      border-radius: 50px; /* Súper redondita */
+      border: 1px solid #333;
+      padding: 4px;
+      position: relative;
+    }
+
+    .bar-fill {
+      width: 20%;
+      height: 100%;
+      background: white;
+      border-radius: 50px;
+      box-shadow: 0 0 15px white;
+      position: relative;
+    }
+
+    /* EMOJI FLOTANTE */
+    .emoji-loader {
+      font-size: 24px;
+      margin-top: 15px;
+      display: inline-block;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* SECCIÓN CONTACTO */
+    .contact-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 20px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    .contact-card h3 {
+      font-size: 16px;
+      margin-top: 0;
+      color: #ccc;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .link-btn {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      padding: 8px 16px;
+      border: 1px solid #444;
+      border-radius: 12px;
+      transition: 0.3s;
+    }
+
+    .link-btn:hover {
+      background: white;
+      color: black;
+      box-shadow: var(--glow);
+    }
+
+    .robux-alert {
+      margin-top: 20px;
+      padding: 10px;
+      border-left: 2px solid #ffffff;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      header { padding: 15px; }
+      h1 { margin-top: 20px; }
+      .container { justify-content: flex-start; margin-top: 40px; }
     }
   </style>
 </head>
- <body>
-  <pre>
-:c
 
-happycorner se cayo, somos sadcorner ahora :c
+<body>
 
-Nos sentimos en tusa. 💔
+  <header>
+    <div style="font-weight: bold; letter-spacing: 1px;">HAPPYCORNER/</div>
+    <div style="color: #666;">v.2026</div>
+  </header>
 
+  <div class="container">
+    <h1>REDISEÑO🪄</h1>
+    <h2>la página está en el happyproceso.</h2>
 
-FELIZ NAVIDAD Y AÑO NUEVO!!! QUE LA PASEN RE BN HAPPYCHICOS
+    <div class="progress-wrapper">
+      <div class="status-info">
+        <span>Happycargando....</span>
+        <span>10%(nada)</span>
+      </div>
+      <div class="bar-bg">
+        <div class="bar-fill"></div>
+      </div>
+      <div class="emoji-loader">...</div>
+    </div>
 
+    <div class="contact-card">
+      <h3>¿Necesitas algo? Escríbenos:</h3>
+      <div class="links">
+        <a href="https://wa.me/34641422390" class="link-btn">WhatsApp</a>
+        <a href="mailto:hola@happycorner.lol" class="link-btn">Email</a>
+                <a href="https://github.com/04Evann/happy-corner" class="link-btn">GitHub</a>
+                            <a href="https://www.instagram.com/happycornerca?igsh=dGQ2NmptejFwZjl3" class="link-btn">Instagram</a>
+      </div>
 
+      <div class="robux-alert">
+        💰 <strong>¿Buscas Robux?</strong> Contáctame por whatsapp o email y te ayudaremos con la compra.
+      </div>
+    </div>
+  </div>
 
+  <footer style="padding: 20px; font-size: 10px; color: #444; text-align: center;">
+    2026 HAPPY CORNER - PORFAVOR HAGANLE...
+  </footer>
 
-
-
-¿Qué pasó contigo? Dímelo
-Rrr
-(O-O-Ovy on the Drums) (mmm)
-Ya no tiene excusa (no, no)
-Hoy salió con su amiga dizque pa matar la tusa (tusa)
-Que porque un hombre le pagó mal (ah)
-Está dura y abusa (eh)
-Se cansó de ser buena
-Ahora es ella quien los usa (hmm-mm)
-Que porque un hombre le pagó mal (mal)
-Ya no se le ve sentimental (-tal)
-Dice que por otro man no llora, no (llora)
-<h3>Pero si le ponen la canción (hmm)
-Le da una depresión tonta
-Llorando lo comienza a llamar
-Pero él la dejó en buzón (oh)
-¿Será porque con otra está (con otra está)
-Fingiendo que a otra se puede amar?
-Pero hice todo este llanto por nada
-Ahora soy una chica mala</h3>
-And now you kickin' and screamin', a big toddler
-Don't try to get your friends to come holla, holla
-Ayo, I used to lay low
-I wasn't in the clubs, I was on my J.O. (woop-woop)
-Until I realized you a epic fail
-So don't tell your guys that I'm still your bae, yo (ah!)
-'Cause it's a new day, I'm in a new place (aha)
-Gettin' some new D, sittin' on a new face (okay)
-'Cause I know I'm the baddest bitch you ever really met (woop)
-You searchin' for a badder bitch and you ain't met her yet (woop)
-Ayo, tell 'em to back off
-He wanna slack off
-Ain't no more booty calls, you gotta jack off
-It's me and Karol G, we let them racks talk
-Don't run up on us, 'cause they lettin' the MACs off
-(Rrr)
-Pero si le ponen la canción (ah)
-Le da una depresión tonta
-Llorando lo comienza a llamar
-Pero él la dejó en buzón (oh)
-¿Será porque con otra está (con otra está)
-Fingiendo que a otra se puede amar?
-Eh, ah
-Un-un shot pa la pena profunda (un shot, eh)
-Y seguimos gastando la funda (la funda)
-Otro shot pa la mente (yeah, yeah)
-Pa que el recuerdo no la atormente (ah, oh)
-Ya no le copia nada (na)
-Su ex ya no vale nada (nada)
-Sale pa' la disco y solo quiere perrear (perrear)
-Pero se confunde cuando empieza a tomar (tomar)
-Ella se cura con rumba (ah)
-Y el amor pa' la tumba (yeah)
-Todos los hombres le zumban (le zumban)
-Pero si le ponen la canción (oh)
-Le da una depresión tonta (tonta)
-Llorando lo comienza a llamar
-Pero él la dejó en buzón (oh)
-¿Será porque con otra está (con otra está)
-Fingiendo que a otra se puede amar?
-Ey, Karol G (ajá, Karol G)
-Nicki Minaj (ah, ajá), ey
-"The Queen" with "The Queen" (ajá, jajaja)
-(O-O-Ovy on the Drums)
-
-Karol G - Ya no tiene escusa
+</body>
 
 </html>
