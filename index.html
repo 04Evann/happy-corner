@@ -1,206 +1,310 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HC | 2026</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>happycorner volvio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hp-gradient: linear-gradient(90deg, #ff5299 0%, #ff9d5c 50%, #ffd45e 100%);
+            --bg-body: #f1f3f8;
+            --text-dark: #2d3436;
+        }
 
-  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en móvil */
+        }
 
-  <style>
-    :root {
-      --neon-white: #ffffff;
-      --glow: 0 0 10px rgba(255, 255, 255, 0.4);
-      --bg: #0c0c0c;
-    }
+        /* HEADER RESPONSIVO */
+        header {
+            background: var(--hp-gradient);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    * { box-sizing: border-box; }
+        .logo-img { max-height: 40px; width: auto; }
 
-    body {
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      font-family: "Special Elite", sans-serif;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
+        nav { display: flex; gap: 10px; }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
 
-    header {
-      width: 100%;
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      border-bottom: 1px solid #222;
-    }
+        /* CAROUSEL RESPONSIVO */
+        .carousel-wrapper {
+            max-width: 1000px;
+            margin: 15px auto;
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            background: #fff;
+            width: calc(100% - 30px); /* Margen en móvil */
+        }
 
-    .container {
-      padding: 20px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+        .track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
 
-    h1 {
-      font-size: clamp(45px, 12vw, 80px); /* Tamaño dinámico para móvil */
-      margin: 0;
-      letter-spacing: -2px;
-      text-shadow: var(--glow);
-    }
+        .slide {
+            min-width: 100%;
+            height: 250px; /* Altura más cómoda para móvil */
+            background-size: cover;
+            background-position: center;
+        }
 
-    h2 {
-      font-size: 18px;
-      color: #888;
-      font-weight: 300;
-      margin-top: 5px;
-    }
+        @media (min-width: 768px) {
+            .slide { height: 400px; }
+            .logo-img { max-height: 50px; }
+            nav a { font-size: 14px; background: transparent; }
+        }
 
-    /* BARRA CUTE */
-    .progress-wrapper {
-      margin: 40px 0;
-      max-width: 400px;
-    }
+        .nav-dot {
+            position: absolute;
+            bottom: 15px; left: 50%;
+            transform: translateX(-50%);
+            display: flex; gap: 8px;
+        }
 
-    .status-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
+        .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; }
+        .dot.active { background: white; width: 20px; border-radius: 10px; }
 
-    .bar-bg {
-      width: 100%;
-      height: 24px;
-      background: #1a1a1a;
-      border-radius: 50px; /* Súper redondita */
-      border: 1px solid #333;
-      padding: 4px;
-      position: relative;
-    }
+        /* GRID PRODUCTOS */
+        .main-title { text-align: center; margin: 30px 0 5px; font-weight: 800; font-size: 24px; }
+        .subtitle { text-align: center; color: #888; font-size: 13px; margin-bottom: 25px; padding: 0 20px; }
 
-    .bar-fill {
-      width: 20%;
-      height: 100%;
-      background: white;
-      border-radius: 50px;
-      box-shadow: 0 0 15px white;
-      position: relative;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 2 columnas en muchos móviles */
+            gap: 15px;
+            padding: 0 15px 100px;
+            max-width: 1200px;
+            margin: auto;
+        }
 
-    /* EMOJI FLOTANTE */
-    .emoji-loader {
-      font-size: 24px;
-      margin-top: 15px;
-      display: inline-block;
-      animation: bounce 2s infinite ease-in-out;
-    }
+        .card {
+            background: white;
+            border-radius: 25px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
 
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
+        .img-placeholder { width: 100%; height: 120px; background: #f8f8f8; border-radius: 20px; margin-bottom: 10px; }
 
-    /* SECCIÓN CONTACTO */
-    .contact-card {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 20px;
-      padding: 20px;
-      margin-top: 30px;
-    }
+        .product-name { font-size: 15px; margin: 8px 0; font-weight: 600; color: #444; }
+        .price-mystery { font-size: 18px; font-weight: 700; color: #ff5299; margin-bottom: 12px; }
 
-    .contact-card h3 {
-      font-size: 16px;
-      margin-top: 0;
-      color: #ccc;
-    }
+        /* CONTROLES CANTIDAD */
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
 
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-top: 15px;
-    }
+        .qty-btn {
+            width: 30px; height: 30px;
+            border-radius: 50%; border: none;
+            background: var(--hp-gradient);
+            color: white; font-size: 18px; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+        }
 
-    .link-btn {
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      padding: 8px 16px;
-      border: 1px solid #444;
-      border-radius: 12px;
-      transition: 0.3s;
-    }
+        .qty-num { font-weight: 600; font-size: 14px; min-width: 20px; }
 
-    .link-btn:hover {
-      background: white;
-      color: black;
-      box-shadow: var(--glow);
-    }
+        .add-btn {
+            width: 100%; padding: 10px;
+            border: none; border-radius: 12px;
+            background: var(--hp-gradient);
+            color: white; font-weight: 700; font-size: 14px;
+            cursor: pointer;
+        }
 
-    .robux-alert {
-      margin-top: 20px;
-      padding: 10px;
-      border-left: 2px solid #ffffff;
-      font-size: 13px;
-      color: #aaa;
-    }
+        /* TOAST RESPONSIVO */
+        #toast {
+            position: fixed;
+            bottom: -100px; left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 40px;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+            width: 90%;
+            max-width: 350px;
+        }
 
-    /* RESPONSIVE */
-    @media (max-width: 600px) {
-      header { padding: 15px; }
-      h1 { margin-top: 20px; }
-      .container { justify-content: flex-start; margin-top: 40px; }
-    }
-  </style>
+        #toast.show { bottom: 20px; }
+
+        .check-circle {
+            background: #111; color: white;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; flex-shrink: 0;
+        }
+
+        .toast-content {
+            background: #d4edda; color: #155724;
+            padding: 4px 12px; border-radius: 8px;
+            font-size: 12px; font-weight: 500;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        /* CARRITO FLOTANTE */
+        .cart-fixed {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            background: white;
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            font-size: 20px; cursor: pointer;
+            z-index: 999;
+        }
+
+        .badge {
+            position: absolute; top: -2px; right: -2px;
+            background: #ff5299; color: white;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            font-size: 11px; display: flex; align-items: center; justify-content: center;
+            border: 2px solid white;
+        }
+    </style>
 </head>
-
 <body>
 
-  <header>
-    <div style="font-weight: bold; letter-spacing: 1px;">HAPPYCORNER/</div>
-    <div style="color: #666;">v.2026</div>
-  </header>
+    <audio id="clinkSound" src="https://www.soundjay.com/buttons_c2026/sounds/button-37a.mp3" preload="auto"></audio>
 
-  <div class="container">
-    <h1>REDISEÑO🪄</h1>
-    <h2>la página está en el happyproceso.</h2>
+    <header>
+        <img src="logo.png" alt="Logo" class="logo-img">
+        <nav>
+            <a href="#">Inicio</a>
+            <a href="#">Catálogo</a>
+            <a href="#">HappyOrder</a>
+            <a href="#">LoyaltyCorner</a>
+            <a href="#">Terminos</a>
+        </nav>
+    </header>
 
-    <div class="progress-wrapper">
-      <div class="status-info">
-        <span>Happycargando....</span>
-        <span>10%(nada)</span>
-      </div>
-      <div class="bar-bg">
-        <div class="bar-fill"></div>
-      </div>
-      <div class="emoji-loader">...</div>
+    <div class="carousel-wrapper">
+        <div class="track" id="track">
+            <div class="slide" style="background-image: url('promo1.jpg')"></div>
+            <div class="slide" style="background-image: url('promo2.jpg')"></div>
+        </div>
+        <div class="nav-dot">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+        </div>
     </div>
 
-    <div class="contact-card">
-      <h3>¿Necesitas algo? Escríbenos:</h3>
-      <div class="links">
-        <a href="https://wa.me/34641422390" class="link-btn">WhatsApp</a>
-        <a href="mailto:hola@happycorner.lol" class="link-btn">Email</a>
-                <a href="https://github.com/04Evann/happy-corner" class="link-btn">GitHub</a>
-                            <a href="https://www.instagram.com/happycornerca?igsh=dGQ2NmptejFwZjl3" class="link-btn">Instagram</a>
-      </div>
+    <h1 class="main-title">Hot Products 🔥</h1>
+    <p class="subtitle">Próximamente dulces nuevos y sorpresas... ¡atentos! ;p</p>
 
-      <div class="robux-alert">
-        💰 <strong>¿Buscas Robux?</strong> Contáctame por whatsapp o email y te ayudaremos con la compra.
-      </div>
+    <div class="grid">
+        <script>
+            for(let i=1; i<=6; i++) {
+                document.write(`
+                <div class="card" id="p${i}">
+                    <div class="img-placeholder"></div>
+                    <h3 class="product-name">Dulce #${i}</h3>
+                    <div class="price-mystery">???</div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="changeQty('p${i}', -1)">−</button>
+                        <span class="qty-num">1</span>
+                        <button class="qty-btn" onclick="changeQty('p${i}', 1)">+</button>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('p${i}')">🛒 Añadir</button>
+                </div>
+                `);
+            }
+        </script>
     </div>
-  </div>
 
-  <footer style="padding: 20px; font-size: 10px; color: #444; text-align: center;">
-    2026 HAPPY CORNER - PORFAVOR HAGANLE...
-  </footer>
+    <div id="toast">
+        <div class="check-circle">✓</div>
+        <div class="toast-content" id="toast-msg"></div>
+    </div>
 
+    <div class="cart-fixed">
+        🛒
+        <div class="badge" id="cart-count">0</div>
+    </div>
+
+    <script>
+        // --- SONIDO Y CARRITO ---
+        let totalItems = 0;
+        const sound = document.getElementById('clinkSound');
+
+        function changeQty(cardId, delta) {
+            const card = document.getElementById(cardId);
+            const qtySpan = card.querySelector('.qty-num');
+            let currentQty = parseInt(qtySpan.innerText);
+            currentQty += delta;
+            if (currentQty < 1) currentQty = 1;
+            qtySpan.innerText = currentQty;
+        }
+
+        function addToCart(cardId) {
+            // Reproducir sonido
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Interacción requerida para audio"));
+
+            const card = document.getElementById(cardId);
+            const name = card.querySelector('.product-name').innerText;
+            const qty = parseInt(card.querySelector('.qty-num').innerText);
+            
+            totalItems += qty;
+            document.getElementById('cart-count').innerText = totalItems;
+
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            msg.innerHTML = `<b>${name}</b> × ${qty} al carrito`;
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+            card.querySelector('.qty-num').innerText = "1";
+        }
+
+        // --- CAROUSEL ---
+        let currentSlide = 0;
+        const track = document.getElementById('track');
+        const dots = document.querySelectorAll('.dot');
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+        }
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % dots.length;
+            updateCarousel();
+        }, 5000);
+    </script>
 </body>
-
 </html>
