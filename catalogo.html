@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Corner</title>
+    <title>Happy Corner | 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css"> </head>
+    <link rel="stylesheet" href="styles.css">
+</head>
 <body>
 
     <audio id="clinkSound" src="" preload="auto"></audio>
 
     <header>
-        <img src="logo.png" alt="HappyCorner" class="logo-img">
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
         <nav>
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
@@ -69,6 +70,32 @@
             <div class="qty-controls"><button class="qty-btn" onclick="changeQty('rbx1000', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('rbx1000', 1)">+</button></div>
             <button class="add-btn" onclick="addToCart('rbx1000')">Añadir al Carrito</button>
         </div>
+        </div>
+
+    <div class="section-tag">Servicios Online 🌐</div>
+    <div class="grid">
+        <div class="card" id="spotify">
+            <div class="img-placeholder">🎵</div>
+            <h3 class="product-name">Spotify 1 Mes</h3>
+            <p class="product-desc">Individual Premium sin anuncios.</p>
+            <div class="price">$18.900</div>
+            <button class="add-btn" onclick="addToCart('spotify')">Añadir al Carrito</button>
+        </div>
+        <div class="card" id="snap-plus">
+            <div class="ribbon">POCAS UNIDADES..</div>
+            <div class="img-placeholder">👻</div>
+            <h3 class="product-name">Snapchat+ (1 Año)</h3>
+            <p class="product-desc">Suscripción anual antes de que se agote.</p>
+            <div class="price">$12.000</div>
+            <button class="add-btn" onclick="addToCart('snap-plus')">Añadir al Carrito</button>
+        </div>
+        <div class="card" id="otros-serv">
+            <div class="img-placeholder">🌐</div>
+            <h3 class="product-name">Varios Servicios</h3>
+            <p class="product-desc">Shein, suscripciones, etc.</p>
+            <div class="price">$3.000</div>
+            <button class="add-btn" onclick="addToCart('otros-serv')">Añadir al Carrito</button>
+        </div>
     </div>
 
     <div id="toast">
@@ -107,16 +134,16 @@
             document.getElementById('cart-count').innerText = totalItems;
 
             const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerHTML = qtyToAdd > 1 ? `<b>${qtyToAdd}x ${name}</b> añadidos!` : `<b>${name}</b> añadido!`;
+            document.getElementById('toast-msg').innerHTML = `<b>${name}</b> añadido!`;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
             if(qtySpan) qtySpan.innerText = "1";
         }
 
+        // Lógica Carousel
         let currentSlide = 0;
         const dots = document.querySelectorAll('.dot');
         const track = document.getElementById('track');
-        
         setInterval(() => {
             if(!dots.length) return;
             currentSlide = (currentSlide + 1) % dots.length;
