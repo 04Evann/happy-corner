@@ -2,12 +2,13 @@
   "name": "happy-corner-api",
   "type": "module",
   "version": "1.0.0",
-  "description": "API para consultar puntos de Happy Corner",
+  "description": "API para Happy Corner (pedidos + puntos)",
   "main": "api/get-customer-data.js",
   "scripts": {
     "start": "node api/get-customer-data.js"
   },
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "@supabase/supabase-js": "^2.39.0",
+    "node-fetch": "^3.3.2"
   }
 }
