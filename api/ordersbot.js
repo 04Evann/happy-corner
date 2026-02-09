@@ -1,27 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
+import fetch from 'node-fetch'
 
 const supabase = createClient(
   process.env.SB_URL,
   process.env.SB_SECRET
 )
 
-// 🔥 CORS HEADERS
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type'
-}
-
 export default async function handler(req, res) {
 
-  // 🛑 PRE-FLIGHT (CORS)
+  // ====== CORS HEADERS (OBLIGATORIO) ======
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  // ====== PRE-FLIGHT ======
   if (req.method === 'OPTIONS') {
-    return res.status(200).setHeader('Access-Control-Allow-Origin', '*')
-      .setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-      .setHeader('Access-Control-Allow-Headers', 'Content-Type')
-      .end()
+    return res.status(200).end()
   }
 
+  // ====== SOLO POST ======
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -29,42 +26,64 @@ export default async function handler(req, res) {
   try {
     const {
       nombre,
-      celular,
+      whatsapp,
       resumen,
       total,
       metodo_pago,
       happycodigo
     } = req.body
 
+    // ====== GUARDAR PEDIDO ======
     const { data, error } = await supabase
       .from('pedidos')
       .insert([{
         nombre,
-        celular,
+        whatsapp,
         resumen,
         total,
         metodo_pago,
         happycodigo,
-        estado: 'Nuevo',
-        fecha_creado: new Date()
+        estado: 'Nuevo'
       }])
       .select()
+      .single()
 
-    if (error) {
-      console.error(error)
-      return res.status(500).json({ error: 'Supabase error' })
-    }
+    if (error) throw error
 
-    return res
-      .status(200)
-      .setHeader('Access-Control-Allow-Origin', '*')
-      .json({ ok: true, pedido: data[0] })
+    const pedidoId = data.id
+
+    // ====== TELEGRAM ======
+    const text =
+`🛒 NUEVO PEDIDO #${pedidoId}
+
+👤 ${nombre}
+📱 ${whatsapp}
+💳 Pago: ${metodo_pago}
+🎟 HappyCódigo: ${happycodigo || 'No'}
+
+📦 ${resumen}
+💰 Total: ${total}`
+
+    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: process.env.TELEGRAM_CHAT_ID,
+        text,
+        reply_markup: {
+          inline_keyboard: [[
+            { text: '✅ Confirmar', callback_data: `confirm_${pedidoId}` },
+            { text: '📦 Entregado', callback_data: `deliver_${pedidoId}` },
+            { text: '❌ Cancelar', callback_data: `cancel_${pedidoId}` }
+          ]]
+        }
+      })
+    })
+
+    return res.status(200).json({ ok: true })
 
   } catch (err) {
     console.error(err)
-    return res
-      .status(500)
-      .setHeader('Access-Control-Allow-Origin', '*')
-      .json({ error: 'Server error' })
+    return res.status(500).json({ error: 'Server error' })
   }
 }
