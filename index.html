@@ -13,146 +13,101 @@
         }
 
         body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body); color: var(--text-dark);
+            overflow-x: hidden; -webkit-tap-highlight-color: transparent;
         }
 
         header {
-            background: var(--hp-gradient);
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            height: 60px;
+            background: var(--hp-gradient); padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; height: 60px;
         }
 
         .logo-img { max-height: 40px; width: auto; }
 
-        /* MENU NORMAL (PC y Tablet) */
-        nav.nav-desktop {
-            display: flex;
-            gap: 10px;
-        }
-
+        /* MENU DESKTOP */
+        nav.nav-desktop { display: flex; gap: 10px; }
         nav.nav-desktop a {
-            color: white;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            background: rgba(255,255,255,0.15);
-            padding: 7px 12px;
-            border-radius: 12px;
-            white-space: nowrap;
-            transition: 0.3s;
+            color: white; text-decoration: none; font-size: 13px; font-weight: 600;
+            background: rgba(255,255,255,0.15); padding: 7px 12px;
+            border-radius: 12px; transition: 0.3s;
         }
 
-        nav.nav-desktop a:hover { background: rgba(255,255,255,0.3); }
-
-        /* BOTON HAMBURGUER (Solo móvil) */
-        .menu-btn {
-            display: none; /* Escondido por defecto */
-            width: 28px; height: 20px;
-            position: relative; cursor: pointer; z-index: 2100;
-        }
-
-        .menu-btn span {
-            display: block; width: 100%; height: 3px;
-            background: white; border-radius: 10px;
-            position: absolute; transition: 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
-        }
-
+        /* MENU MÓVIL (Hamburguesa) */
+        .menu-btn { display: none; width: 28px; height: 20px; position: relative; cursor: pointer; z-index: 2100; }
+        .menu-btn span { display: block; width: 100%; height: 3px; background: white; border-radius: 10px; position: absolute; transition: 0.3s; }
         .menu-btn span:nth-child(1) { top: 0; }
         .menu-btn span:nth-child(2) { top: 8px; }
         .menu-btn span:nth-child(3) { top: 16px; }
 
-        .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-        .menu-btn.active span:nth-child(2) { opacity: 0; }
-        .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-
-        /* SIDE MENU (Móvil) */
         .side-menu {
-            position: fixed; top: 0; right: -100%;
-            width: 280px; height: 100vh;
-            background: white; z-index: 2000;
-            padding: 100px 30px;
+            position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+            background: white; z-index: 2000; padding: 100px 30px;
             display: flex; flex-direction: column; gap: 25px;
             transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: -10px 0 30px rgba(0,0,0,0.1);
         }
-
         .side-menu.active { right: 0; }
+        .side-menu a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 18px; }
 
-        .side-menu a {
-            text-decoration: none; color: var(--text-dark);
-            font-weight: 700; font-size: 18px;
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1900; display: none; }
 
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
-            z-index: 1900; display: none;
-        }
-
-        /* MEDIA QUERIES PARA ADAPTACIÓN */
         @media (max-width: 768px) {
-            nav.nav-desktop { display: none; } /* Esconde el menú de PC */
-            .menu-btn { display: block; }    /* Muestra hamburguesa */
+            nav.nav-desktop { display: none; }
+            .menu-btn { display: block; }
         }
 
-        /* CAROUSEL */
-        .carousel-wrapper {
-            max-width: 900px; margin: 20px auto;
-            position: relative; border-radius: 20px;
-            overflow: hidden; width: calc(100% - 30px); height: 180px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        /* CAROUSEL CON FLECHAS */
+        .carousel-container {
+            max-width: 900px; margin: 20px auto; position: relative;
+            width: calc(100% - 30px); height: 180px; border-radius: 20px;
+            overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
 
-        @media (min-width: 768px) { .carousel-wrapper { height: 350px; } }
+        @media (min-width: 768px) { .carousel-container { height: 350px; } }
 
-        .track { display: flex; height: 100%; transition: transform 0.6s ease; }
+        .track { display: flex; height: 100%; transition: transform 0.5s ease-in-out; }
         .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; }
 
-        /* GRID */
-        .main-title { text-align: center; margin: 30px 0 5px; font-weight: 800; font-size: 22px; }
-        .subtitle { text-align: center; color: #888; font-size: 12px; margin-bottom: 25px; }
+        .arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.7); border: none; width: 35px; height: 35px;
+            border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .arrow:hover { background: white; }
+        .prev { left: 10px; }
+        .next { right: 10px; }
 
+        /* GRID PRODUCTOS */
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, 160px);
-            gap: 15px; padding: 0 15px 100px;
-            max-width: 1200px; margin: auto; justify-content: center;
+            display: grid; grid-template-columns: repeat(auto-fit, 160px);
+            gap: 15px; padding: 0 15px 100px; max-width: 1200px; margin: auto; justify-content: center;
         }
 
         .card {
-            background: white; border-radius: 25px; padding: 15px;
-            text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            background: white; border-radius: 25px; padding: 15px; text-align: center;
             border: 1px solid rgba(0,0,0,0.05); height: 260px;
             display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        .img-placeholder { 
-            width: 100%; height: 100px; background: #f8f8f8; 
-            border-radius: 18px; display: flex; align-items: center; justify-content: center;
-        }
+        .img-placeholder { width: 100%; height: 100px; background: #f8f8f8; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
         .img-placeholder::after { content: '?'; color: #ddd; font-size: 35px; font-weight: 800; }
-
-        .product-name { font-size: 14px; font-weight: 600; color: #444; }
-        .price-mystery { font-size: 17px; font-weight: 800; color: #ff5299; }
 
         .qty-controls { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: var(--hp-gradient); color: white; cursor: pointer; font-weight: bold; }
-        
         .add-btn { width: 100%; padding: 10px; border: none; border-radius: 12px; background: var(--hp-gradient); color: white; font-weight: 700; cursor: pointer; font-size: 12px; }
 
-        /* CARRITO */
+        /* POP-UP (TOAST) */
+        #toast {
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            background: white; padding: 12px 25px; border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3000;
+            display: flex; align-items: center; gap: 10px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #toast.show { bottom: 30px; }
+        .toast-check { background: #2ecc71; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+
         .cart-fixed { position: fixed; bottom: 20px; right: 20px; background: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); font-size: 20px; z-index: 999; }
         .badge { position: absolute; top: -2px; right: -2px; background: #ff5299; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
     </style>
@@ -162,8 +117,7 @@
     <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
 
     <header>
-        <img src="logo.png" alt="Logo" class="logo-img">
-        
+        <img src="logo.png" alt="HappyCorner" class="logo-img">
         <nav class="nav-desktop">
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
@@ -171,14 +125,10 @@
             <a href="loyalty.html">LoyaltyCorner</a>
             <a href="terminos.html">Terminos</a>
         </nav>
-
-        <div class="menu-btn" id="menuBtn">
-            <span></span><span></span><span></span>
-        </div>
+        <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
     </header>
 
     <div class="overlay" id="overlay"></div>
-
     <nav class="side-menu" id="sideMenu">
         <a href="index.html">🏠 Inicio</a>
         <a href="catalogo.html">🍭 Catálogo</a>
@@ -187,16 +137,18 @@
         <a href="terminos.html">📋 Términos</a>
     </nav>
 
-    <div class="carousel-wrapper">
+    <div class="carousel-container">
+        <button class="arrow prev" onclick="moveSlide(-1)">❮</button>
+        <button class="arrow next" onclick="moveSlide(1)">❯</button>
         <div class="track" id="track">
             <div class="slide" style="background-image: url('promo1.jpg')"></div>
             <div class="slide" style="background-image: url('promo2.jpg')"></div>
+            <div class="slide" style="background-image: url('promo3.jpg')"></div>
         </div>
     </div>
 
-    <h1 class="main-title">Hot Products 🔥</h1>
-    <p class="subtitle">Próximamente dulces nuevos y sorpresas...</p>
-
+    <h1 style="text-align: center; font-size: 22px; margin-top: 25px;">Hot Products 🔥</h1>
+    
     <div class="grid">
         <script>
             for(let i=1; i<=6; i++) {
@@ -210,11 +162,16 @@
                         <span class="qty-num">1</span>
                         <button class="qty-btn" onclick="qty('p${i}',1)">+</button>
                     </div>
-                    <button class="add-btn" onclick="add()">🛒 Añadir</button>
+                    <button class="add-btn" onclick="add('Dulce #${i}')">🛒 Añadir</button>
                 </div>
                 `);
             }
         </script>
+    </div>
+
+    <div id="toast">
+        <div class="toast-check">✓</div>
+        <span id="toast-text">Producto añadido</span>
     </div>
 
     <div class="cart-fixed">
@@ -222,42 +179,45 @@
     </div>
 
     <script>
-        // Lógica del Menú
+        // Menu lateral
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
-
         function toggleMenu() {
-            menuBtn.classList.toggle('active');
-            sideMenu.classList.toggle('active');
+            menuBtn.classList.toggle('active'); sideMenu.classList.toggle('active');
             overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
         }
-
         menuBtn.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
 
-        // Lógica de productos
+        // Carousel Logic
+        let currentIdx = 0;
+        const track = document.getElementById('track');
+        function moveSlide(step) {
+            currentIdx = (currentIdx + step + 3) % 3;
+            track.style.transform = `translateX(-${currentIdx * 100}%)`;
+        }
+        setInterval(() => moveSlide(1), 6000);
+
+        // Productos y Pop-up
+        let count = 0;
         function qty(id, d) {
             let s = document.querySelector(`#${id} .qty-num`);
             let v = parseInt(s.innerText) + d;
             if(v > 0) s.innerText = v;
         }
 
-        let c = 0;
-        function add() {
-            const sound = document.getElementById('clinkSound');
-            sound.currentTime = 0;
-            sound.play().catch(()=>{});
-            c++;
-            document.getElementById('cart-count').innerText = c;
-        }
+        function add(name) {
+            document.getElementById('clinkSound').play().catch(()=>{});
+            count++;
+            document.getElementById('cart-count').innerText = count;
 
-        // Carrusel
-        let idx = 0;
-        setInterval(() => {
-            idx = (idx + 1) % 2;
-            document.getElementById('track').style.transform = `translateX(-${idx * 100}%)`;
-        }, 5000);
+            // Mostrar Pop-up
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = name + " añadido";
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
     </script>
 </body>
 </html>
