@@ -44,6 +44,11 @@
                     <div class="img-placeholder">❓</div>
                     <h3 class="product-name">Dulce Misterioso #${i}</h3>
                     <div class="price">???</div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="changeQty('m${i}', -1)">−</button>
+                        <span class="qty-num">1</span>
+                        <button class="qty-btn" onclick="changeQty('m${i}', 1)">+</button>
+                    </div>
                     <button class="add-btn" onclick="addToCart('m${i}')">Añadir</button>
                 </div>
                 `);
@@ -70,7 +75,7 @@
             <div class="qty-controls"><button class="qty-btn" onclick="changeQty('rbx1000', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('rbx1000', 1)">+</button></div>
             <button class="add-btn" onclick="addToCart('rbx1000')">Añadir al Carrito</button>
         </div>
-        </div>
+    </div>
 
     <div class="section-tag">Servicios Online 🌐</div>
     <div class="grid">
@@ -79,6 +84,7 @@
             <h3 class="product-name">Spotify 1 Mes</h3>
             <p class="product-desc">Individual Premium sin anuncios.</p>
             <div class="price">$18.900</div>
+            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('spotify', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('spotify', 1)">+</button></div>
             <button class="add-btn" onclick="addToCart('spotify')">Añadir al Carrito</button>
         </div>
         <div class="card" id="snap-plus">
@@ -87,14 +93,8 @@
             <h3 class="product-name">Snapchat+ (1 Año)</h3>
             <p class="product-desc">Suscripción anual antes de que se agote.</p>
             <div class="price">$12.000</div>
+            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('snap-plus', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('snap-plus', 1)">+</button></div>
             <button class="add-btn" onclick="addToCart('snap-plus')">Añadir al Carrito</button>
-        </div>
-        <div class="card" id="otros-serv">
-            <div class="img-placeholder">🌐</div>
-            <h3 class="product-name">Varios Servicios</h3>
-            <p class="product-desc">Shein, suscripciones, etc.</p>
-            <div class="price">$3.000</div>
-            <button class="add-btn" onclick="addToCart('otros-serv')">Añadir al Carrito</button>
         </div>
     </div>
 
@@ -134,13 +134,18 @@
             document.getElementById('cart-count').innerText = totalItems;
 
             const toast = document.getElementById('toast');
-            document.getElementById('toast-msg').innerHTML = `<b>${name}</b> añadido!`;
+            // AQUÍ LA LÓGICA DEL POPUP DINÁMICO
+            const message = qtyToAdd > 1 ? `<b>${qtyToAdd}x ${name}</b> añadidos!` : `<b>${name}</b> añadido!`;
+            document.getElementById('toast-msg').innerHTML = message;
+            
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
+            
+            // Resetear el contador de la tarjeta después de añadir
             if(qtySpan) qtySpan.innerText = "1";
         }
 
-        // Lógica Carousel
+        // Carousel
         let currentSlide = 0;
         const dots = document.querySelectorAll('.dot');
         const track = document.getElementById('track');
