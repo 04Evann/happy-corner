@@ -203,11 +203,11 @@
      
     <script>
 document.getElementById('checkout-form').addEventListener('submit', async function(e){
-    e.preventDefault(); // evita recargar
+    e.preventDefault();
 
     const payload = {
-        nombre: document.getElementById('nombre').value,
-        whatsapp: document.getElementById('celular').value,
+        nombre: document.getElementById('nombre').value.trim(),
+        whatsapp: document.getElementById('celular').value.trim(),
         resumen: document.getElementById('hidden-summary').value,
         total: document.getElementById('hidden-total').value
     };
@@ -220,10 +220,11 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
         });
 
         const data = await resp.json();
+
         if(data.ok){
             alert('✅ Pedido enviado correctamente! Revisa Telegram');
             localStorage.removeItem('hc_cart'); // limpia carrito
-            window.location.href = 'catalogo.html'; // vuelve al catálogo
+            window.location.href = 'catalogo.html';
         } else {
             alert('❌ Error enviando el pedido: ' + (data.error || 'Intenta de nuevo'));
         }
@@ -232,6 +233,7 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
         alert('❌ Error enviando el pedido 😓');
     }
 });
-    </script>
+</script>
+
 </body>
 </html>
