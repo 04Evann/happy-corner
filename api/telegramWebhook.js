@@ -6,81 +6,96 @@ const supabase = createClient(
   process.env.SB_SECRET
 )
 
-const BOT = process.env.TELEGRAM_TOKEN
-
 export default async function handler(req, res) {
 
-  // 🚨 RESPONDEMOS A TELEGRAM INMEDIATO
-  res.status(200).end()
+  const update = req.body
+  if (!update.callback_query) return res.status(200).end()
 
-  if (req.method !== 'POST') return
+  const { data } = update.callback_query
+  const chatId = update.callback_query.message.chat.id
+  const messageId = update.callback_query.message.message_id
 
-  try {
-    const update = req.body
+  const [action, pedidoId] = data.split('_')
+  const now = new Date()
+  const fechaTxt = now.toLocaleString('es-CO')
 
-    if (!update.callback_query) return
+  // 📥 Obtener pedido
+  const { data: pedido } = await supabase
+    .from('pedidos')
+    .select('*')
+    .eq('id', pedidoId)
+    .single()
 
-    const {
-      data,
-      message,
-      id: callbackId
-    } = update.callback_query
+  // ✅ CONFIRMAR
+  if (action === 'confirm') {
+    await supabase
+      .from('pedidos')
+      .update({
+        estado: 'Confirmado',
+        fecha_confirmado: now.toISOString()
+      })
+      .eq('id', pedidoId)
 
-    const chatId = message.chat.id
-    const messageId = message.message_id
+    await edit(chatId, messageId, `✅ Pedido #${pedidoId} CONFIRMADO\n🕒 ${fechaTxt}`)
+  }
 
-    const [action, pedidoId] = data.split('_')
+  // 📦 ENTREGADO
+  if (action === 'deliver') {
+    await supabase
+      .from('pedidos')
+      .update({
+        estado: 'Entregado',
+        fecha_entregado: now.toISOString()
+      })
+      .eq('id', pedidoId)
 
-    if (action === 'confirm') {
-      await supabase.from('pedidos')
-        .update({
-          estado: 'Confirmado',
-          fecha_confirmado: new Date().toISOString()
-        })
-        .eq('id', pedidoId)
+    const msgWA =
+`Hola ${pedido.nombre} 👋😊
 
-      await edit(chatId, messageId, `✅ Pedido #${pedidoId} CONFIRMADO`)
-    }
+Tu pedido ya fue entregado:
 
-    if (action === 'deliver') {
-      await supabase.from('pedidos')
-        .update({
-          estado: 'Entregado',
-          fecha_entregado: new Date().toISOString()
-        })
-        .eq('id', pedidoId)
+${pedido.resumen}
+💰 ${pedido.total}
 
-      await edit(chatId, messageId, `📦 Pedido #${pedidoId} ENTREGADO`)
-    }
+🕒 ${fechaTxt}
 
-    if (action === 'cancel') {
-      await supabase.from('pedidos')
-        .update({ estado: 'Cancelado' })
-        .eq('id', pedidoId)
+¡Gracias por comprar en Happy Corner! 🍭✨`
 
-      await edit(chatId, messageId, `❌ Pedido #${pedidoId} CANCELADO`)
-    }
+    const wa = `https://wa.me/57${pedido.whatsapp}?text=${encodeURIComponent(msgWA)}`
 
-    // 🔥 ESTO QUITA EL "Loading..."
-    await fetch(`https://api.telegram.org/bot${BOT}/answerCallbackQuery`, {
+    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/editMessageText`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ callback_query_id: callbackId })
+      body: JSON.stringify({
+        chat_id: chatId,
+        message_id: messageId,
+        text: `📦 Pedido #${pedidoId} ENTREGADO\n🕒 ${fechaTxt}`,
+        reply_markup: {
+          inline_keyboard: [[
+            { text: '📲 Enviar WhatsApp', url: wa }
+          ]]
+        }
+      })
     })
-
-  } catch (err) {
-    console.error('Webhook error:', err)
   }
+
+  // ❌ CANCELAR
+  if (action === 'cancel') {
+    await supabase
+      .from('pedidos')
+      .update({ estado: 'Cancelado' })
+      .eq('id', pedidoId)
+
+    await edit(chatId, messageId, `❌ Pedido #${pedidoId} CANCELADO`)
+  }
+
+  res.status(200).end()
 }
 
 async function edit(chatId, messageId, text) {
-  await fetch(`https://api.telegram.org/bot${BOT}/editMessageText`, {
+  await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/editMessageText`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: chatId,
-      message_id: messageId,
-      text
-    })
+    body: JSON.stringify({ chat_id: chatId, message_id: messageId, text })
   })
 }
