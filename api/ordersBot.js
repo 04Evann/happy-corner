@@ -66,12 +66,13 @@ export default async function handler(req, res) {
 📱 [WhatsApp](https://wa.me/57${whatsapp})`;
 
     const replyMarkup = {
-      inline_keyboard: [
-        [{ text: '✅ Confirmar', callback_data: `confirm_${pedidoId}` }],
-        [{ text: '📦 Entregado', callback_data: `delivered_${pedidoId}` }],
-        [{ text: '❌ Cancelar', callback_data: `cancel_${pedidoId}` }]
-      ]
-    };
+  inline_keyboard: [
+    [{ text: '✅ Confirmar', callback_data: `confirm_${pedidoId}` }],
+    [{ text: '📦 Entregado', callback_data: `deliver_${pedidoId}` }],
+    [{ text: '❌ Cancelar', callback_data: `cancel_${pedidoId}` }]
+  ]
+}
+
 
     await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
       method: 'POST',
