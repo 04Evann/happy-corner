@@ -8,82 +8,86 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
 
-  // ====== CORS HEADERS (OBLIGATORIO) ======
-  res.setHeader('Access-Control-Allow-Origin', '*')
+  // 🟢 CORS
+  const allowed = ['https://happycorner.lol']
+  const origin = req.headers.origin
+  if (allowed.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-  // ====== PRE-FLIGHT ======
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end()
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+
+  const {
+    nombre,
+    email,
+    whatsapp,
+    resumen,
+    total,
+    metodo_pago,
+    happycodigo
+  } = req.body
+
+  if (!nombre || !whatsapp || !resumen || !total) {
+    return res.status(400).json({ error: 'Faltan datos' })
   }
 
-  // ====== SOLO POST ======
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
-
-  try {
-    const {
+  // 1️⃣ Guardar en Supabase
+  const { data, error } = await supabase
+    .from('pedidos')
+    .insert([{
       nombre,
+      email,
       whatsapp,
       resumen,
       total,
       metodo_pago,
-      happycodigo
-    } = req.body
+      happycodigo,
+      estado: 'Nuevo'
+    }])
+    .select()
+    .single()
 
-    // ====== GUARDAR PEDIDO ======
-    const { data, error } = await supabase
-      .from('pedidos')
-      .insert([{
-        nombre,
-        whatsapp,
-        resumen,
-        total,
-        metodo_pago,
-        happycodigo,
-        estado: 'Nuevo'
-      }])
-      .select()
-      .single()
+  if (error) return res.status(500).json({ error: error.message })
 
-    if (error) throw error
+  const pedidoId = data.id
+  const fechaTxt = new Date(data.created_at).toLocaleString('es-CO')
 
-    const pedidoId = data.id
-
-    // ====== TELEGRAM ======
-    const text =
-`🛒 NUEVO PEDIDO #${pedidoId}
+  // 2️⃣ Telegram
+  const text =
+`📦 *Nuevo Pedido* #${pedidoId}
 
 👤 ${nombre}
+📧 ${email || 'No registrado'}
 📱 ${whatsapp}
-💳 Pago: ${metodo_pago}
-🎟 HappyCódigo: ${happycodigo || 'No'}
 
-📦 ${resumen}
-💰 Total: ${total}`
+🛒 ${resumen}
+💰 ${total}
+💳 ${metodo_pago || 'No especificado'}
+🎟️ ${happycodigo || '—'}
 
-    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: process.env.TELEGRAM_CHAT_ID,
-        text,
-        reply_markup: {
-          inline_keyboard: [[
-            { text: '✅ Confirmar', callback_data: `confirm_${pedidoId}` },
-            { text: '📦 Entregado', callback_data: `deliver_${pedidoId}` },
-            { text: '❌ Cancelar', callback_data: `cancel_${pedidoId}` }
-          ]]
-        }
-      })
-    })
+🕒 ${fechaTxt}`
 
-    return res.status(200).json({ ok: true })
-
-  } catch (err) {
-    console.error(err)
-    return res.status(500).json({ error: 'Server error' })
+  const buttons = {
+    inline_keyboard: [
+      [{ text: '✅ Confirmar', callback_data: `confirm_${pedidoId}` }],
+      [{ text: '📦 Entregado', callback_data: `deliver_${pedidoId}` }],
+      [{ text: '❌ Cancelar', callback_data: `cancel_${pedidoId}` }]
+    ]
   }
+
+  await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: process.env.TELEGRAM_CHAT_ID,
+      text,
+      parse_mode: 'Markdown',
+      reply_markup: buttons
+    })
+  })
+
+  res.json({ ok: true, pedidoId })
 }
