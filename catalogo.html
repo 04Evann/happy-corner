@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Corner | 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Catálogo | Happy Corner</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -13,94 +13,76 @@
 
     <header>
         <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav>
+        <nav class="nav-desktop">
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
             <a href="happyorder.html">HappyOrder</a>
             <a href="loyalty.html">LoyaltyCorner</a>
             <a href="terminos.html">Terminos</a>
         </nav>
+        <div class="menu-btn" id="menuBtn">
+            <span></span><span></span><span></span>
+        </div>
     </header>
 
-    <div class="carousel-wrapper">
-        <div class="track" id="track">
-            <div class="slide" style="background-image: url('promo1.jpg')"></div>
-            <div class="slide" style="background-image: url('promo2.jpg')"></div>
-            <div class="slide" style="background-image: url('promo3.jpg')"></div>
-        </div>
-        <div class="nav-dot">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
+    <div class="overlay" id="overlay"></div>
+    <nav class="side-menu" id="sideMenu">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="happyorder.html">HappyOrder</a>
+        <a href="loyalty.html">LoyaltyCorner</a>
+        <a href="terminos.html">Términos</a>
+    </nav>
+
+    <div style="padding: 20px; text-align: center;">
+        <h1 style="font-size: 24px; font-weight: 800; margin-bottom: 10px;">Nuestro Catálogo 🛒</h1>
+        <p style="font-size: 14px; color: #666;">Explora todos nuestros productos y servicios.</p>
     </div>
 
     <div class="section-tag">Dulces</div>
-    <div class="grid" id="mystery-grid">
+    <div class="grid">
         <script>
-            for(let i=1; i<=6; i++) {
+            // Generamos 8 dulces para el catálogo
+            for(let i=1; i<=8; i++) {
                 document.write(`
-                <div class="card" id="m${i}">
-                    <div class="img-placeholder">❓</div>
+                <div class="card" id="cat-m${i}">
+                    <div class="img-placeholder">🍭</div>
                     <h3 class="product-name">Dulce Misterioso #${i}</h3>
                     <div class="price">???</div>
                     <div class="qty-controls">
-                        <button class="qty-btn" onclick="changeQty('m${i}', -1)">−</button>
+                        <button class="qty-btn" onclick="changeQty('cat-m${i}', -1)">−</button>
                         <span class="qty-num">1</span>
-                        <button class="qty-btn" onclick="changeQty('m${i}', 1)">+</button>
+                        <button class="qty-btn" onclick="changeQty('cat-m${i}', 1)">+</button>
                     </div>
-                    <button class="add-btn" onclick="addToCart('m${i}')">Añadir</button>
+                    <button class="add-btn" onclick="addToCart('cat-m${i}')">Añadir</button>
                 </div>
                 `);
             }
         </script>
     </div>
-    
+
     <div class="section-tag">Roblox 💎</div>
-    <div class="grid" id="roblox-grid">
-        <div class="card" id="rbx40">
+    <div class="grid">
+        <div class="card" id="c-rbx40">
             <div class="img-placeholder">💎</div>
             <h3 class="product-name">40 RBX</h3>
-            <p class="product-desc">Pequeño impulso para tus compras rápidas.</p>
             <div class="price">$4.000</div>
-            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('rbx40', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('rbx40', 1)">+</button></div>
-            <button class="add-btn" onclick="addToCart('rbx40')">Añadir al Carrito</button>
+            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('c-rbx40', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('c-rbx40', 1)">+</button></div>
+            <button class="add-btn" onclick="addToCart('c-rbx40')">Añadir</button>
         </div>
-        <div class="card" id="rbx1000">
+        <div class="card" id="c-rbx1000">
             <div class="ribbon">PROMO!!</div>
             <div class="img-placeholder">🔥</div>
             <h3 class="product-name">1000 RBX</h3>
-            <p class="product-desc">SUPERHAPYPROMO!! Aprovecha YA!!</p>
             <div class="price">$40.000</div>
-            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('rbx1000', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('rbx1000', 1)">+</button></div>
-            <button class="add-btn" onclick="addToCart('rbx1000')">Añadir al Carrito</button>
-        </div>
-    </div>
-
-    <div class="section-tag">Servicios Online 🌐</div>
-    <div class="grid">
-        <div class="card" id="spotify">
-            <div class="img-placeholder">🎵</div>
-            <h3 class="product-name">Spotify 1 Mes</h3>
-            <p class="product-desc">Individual Premium sin anuncios.</p>
-            <div class="price">$18.900</div>
-            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('spotify', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('spotify', 1)">+</button></div>
-            <button class="add-btn" onclick="addToCart('spotify')">Añadir al Carrito</button>
-        </div>
-        <div class="card" id="snap-plus">
-            <div class="ribbon">POCAS UNIDADES..</div>
-            <div class="img-placeholder">👻</div>
-            <h3 class="product-name">Snapchat+ (1 Año)</h3>
-            <p class="product-desc">Suscripción anual antes de que se agote.</p>
-            <div class="price">$12.000</div>
-            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('snap-plus', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('snap-plus', 1)">+</button></div>
-            <button class="add-btn" onclick="addToCart('snap-plus')">Añadir al Carrito</button>
+            <div class="qty-controls"><button class="qty-btn" onclick="changeQty('c-rbx1000', -1)">−</button><span class="qty-num">1</span><button class="qty-btn" onclick="changeQty('c-rbx1000', 1)">+</button></div>
+            <button class="add-btn" onclick="addToCart('c-rbx1000')">Añadir</button>
         </div>
     </div>
 
     <div id="toast">
-        <div class="check-circle">✓</div>
-        <div class="toast-content" id="toast-msg"></div>
+        <div class="toast-check">✓</div>
+        <div class="toast-content" id="toast-msg" style="margin-left: 10px;"></div>
     </div>
 
     <a href="happyorder.html" class="cart-fixed">
@@ -108,15 +90,29 @@
     </a>
 
     <script>
+        // LÓGICA DEL MENÚ (Copia fiel del index para consistencia)
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+
+        menuBtn.onclick = () => {
+            sideMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
+
+        overlay.onclick = () => {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        // LÓGICA DE COMPRA
         let totalItems = 0;
         const sound = document.getElementById('clinkSound');
 
         function changeQty(cardId, delta) {
             const card = document.getElementById(cardId);
             const qtySpan = card.querySelector('.qty-num');
-            if(!qtySpan) return;
-            let currentQty = parseInt(qtySpan.innerText);
-            currentQty += delta;
+            let currentQty = parseInt(qtySpan.innerText) + delta;
             if (currentQty < 1) currentQty = 1;
             qtySpan.innerText = currentQty;
         }
@@ -128,33 +124,20 @@
             const card = document.getElementById(cardId);
             const name = card.querySelector('.product-name').innerText;
             const qtySpan = card.querySelector('.qty-num');
-            const qtyToAdd = qtySpan ? parseInt(qtySpan.innerText) : 1;
+            const qtyToAdd = parseInt(qtySpan.innerText);
             
             totalItems += qtyToAdd;
             document.getElementById('cart-count').innerText = totalItems;
 
             const toast = document.getElementById('toast');
-            // AQUÍ LA LÓGICA DEL POPUP DINÁMICO
             const message = qtyToAdd > 1 ? `<b>${qtyToAdd}x ${name}</b> añadidos!` : `<b>${name}</b> añadido!`;
             document.getElementById('toast-msg').innerHTML = message;
             
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
             
-            // Resetear el contador de la tarjeta después de añadir
-            if(qtySpan) qtySpan.innerText = "1";
+            qtySpan.innerText = "1";
         }
-
-        // Carousel
-        let currentSlide = 0;
-        const dots = document.querySelectorAll('.dot');
-        const track = document.getElementById('track');
-        setInterval(() => {
-            if(!dots.length) return;
-            currentSlide = (currentSlide + 1) % dots.length;
-            track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
-        }, 5000);
     </script>
 </body>
 </html>
