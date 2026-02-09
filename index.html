@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>happycorner volvio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -18,13 +18,13 @@
             background-color: var(--bg-body);
             color: var(--text-dark);
             overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent; /* Quita el cuadro azul al tocar en móvil */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* HEADER RESPONSIVO */
         header {
             background: var(--hp-gradient);
-            padding: 10px 20px;
+            padding: 10px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -34,110 +34,136 @@
             z-index: 1000;
         }
 
-        .logo-img { max-height: 40px; width: auto; }
+        .logo-img { max-height: 35px; width: auto; }
 
-        nav { display: flex; gap: 10px; }
+        nav { 
+            display: flex; 
+            gap: 8px; 
+            overflow-x: auto; /* Permite deslizar el menú en móviles pequeños */
+            padding: 5px 0;
+        }
+        
+        nav::-webkit-scrollbar { display: none; } /* Oculta barra de scroll del menú */
+
         nav a {
             color: white;
             text-decoration: none;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
             padding: 5px 10px;
             border-radius: 10px;
+            white-space: nowrap;
         }
 
-        /* CAROUSEL RESPONSIVO */
+        /* CAROUSEL ADAPTADO (No gigante) */
         .carousel-wrapper {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 15px auto;
             position: relative;
-            border-radius: 25px;
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             background: #fff;
-            width: calc(100% - 30px); /* Margen en móvil */
+            width: calc(100% - 30px);
+            /* Controlamos la altura para que no sea gigante en móvil */
+            height: 160px; 
+        }
+
+        @media (min-width: 768px) {
+            .carousel-wrapper { height: 350px; } /* Altura en PC */
+            .logo-img { max-height: 45px; }
+            nav a { font-size: 13px; }
         }
 
         .track {
             display: flex;
+            height: 100%;
             transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .slide {
             min-width: 100%;
-            height: 250px; /* Altura más cómoda para móvil */
+            height: 100%;
             background-size: cover;
             background-position: center;
         }
 
-        @media (min-width: 768px) {
-            .slide { height: 400px; }
-            .logo-img { max-height: 50px; }
-            nav a { font-size: 14px; background: transparent; }
-        }
-
         .nav-dot {
             position: absolute;
-            bottom: 15px; left: 50%;
+            bottom: 10px; left: 50%;
             transform: translateX(-50%);
-            display: flex; gap: 8px;
+            display: flex; gap: 6px;
         }
 
-        .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.4); border-radius: 50%; }
-        .dot.active { background: white; width: 20px; border-radius: 10px; }
+        .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.4); border-radius: 50%; }
+        .dot.active { background: white; width: 15px; border-radius: 10px; }
 
-        /* GRID PRODUCTOS */
-        .main-title { text-align: center; margin: 30px 0 5px; font-weight: 800; font-size: 24px; }
-        .subtitle { text-align: center; color: #888; font-size: 13px; margin-bottom: 25px; padding: 0 20px; }
+        /* GRID PRODUCTOS CHIQUITOS */
+        .main-title { text-align: center; margin: 25px 0 5px; font-weight: 800; font-size: 20px; }
+        .subtitle { text-align: center; color: #888; font-size: 11px; margin-bottom: 20px; padding: 0 20px; }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); /* 2 columnas en muchos móviles */
-            gap: 15px;
-            padding: 0 15px 100px;
+            /* Forzamos el tamaño de las cards para que no se estiren feo */
+            grid-template-columns: repeat(auto-fit, 155px); 
+            gap: 12px;
+            padding: 0 10px 100px;
             max-width: 1200px;
             margin: auto;
+            justify-content: center;
         }
 
         .card {
             background: white;
-            border-radius: 25px;
-            padding: 15px;
+            border-radius: 22px;
+            padding: 12px;
             text-align: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.02);
             border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 250px;
         }
 
-        .img-placeholder { width: 100%; height: 120px; background: #f8f8f8; border-radius: 20px; margin-bottom: 10px; }
-
-        .product-name { font-size: 15px; margin: 8px 0; font-weight: 600; color: #444; }
-        .price-mystery { font-size: 18px; font-weight: 700; color: #ff5299; margin-bottom: 12px; }
-
-        /* CONTROLES CANTIDAD */
-        .qty-controls {
+        .img-placeholder { 
+            width: 100%; 
+            height: 90px; 
+            background: #f8f8f8; 
+            border-radius: 15px; 
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 15px;
+        }
+        
+        .img-placeholder::after { content: '?'; color: #ddd; font-size: 30px; font-weight: 800; }
+
+        .product-name { font-size: 13px; margin: 5px 0; font-weight: 600; color: #444; }
+        .price-mystery { font-size: 16px; font-weight: 700; color: #ff5299; margin-bottom: 10px; }
+
+        /* CONTROLES CANTIDAD COMPACTOS */
+        .qty-controls {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; margin-bottom: 12px;
         }
 
         .qty-btn {
-            width: 30px; height: 30px;
+            width: 25px; height: 25px;
             border-radius: 50%; border: none;
             background: var(--hp-gradient);
-            color: white; font-size: 18px; font-weight: bold;
+            color: white; font-size: 16px; font-weight: bold;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
 
-        .qty-num { font-weight: 600; font-size: 14px; min-width: 20px; }
+        .qty-num { font-weight: 600; font-size: 13px; min-width: 18px; }
 
         .add-btn {
-            width: 100%; padding: 10px;
-            border: none; border-radius: 12px;
+            width: 100%; padding: 8px;
+            border: none; border-radius: 10px;
             background: var(--hp-gradient);
-            color: white; font-weight: 700; font-size: 14px;
+            color: white; font-weight: 700; font-size: 12px;
             cursor: pointer;
         }
 
@@ -153,25 +179,24 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 2000;
-            width: 90%;
-            max-width: 350px;
+            width: 85%;
+            max-width: 300px;
         }
 
-        #toast.show { bottom: 20px; }
+        #toast.show { bottom: 80px; }
 
         .check-circle {
             background: #111; color: white;
-            width: 20px; height: 20px;
+            width: 18px; height: 18px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 10px; flex-shrink: 0;
+            font-size: 9px; flex-shrink: 0;
         }
 
         .toast-content {
             background: #d4edda; color: #155724;
-            padding: 4px 12px; border-radius: 8px;
-            font-size: 12px; font-weight: 500;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            padding: 4px 10px; border-radius: 8px;
+            font-size: 11px; font-weight: 500;
         }
 
         /* CARRITO FLOTANTE */
@@ -179,36 +204,36 @@
             position: fixed;
             bottom: 20px; right: 20px;
             background: white;
-            width: 55px; height: 55px;
+            width: 50px; height: 50px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            font-size: 20px; cursor: pointer;
+            font-size: 18px; cursor: pointer;
             z-index: 999;
         }
 
         .badge {
             position: absolute; top: -2px; right: -2px;
             background: #ff5299; color: white;
-            width: 20px; height: 20px;
+            width: 18px; height: 18px;
             border-radius: 50%;
-            font-size: 11px; display: flex; align-items: center; justify-content: center;
+            font-size: 10px; display: flex; align-items: center; justify-content: center;
             border: 2px solid white;
         }
     </style>
 </head>
 <body>
 
-    <audio id="clinkSound" src="https://www.soundjay.com/buttons_c2026/sounds/button-37a.mp3" preload="auto"></audio>
+    <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
 
     <header>
         <img src="logo.png" alt="Logo" class="logo-img">
         <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Catálogo</a>
-            <a href="#">HappyOrder</a>
-            <a href="#">LoyaltyCorner</a>
-            <a href="#">Terminos</a>
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="happyorder.html">HappyOrder</a>
+            <a href="loyalty.html">LoyaltyCorner</a>
+            <a href="terminos.html">Terminos</a>
         </nav>
     </header>
 
@@ -257,7 +282,6 @@
     </div>
 
     <script>
-        // --- SONIDO Y CARRITO ---
         let totalItems = 0;
         const sound = document.getElementById('clinkSound');
 
@@ -271,9 +295,8 @@
         }
 
         function addToCart(cardId) {
-            // Reproducir sonido
             sound.currentTime = 0;
-            sound.play().catch(e => console.log("Interacción requerida para audio"));
+            sound.play().catch(e => console.log("Interacción requerida"));
 
             const card = document.getElementById(cardId);
             const name = card.querySelector('.product-name').innerText;
@@ -284,14 +307,13 @@
 
             const toast = document.getElementById('toast');
             const msg = document.getElementById('toast-msg');
-            msg.innerHTML = `<b>${name}</b> × ${qty} al carrito`;
+            msg.innerHTML = `<b>${name}</b> añadido`;
             
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            setTimeout(() => toast.classList.remove('show'), 2000);
             card.querySelector('.qty-num').innerText = "1";
         }
 
-        // --- CAROUSEL ---
         let currentSlide = 0;
         const track = document.getElementById('track');
         const dots = document.querySelectorAll('.dot');
