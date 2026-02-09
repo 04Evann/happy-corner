@@ -1,3 +1,4 @@
+// api/ordersbot.js
 import { createClient } from '@supabase/supabase-js'
 import fetch from 'node-fetch'
 
@@ -6,23 +7,29 @@ const supabase = createClient(
   process.env.SB_SECRET
 )
 
-const BOT_TOKEN = process.env.TELEGRAM_TOKEN
-const ADMIN_CHAT = process.env.TELEGRAM_CHAT_ID
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID
 
 export default async function handler(req, res) {
 
-  // 🔓 CORS
+  // ===== CORS =====
+  const allowedOrigins = ['https://happycorner.lol']
   const origin = req.headers.origin
-  const allowed = ['https://happycorner.lol', 'http://localhost:5500']
-  if (allowed.includes(origin)) {
+  if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin)
   }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
-  if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Only POST' })
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
 
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Only POST allowed' })
+  }
+
+  // ===== DATOS =====
   const {
     nombre,
     whatsapp,
@@ -32,11 +39,11 @@ export default async function handler(req, res) {
     happycodigo
   } = req.body
 
-  if (!nombre || !whatsapp || !resumen || !total) {
+  if (!nombre || !whatsapp || !resumen || !total || !metodo_pago) {
     return res.status(400).json({ error: 'Faltan datos' })
   }
 
-  // 1️⃣ Guardar en Supabase
+  // ===== GUARDAR EN SUPABASE =====
   const { data, error } = await supabase
     .from('pedidos')
     .insert([{
@@ -44,7 +51,7 @@ export default async function handler(req, res) {
       whatsapp,
       resumen,
       total,
-      metodo_pago: metodo_pago || 'No especificado',
+      metodo_pago,
       happycodigo: happycodigo || null,
       estado: 'Nuevo'
     }])
@@ -52,47 +59,46 @@ export default async function handler(req, res) {
     .single()
 
   if (error) {
-    console.error(error)
-    return res.status(500).json({ error: 'DB error' })
+    return res.status(500).json({ error: error.message })
   }
 
-  const id = data.id
+  const pedidoId = data.id
 
-  // 2️⃣ Mensaje a Telegram
-  const texto =
-`📦 *Nuevo pedido* #${id}
+  // ===== MENSAJE TELEGRAM =====
+  const messageText =
+`📦 *Nuevo pedido* #${pedidoId}
 
 👤 *Cliente:* ${nombre}
 📱 *WhatsApp:* ${whatsapp}
 🛒 *Pedido:* ${resumen}
 💰 *Total:* ${total}
-💳 *Pago:* ${data.metodo_pago}
-🎟 *HappyCódigo:* ${data.happycodigo || '—'}
+💳 *Pago:* ${metodo_pago}
+🎟️ *HappyCódigo:* ${happycodigo || '—'}
 
 👉 [Abrir WhatsApp](https://wa.me/57${whatsapp})`
 
-  const keyboard = {
+  const replyMarkup = {
     inline_keyboard: [
       [
-        { text: '✅ Confirmar', callback_data: `confirm_${id}` },
-        { text: '📦 Entregado', callback_data: `deliver_${id}` }
+        { text: '✅ Confirmar', callback_data: `confirm_${pedidoId}` },
+        { text: '📦 Entregado', callback_data: `deliver_${pedidoId}` }
       ],
       [
-        { text: '❌ Cancelar', callback_data: `cancel_${id}` }
+        { text: '❌ Cancelar', callback_data: `cancel_${pedidoId}` }
       ]
     ]
   }
 
-  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      chat_id: ADMIN_CHAT,
-      text: texto,
+      chat_id: TELEGRAM_CHAT_ID,
+      text: messageText,
       parse_mode: 'Markdown',
-      reply_markup: keyboard
+      reply_markup: replyMarkup
     })
   })
 
-  res.status(200).json({ ok: true, pedidoId: id })
+  res.status(200).json({ ok: true, pedidoId })
 }
