@@ -217,92 +217,114 @@
         </section>
     </main>
 
-    <script>
-        const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api';
-        let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+<script>
+    const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api';
+    
+    // 1. Cargamos el carrito con seguridad
+    let cart = [];
+    try {
+        cart = JSON.parse(localStorage.getItem('happyCart')) || [];
+        console.log("Carrito cargado:", cart);
+    } catch (e) {
+        console.error("Error leyendo localStorage:", e);
+        cart = [];
+    }
 
-        function toggleMenu() {
-            document.getElementById('side-menu').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
+    function toggleMenu() {
+        document.getElementById('side-menu').classList.toggle('active');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+
+    function renderCart() {
+        const list = document.getElementById('cart-items-list');
+        const emptyMsg = document.getElementById('empty-cart-msg');
+        const totalBox = document.querySelector('.total-box');
+        
+        list.innerHTML = '';
+        let subtotal = 0;
+
+        if (!cart || cart.length === 0) {
+            emptyMsg.style.display = 'block';
+            totalBox.style.display = 'none';
+            document.getElementById('subtotal-price').textContent = "$0";
+            document.getElementById('total-price').textContent = "$0";
+            return;
         }
 
-        function renderCart() {
-            const list = document.getElementById('cart-items-list');
-            const emptyMsg = document.getElementById('empty-cart-msg');
-            list.innerHTML = '';
-            let subtotal = 0;
+        emptyMsg.style.display = 'none';
+        totalBox.style.display = 'block';
 
-            if (cart.length === 0) {
-                emptyMsg.style.display = 'block';
-                return;
+        cart.forEach((item, index) => {
+            // Limpiamos el precio por si viene como texto tipo "$2.500"
+            let cleanPrice = 0;
+            if (typeof item.price === 'string') {
+                cleanPrice = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
+            } else {
+                cleanPrice = item.price;
             }
 
-            cart.forEach((item, index) => {
-                subtotal += item.price * item.quantity;
-                const li = document.createElement('li');
-                li.className = 'cart-item';
-                li.innerHTML = `
-                    <div class="item-info">
-                        <span class="name">${item.name}</span>
-                        <span class="sub">$${item.price.toLocaleString()} c/u</span>
-                    </div>
-                    <div class="item-qty-controls">
-                        <button type="button" class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button type="button" class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
-                    </div>
-                    <div style="font-weight:800">$${(item.price * item.quantity).toLocaleString()}</div>
-                `;
-                list.appendChild(li);
-            });
+            const itemTotal = cleanPrice * item.quantity;
+            subtotal += itemTotal;
 
-            document.getElementById('subtotal-price').textContent = `$${subtotal.toLocaleString()}`;
-            document.getElementById('total-price').textContent = `$${subtotal.toLocaleString()}`;
+            const li = document.createElement('li');
+            li.className = 'cart-item';
+            li.innerHTML = `
+                <div class="item-info">
+                    <span class="name">${item.name}</span>
+                    <span class="sub">$${cleanPrice.toLocaleString('es-CO')} c/u</span>
+                </div>
+                <div class="item-qty-controls">
+                    <button type="button" class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                    <span>${item.quantity}</span>
+                    <button type="button" class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                </div>
+                <div style="font-weight:800">$${itemTotal.toLocaleString('es-CO')}</div>
+            `;
+            list.appendChild(li);
+        });
+
+        const formattedTotal = `$${subtotal.toLocaleString('es-CO')}`;
+        document.getElementById('subtotal-price').textContent = formattedTotal;
+        document.getElementById('total-price').textContent = formattedTotal;
+        
+        // Sincronizar con los inputs ocultos para FormSubmit
+        document.getElementById('total-price-hidden').value = formattedTotal;
+        document.getElementById('order-summary-input').value = cart.map(i => `${i.name} (x${i.quantity})`).join(', ');
+    }
+
+    function updateQty(index, change) {
+        cart[index].quantity += change;
+        if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
+        localStorage.setItem('happyCart', JSON.stringify(cart));
+        renderCart();
+    }
+
+    // Lógica de Happy Puntos (se mantiene igual)
+    document.getElementById('consultar-puntos-btn').onclick = async function() {
+        const code = document.getElementById('puntos_code').value.trim();
+        if(!code) return alert("Escribe un código");
+        
+        this.textContent = "...";
+        try {
+            const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${encodeURIComponent(code)}`);
+            if(!res.ok) throw new Error();
+            const data = await res.json();
             
-            // Preparar datos para el envío del mail
-            document.getElementById('total-price-hidden').value = `$${subtotal.toLocaleString()}`;
-            document.getElementById('order-summary-input').value = cart.map(i => `${i.name} (x${i.quantity})`).join(', ');
-        }
-
-        function updateQty(index, change) {
-            cart[index].quantity += change;
-            if (cart[index].quantity <= 0) cart.splice(index, 1);
-            localStorage.setItem('happyCart', JSON.stringify(cart));
-            renderCart();
-        }
-
-        function updatePaymentDetails() {
-            const method = document.getElementById('metodo_pago').value;
-            const note = document.getElementById('payment-note');
-            if(method === 'nequi') note.innerHTML = "Te enviaremos el QR de Nequi por WhatsApp para que subas el comprobante.";
-            if(method === 'efectivo') note.innerHTML = "Recuerda tener el dinero exacto al momento de la entrega en el colegio.";
-            if(method === 'tarjeta') note.innerHTML = "Se generará un link de Revolut seguro para tu pago.";
-            if(method === 'pse') note.innerHTML = "Usaremos la pasarela de Nequi para tu pago por PSE.";
-        }
-
-        // Función de Happy Puntos
-        document.getElementById('consultar-puntos-btn').onclick = async function() {
-            const code = document.getElementById('puntos_code').value.trim();
-            if(!code) return alert("Escribe un código");
-            
-            this.textContent = "...";
-            try {
-                const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${code}`);
-                const data = await res.json();
-                if(data.error) throw new Error(data.error);
-                
-                if(confirm(`¡Hola ${data.nombre}! Tienes ${data.puntos} puntos. ¿Usar tus datos?`)) {
-                    document.getElementById('nombre').value = data.nombre;
-                    document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
-                }
-            } catch (e) {
-                alert("Código no encontrado");
-            } finally {
-                this.textContent = "Consultar";
+            if(confirm(`¡Hola ${data.nombre}! Tienes ${data.puntos} puntos. ¿Usar tus datos?`)) {
+                document.getElementById('nombre').value = data.nombre;
+                document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
             }
-        };
+        } catch (e) {
+            alert("Código no encontrado o error de conexión");
+        } finally {
+            this.textContent = "Consultar";
+        }
+    };
 
-        window.onload = renderCart;
-    </script>
+    // Ejecutar al cargar la página
+    document.addEventListener('DOMContentLoaded', renderCart);
+</script>
 </body>
 </html>
