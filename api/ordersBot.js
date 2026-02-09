@@ -10,10 +10,11 @@ const telegramToken = process.env.TELEGRAM_TOKEN; // Token de tu bot
 const telegramChatId = process.env.TELEGRAM_CHAT_ID;  // Tu ID de Telegram (admin)
 
 export default async function handler(req, res) {
-  // 🔓 CORS HEADERS
+  // 🔓 CORS HEADERS - More comprehensive
   res.setHeader("Access-Control-Allow-Origin", "https://happycorner.lol");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Max-Age", "86400");
 
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
