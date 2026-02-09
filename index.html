@@ -34,7 +34,7 @@
             border-radius: 12px; transition: 0.3s;
         }
 
-        /* MENU MÓVIL (Hamburguesa) */
+        /* MENU MÓVIL */
         .menu-btn { display: none; width: 28px; height: 20px; position: relative; cursor: pointer; z-index: 2100; }
         .menu-btn span { display: block; width: 100%; height: 3px; background: white; border-radius: 10px; position: absolute; transition: 0.3s; }
         .menu-btn span:nth-child(1) { top: 0; }
@@ -57,7 +57,7 @@
             .menu-btn { display: block; }
         }
 
-        /* CAROUSEL CON FLECHAS */
+        /* CAROUSEL */
         .carousel-container {
             max-width: 900px; margin: 20px auto; position: relative;
             width: calc(100% - 30px); height: 180px; border-radius: 20px;
@@ -71,13 +71,11 @@
 
         .arrow {
             position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(255,255,255,0.7); border: none; width: 35px; height: 35px;
+            background: rgba(255,255,255,0.8); border: none; width: 35px; height: 35px;
             border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold;
-            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
         }
-        .arrow:hover { background: white; }
-        .prev { left: 10px; }
-        .next { right: 10px; }
+        .prev { left: 10px; } .next { right: 10px; }
 
         /* GRID PRODUCTOS */
         .grid {
@@ -96,6 +94,7 @@
 
         .qty-controls { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: var(--hp-gradient); color: white; cursor: pointer; font-weight: bold; }
+        .qty-num { font-weight: 600; font-size: 14px; width: 20px; }
         .add-btn { width: 100%; padding: 10px; border: none; border-radius: 12px; background: var(--hp-gradient); color: white; font-weight: 700; cursor: pointer; font-size: 12px; }
 
         /* POP-UP (TOAST) */
@@ -104,12 +103,13 @@
             background: white; padding: 12px 25px; border-radius: 50px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3000;
             display: flex; align-items: center; gap: 10px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap;
         }
         #toast.show { bottom: 30px; }
-        .toast-check { background: #2ecc71; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+        .toast-check { background: #2ecc71; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
         .cart-fixed { position: fixed; bottom: 20px; right: 20px; background: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); font-size: 20px; z-index: 999; }
-        .badge { position: absolute; top: -2px; right: -2px; background: #ff5299; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid white; }
+        .badge { position: absolute; top: -2px; right: -2px; background: #ff5299; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -162,7 +162,7 @@
                         <span class="qty-num">1</span>
                         <button class="qty-btn" onclick="qty('p${i}',1)">+</button>
                     </div>
-                    <button class="add-btn" onclick="add('Dulce #${i}')">🛒 Añadir</button>
+                    <button class="add-btn" onclick="add('p${i}', 'Dulce #${i}')">🛒 Añadir</button>
                 </div>
                 `);
             }
@@ -199,24 +199,37 @@
         }
         setInterval(() => moveSlide(1), 6000);
 
-        // Productos y Pop-up
-        let count = 0;
+        // Productos
+        let totalCartCount = 0;
+        
         function qty(id, d) {
             let s = document.querySelector(`#${id} .qty-num`);
             let v = parseInt(s.innerText) + d;
             if(v > 0) s.innerText = v;
         }
 
-        function add(name) {
+        function add(id, name) {
+            // Sonido
             document.getElementById('clinkSound').play().catch(()=>{});
-            count++;
-            document.getElementById('cart-count').innerText = count;
+            
+            // Obtener cantidad seleccionada en la card
+            const qtyElement = document.querySelector(`#${id} .qty-num`);
+            const selectedQty = parseInt(qtyElement.innerText);
+            
+            // Sumar al contador total
+            totalCartCount += selectedQty;
+            document.getElementById('cart-count').innerText = totalCartCount;
 
-            // Mostrar Pop-up
+            // Mostrar Pop-up con cantidad específica
             const toast = document.getElementById('toast');
-            document.getElementById('toast-text').innerText = name + " añadido";
+            const msg = selectedQty > 1 ? `${selectedQty}x ${name} añadidos` : `${name} añadido`;
+            document.getElementById('toast-text').innerText = msg;
+            
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
+
+            // Resetear el contador de la card a 1 después de añadir
+            qtyElement.innerText = "1";
         }
     </script>
 </body>
