@@ -201,39 +201,41 @@
         window.onload = renderCart;
     </script>
      
-    <script>
-document.getElementById('checkout-form').addEventListener('submit', async function(e){
-    e.preventDefault();
+   <script>
+document.getElementById('checkout-form').addEventListener('submit', async function (e) {
+  e.preventDefault()
 
-    const payload = {
-        nombre: document.getElementById('nombre').value.trim(),
-        whatsapp: document.getElementById('celular').value.trim(),
-        resumen: document.getElementById('hidden-summary').value,
-        total: document.getElementById('hidden-total').value
-    };
+  const payload = {
+    nombre: document.getElementById('nombre').value,
+    whatsapp: document.getElementById('celular').value,
+    resumen: document.getElementById('hidden-summary').value,
+    total: document.getElementById('hidden-total').value,
+    metodo_pago: document.getElementById('metodo_pago').value,
+    happycodigo: document.getElementById('puntos_code').value || null
+  }
 
-    try {
-        const resp = await fetch('https://happy-corner.vercel.app/api/ordersBot', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+  try {
+    const resp = await fetch('https://happy-corner.vercel.app/api/ordersbot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
 
-        const data = await resp.json();
+    const data = await resp.json()
 
-        if(data.ok){
-            alert('✅ Pedido enviado correctamente! Revisa Telegram');
-            localStorage.removeItem('hc_cart'); // limpia carrito
-            window.location.href = 'catalogo.html';
-        } else {
-            alert('❌ Error enviando el pedido: ' + (data.error || 'Intenta de nuevo'));
-        }
-    } catch(err) {
-        console.error(err);
-        alert('❌ Error enviando el pedido 😓');
+    if (data.ok) {
+      alert('✅ Pedido enviado con éxito')
+      localStorage.removeItem('hc_cart')
+      window.location.href = 'catalogo.html'
+    } else {
+      alert('❌ Error: ' + (data.error || 'Intenta de nuevo'))
     }
-});
-</script>
 
+  } catch (err) {
+    console.error(err)
+    alert('❌ Error enviando el pedido 😓')
+  }
+})
+</script>
 </body>
 </html>
