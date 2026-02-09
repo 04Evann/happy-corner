@@ -1,153 +1,82 @@
-import { Telegraf, Markup } from "telegraf";
-import { generarFactura } from "./factura.js";
-import fs from "fs";
+import { createClient } from '@supabase/supabase-js'
+import fetch from 'node-fetch'
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const supabase = createClient(
+  process.env.SB_URL,
+  process.env.SB_SECRET
+)
 
-// MEMORIA DEL BOT
-const pedidos = new Map();
-
-function now() {
-  return new Date().toLocaleString("es-CO", {
-    dateStyle: "short",
-    timeStyle: "short"
-  });
-}
-
-// API DESDE LA WEB
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+  const origin = req.headers.origin
+  res.setHeader('Access-Control-Allow-Origin', origin || '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
   const {
     nombre,
+    email,
     whatsapp,
     resumen,
     total,
     metodo_pago,
     happycodigo
-  } = req.body;
+  } = req.body
 
-  const codigo = Math.floor(100 + Math.random() * 900).toString();
+  if (!nombre || !whatsapp || !resumen || !total) {
+    return res.status(400).json({ error: 'Faltan datos' })
+  }
 
-  const productos = resumen.split(",").map(p => {
-    const match = p.match(/(.+)\s\(x(\d+)\)/);
-    return {
-      nombre: match ? match[1] : p,
-      qty: match ? Number(match[2]) : 1,
-      precio: 0
-    };
-  });
+  const { data, error } = await supabase
+    .from('pedidos')
+    .insert([{
+      nombre,
+      email,
+      whatsapp,
+      resumen,
+      total,
+      metodo_pago,
+      happycodigo,
+      estado: 'Nuevo'
+    }])
+    .select()
+    .single()
 
-  const pedido = {
-    codigo,
-    nombre,
-    telefono: whatsapp,
-    productos,
-    metodoPago: metodo_pago,
-    happycodigo,
-    estado: "nuevo",
-    createdAt: now()
-  };
+  if (error) return res.status(500).json({ error: error.message })
 
-  pedidos.set(codigo, pedido);
+  const fecha = new Date(data.created_at).toLocaleString('es-CO')
 
-  await bot.telegram.sendMessage(
-    process.env.TELEGRAM_CHAT_ID,
-    `🛒 *Nuevo pedido*\n\n` +
-    `👤 ${nombre}\n` +
-    `📦 Pedido #${codigo}\n` +
-    `💰 ${total}\n` +
-    `💳 ${metodo_pago}\n` +
-    `🕒 ${pedido.createdAt}`,
-    {
-      parse_mode: "Markdown",
-      ...Markup.inlineKeyboard([
-        [
-          Markup.button.callback("✅ Confirmar", `confirmar_${codigo}`),
-          Markup.button.callback("❌ Cancelar", `cancelar_${codigo}`)
+  const msg =
+`📦 *Nuevo pedido* #${data.id}
+👤 ${nombre}
+📧 ${email || 'No registrado'}
+📱 ${whatsapp}
+💳 ${metodo_pago}
+🎟️ ${happycodigo || '—'}
+
+🛒 ${resumen}
+💰 ${total}
+
+🕒 ${fecha}`
+
+  await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: process.env.TELEGRAM_CHAT_ID,
+      text: msg,
+      parse_mode: 'Markdown',
+      reply_markup: {
+        inline_keyboard: [
+          [{ text: '✅ Confirmar', callback_data: `confirm_${data.id}` }],
+          [{ text: '📦 Entregado', callback_data: `deliver_${data.id}` }],
+          [{ text: '❌ Cancelar', callback_data: `cancel_${data.id}` }]
         ]
-      ])
-    }
-  );
+      }
+    })
+  })
 
-  res.status(200).json({ ok: true, codigo });
+  res.json({ ok: true })
 }
-
-// BOTONES
-bot.on("callback_query", async (ctx) => {
-  const data = ctx.callbackQuery.data;
-  const [accion, codigo] = data.split("_");
-  const pedido = pedidos.get(codigo);
-
-  if (!pedido) {
-    return ctx.reply("❌ Pedido no encontrado");
-  }
-
-  if (accion === "confirmar") {
-    pedido.estado = "confirmado";
-    pedido.confirmedAt = now();
-
-    await ctx.reply(
-      `✅ Pedido ${codigo} confirmado\n` +
-      `🕒 ${pedido.confirmedAt}\n\n` +
-      `/entregar ${codigo}`
-    );
-  }
-
-  if (accion === "cancelar") {
-    pedido.estado = "cancelado";
-
-    const msg =
-      `Hola ${pedido.nombre}, tu pedido fue cancelado ❌`;
-
-    const wpp = `https://wa.me/${pedido.telefono}?text=${encodeURIComponent(msg)}`;
-
-    await ctx.reply(
-      `❌ Pedido ${codigo} cancelado`,
-      Markup.inlineKeyboard([
-        [Markup.button.url("Avisar por WhatsApp", wpp)]
-      ])
-    );
-  }
-
-  ctx.answerCbQuery();
-});
-
-// ENTREGAR
-bot.command("entregar", async (ctx) => {
-  const codigo = ctx.message.text.split(" ").pop();
-  const pedido = pedidos.get(codigo);
-
-  if (!pedido) return ctx.reply("❌ Pedido no existe");
-
-  pedido.estado = "entregado";
-  pedido.deliveredAt = now();
-
-  const facturaPath = generarFactura(pedido);
-
-  await ctx.reply(`📦 Pedido ${codigo} entregado`);
-  await ctx.replyWithDocument({
-    source: fs.createReadStream(facturaPath),
-    filename: `Factura-HC-${codigo}.pdf`
-  });
-
-  const mensaje =
-    `Hola ${pedido.nombre} 👋\n` +
-    `Tu pedido fue entregado 🍬\n` +
-    `Gracias por comprar en Happy Corner 💚\n` +
-    `📦 Pedido #${codigo}\n` +
-    `🕒 ${pedido.deliveredAt}`;
-
-  const wpp = `https://wa.me/${pedido.telefono}?text=${encodeURIComponent(mensaje)}`;
-
-  await ctx.reply(
-    "📲 Avisar al cliente:",
-    Markup.inlineKeyboard([
-      [Markup.button.url("Abrir WhatsApp", wpp)]
-    ])
-  );
-});
-
-bot.launch();
