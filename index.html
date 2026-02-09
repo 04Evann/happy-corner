@@ -5,119 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>happycorner volvio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --hp-gradient: linear-gradient(90deg, #ff5299 0%, #ff9d5c 50%, #ffd45e 100%);
-            --bg-body: #f1f3f8;
-            --text-dark: #2d3436;
-        }
-
-        body {
-            margin: 0; font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-body); color: var(--text-dark);
-            overflow-x: hidden; -webkit-tap-highlight-color: transparent;
-        }
-
-        header {
-            background: var(--hp-gradient); padding: 10px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; height: 60px;
-        }
-
-        .logo-img { max-height: 40px; width: auto; }
-
-        /* MENU DESKTOP */
-        nav.nav-desktop { display: flex; gap: 10px; }
-        nav.nav-desktop a {
-            color: white; text-decoration: none; font-size: 13px; font-weight: 600;
-            background: rgba(255,255,255,0.15); padding: 7px 12px;
-            border-radius: 12px; transition: 0.3s;
-        }
-
-        /* MENU MÓVIL */
-        .menu-btn { display: none; width: 28px; height: 20px; position: relative; cursor: pointer; z-index: 2100; }
-        .menu-btn span { display: block; width: 100%; height: 3px; background: white; border-radius: 10px; position: absolute; transition: 0.3s; }
-        .menu-btn span:nth-child(1) { top: 0; }
-        .menu-btn span:nth-child(2) { top: 8px; }
-        .menu-btn span:nth-child(3) { top: 16px; }
-
-        .side-menu {
-            position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
-            background: white; z-index: 2000; padding: 100px 30px;
-            display: flex; flex-direction: column; gap: 25px;
-            transition: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        .side-menu.active { right: 0; }
-        .side-menu a { text-decoration: none; color: var(--text-dark); font-weight: 700; font-size: 18px; }
-
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 1900; display: none; }
-
-        @media (max-width: 768px) {
-            nav.nav-desktop { display: none; }
-            .menu-btn { display: block; }
-        }
-
-        /* CAROUSEL */
-        .carousel-container {
-            max-width: 900px; margin: 20px auto; position: relative;
-            width: calc(100% - 30px); height: 180px; border-radius: 20px;
-            overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-        }
-
-        @media (min-width: 768px) { .carousel-container { height: 350px; } }
-
-        .track { display: flex; height: 100%; transition: transform 0.5s ease-in-out; }
-        .slide { min-width: 100%; height: 100%; background-size: cover; background-position: center; }
-
-        .arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(255,255,255,0.8); border: none; width: 35px; height: 35px;
-            border-radius: 50%; cursor: pointer; z-index: 10; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .prev { left: 10px; } .next { right: 10px; }
-
-        /* GRID PRODUCTOS */
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fit, 160px);
-            gap: 15px; padding: 0 15px 100px; max-width: 1200px; margin: auto; justify-content: center;
-        }
-
-        .card {
-            background: white; border-radius: 25px; padding: 15px; text-align: center;
-            border: 1px solid rgba(0,0,0,0.05); height: 260px;
-            display: flex; flex-direction: column; justify-content: space-between;
-        }
-
-        .img-placeholder { width: 100%; height: 100px; background: #f8f8f8; border-radius: 18px; display: flex; align-items: center; justify-content: center; }
-        .img-placeholder::after { content: '?'; color: #ddd; font-size: 35px; font-weight: 800; }
-
-        .qty-controls { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .qty-btn { width: 28px; height: 28px; border-radius: 50%; border: none; background: var(--hp-gradient); color: white; cursor: pointer; font-weight: bold; }
-        .qty-num { font-weight: 600; font-size: 14px; width: 20px; }
-        .add-btn { width: 100%; padding: 10px; border: none; border-radius: 12px; background: var(--hp-gradient); color: white; font-weight: 700; cursor: pointer; font-size: 12px; }
-
-        /* POP-UP (TOAST) */
-        #toast {
-            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
-            background: white; padding: 12px 25px; border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3000;
-            display: flex; align-items: center; gap: 10px; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            white-space: nowrap;
-        }
-        #toast.show { bottom: 30px; }
-        .toast-check { background: #2ecc71; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
-        .cart-fixed { position: fixed; bottom: 20px; right: 20px; background: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.1); font-size: 20px; z-index: 999; }
-        .badge { position: absolute; top: -2px; right: -2px; background: #ff5299; color: white; width: 22px; height: 22px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-weight: bold; }
-    </style>
-</head>
+    <link rel="stylesheet" href="styles.css"> </head>
 <body>
 
-    <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
+    <audio id="clinkSound" src="" preload="auto"></audio>
 
     <header>
-        <img src="logo.png" alt="HappyCorner" class="logo-img">
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
         <nav class="nav-desktop">
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
@@ -130,11 +24,11 @@
 
     <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
-        <a href="index.html">🏠 Inicio</a>
-        <a href="catalogo.html">🍭 Catálogo</a>
-        <a href="happyorder.html">📦 HappyOrder</a>
-        <a href="loyalty.html">⭐ LoyaltyCorner</a>
-        <a href="terminos.html">📋 Términos</a>
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="order.html">HappyOrder</a>
+        <a href="loyalty.html">LoyaltyCorner</a>
+        <a href="terminos.html">Términos</a>
     </nav>
 
     <div class="carousel-container">
@@ -174,15 +68,15 @@
         <span id="toast-text">Producto añadido</span>
     </div>
 
-    <div class="cart-fixed">
+    <a href="happyorder.html" class="cart-fixed">
         🛒<div class="badge" id="cart-count">0</div>
-    </div>
+    </a>
 
     <script>
-        // Menu lateral
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
+
         function toggleMenu() {
             menuBtn.classList.toggle('active'); sideMenu.classList.toggle('active');
             overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
@@ -190,7 +84,6 @@
         menuBtn.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
 
-        // Carousel Logic
         let currentIdx = 0;
         const track = document.getElementById('track');
         function moveSlide(step) {
@@ -199,9 +92,7 @@
         }
         setInterval(() => moveSlide(1), 6000);
 
-        // Productos
         let totalCartCount = 0;
-        
         function qty(id, d) {
             let s = document.querySelector(`#${id} .qty-num`);
             let v = parseInt(s.innerText) + d;
@@ -209,26 +100,18 @@
         }
 
         function add(id, name) {
-            // Sonido
             document.getElementById('clinkSound').play().catch(()=>{});
-            
-            // Obtener cantidad seleccionada en la card
             const qtyElement = document.querySelector(`#${id} .qty-num`);
             const selectedQty = parseInt(qtyElement.innerText);
             
-            // Sumar al contador total
             totalCartCount += selectedQty;
             document.getElementById('cart-count').innerText = totalCartCount;
 
-            // Mostrar Pop-up con cantidad específica
             const toast = document.getElementById('toast');
-            const msg = selectedQty > 1 ? `${selectedQty}x ${name} añadidos` : `${name} añadido`;
-            document.getElementById('toast-text').innerText = msg;
+            document.getElementById('toast-text').innerText = selectedQty > 1 ? `${selectedQty}x ${name} añadidos` : `${name} añadido`;
             
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
-
-            // Resetear el contador de la card a 1 después de añadir
             qtyElement.innerText = "1";
         }
     </script>
