@@ -201,37 +201,36 @@
         window.onload = renderCart;
     </script>
     <script>
-document.getElementById("checkout-form").addEventListener("submit", async function (e) {
-  e.preventDefault();
+document.getElementById('checkout-form').addEventListener('submit', async function(e){
+    e.preventDefault(); // evita recargar
 
-  if (cart.length === 0) {
-    alert("El carrito está vacío");
-    return;
-  }
+    const payload = {
+        nombre: document.getElementById('nombre').value,
+        whatsapp: document.getElementById('celular').value,
+        resumen: document.getElementById('hidden-summary').value,
+        total: document.getElementById('hidden-total').value
+    };
 
-  const data = {
-    nombre: document.getElementById("nombre").value,
-    email: document.getElementById("email").value,
-    whatsapp: document.getElementById("celular").value,
-    metodo: document.querySelector("select[name='Metodo_Pago']").value,
-    resumen: document.getElementById("hidden-summary").value.replaceAll(",", "\n"),
-    total: document.getElementById("hidden-total").value
-  };
+    try {
+        const resp = await fetch('https://happy-corner.vercel.app/api/ordersBot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
-  try {
-    await fetch("https://happy-corner.vercel.app/api/sendOrderTelegram", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-
-    alert("Pedido enviado con éxito 🚀🍭");
-    localStorage.removeItem("hc_cart");
-    window.location.href = "index.html";
-
-  } catch (err) {
-    alert("Error enviando el pedido 😓");
-  }
+        const data = await resp.json();
+        if(data.ok){
+            alert('✅ Pedido enviado correctamente! Revisa Telegram');
+            localStorage.removeItem('hc_cart'); // limpia carrito
+            window.location.href = 'catalogo.html'; // vuelve al catálogo
+        } else {
+            alert('❌ Error enviando el pedido: ' + (data.error || 'Intenta de nuevo'));
+        }
+    } catch(err) {
+        console.error(err);
+        alert('❌ Error enviando el pedido 😓');
+    }
+})
 });
 </script>
 </body>
