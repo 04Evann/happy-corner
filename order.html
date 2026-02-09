@@ -4,39 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Shop - Finalizar Pedido</title>
-    
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css"> <style>
-        /* Ajustes específicos para la página de Checkout */
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
         .order-main {
             max-width: 1100px;
             margin: 30px auto;
             padding: 0 15px;
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 columnas en PC */
+            grid-template-columns: 1fr 1fr;
             gap: 30px;
         }
-
         .checkout-section {
-            background: var(--white);
+            background: white;
             border-radius: 25px;
             padding: 25px;
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             height: fit-content;
         }
-
-        .checkout-section h2 {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            color: var(--text-dark);
-            border-bottom: 3px solid #f1f3f8;
-            padding-bottom: 10px;
-        }
-
-        /* Lista de productos en el resumen */
+        .checkout-section h2 { font-weight: 800; margin-bottom: 20px; border-bottom: 3px solid #f1f3f8; padding-bottom: 10px; }
         #cart-items-list { list-style: none; }
         .cart-item {
             display: flex;
@@ -45,9 +31,6 @@
             padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
-        .item-info .name { font-weight: 700; display: block; font-size: 14px; }
-        .item-info .sub { font-size: 12px; color: #888; }
-        
         .item-qty-controls {
             display: flex;
             align-items: center;
@@ -56,275 +39,165 @@
             padding: 5px 10px;
             border-radius: 15px;
         }
-
-        /* Estilos del Formulario */
         .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #555; }
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
         input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 12px;
-            border: 2px solid #eee;
-            font-family: inherit;
-            font-size: 14px;
-            transition: 0.3s;
+            width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; font-family: inherit;
         }
-        input:focus, select:focus { border-color: #ff9d5c; outline: none; }
-
-        .btn-consultar {
-            background: var(--hp-gradient);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        .total-box {
-            margin-top: 20px;
-            padding: 20px;
-            background: #fff9f5;
-            border-radius: 15px;
-        }
+        .total-box { margin-top: 20px; padding: 20px; background: #fff9f5; border-radius: 15px; }
         .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .total-row.final { font-size: 20px; font-weight: 800; color: #ff5299; margin-top: 10px; }
-
-        .payment-info-box {
-            background: #f0f7ff;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 13px;
-            margin-bottom: 15px;
-            border-left: 5px solid #007bff;
-        }
-
-        /* RESPONSIVE: De 2 columnas a 1 en móvil */
+        .total-row.final { font-size: 20px; font-weight: 800; color: #ff5299; }
+        
         @media (max-width: 850px) {
-            .order-main {
-                grid-template-columns: 1fr; /* Apilado en móvil */
-                margin-top: 15px;
-            }
-            .checkout-section:first-child { order: 1; } /* Productos arriba */
-            .checkout-section:last-child { order: 2; }  /* Formulario abajo */
+            .order-main { grid-template-columns: 1fr; }
+            .checkout-section:first-child { order: 1; }
+            .checkout-section:last-child { order: 2; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="loguito.png" alt="Happy Shop" class="logo-img" />
-        <div class="nav-desktop">
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        <nav class="nav-desktop">
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
-            <a href="puntos.html">Happy Puntos</a>
-        </div>
-        <div class="menu-btn" onclick="toggleMenu()">
-            <span></span><span></span><span></span>
-        </div>
+            <a href="order.html">HappyOrder</a>
+        </nav>
+        <div class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     </header>
-
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-    <nav class="side-menu" id="side-menu">
-        <a href="index.html">Inicio</a>
-        <a href="catalogo.html">Catálogo</a>
-        <a href="order.html">Mi Pedido</a>
-        <a href="puntos.html">Happy Puntos</a>
-    </nav>
 
     <main class="order-main">
         <section class="checkout-section">
             <h2>🛍️ Tu Carrito</h2>
-            <ul id="cart-items-list">
-                </ul>
-            
-            <div id="empty-cart-msg" style="display:none; text-align:center; padding:30px;">
-                <p>Tu carrito está vacío 🥺</p>
-                <a href="catalogo.html" style="color:#ff5299; font-weight:700;">Ir al catálogo</a>
+            <ul id="cart-items-list"></ul>
+            <div id="empty-cart-msg" style="display:none; text-align:center; padding:20px;">
+                <p>Carrito vacío. <a href="catalogo.html" style="color:#ff5299; font-weight:800;">Ver productos</a></p>
             </div>
-
-            <div class="total-box">
+            <div class="total-box" id="total-container">
                 <div class="total-row"><span>Subtotal:</span> <span id="subtotal-price">$0</span></div>
-                <div class="total-row"><span>Envío:</span> <span id="shipping-price">Gratis</span></div>
                 <div class="total-row final"><span>Total:</span> <span id="total-price">$0</span></div>
             </div>
         </section>
 
         <section class="checkout-section">
             <h2>📝 Datos de Entrega</h2>
-            <form action="https://formsubmit.co/email@youremail.com" method="POST" id="checkout-form">
-                
+            <form action="https://formsubmit.co/evanlensenmo@gmail.com" method="POST" id="checkout-form">
                 <div class="form-group">
                     <label>¿Tienes HappyCódigo?</label>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="puntos_code" placeholder="Ej: HP-123" />
-                        <button type="button" class="btn-consultar" id="consultar-puntos-btn">Consultar</button>
+                        <input type="text" id="puntos_code" placeholder="Tu código">
+                        <button type="button" id="consultar-puntos-btn" class="add-btn" style="width:auto; padding:0 15px;">Consultar</button>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label for="nombre">Nombre Completo</label>
-                    <input type="text" id="nombre" name="nombre" required placeholder="Como aparece en el colegio" />
+                    <label>Nombre Completo</label>
+                    <input type="text" name="Nombre" id="nombre" required>
                 </div>
-
                 <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" required placeholder="Para enviarte el recibo" />
+                    <label>Correo</label>
+                    <input type="email" name="Email" id="email" required>
                 </div>
-
                 <div class="form-group">
-                    <label for="tipo_entrega">¿Cómo lo entregamos?</label>
-                    <select id="tipo_entrega" name="tipo_entrega" required>
-                        <option value="colegio">Entrega en el Colegio (Físico)</option>
-                        <option value="virtual">Entrega Virtual (Robux, Spotify, etc.)</option>
-                    </select>
+                    <label>WhatsApp</label>
+                    <input type="text" name="WhatsApp" id="celular" required>
                 </div>
-
                 <div class="form-group">
-                    <label for="celular">WhatsApp</label>
-                    <input type="text" id="celular" name="celular" required placeholder="Ej: 3001234567" />
-                </div>
-
-                <div class="form-group">
-                    <label for="metodo_pago">Método de Pago</label>
-                    <select id="metodo_pago" name="metodo_pago" required onchange="updatePaymentDetails()">
+                    <label>Método de Pago</label>
+                    <select name="Metodo_Pago" required>
                         <option value="nequi">Nequi</option>
+                        <option value="efectivo">Efectivo</option>
                         <option value="pse">PSE</option>
-                        <option value="efectivo">Efectivo (En el colegio)</option>
-                        <option value="tarjeta">Tarjeta / Apple Pay (Revolut)</option>
                     </select>
                 </div>
-
-                <div id="payment-note" class="payment-info-box">
-                    Al finalizar, te contactaremos por WhatsApp para enviarte el QR de Nequi o confirmar la entrega.
-                </div>
-
-                <div class="form-group">
-                    <label for="notas">Notas (Opcional)</label>
-                    <textarea id="notas" name="notas" rows="2" placeholder="Ej: Entregar en el descanso de las 10am"></textarea>
-                </div>
-
-                <input type="hidden" name="_subject" value="🚀 ¡Nuevo Pedido en Happy Shop!">
-                <input type="hidden" name="Resumen_Pedido" id="order-summary-input">
-                <input type="hidden" name="Total_Pagar" id="total-price-hidden">
-                <input type="hidden" name="_captcha" value="false">
-
-                <button type="submit" class="add-btn" style="padding:15px; font-size:16px;">
-                    🚀 FINALIZAR PEDIDO
-                </button>
+                <input type="hidden" name="Resumen_Pedido" id="hidden-summary">
+                <input type="hidden" name="Total_Pagar" id="hidden-total">
+                <button type="submit" class="add-btn" style="padding:15px; font-size:16px;">🚀 PEDIR AHORA</button>
             </form>
         </section>
     </main>
 
-<script>
-    const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api';
-    
-    // 1. Cargamos el carrito con seguridad
-    let cart = [];
-    try {
-        cart = JSON.parse(localStorage.getItem('happyCart')) || [];
-        console.log("Carrito cargado:", cart);
-    } catch (e) {
-        console.error("Error leyendo localStorage:", e);
-        cart = [];
-    }
+    <script>
+        // SINCRONIZADO CON CATALOGO: Usamos 'hc_cart' y la propiedad 'qty'
+        let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
 
-    function toggleMenu() {
-        document.getElementById('side-menu').classList.toggle('active');
-        document.getElementById('overlay').classList.toggle('active');
-    }
+        function renderCart() {
+            const list = document.getElementById('cart-items-list');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            const totalContainer = document.getElementById('total-container');
+            list.innerHTML = '';
+            let subtotal = 0;
 
-    function renderCart() {
-        const list = document.getElementById('cart-items-list');
-        const emptyMsg = document.getElementById('empty-cart-msg');
-        const totalBox = document.querySelector('.total-box');
-        
-        list.innerHTML = '';
-        let subtotal = 0;
-
-        if (!cart || cart.length === 0) {
-            emptyMsg.style.display = 'block';
-            totalBox.style.display = 'none';
-            document.getElementById('subtotal-price').textContent = "$0";
-            document.getElementById('total-price').textContent = "$0";
-            return;
-        }
-
-        emptyMsg.style.display = 'none';
-        totalBox.style.display = 'block';
-
-        cart.forEach((item, index) => {
-            // Limpiamos el precio por si viene como texto tipo "$2.500"
-            let cleanPrice = 0;
-            if (typeof item.price === 'string') {
-                cleanPrice = parseFloat(item.price.replace(/[^0-9.-]+/g, ""));
-            } else {
-                cleanPrice = item.price;
+            if (cart.length === 0) {
+                emptyMsg.style.display = 'block';
+                totalContainer.style.display = 'none';
+                return;
             }
 
-            const itemTotal = cleanPrice * item.quantity;
-            subtotal += itemTotal;
+            emptyMsg.style.display = 'none';
+            totalContainer.style.display = 'block';
 
-            const li = document.createElement('li');
-            li.className = 'cart-item';
-            li.innerHTML = `
-                <div class="item-info">
-                    <span class="name">${item.name}</span>
-                    <span class="sub">$${cleanPrice.toLocaleString('es-CO')} c/u</span>
-                </div>
-                <div class="item-qty-controls">
-                    <button type="button" class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                    <span>${item.quantity}</span>
-                    <button type="button" class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
-                </div>
-                <div style="font-weight:800">$${itemTotal.toLocaleString('es-CO')}</div>
-            `;
-            list.appendChild(li);
-        });
+            cart.forEach((item, index) => {
+                const price = parseInt(item.price) || 0;
+                const itemTotal = price * item.qty;
+                subtotal += itemTotal;
 
-        const formattedTotal = `$${subtotal.toLocaleString('es-CO')}`;
-        document.getElementById('subtotal-price').textContent = formattedTotal;
-        document.getElementById('total-price').textContent = formattedTotal;
-        
-        // Sincronizar con los inputs ocultos para FormSubmit
-        document.getElementById('total-price-hidden').value = formattedTotal;
-        document.getElementById('order-summary-input').value = cart.map(i => `${i.name} (x${i.quantity})`).join(', ');
-    }
+                const li = document.createElement('li');
+                li.className = 'cart-item';
+                li.innerHTML = `
+                    <div>
+                        <b style="font-size:14px;">${item.name}</b><br>
+                        <small>$${price.toLocaleString()}</small>
+                    </div>
+                    <div class="item-qty-controls">
+                        <button type="button" class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                        <span>${item.qty}</span>
+                        <button type="button" class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                    </div>
+                    <div style="font-weight:800">$${itemTotal.toLocaleString()}</div>
+                `;
+                list.appendChild(li);
+            });
 
-    function updateQty(index, change) {
-        cart[index].quantity += change;
-        if (cart[index].quantity <= 0) {
-            cart.splice(index, 1);
+            const totalTxt = `$${subtotal.toLocaleString()}`;
+            document.getElementById('subtotal-price').textContent = totalTxt;
+            document.getElementById('total-price').textContent = totalTxt;
+            document.getElementById('hidden-total').value = totalTxt;
+            document.getElementById('hidden-summary').value = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
         }
-        localStorage.setItem('happyCart', JSON.stringify(cart));
-        renderCart();
-    }
 
-    // Lógica de Happy Puntos (se mantiene igual)
-    document.getElementById('consultar-puntos-btn').onclick = async function() {
-        const code = document.getElementById('puntos_code').value.trim();
-        if(!code) return alert("Escribe un código");
-        
-        this.textContent = "...";
-        try {
-            const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${encodeURIComponent(code)}`);
-            if(!res.ok) throw new Error();
-            const data = await res.json();
-            
-            if(confirm(`¡Hola ${data.nombre}! Tienes ${data.puntos} puntos. ¿Usar tus datos?`)) {
-                document.getElementById('nombre').value = data.nombre;
-                document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
-            }
-        } catch (e) {
-            alert("Código no encontrado o error de conexión");
-        } finally {
-            this.textContent = "Consultar";
+        function updateQty(index, d) {
+            cart[index].qty += d;
+            if (cart[index].qty <= 0) cart.splice(index, 1);
+            localStorage.setItem('hc_cart', JSON.stringify(cart));
+            renderCart();
         }
-    };
 
-    // Ejecutar al cargar la página
-    document.addEventListener('DOMContentLoaded', renderCart);
-</script>
+        // Happy Puntos
+        document.getElementById('consultar-puntos-btn').onclick = async function() {
+            const code = document.getElementById('puntos_code').value.trim();
+            if(!code) return alert("Escribe tu código");
+            this.innerText = "...";
+            try {
+                const res = await fetch(`https://happy-corner.vercel.app/api/getPoints?codigo=${code}`);
+                const data = await res.json();
+                if(data.nombre) {
+                    if(confirm(`¡Hola ${data.nombre}! ¿Usamos tus datos?`)) {
+                        document.getElementById('nombre').value = data.nombre;
+                        document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
+                    }
+                } else { alert("Código no válido"); }
+            } catch (e) { alert("Error al conectar"); }
+            this.innerText = "Consultar";
+        };
+
+        function toggleMenu() {
+            // Reutiliza la lógica de tu styles.css si existe el side-menu
+            const sm = document.getElementById('sideMenu') || document.querySelector('.side-menu');
+            if(sm) sm.classList.toggle('active');
+        }
+
+        window.onload = renderCart;
+    </script>
 </body>
 </html>
