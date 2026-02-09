@@ -1,212 +1,308 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Resumen de Compra | Happy Corner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        .order-container { padding: 20px; max-width: 800px; margin: auto; min-height: 80vh; }
-        
-        /* Estilo de los items en el carrito */
-        .cart-item {
-            background: white;
-            border-radius: 20px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.02);
-        }
-        .item-emoji {
-            width: 50px; height: 50px; background: #f9f9f9;
-            border-radius: 15px; display: flex; align-items: center;
-            justify-content: center; font-size: 24px;
-        }
-        .item-details { flex-grow: 1; }
-        .item-details h4 { font-size: 14px; font-weight: 700; margin: 0; }
-        .item-details p { font-size: 12px; color: #888; margin: 0; }
-        .item-price { font-weight: 800; color: #ff5299; font-size: 15px; }
-        .remove-btn { 
-            background: #ffeded; color: #ff5299; border: none; 
-            width: 30px; height: 30px; border-radius: 50%; 
-            cursor: pointer; font-weight: bold; font-size: 12px;
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Shop - Finalizar Pedido</title>
+    
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> <style>
+        /* Ajustes específicos para la página de Checkout */
+        .order-main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 columnas en PC */
+            gap: 30px;
         }
 
-        /* Card del Total */
-        .total-section {
-            background: var(--hp-gradient);
+        .checkout-section {
+            background: var(--white);
             border-radius: 25px;
             padding: 25px;
-            color: white;
-            text-align: center;
-            margin-top: 30px;
-            box-shadow: 0 10px 20px rgba(255, 82, 153, 0.2);
+            box-shadow: var(--shadow);
+            height: fit-content;
         }
-        .total-section p { font-size: 14px; opacity: 0.9; margin-bottom: 5px; }
-        .total-section h2 { font-size: 32px; font-weight: 800; margin-bottom: 20px; }
 
-        /* Botón WhatsApp */
-        .btn-whatsapp {
-            background: white;
-            color: #25D366;
-            text-decoration: none;
+        .checkout-section h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            border-bottom: 3px solid #f1f3f8;
+            padding-bottom: 10px;
+        }
+
+        /* Lista de productos en el resumen */
+        #cart-items-list { list-style: none; }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .item-info .name { font-weight: 700; display: block; font-size: 14px; }
+        .item-info .sub { font-size: 12px; color: #888; }
+        
+        .item-qty-controls {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
-            padding: 15px;
+            background: #f8f9fa;
+            padding: 5px 10px;
             border-radius: 15px;
-            font-weight: 800;
-            font-size: 16px;
+        }
+
+        /* Estilos del Formulario */
+        .form-group { margin-bottom: 18px; }
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #555; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 2px solid #eee;
+            font-family: inherit;
+            font-size: 14px;
             transition: 0.3s;
         }
-        .btn-whatsapp:active { transform: scale(0.98); }
+        input:focus, select:focus { border-color: #ff9d5c; outline: none; }
 
-        .empty-msg {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
+        .btn-consultar {
+            background: var(--hp-gradient);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .total-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff9f5;
+            border-radius: 15px;
+        }
+        .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .total-row.final { font-size: 20px; font-weight: 800; color: #ff5299; margin-top: 10px; }
+
+        .payment-info-box {
+            background: #f0f7ff;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            border-left: 5px solid #007bff;
+        }
+
+        /* RESPONSIVE: De 2 columnas a 1 en móvil */
+        @media (max-width: 850px) {
+            .order-main {
+                grid-template-columns: 1fr; /* Apilado en móvil */
+                margin-top: 15px;
+            }
+            .checkout-section:first-child { order: 1; } /* Productos arriba */
+            .checkout-section:last-child { order: 2; }  /* Formulario abajo */
         }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav class="nav-desktop">
-            <a href="index">Inicio</a>
-            <a href="catalogo">Catálogo</a>
-            <a href="happyorder">HappyOrder</a>
-            <a href="loyalty">LoyaltyCorner</a>
-        </nav>
-        <div class="menu-btn" id="menuBtn">
+        <img src="loguito.png" alt="Happy Shop" class="logo-img" />
+        <div class="nav-desktop">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="puntos.html">Happy Puntos</a>
+        </div>
+        <div class="menu-btn" onclick="toggleMenu()">
             <span></span><span></span><span></span>
         </div>
     </header>
 
-    <div class="overlay" id="overlay"></div>
-    <nav class="side-menu" id="sideMenu">
-        <a href="index">Inicio</a>
-        <a href="catalogo">Catálogo</a>
-        <a href="happyorder">HappyOrder</a>
-        <a href="loyalty">LoyaltyCorner</a>
-        <a href="terminos">Términos</a>
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    <nav class="side-menu" id="side-menu">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="order.html">Mi Pedido</a>
+        <a href="puntos.html">Happy Puntos</a>
     </nav>
 
-    <div class="order-container">
-        <h1 style="font-weight: 800; font-size: 24px; margin-bottom: 20px;">Tu Carrito 🛒</h1>
-        
-        <div id="cart-items-container">
+    <main class="order-main">
+        <section class="checkout-section">
+            <h2>🛍️ Tu Carrito</h2>
+            <ul id="cart-items-list">
+                </ul>
+            
+            <div id="empty-cart-msg" style="display:none; text-align:center; padding:30px;">
+                <p>Tu carrito está vacío 🥺</p>
+                <a href="catalogo.html" style="color:#ff5299; font-weight:700;">Ir al catálogo</a>
             </div>
 
-        <div id="order-summary" style="display: none;">
-            <div class="total-section">
-                <p>Total de tu compra:</p>
-                <h2 id="total-amount">$0</h2>
-                <a href="#" class="btn-whatsapp" onclick="sendWhatsApp(event)">
-                    PEDIR POR WHATSAPP ✅
-                </a>
+            <div class="total-box">
+                <div class="total-row"><span>Subtotal:</span> <span id="subtotal-price">$0</span></div>
+                <div class="total-row"><span>Envío:</span> <span id="shipping-price">Gratis</span></div>
+                <div class="total-row final"><span>Total:</span> <span id="total-price">$0</span></div>
             </div>
-            <p style="text-align: center; font-size: 11px; color: #aaa; margin-top: 15px; cursor: pointer;" onclick="clearCart()">
-                Vaciar mi carrito
-            </p>
-        </div>
+        </section>
 
-        <div id="cart-empty" class="empty-msg" style="display: none;">
-            <div style="font-size: 50px;">🥺</div>
-            <p>No tienes productos todavía.</p>
-            <a href="catalogo" class="add-btn" style="display: inline-block; width: auto; padding: 12px 30px; margin-top: 20px; text-decoration: none;">Ir al Catálogo</a>
-        </div>
-    </div>
+        <section class="checkout-section">
+            <h2>📝 Datos de Entrega</h2>
+            <form action="https://formsubmit.co/email@youremail.com" method="POST" id="checkout-form">
+                
+                <div class="form-group">
+                    <label>¿Tienes HappyCódigo?</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="puntos_code" placeholder="Ej: HP-123" />
+                        <button type="button" class="btn-consultar" id="consultar-puntos-btn">Consultar</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Como aparece en el colegio" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" required placeholder="Para enviarte el recibo" />
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo_entrega">¿Cómo lo entregamos?</label>
+                    <select id="tipo_entrega" name="tipo_entrega" required>
+                        <option value="colegio">Entrega en el Colegio (Físico)</option>
+                        <option value="virtual">Entrega Virtual (Robux, Spotify, etc.)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="celular">WhatsApp</label>
+                    <input type="text" id="celular" name="celular" required placeholder="Ej: 3001234567" />
+                </div>
+
+                <div class="form-group">
+                    <label for="metodo_pago">Método de Pago</label>
+                    <select id="metodo_pago" name="metodo_pago" required onchange="updatePaymentDetails()">
+                        <option value="nequi">Nequi</option>
+                        <option value="pse">PSE</option>
+                        <option value="efectivo">Efectivo (En el colegio)</option>
+                        <option value="tarjeta">Tarjeta / Apple Pay (Revolut)</option>
+                    </select>
+                </div>
+
+                <div id="payment-note" class="payment-info-box">
+                    Al finalizar, te contactaremos por WhatsApp para enviarte el QR de Nequi o confirmar la entrega.
+                </div>
+
+                <div class="form-group">
+                    <label for="notas">Notas (Opcional)</label>
+                    <textarea id="notas" name="notas" rows="2" placeholder="Ej: Entregar en el descanso de las 10am"></textarea>
+                </div>
+
+                <input type="hidden" name="_subject" value="🚀 ¡Nuevo Pedido en Happy Shop!">
+                <input type="hidden" name="Resumen_Pedido" id="order-summary-input">
+                <input type="hidden" name="Total_Pagar" id="total-price-hidden">
+                <input type="hidden" name="_captcha" value="false">
+
+                <button type="submit" class="add-btn" style="padding:15px; font-size:16px;">
+                    🚀 FINALIZAR PEDIDO
+                </button>
+            </form>
+        </section>
+    </main>
 
     <script>
-        // Lógica del Menú lateral
-        const menuBtn = document.getElementById('menuBtn');
-        const sideMenu = document.getElementById('sideMenu');
-        const overlay = document.getElementById('overlay');
+        const VERCEL_API_BASE_URL = 'https://happy-corner.vercel.app/api';
+        let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
 
-        menuBtn.onclick = () => { sideMenu.classList.add('active'); overlay.classList.add('active'); };
-        overlay.onclick = () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); };
+        function toggleMenu() {
+            document.getElementById('side-menu').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
 
-        // Lógica del Carrito
-        function loadCart() {
-            const cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
-            const container = document.getElementById('cart-items-container');
-            const summary = document.getElementById('order-summary');
-            const emptyMsg = document.getElementById('cart-empty');
-            
+        function renderCart() {
+            const list = document.getElementById('cart-items-list');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            list.innerHTML = '';
+            let subtotal = 0;
+
             if (cart.length === 0) {
-                container.innerHTML = '';
-                summary.style.display = 'none';
                 emptyMsg.style.display = 'block';
                 return;
             }
 
-            emptyMsg.style.display = 'none';
-            summary.style.display = 'block';
-            container.innerHTML = '';
-            
-            let total = 0;
-
             cart.forEach((item, index) => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                container.innerHTML += `
-                    <div class="cart-item">
-                        <div class="item-emoji">🎁</div>
-                        <div class="item-details">
-                            <h4>${item.name}</h4>
-                            <p>${item.qty} unidad(es) x $${item.price.toLocaleString()}</p>
-                        </div>
-                        <div class="item-price">$${subtotal.toLocaleString()}</div>
-                        <button class="remove-btn" onclick="removeItem(${index})">×</button>
+                subtotal += item.price * item.quantity;
+                const li = document.createElement('li');
+                li.className = 'cart-item';
+                li.innerHTML = `
+                    <div class="item-info">
+                        <span class="name">${item.name}</span>
+                        <span class="sub">$${item.price.toLocaleString()} c/u</span>
                     </div>
+                    <div class="item-qty-controls">
+                        <button type="button" class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button type="button" class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                    </div>
+                    <div style="font-weight:800">$${(item.price * item.quantity).toLocaleString()}</div>
                 `;
+                list.appendChild(li);
             });
 
-            document.getElementById('total-amount').innerText = `$${total.toLocaleString()}`;
+            document.getElementById('subtotal-price').textContent = `$${subtotal.toLocaleString()}`;
+            document.getElementById('total-price').textContent = `$${subtotal.toLocaleString()}`;
+            
+            // Preparar datos para el envío del mail
+            document.getElementById('total-price-hidden').value = `$${subtotal.toLocaleString()}`;
+            document.getElementById('order-summary-input').value = cart.map(i => `${i.name} (x${i.quantity})`).join(', ');
         }
 
-        function removeItem(index) {
-            let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
-            cart.splice(index, 1);
-            localStorage.setItem('hc_cart', JSON.stringify(cart));
-            loadCart();
+        function updateQty(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) cart.splice(index, 1);
+            localStorage.setItem('happyCart', JSON.stringify(cart));
+            renderCart();
         }
 
-        function clearCart() {
-            if(confirm('¿Seguro quieres vaciar todo el carrito?')) {
-                localStorage.removeItem('hc_cart');
-                loadCart();
+        function updatePaymentDetails() {
+            const method = document.getElementById('metodo_pago').value;
+            const note = document.getElementById('payment-note');
+            if(method === 'nequi') note.innerHTML = "Te enviaremos el QR de Nequi por WhatsApp para que subas el comprobante.";
+            if(method === 'efectivo') note.innerHTML = "Recuerda tener el dinero exacto al momento de la entrega en el colegio.";
+            if(method === 'tarjeta') note.innerHTML = "Se generará un link de Revolut seguro para tu pago.";
+            if(method === 'pse') note.innerHTML = "Usaremos la pasarela de Nequi para tu pago por PSE.";
+        }
+
+        // Función de Happy Puntos
+        document.getElementById('consultar-puntos-btn').onclick = async function() {
+            const code = document.getElementById('puntos_code').value.trim();
+            if(!code) return alert("Escribe un código");
+            
+            this.textContent = "...";
+            try {
+                const res = await fetch(`${VERCEL_API_BASE_URL}/getPoints?codigo=${code}`);
+                const data = await res.json();
+                if(data.error) throw new Error(data.error);
+                
+                if(confirm(`¡Hola ${data.nombre}! Tienes ${data.puntos} puntos. ¿Usar tus datos?`)) {
+                    document.getElementById('nombre').value = data.nombre;
+                    document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
+                }
+            } catch (e) {
+                alert("Código no encontrado");
+            } finally {
+                this.textContent = "Consultar";
             }
-        }
+        };
 
-        function sendWhatsApp(e) {
-            e.preventDefault();
-            const cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
-            if(cart.length === 0) return;
-
-            let message = "¡Hola Happy Corner! 🌈✨\nQuiero realizar el siguiente pedido:\n\n";
-            let total = 0;
-
-            cart.forEach(item => {
-                const subtotal = item.price * item.qty;
-                message += `✅ ${item.qty}x ${item.name} ($${subtotal.toLocaleString()})\n`;
-                total += subtotal;
-            });
-
-            message += `\n*TOTAL A PAGAR: $${total.toLocaleString()}*`;
-            message += `\n\nQuedo atento(a) para el pago. Gracias!`;
-
-            const phone = "573000000000"; // PON TU NÚMERO AQUÍ
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        window.onload = loadCart;
+        window.onload = renderCart;
     </script>
 </body>
 </html>
