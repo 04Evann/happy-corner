@@ -1,6 +1,6 @@
 // ordersBot.js - Vercel Endpoint
 import { createClient } from '@supabase/supabase-js';
-import fetch from 'node-fetch';srf
+import fetch from 'node-fetch';
 
 const supabaseUrl = process.env.SB_URL;
 const supabaseKey = process.env.SB_SECRET;
