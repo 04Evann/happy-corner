@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>happycorner volvio</title>
+    <title>Happy Corner | Inicio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css"> </head>
+    <link rel="stylesheet" href="styles.css">
+</head>
 <body>
 
-    <audio id="clinkSound" src="" preload="auto"></audio>
+    <audio id="clinkSound" src="3" preload="auto"></audio>
 
     <header>
         <img src="loguito.png" alt="HappyCorner" class="logo-img">
         <nav class="nav-desktop">
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
-            <a href="happyorder.html">HappyOrder</a>
+            <a href="order.html">HappyOrder</a>
             <a href="loyalty.html">LoyaltyCorner</a>
             <a href="terminos.html">Terminos</a>
         </nav>
@@ -26,12 +27,12 @@
     <nav class="side-menu" id="sideMenu">
         <a href="index.html">Inicio</a>
         <a href="catalogo.html">Catálogo</a>
-        <a href="order.html">HappyOrder</a>
+        <a href="happyorder.html">HappyOrder</a>
         <a href="loyalty.html">LoyaltyCorner</a>
         <a href="terminos.html">Términos</a>
     </nav>
 
-    <div class="carousel-container">
+    <div class="carousel-wrapper">
         <button class="arrow prev" onclick="moveSlide(-1)">❮</button>
         <button class="arrow next" onclick="moveSlide(1)">❯</button>
         <div class="track" id="track">
@@ -39,18 +40,24 @@
             <div class="slide" style="background-image: url('promo2.jpg')"></div>
             <div class="slide" style="background-image: url('promo3.jpg')"></div>
         </div>
+        <div class="nav-dot" id="dotContainer">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
     </div>
 
     <h1 style="text-align: center; font-size: 22px; margin-top: 25px;">Hot Products 🔥</h1>
-    
+
+    <div class="section-tag">Dulces Misteriosos</div>
     <div class="grid">
         <script>
             for(let i=1; i<=6; i++) {
                 document.write(`
                 <div class="card" id="p${i}">
-                    <div class="img-placeholder"></div>
-                    <div class="product-name">Dulce #${i}</div>
-                    <div class="price-mystery">???</div>
+                    <div class="img-placeholder">❓</div>
+                    <div class="product-name">Dulce Misterioso #${i}</div>
+                    <div class="price">???</div>
                     <div class="qty-controls">
                         <button class="qty-btn" onclick="qty('p${i}',-1)">-</button>
                         <span class="qty-num">1</span>
@@ -63,36 +70,51 @@
         </script>
     </div>
 
+
     <div id="toast">
-        <div class="toast-check">✓</div>
+        <div class="check-circle">✓</div>
         <span id="toast-text">Producto añadido</span>
     </div>
 
-    <a href="happyorder.html" class="cart-fixed">
+    <a href="order.html" class="cart-fixed">
         🛒<div class="badge" id="cart-count">0</div>
     </a>
 
     <script>
+        // Lógica del Menú
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
 
         function toggleMenu() {
-            menuBtn.classList.toggle('active'); sideMenu.classList.toggle('active');
-            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
+            menuBtn.classList.toggle('active'); 
+            sideMenu.classList.toggle('active');
+            overlay.classList.toggle('active'); // Usamos clases en vez de style.display para que sea más fluido
         }
         menuBtn.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
 
+        // Lógica Carousel
         let currentIdx = 0;
         const track = document.getElementById('track');
+        const dots = document.querySelectorAll('.dot');
+        
         function moveSlide(step) {
             currentIdx = (currentIdx + step + 3) % 3;
             track.style.transform = `translateX(-${currentIdx * 100}%)`;
+            updateDots();
+        }
+
+        function updateDots() {
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIdx);
+            });
         }
         setInterval(() => moveSlide(1), 6000);
 
+        // Lógica Carrito
         let totalCartCount = 0;
+
         function qty(id, d) {
             let s = document.querySelector(`#${id} .qty-num`);
             let v = parseInt(s.innerText) + d;
@@ -100,7 +122,11 @@
         }
 
         function add(id, name) {
-            document.getElementById('clinkSound').play().catch(()=>{});
+            // Sonido
+            const sound = document.getElementById('clinkSound');
+            sound.currentTime = 0;
+            sound.play().catch(()=>{});
+
             const qtyElement = document.querySelector(`#${id} .qty-num`);
             const selectedQty = parseInt(qtyElement.innerText);
             
@@ -108,10 +134,14 @@
             document.getElementById('cart-count').innerText = totalCartCount;
 
             const toast = document.getElementById('toast');
-            document.getElementById('toast-text').innerText = selectedQty > 1 ? `${selectedQty}x ${name} añadidos` : `${name} añadido`;
+            const toastText = document.getElementById('toast-text');
+            
+            toastText.innerHTML = selectedQty > 1 ? `<b>${selectedQty}x ${name}</b> añadidos` : `<b>${name}</b> añadido`;
             
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
+            
+            // Resetear cantidad a 1 después de añadir
             qtyElement.innerText = "1";
         }
     </script>
