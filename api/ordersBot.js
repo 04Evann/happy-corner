@@ -1,51 +1,65 @@
+// ordersBot.js (endpoint Vercel)
 import { createClient } from '@supabase/supabase-js';
 import fetch from 'node-fetch';
 
-const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET);
+const supabaseUrl = process.env.SB_URL; // URL de tu proyecto Supabase
+const supabaseKey = process.env.SB_SECRET; // Anon/public key
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+const telegramToken = process.env.TELEGRAM_TOKEN; // Token de tu bot
+const telegramChatId = process.env.TELEGRAM_CHAT_ID;  // Tu ID de Telegram (admin)
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  // 🔓 CORS HEADERS
+  res.setHeader("Access-Control-Allow-Origin", "https://happycorner.lol");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') return res.status(405).send({ error: 'Only POST allowed' });
 
   const { nombre, whatsapp, resumen, total } = req.body;
+  if (!nombre || !whatsapp || !resumen || !total) return res.status(400).send({ error: 'Faltan datos' });
 
-  if (!nombre || !whatsapp || !resumen || !total) {
-    return res.status(400).json({ error: 'Faltan datos del pedido' });
-  }
+  // 1️⃣ Guardar pedido en Supabase
+  const { data, error } = await supabase
+    .from('pedidos')
+    .insert([{ nombre, whatsapp, resumen, total, estado: 'Nuevo' }])
+    .select()
+    .single();
 
-  try {
-    // Guardar en Supabase
-    const { data, error } = await supabase.from('pedidos').insert([{
-      nombre,
-      whatsapp,
-      resumen,
-      total,
-      estado: 'Nuevo'
-    }]);
+  if (error) return res.status(500).send({ error: error.message });
 
-    if (error) throw error;
+  const pedidoId = data.id;
 
-    // Enviar mensaje a Telegram
-    const telegramMessage = `
-📦 Nuevo pedido de HappyCorner
-👤 Nombre: ${nombre}
-📱 WhatsApp: ${whatsapp}
-🛒 Pedido: ${resumen}
-💵 Total: ${total}
-`;
+  // 2️⃣ Enviar mensaje a Telegram
+  const messageText = `📦 *Nuevo pedido* #${pedidoId}\n` +
+                      `👤 ${nombre}\n` +
+                      `🛒 ${resumen}\n` +
+                      `💰 ${total}\n` +
+                      `📱 [Enviar WhatsApp](https://wa.me/57${whatsapp})`;
 
-    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: process.env.TELEGRAM_CHAT_ID,
-        text: telegramMessage
-      })
-    });
+  const replyMarkup = {
+    inline_keyboard: [
+      [{ text: '✅ Confirmar', callback_data: `confirm_${pedidoId}` }],
+      [{ text: '❌ Cancelar', callback_data: `cancel_${pedidoId}` }]
+    ]
+  };
 
-    return res.status(200).json({ ok: true, msg: 'Pedido enviado!' });
+  await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: telegramChatId,
+      text: messageText,
+      parse_mode: 'Markdown',
+      reply_markup: replyMarkup
+    })
+  });
 
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ ok: false, error: 'Error guardando o enviando pedido' });
-  }
+  res.status(200).send({ ok: true, pedidoId });
 }
