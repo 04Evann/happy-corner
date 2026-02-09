@@ -108,6 +108,7 @@
                         <option value="nequi">Nequi</option>
                         <option value="efectivo">Efectivo</option>
                         <option value="pse">PSE</option>
+                       <option value="pse">Tarjeta(DEBERAS DE CONTACTARNOS)</option>
                     </select>
                 </div>
                 <input type="hidden" name="Resumen_Pedido" id="hidden-summary">
@@ -199,5 +200,39 @@
 
         window.onload = renderCart;
     </script>
+    <script>
+document.getElementById("checkout-form").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  if (cart.length === 0) {
+    alert("El carrito está vacío");
+    return;
+  }
+
+  const data = {
+    nombre: document.getElementById("nombre").value,
+    email: document.getElementById("email").value,
+    whatsapp: document.getElementById("celular").value,
+    metodo: document.querySelector("select[name='Metodo_Pago']").value,
+    resumen: document.getElementById("hidden-summary").value.replaceAll(",", "\n"),
+    total: document.getElementById("hidden-total").value
+  };
+
+  try {
+    await fetch("https://happy-corner.vercel.app/api/sendOrderTelegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    alert("Pedido enviado con éxito 🚀🍭");
+    localStorage.removeItem("hc_cart");
+    window.location.href = "index.html";
+
+  } catch (err) {
+    alert("Error enviando el pedido 😓");
+  }
+});
+</script>
 </body>
 </html>
