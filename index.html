@@ -9,18 +9,20 @@
 </head>
 <body>
 
-    <audio id="clinkSound" src="3" preload="auto"></audio>
+    <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
 
     <header>
         <img src="loguito.png" alt="HappyCorner" class="logo-img">
         <nav class="nav-desktop">
             <a href="index.html">Inicio</a>
             <a href="catalogo.html">Catálogo</a>
-            <a href="order.html">HappyOrder</a>
+            <a href="happyorder.html">HappyOrder</a>
             <a href="loyalty.html">LoyaltyCorner</a>
             <a href="terminos.html">Terminos</a>
         </nav>
-        <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
+        <div class="menu-btn" id="menuBtn">
+            <span></span><span></span><span></span>
+        </div>
     </header>
 
     <div class="overlay" id="overlay"></div>
@@ -32,7 +34,7 @@
         <a href="terminos.html">Términos</a>
     </nav>
 
-    <div class="carousel-wrapper">
+    <div class="carousel-container">
         <button class="arrow prev" onclick="moveSlide(-1)">❮</button>
         <button class="arrow next" onclick="moveSlide(1)">❯</button>
         <div class="track" id="track">
@@ -40,19 +42,14 @@
             <div class="slide" style="background-image: url('promo2.jpg')"></div>
             <div class="slide" style="background-image: url('promo3.jpg')"></div>
         </div>
-        <div class="nav-dot" id="dotContainer">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
     </div>
 
-    <h1 style="text-align: center; font-size: 22px; margin-top: 25px;">Hot Products 🔥</h1>
+    <h1 style="text-align: center; font-size: 20px; margin: 25px 0 10px;">Hot Products 🔥</h1>
 
     <div class="section-tag">Dulces Misteriosos</div>
     <div class="grid">
         <script>
-            for(let i=1; i<=6; i++) {
+            for(let i=1; i<=4; i++) {
                 document.write(`
                 <div class="card" id="p${i}">
                     <div class="img-placeholder">❓</div>
@@ -63,57 +60,103 @@
                         <span class="qty-num">1</span>
                         <button class="qty-btn" onclick="qty('p${i}',1)">+</button>
                     </div>
-                    <button class="add-btn" onclick="add('p${i}', 'Dulce #${i}')">🛒 Añadir</button>
+                    <button class="add-btn" onclick="add('p${i}', 'Dulce #${i}')">Añadir</button>
                 </div>
                 `);
             }
         </script>
     </div>
 
-
-    <div id="toast">
-        <div class="check-circle">✓</div>
-        <span id="toast-text">Producto añadido</span>
+    <div class="section-tag">Roblox 💎</div>
+    <div class="grid">
+        <div class="card" id="rbx1000">
+            <div class="ribbon">PROMO!!</div>
+            <div class="img-placeholder">🔥</div>
+            <div class="product-name">1000 RBX</div>
+            <div class="price">$40.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('rbx1000',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('rbx1000',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('rbx1000', '1000 RBX')">Añadir</button>
+        </div>
+        <div class="card" id="rbx40">
+            <div class="img-placeholder">💎</div>
+            <div class="product-name">40 RBX</div>
+            <div class="price">$4.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('rbx40',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('rbx40',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('rbx40', '40 RBX')">Añadir</button>
+        </div>
     </div>
 
-    <a href="order.html" class="cart-fixed">
+    <div class="section-tag">Servicios Online 🌐</div>
+    <div class="grid">
+        <div class="card" id="snap">
+            <div class="ribbon">TOP</div>
+            <div class="img-placeholder">👻</div>
+            <div class="product-name">Snapchat+</div>
+            <div class="price">$12.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('snap',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('snap',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('snap', 'Snapchat+')">Añadir</button>
+        </div>
+        <div class="card" id="spot">
+            <div class="img-placeholder">🎵</div>
+            <div class="product-name">Spotify 1 Mes</div>
+            <div class="price">$18.900</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('spot',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('spot',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('spot', 'Spotify')">Añadir</button>
+        </div>
+    </div>
+
+    <div id="toast">
+        <div class="toast-check">✓</div>
+        <span id="toast-text"></span>
+    </div>
+
+    <a href="happyorder.html" class="cart-fixed">
         🛒<div class="badge" id="cart-count">0</div>
     </a>
 
     <script>
-        // Lógica del Menú
+        // Menú Lateral
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
 
-        function toggleMenu() {
-            menuBtn.classList.toggle('active'); 
+        menuBtn.onclick = () => {
             sideMenu.classList.toggle('active');
-            overlay.classList.toggle('active'); // Usamos clases en vez de style.display para que sea más fluido
-        }
-        menuBtn.addEventListener('click', toggleMenu);
-        overlay.addEventListener('click', toggleMenu);
+            overlay.classList.toggle('active');
+        };
 
-        // Lógica Carousel
+        overlay.onclick = () => {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
+        // Carousel
         let currentIdx = 0;
         const track = document.getElementById('track');
-        const dots = document.querySelectorAll('.dot');
-        
         function moveSlide(step) {
             currentIdx = (currentIdx + step + 3) % 3;
             track.style.transform = `translateX(-${currentIdx * 100}%)`;
-            updateDots();
         }
+        setInterval(() => moveSlide(1), 5000);
 
-        function updateDots() {
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentIdx);
-            });
-        }
-        setInterval(() => moveSlide(1), 6000);
-
-        // Lógica Carrito
-        let totalCartCount = 0;
+        // Carrito y Cantidades
+        let totalItems = 0;
 
         function qty(id, d) {
             let s = document.querySelector(`#${id} .qty-num`);
@@ -122,27 +165,19 @@
         }
 
         function add(id, name) {
-            // Sonido
-            const sound = document.getElementById('clinkSound');
-            sound.currentTime = 0;
-            sound.play().catch(()=>{});
-
-            const qtyElement = document.querySelector(`#${id} .qty-num`);
-            const selectedQty = parseInt(qtyElement.innerText);
+            document.getElementById('clinkSound').play().catch(()=>{});
+            const qtyVal = parseInt(document.querySelector(`#${id} .qty-num`).innerText);
             
-            totalCartCount += selectedQty;
-            document.getElementById('cart-count').innerText = totalCartCount;
+            totalItems += qtyVal;
+            document.getElementById('cart-count').innerText = totalItems;
 
             const toast = document.getElementById('toast');
-            const toastText = document.getElementById('toast-text');
-            
-            toastText.innerHTML = selectedQty > 1 ? `<b>${selectedQty}x ${name}</b> añadidos` : `<b>${name}</b> añadido`;
+            document.getElementById('toast-text').innerHTML = `<b>${qtyVal > 1 ? qtyVal + 'x ' : ''}${name}</b> añadido`;
             
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+            setTimeout(() => toast.classList.remove('show'), 2000);
             
-            // Resetear cantidad a 1 después de añadir
-            qtyElement.innerText = "1";
+            document.querySelector(`#${id} .qty-num`).innerText = "1";
         }
     </script>
 </body>
