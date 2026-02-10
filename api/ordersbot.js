@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
 
 export default async function handler(req, res) {
+  // Configuración de CORS para que tu web pueda hablar con Vercel
   const origin = req.headers.origin;
   res.setHeader('Access-Control-Allow-Origin', origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -11,39 +12,40 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { nombre, whatsapp, resumen, total, metodo_pago } = req.body;
+  try {
+    const { nombre, whatsapp, resumen, total } = req.body;
 
-  // 1. Guardar en Supabase
-  const { data, error } = await supabase
-    .from('pedidos')
-    .insert([{ nombre, whatsapp, resumen, total, metodo_pago, estado: 'Nuevo' }])
-    .select().single();
+    // 1. Guardar en Supabase
+    const { data, error } = await supabase
+      .from('pedidos')
+      .insert([{ nombre, whatsapp, resumen, total, estado: 'Nuevo' }])
+      .select().single();
 
-  if (error) return res.status(500).json({ error: error.message });
+    if (error) throw error;
 
-  // 2. Texto con comandos rápidos (links azules)
-  const msg = 
-`📦 *Nuevo pedido* #${data.id}
-👤 ${nombre}
-📱 ${whatsapp}
-💰 ${total}
-🛒 ${resumen}
+    // 2. Mensaje en texto plano (EVITA ERRORES DE TELEGRAM)
+    const msg = `NUEVO PEDIDO #${data.id}\n\n` +
+                `Cliente: ${nombre}\n` +
+                `WhatsApp: ${whatsapp}\n` +
+                `Total: ${total}\n\n` +
+                `Productos: ${resumen}\n\n` +
+                `Toca para procesar:\n` +
+                `/confirmar_${data.id}\n` +
+                `/entregar_${data.id}\n` +
+                `/cancelar_${data.id}`;
 
-*Toca para procesar:*
-✅ /confirmar_${data.id}
-📦 /entregar_${data.id}
-❌ /cancelar_${data.id}`;
+    // 3. Enviar a Telegram
+    const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: process.env.TELEGRAM_CHAT_ID,
+        text: msg
+      })
+    });
 
-  // 3. Envío a Telegram
-  await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: process.env.TELEGRAM_CHAT_ID,
-      text: msg,
-      parse_mode: 'Markdown'
-    })
-  });
-
-  return res.status(200).json({ ok: true });
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 }
