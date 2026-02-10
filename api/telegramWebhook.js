@@ -2,99 +2,67 @@ import { createClient } from '@supabase/supabase-js'
 import fetch from 'node-fetch'
 
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
+const TG_URL = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}`;
+
+// Función auxiliar para esperar
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export default async function handler(req, res) {
-  // 1. Log inicial para verificar conexión en Vercel
-  console.log("--- WEBHOOK ACTIVADO ---");
+  if (req.method !== 'POST' || !req.body.callback_query) return res.status(200).end();
 
-  // 2. Seguridad: Ignorar peticiones que no sean POST o no tengan body
-  if (req.method !== 'POST' || !req.body) {
-    return res.status(200).send('<h1>Happy Corner Bot 🍭</h1><p>Esperando datos de Telegram...</p>');
-  }
+  const { data: cbData, id: cbId, message } = req.body.callback_query;
+  const [action, pedidoId] = cbData.split('_');
+  const chatId = message.chat.id;
 
-  const update = req.body;
+  // 1. Quitar el relojito de carga
+  await fetch(`${TG_URL}/answerCallbackQuery`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ callback_query_id: cbId })
+  });
 
-  // 3. Si no es un click en botón, terminar
-  if (!update.callback_query) {
-    console.log("Update recibido, pero no es callback_query");
-    return res.status(200).end();
-  }
+  // 2. Actualizar Supabase
+  const estados = { confirm: 'Confirmado', deliver: 'Entregado', cancel: 'Cancelado' };
+  await supabase.from('pedidos').update({ estado: estados[action] }).eq('id', pedidoId);
 
-  const { data: callbackData, id: callbackQueryId } = update.callback_query;
-  const [action, id] = callbackData.split('_');
-  const chatId = update.callback_query.message.chat.id;
-  const msgId = update.callback_query.message.message_id;
+  // 3. Obtener datos para WhatsApp
+  const { data: p } = await supabase.from('pedidos').select('*').eq('id', pedidoId).single();
+  
+  const textoWA = action === 'confirm' ? `Hola ${p.nombre}, pedido confirmado! 🎉` : `Hola ${p.nombre}, pedido entregado! 🙌`;
+  const linkWA = `https://wa.me/57${p.whatsapp}?text=${encodeURIComponent(textoWA)}`;
 
-  try {
-    // 4. Quitar el loading de Telegram de inmediato
-    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/answerCallbackQuery`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ callback_query_id: callbackQueryId })
-    });
+  // 4. Enviar mensaje de WhatsApp y GUARDAR el ID para borrarlo luego
+  const resWA = await fetch(`${TG_URL}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text: `📲 [ENVIAR WHATSAPP](${linkWA})`, parse_mode: 'Markdown' })
+  });
+  const msgWA = await resWA.json();
 
-    // 5. Obtener datos del pedido de Supabase
-    const { data: pedido, error: errorFetch } = await supabase
-      .from('pedidos')
-      .select('*')
-      .eq('id', id)
-      .single();
+  // --- INICIO DE LA CUENTA REGRESIVA ---
+  await delay(5000);
 
-    if (!pedido || errorFetch) {
-      console.error("Error buscando pedido:", errorFetch);
-      return res.status(200).end();
-    }
+  // 5. Enviar link al Panel Admin
+  const resAdmin = await fetch(`${TG_URL}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text: `📊 [ENTRAR AL PANEL ADMIN](https://happycorner.lol/admin)` })
+  });
+  const msgAdmin = await resAdmin.json();
 
-    // 6. Definir nuevo estado y mensaje
-    const estados = { confirm: 'Confirmado', deliver: 'Entregado', cancel: 'Cancelado' };
-    const nuevoEstado = estados[action];
+  await delay(5000);
 
-    // 7. Actualizar Supabase
-    const { error: errorUpdate } = await supabase
-      .from('pedidos')
-      .update({ estado: nuevoEstado })
-      .eq('id', id);
+  // 6. LIMPIEZA: Borrar los mensajes de asistencia
+  await fetch(`${TG_URL}/deleteMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, message_id: msgWA.result.message_id })
+  });
+  await fetch(`${TG_URL}/deleteMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, message_id: msgAdmin.result.message_id })
+  });
 
-    if (errorUpdate) throw errorUpdate;
-
-    // 8. Editar el mensaje original para mostrar progreso
-    const textoOriginal = update.callback_query.message.text;
-    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/editMessageText`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        message_id: msgId,
-        text: `${textoOriginal}\n\n📍 *ESTADO:* ${nuevoEstado.toUpperCase()}`,
-        parse_mode: 'Markdown'
-      })
-    });
-
-    // 9. Enviar link de WhatsApp si es Confirmado o Entregado
-    if (action === 'confirm' || action === 'deliver') {
-      const msjs = {
-        confirm: `¡Hola ${pedido.nombre}! 🎉 Tu pedido de Happy Corner ha sido CONFIRMADO. Estaremos preparándolo para ti.`,
-        deliver: `¡Hola ${pedido.nombre}! 🙌 Tu pedido ya fue ENTREGADO. ¡Gracias por elegir Happy Corner! 🍭`
-      };
-      
-      const linkWA = `https://wa.me/57${pedido.whatsapp}?text=${encodeURIComponent(msjs[action])}`;
-      
-      await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: `📲 *Acción requerida:*\n[Enviar WhatsApp al cliente](${linkWA})`,
-          parse_mode: 'Markdown',
-          disable_web_page_preview: true
-        })
-      });
-    }
-
-  } catch (err) {
-    console.error("Error crítico en Webhook:", err);
-  }
-
-  // Respuesta final exitosa para Telegram
-  return res.status(200).setHeader('Cache-Control', 'no-store').send('OK');
+  return res.status(200).send('OK');
 }
