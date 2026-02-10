@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin | Happy Corner</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="styles.css"> 
     <style>
         .admin-container { padding: 20px; max-width: 1200px; margin: auto; }
@@ -37,9 +36,9 @@
 
     <div id="login-screen" class="login-overlay">
         <div class="login-card">
-            <img src="happylogo.png" class="logo-img" style="margin: 0 auto 20px; filter: invert(0);">
+            <img src="happylogo.png" class="logo-img" style="margin: 0 auto 20px;">
             <h2 class="product-name" style="font-size: 20px;">Acceso Administrativo</h2>
-            <p class="text-gray" style="font-size: 12px; margin-bottom: 15px;">Introduce tu Chat ID para recibir un código de acceso.</p>
+            <p style="font-size: 12px; margin-bottom: 15px; color: #666;">Introduce tu Chat ID para recibir un código de acceso.</p>
             <input type="text" id="admin-chatid" placeholder="Tu Chat ID">
             <button onclick="solicitarAcceso()" class="add-btn">Solicitar Código</button>
             <div id="otp-section" class="hidden">
@@ -62,40 +61,42 @@
         </header>
 
         <div class="section-tag">Pedidos Recientes</div>
-        <div class="grid" id="grid-pedidos">
-            </div>
+        <div class="grid" id="grid-pedidos"></div>
     </div>
 
     <script>
-        const SB_URL = "TU_SUPABASE_URL";
-        const SB_KEY = "TU_SUPABASE_ANON_KEY";
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-        
         let otpGenerado = "";
 
         async function solicitarAcceso() {
             const chatId = document.getElementById('admin-chatid').value;
             if(!chatId) return alert("Pon tu ID");
 
-            // Generar código aleatorio
             otpGenerado = Math.floor(1000 + Math.random() * 9000).toString();
 
-            // Usamos tu bot para enviarte el código a TI
-            await fetch(`https://happy-corner.vercel.app/api/sendOTP`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ chatId, otp: otpGenerado })
-            });
+            try {
+                const resp = await fetch('/api/sendOTP', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chatId, otp: otpGenerado })
+                });
 
-            document.getElementById('otp-section').classList.remove('hidden');
-            alert("🔒 Código enviado a tu Telegram");
+                if(resp.ok) {
+                    document.getElementById('otp-section').classList.remove('hidden');
+                    alert("🔒 Código enviado a tu Telegram");
+                } else {
+                    alert("Error enviando el código. Revisa que el ID sea correcto.");
+                }
+            } catch (err) {
+                alert("Error de conexión");
+            }
         }
 
         function verificarAcceso() {
             const otpInput = document.getElementById('admin-otp').value;
-            if(otpInput === otpGenerado) {
+            if(otpInput === otpGenerado && otpGenerado !== "") {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-content').classList.remove('hidden');
+                document.getElementById('fecha-actual').innerText = new Date().toLocaleDateString();
                 cargarPedidos();
             } else {
                 alert("Código incorrecto");
@@ -103,34 +104,37 @@
         }
 
         async function cargarPedidos() {
-            const { data, error } = await supabaseClient
-                .from('pedidos')
-                .select('*')
-                .order('id', { ascending: false });
+            try {
+                const resp = await fetch('/api/getOrders');
+                const data = await resp.json();
 
-            const grid = document.getElementById('grid-pedidos');
-            grid.innerHTML = '';
-            let total = 0;
+                const grid = document.getElementById('grid-pedidos');
+                grid.innerHTML = '';
+                let total = 0;
 
-            data.forEach(p => {
-                if(p.estado === 'Entregado') {
-                    total += parseInt(p.total.replace(/[^0-9]/g, '')) || 0;
-                }
+                data.forEach(p => {
+                    if(p.estado === 'Entregado') {
+                        const valor = parseInt(p.total.replace(/[^0-9]/g, '')) || 0;
+                        total += valor;
+                    }
 
-                grid.innerHTML += `
-                    <div class="card pedido-card">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <span style="font-size:10px; font-weight:700; color:#ccc;">#${p.id}</span>
-                            <span class="status-pill" style="background:${p.estado === 'Nuevo' ? '#ff5299' : '#2ecc71'}">${p.estado}</span>
+                    grid.innerHTML += `
+                        <div class="card pedido-card">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <span style="font-size:10px; font-weight:700; color:#888;">#${p.id}</span>
+                                <span class="status-pill" style="background:${p.estado === 'Nuevo' ? '#ff5299' : '#2ecc71'}">${p.estado}</span>
+                            </div>
+                            <div class="product-name" style="text-align:left;">${p.nombre}</div>
+                            <div class="price" style="font-size:14px; text-align:left; color:#ff5299;">${p.total}</div>
+                            <div style="font-size:10px; color:gray; margin-top:5px; text-align:left;">🎟️ ${p.happycodigo || 'Sin código'}</div>
+                            <div style="font-size:10px; color:gray; text-align:left;">💳 ${p.metodo_pago} | 📱 ${p.whatsapp}</div>
                         </div>
-                        <div class="product-name">${p.nombre}</div>
-                        <div class="price" style="font-size:14px;">${p.total}</div>
-                        <div style="font-size:10px; color:gray; margin-top:5px;">🎟️ ${p.happycodigo || 'Sin código'}</div>
-                        <div style="font-size:10px; color:gray;">💳 ${p.metodo_pago}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('total-monto').innerText = `$${total.toLocaleString()}`;
+                    `;
+                });
+                document.getElementById('total-monto').innerText = `$${total.toLocaleString()}`;
+            } catch (err) {
+                console.error("Error:", err);
+            }
         }
     </script>
 </body>
