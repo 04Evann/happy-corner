@@ -3,64 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin | Happy Corner</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css"> 
+    <title>HappyBlack | CEO Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet">
     <style>
-        .admin-container { padding: 20px; max-width: 1200px; margin: auto; }
-        .stats-banner { 
-            background: var(--hp-gradient); 
-            color: white; padding: 20px; 
-            border-radius: 25px; margin-bottom: 20px;
-            display: flex; justify-content: space-between; align-items: center;
+        :root {
+            --gold: #d4af37;
+            --dark-bg: #0a0a0a;
+            --card-bg: #0b0b0b;
+            --text-gray: #dcdcdc;
         }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--dark-bg);
+            color: #f5f5f5;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+
+        /* HEADER ESTILO CEO */
+        header { text-align: center; margin-bottom: 50px; }
+        .logo-ceo { width: 96px; margin-bottom: 16px; }
+        .edition-label { 
+            font-size: 14px; letter-spacing: 3px; color: var(--gold); 
+            text-transform: uppercase; margin-bottom: 8px; 
+        }
+        .title { font-size: 34px; font-weight: 700; margin: 0; }
+        .divider { width: 72px; height: 2px; background: var(--gold); margin: 20px auto; }
+
+        /* LOGIN SCREEN */
         .login-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%;
-            background: var(--bg-body); z-index: 5000;
+            background: var(--dark-bg); z-index: 5000;
             display: flex; align-items: center; justify-content: center;
         }
         .login-card {
-            background: white; padding: 30px; border-radius: 30px;
-            box-shadow: var(--shadow); text-align: center; width: 90%; max-width: 400px;
+            background: var(--card-bg); padding: 40px; border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.45); text-align: center;
+            width: 90%; max-width: 400px; border: 1px solid #1b1b1c;
         }
+
         input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border-radius: 15px; border: 1px solid #eee; font-family: inherit;
+            width: 100%; padding: 15px; margin: 15px 0;
+            background: #151515; border: 1px solid #333;
+            border-radius: 10px; color: white; font-family: inherit;
+            text-align: center; box-sizing: border-box;
+        }
+        input:focus { border-color: var(--gold); outline: none; }
+
+        .btn-gold {
+            background: var(--gold); color: black; border: none;
+            padding: 15px 30px; border-radius: 10px; font-weight: 700;
+            cursor: pointer; width: 100%; text-transform: uppercase;
+            letter-spacing: 1px; transition: 0.3s;
+        }
+        .btn-gold:hover { opacity: 0.8; transform: translateY(-2px); }
+
+        /* PANEL DE PEDIDOS */
+        .stats-banner {
+            background: #0f0f10; border: 1px solid #1b1b1c;
+            padding: 25px; border-radius: 16px; margin-bottom: 30px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .order-card {
+            background: #0f0f10; border: 1px solid #1b1b1c;
+            border-radius: 16px; padding: 20px; margin-bottom: 15px;
+            transition: 0.3s;
+        }
+        .order-card:hover { border-color: var(--gold); }
+        .status-pill {
+            font-size: 10px; padding: 4px 12px; border-radius: 50px;
+            background: #1b1b1c; color: var(--gold); border: 1px solid var(--gold);
         }
         .hidden { display: none !important; }
-        .pedido-card { margin-bottom: 15px; position: relative; }
-        .status-pill { font-size: 10px; padding: 4px 12px; border-radius: 50px; color: white; font-weight: bold; }
+        .grid { display: grid; gap: 15px; }
+
+        @media (max-width: 600px) {
+            .stats-banner { flex-direction: column; text-align: center; gap: 15px; }
+        }
     </style>
 </head>
 <body>
 
     <div id="login-screen" class="login-overlay">
         <div class="login-card">
-            <img src="Happylogo.png" class="logo-img" style="margin: 0 auto 20px;">
-            <h2 class="product-name" style="font-size: 20px;">Acceso Administrativo</h2>
-            <p style="font-size: 12px; margin-bottom: 15px; color: #666;">Introduce tu Chat ID para recibir un código de acceso.</p>
-            <input type="text" id="admin-chatid" placeholder="Tu Chat ID">
-            <button onclick="solicitarAcceso()" class="add-btn">Solicitar Código</button>
+            <img src="Happylogo.png" class="logo-ceo">
+            <div class="edition-label">CEO Access</div>
+            <h2 style="font-size: 20px; margin-bottom: 20px;">Verificación de Identidad</h2>
+            <input type="text" id="admin-chatid" placeholder="Chat ID Personal">
+            <button onclick="solicitarAcceso()" class="btn-gold">Solicitar Token</button>
             <div id="otp-section" class="hidden">
-                <input type="text" id="admin-otp" placeholder="Código de 4 dígitos">
-                <button onclick="verificarAcceso()" class="add-btn" style="background: #2ecc71;">Entrar</button>
+                <input type="text" id="admin-otp" placeholder="Token de 4 dígitos">
+                <button onclick="verificarAcceso()" class="btn-gold" style="background: #e8e8e8;">Entrar al Sistema</button>
             </div>
         </div>
     </div>
 
-    <div id="admin-content" class="admin-container hidden">
-        <header class="stats-banner">
-            <div>
-                <h1 style="font-weight: 800; font-size: 20px;">Panel de Ventas</h1>
-                <p id="fecha-actual" style="font-size: 12px; opacity: 0.8;"></p>
-            </div>
-            <div style="text-align: right;">
-                <span style="font-size: 10px; text-transform: uppercase; font-weight: 700;">Ventas Hoy</span>
-                <div id="total-monto" style="font-size: 24px; font-weight: 800;">$0</div>
-            </div>
+    <div id="admin-content" class="container hidden">
+        <header>
+            <img src="Happylogo.png" class="logo-ceo">
+            <div class="edition-label">CEO Edition</div>
+            <h1 class="title">HappyBlack Management</h1>
+            <div class="divider"></div>
         </header>
 
-        <div class="section-tag">Pedidos Recientes</div>
+        <div class="stats-banner">
+            <div>
+                <div style="color: var(--gold); font-size: 12px; letter-spacing: 2px;">ESTADO FINANCIERO</div>
+                <div id="total-monto" style="font-size: 32px; font-weight: 700; margin-top: 5px;">$0</div>
+            </div>
+            <div style="text-align: right;">
+                <div style="color: #8a8a8a; font-size: 12px;">SESIÓN ACTIVA</div>
+                <div id="fecha-actual" style="font-size: 14px; color: #f5f5f5;"></div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 15px; color: var(--gold); font-size: 14px; letter-spacing: 1px;">PEDIDOS PRIORITARIOS</div>
         <div class="grid" id="grid-pedidos"></div>
     </div>
 
@@ -69,12 +129,13 @@
 
         async function solicitarAcceso() {
             const chatId = document.getElementById('admin-chatid').value;
-            if(!chatId) return alert("Pon tu ID");
+            if(!chatId) return alert("Ingrese su Chat ID");
 
             otpGenerado = Math.floor(1000 + Math.random() * 9000).toString();
 
             try {
-                const resp = await fetch('/api/sendOTP', {
+                // Adaptado con .js para GitHub/Vercel
+                const resp = await fetch('/api/sendotp.js', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ chatId, otp: otpGenerado })
@@ -82,12 +143,12 @@
 
                 if(resp.ok) {
                     document.getElementById('otp-section').classList.remove('hidden');
-                    alert("🔒 Código enviado a tu Telegram");
+                    alert("🔐 Token enviado a su terminal de Telegram.");
                 } else {
-                    alert("Error enviando el código. Revisa que el ID sea correcto.");
+                    alert("Acceso Denegado: ID no reconocido.");
                 }
             } catch (err) {
-                alert("Error de conexión");
+                alert("Error de conexión con el servidor.");
             }
         }
 
@@ -96,16 +157,17 @@
             if(otpInput === otpGenerado && otpGenerado !== "") {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-content').classList.remove('hidden');
-                document.getElementById('fecha-actual').innerText = new Date().toLocaleDateString();
+                document.getElementById('fecha-actual').innerText = new Date().toLocaleDateString('es-CO');
                 cargarPedidos();
             } else {
-                alert("Código incorrecto");
+                alert("Token de seguridad inválido.");
             }
         }
 
         async function cargarPedidos() {
             try {
-                const resp = await fetch('/api/getOrders');
+                // Adaptado con .js
+                const resp = await fetch('/api/getOrders.js');
                 const data = await resp.json();
 
                 const grid = document.getElementById('grid-pedidos');
@@ -119,19 +181,21 @@
                     }
 
                     grid.innerHTML += `
-                        <div class="card pedido-card">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <span style="font-size:10px; font-weight:700; color:#888;">#${p.id}</span>
-                                <span class="status-pill" style="background:${p.estado === 'Nuevo' ? '#ff5299' : '#2ecc71'}">${p.estado}</span>
+                        <div class="order-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                <span style="font-size:12px; color:var(--gold);">MEMBER ACCESS #${p.id}</span>
+                                <span class="status-pill">${p.estado.toUpperCase()}</span>
                             </div>
-                            <div class="product-name" style="text-align:left;">${p.nombre}</div>
-                            <div class="price" style="font-size:14px; text-align:left; color:#ff5299;">${p.total}</div>
-                            <div style="font-size:10px; color:gray; margin-top:5px; text-align:left;">🎟️ ${p.happycodigo || 'Sin código'}</div>
-                            <div style="font-size:10px; color:gray; text-align:left;">💳 ${p.metodo_pago} | 📱 ${p.whatsapp}</div>
+                            <div style="font-size:18px; font-weight:700; color:#f0f0f0;">${p.nombre}</div>
+                            <div style="font-size:14px; color:#dcdcdc; margin-top:5px; line-height:1.6;">${p.resumen || 'Sin resumen'}</div>
+                            <div style="margin-top:15px; padding-top:15px; border-top: 1px solid #1b1b1c; display:flex; justify-content:space-between;">
+                                <span style="color:var(--gold); font-weight:700;">${p.total}</span>
+                                <span style="font-size:12px; color:#8a8a8a;">📱 ${p.whatsapp}</span>
+                            </div>
                         </div>
                     `;
                 });
-                document.getElementById('total-monto').innerText = `$${total.toLocaleString()}`;
+                document.getElementById('total-monto').innerText = `$${total.toLocaleString('es-CO')}`;
             } catch (err) {
                 console.error("Error:", err);
             }
