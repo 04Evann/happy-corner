@@ -11,34 +11,36 @@ export default async function handler(req, res) {
     const { method, query } = req;
 
     try {
-        // --- CONSULTA LOYVERSE (Puntos del Cliente) ---
-        if (method === 'GET' && query.phone) {
-            const lvRes = await fetch(`https://api.loyverse.com/v2/customers?phone_number=${query.phone}`, {
+        // --- ESTADÍSTICAS DE GANANCIAS ---
+        if (query.stats) {
+            const now = new Date();
+            const startOfDay = new Date(now.setHours(0,0,0,0)).toISOString();
+            
+            const { data: hoy } = await supabase.from('pedidos').select('total').eq('estado', 'Entregado').gte('created_at', startOfDay);
+            const { data: todos } = await supabase.from('pedidos').select('total, created_at').eq('estado', 'Entregado');
+
+            return res.status(200).json({ hoy, todos });
+        }
+
+        // --- ELIMINAR MENSAJE TELEGRAM ---
+        if (query.deleteMsg && query.msgId) {
+            await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/deleteMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&message_id=${query.msgId}`);
+            return res.status(200).json({ ok: true });
+        }
+
+        // --- CONSULTA LOYVERSE ---
+        if (query.phone) {
+            const lvRes = await fetch(`https://api.loyverse.com/v2/customers?phone_number=${encodeURIComponent(query.phone)}`, {
                 headers: { 'Authorization': `Token ${process.env.LOYVERSE_API_KEY}` }
             });
             const lvData = await lvRes.json();
-            return res.status(200).json(lvData.customers?.[0] || { points: 0, name: "Nuevo" });
+            return res.status(200).json(lvData.customers?.[0] || { points: 0 });
         }
 
-        // --- ACCIONES SOBRE PEDIDOS ---
-        if (method === 'POST' && query.id && query.estado) {
-            await supabase.from('pedidos').update({ estado: query.estado }).eq('id', query.id);
-            return res.status(200).json({ ok: true });
-        }
-
-        if (method === 'DELETE' && query.id) {
-            await supabase.from('pedidos').delete().eq('id', query.id);
-            return res.status(200).json({ ok: true });
-        }
-
-        // --- LISTAR PEDIDOS CON FILTROS ---
-        let dbQuery = supabase.from('pedidos').select('*');
+        // --- LISTAR PEDIDOS ---
+        let dbQuery = supabase.from('pedidos').select('*').order('id', { ascending: false });
         if (query.search) dbQuery = dbQuery.or(`nombre.ilike.%${query.search}%,whatsapp.ilike.%${query.search}%`);
         
-        // Ordenamiento MD3
-        if (query.sort === 'price_desc') dbQuery = dbQuery.order('total', { ascending: false });
-        else dbQuery = dbQuery.order('id', { ascending: false });
-
         const { data, error } = await dbQuery;
         if (error) throw error;
         res.status(200).json(data);
