@@ -200,42 +200,53 @@
 
         window.onload = renderCart;
     </script>
-     
-   <script>
+   
+    <script>
 document.getElementById('checkout-form').addEventListener('submit', async function (e) {
-  e.preventDefault()
+    e.preventDefault();
 
-  const payload = {
-    nombre: document.getElementById('nombre').value,
-    whatsapp: document.getElementById('celular').value,
-    resumen: document.getElementById('hidden-summary').value,
-    total: document.getElementById('hidden-total').value,
-    metodo_pago: document.getElementById('metodo_pago').value,
-    happycodigo: document.getElementById('puntos_code').value || null
-  }
+    // Capturamos los datos asegurándonos de que existan los IDs en el HTML
+    const payload = {
+        nombre: document.getElementById('nombre').value,
+        whatsapp: document.getElementById('celular').value,
+        resumen: document.getElementById('hidden-summary').value,
+        total: document.getElementById('hidden-total').value,
+        // Verifica que tu <select> tenga id="metodo_pago"
+        metodo_pago: document.getElementById('metodo_pago').value,
+        happycodigo: document.getElementById('puntos_code').value || null
+    };
 
-  try {
-    const resp = await fetch('https://happy-corner.vercel.app/api/ordersbot', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    // Animación simple en el botón
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerText;
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
 
-    const data = await resp.json()
+    try {
+        const resp = await fetch('https://happy-corner.vercel.app/api/ordersbot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
-    if (data.ok) {
-      alert('✅ Pedido enviado con éxito')
-      localStorage.removeItem('hc_cart')
-      window.location.href = 'catalogo.html'
-    } else {
-      alert('❌ Error: ' + (data.error || 'Intenta de nuevo'))
+        const data = await resp.json();
+
+        if (data.ok) {
+            alert('✅ ¡Pedido enviado! Revisa tu WhatsApp pronto.');
+            localStorage.removeItem('hc_cart'); // Limpiamos el carrito
+            window.location.href = 'catalogo.html'; // Volvemos al catálogo
+        } else {
+            throw new Error(data.error || 'Error desconocido');
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert('❌ No pudimos enviar el pedido: ' + err.message);
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
     }
-
-  } catch (err) {
-    console.error(err)
-    alert('❌ Error enviando el pedido 😓')
-  }
-})
+});
 </script>
 </body>
 </html>
