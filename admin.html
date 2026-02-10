@@ -128,18 +128,35 @@
         let otpGenerado = "";
 
         async function solicitarAcceso() {
-            const chatId = document.getElementById('admin-chatid').value;
-            if(!chatId) return alert("Ingrese su Chat ID");
+    const chatId = document.getElementById('admin-chatid').value;
+    if(!chatId) return alert("Ingrese su Chat ID");
 
-            otpGenerado = Math.floor(1000 + Math.random() * 9000).toString();
+    otpGenerado = Math.floor(1000 + Math.random() * 9000).toString();
 
-            try {
-                // Adaptado con .js para GitHub/Vercel
-                const resp = await fetch('/api/sendotp.js', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ chatId, otp: otpGenerado })
-                });
+    try {
+        // USANDO LA URL DIRECTA DE VERCEL
+        const resp = await fetch('https://happy-corner.vercel.app/api/sendotp', {
+            method: 'POST',
+            mode: 'cors', // <--- IMPORTANTE para que funcione entre dominios
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ chatId, otp: otpGenerado })
+        });
+
+        if(resp.ok) {
+            document.getElementById('otp-section').classList.remove('hidden');
+            alert("🔐 Token enviado a su terminal de Telegram.");
+        } else {
+            // Si llega aquí, es porque el ID no coincide o la API dio error
+            const errorData = await resp.json();
+            alert("Acceso Denegado: " + (errorData.error || "ID no reconocido"));
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error de conexión con el servidor central.");
+    }
+}
 
                 if(resp.ok) {
                     document.getElementById('otp-section').classList.remove('hidden');
