@@ -4,15 +4,19 @@ import fetch from 'node-fetch'
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
 
 export default async function handler(req, res) {
-  // 1. SEGURIDAD: Evita que el código explote si entras desde el navegador
+  // 1. Log inicial para verificar conexión en Vercel
+  console.log("--- WEBHOOK ACTIVADO ---");
+
+  // 2. Seguridad: Ignorar peticiones que no sean POST o no tengan body
   if (req.method !== 'POST' || !req.body) {
     return res.status(200).send('<h1>Happy Corner Bot 🍭</h1><p>Esperando datos de Telegram...</p>');
   }
 
   const update = req.body;
 
-  // 2. Si no es un click en un botón, ignorar tranquilamente
+  // 3. Si no es un click en botón, terminar
   if (!update.callback_query) {
+    console.log("Update recibido, pero no es callback_query");
     return res.status(200).end();
   }
 
@@ -22,43 +26,38 @@ export default async function handler(req, res) {
   const msgId = update.callback_query.message.message_id;
 
   try {
-    // 3. Quitar el "loading" de Telegram de inmediato
+    // 4. Quitar el loading de Telegram de inmediato
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/answerCallbackQuery`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ callback_query_id: callbackQueryId })
     });
 
-    // 4. Obtener datos del pedido de Supabase
-    const { data: pedido, error } = await supabase
+    // 5. Obtener datos del pedido de Supabase
+    const { data: pedido, error: errorFetch } = await supabase
       .from('pedidos')
       .select('*')
       .eq('id', id)
       .single();
 
-    if (!pedido || error) {
-      console.error("Pedido no encontrado:", error);
+    if (!pedido || errorFetch) {
+      console.error("Error buscando pedido:", errorFetch);
       return res.status(200).end();
     }
 
-    let textoEstado = '';
-    let mensajeWA = '';
+    // 6. Definir nuevo estado y mensaje
+    const estados = { confirm: 'Confirmado', deliver: 'Entregado', cancel: 'Cancelado' };
+    const nuevoEstado = estados[action];
 
-    // 5. Lógica de estados y mensajes
-    if (action === 'confirm') {
-      await supabase.from('pedidos').update({ estado: 'Confirmado' }).eq('id', id);
-      textoEstado = `✅ Pedido #${id} CONFIRMADO`;
-      mensajeWA = `Hola ${pedido.nombre}, tu pedido fue CONFIRMADO 🎉`;
-    } else if (action === 'deliver') {
-      await supabase.from('pedidos').update({ estado: 'Entregado' }).eq('id', id);
-      textoEstado = `📦 Pedido #${id} ENTREGADO`;
-      mensajeWA = `Hola ${pedido.nombre}, tu pedido fue ENTREGADO 🙌 Gracias por comprar en Happy Corner 🍭`;
-    } else if (action === 'cancel') {
-      await supabase.from('pedidos').update({ estado: 'Cancelado' }).eq('id', id);
-      textoEstado = `❌ Pedido #${id} CANCELADO`;
-    }
+    // 7. Actualizar Supabase
+    const { error: errorUpdate } = await supabase
+      .from('pedidos')
+      .update({ estado: nuevoEstado })
+      .eq('id', id);
 
-    // 6. Editar el mensaje original en Telegram
+    if (errorUpdate) throw errorUpdate;
+
+    // 8. Editar el mensaje original para mostrar progreso
     const textoOriginal = update.callback_query.message.text;
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/editMessageText`, {
       method: 'POST',
@@ -66,20 +65,26 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         chat_id: chatId,
         message_id: msgId,
-        text: `${textoOriginal}\n\n📍 *ESTADO ACTUAL:* ${textoEstado}`,
+        text: `${textoOriginal}\n\n📍 *ESTADO:* ${nuevoEstado.toUpperCase()}`,
         parse_mode: 'Markdown'
       })
     });
 
-    // 7. Enviar link de WhatsApp si hubo acción positiva
-    if (mensajeWA) {
-      const linkWhatsapp = `https://wa.me/57${pedido.whatsapp}?text=${encodeURIComponent(mensajeWA)}`;
+    // 9. Enviar link de WhatsApp si es Confirmado o Entregado
+    if (action === 'confirm' || action === 'deliver') {
+      const msjs = {
+        confirm: `¡Hola ${pedido.nombre}! 🎉 Tu pedido de Happy Corner ha sido CONFIRMADO. Estaremos preparándolo para ti.`,
+        deliver: `¡Hola ${pedido.nombre}! 🙌 Tu pedido ya fue ENTREGADO. ¡Gracias por elegir Happy Corner! 🍭`
+      };
+      
+      const linkWA = `https://wa.me/57${pedido.whatsapp}?text=${encodeURIComponent(msjs[action])}`;
+      
       await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
-          text: `📲 *Notificar al cliente:*\n[Haz clic aquí para abrir WhatsApp](${linkWhatsapp})`,
+          text: `📲 *Acción requerida:*\n[Enviar WhatsApp al cliente](${linkWA})`,
           parse_mode: 'Markdown',
           disable_web_page_preview: true
         })
@@ -87,8 +92,9 @@ export default async function handler(req, res) {
     }
 
   } catch (err) {
-    console.error("Error procesando webhook:", err);
+    console.error("Error crítico en Webhook:", err);
   }
 
-  return res.status(200).send('OK');
+  // Respuesta final exitosa para Telegram
+  return res.status(200).setHeader('Cache-Control', 'no-store').send('OK');
 }
