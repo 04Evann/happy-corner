@@ -1,82 +1,39 @@
-import { createClient } from '@supabase/supabase-js'
-import fetch from 'node-fetch'
-
-const supabase = createClient(
-  process.env.SB_URL,
-  process.env.SB_SECRET
-)
-
+// ordersbot.js
 export default async function handler(req, res) {
-  const origin = req.headers.origin
-  res.setHeader('Access-Control-Allow-Origin', origin || '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-
-  if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
-
-  const {
-    nombre,
-    email,
-    whatsapp,
-    resumen,
-    total,
-    metodo_pago,
-    happycodigo
-  } = req.body
-
-  if (!nombre || !whatsapp || !resumen || !total) {
-    return res.status(400).json({ error: 'Faltan datos' })
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { data, error } = await supabase
-    .from('pedidos')
-    .insert([{
-      nombre,
-      email,
-      whatsapp,
-      resumen,
-      total,
-      metodo_pago,
-      happycodigo,
-      estado: 'Nuevo'
-    }])
-    .select()
-    .single()
+  const { pedido_id, estado, mensaje } = req.body;
 
-  if (error) return res.status(500).json({ error: error.message })
+  const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
+  const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-  const fecha = new Date(data.created_at).toLocaleString('es-CO')
+  const textoTelegram = `
+🧾 MOVIMIENTO DE PEDIDO - HAPPY CORNER 🍭
 
-  const msg =
-`📦 *Nuevo pedido* #${data.id}
-👤 ${nombre}
-📧 ${email || 'No registrado'}
-📱 ${whatsapp}
-💳 ${metodo_pago}
-🎟️ ${happycodigo || '—'}
+Pedido: #${pedido_id}
+Estado: ${estado.toUpperCase()}
 
-🛒 ${resumen}
-💰 ${total}
+Mensaje enviado al cliente:
+"${mensaje}"
 
-🕒 ${fecha}`
+Todo bien
+`;
 
-  await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: process.env.TELEGRAM_CHAT_ID,
-      text: msg,
-      parse_mode: 'Markdown',
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: '✅ Confirmar', callback_data: `confirm_${data.id}` }],
-          [{ text: '📦 Entregado', callback_data: `deliver_${data.id}` }],
-          [{ text: '❌ Cancelar', callback_data: `cancel_${data.id}` }]
-        ]
-      }
-    })
-  })
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: textoTelegram
+      })
+    });
 
-  res.json({ ok: true })
+    return res.status(200).json({ ok: true });
+  } catch (error) {
+    console.error("Error Telegram:", error);
+    return res.status(500).json({ error: "Telegram error" });
+  }
 }
