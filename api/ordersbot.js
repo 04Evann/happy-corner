@@ -4,24 +4,24 @@ import fetch from 'node-fetch'
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
 
 export default async function handler(req, res) {
-  const origin = req.headers.origin
-  res.setHeader('Access-Control-Allow-Origin', origin || '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  const origin = req.headers.origin;
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') return res.status(200).end()
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { nombre, whatsapp, resumen, total, metodo_pago } = req.body
+  const { nombre, whatsapp, resumen, total, metodo_pago } = req.body;
 
-  // Guardar en Supabase
+  // 1. Guardar en Supabase
   const { data, error } = await supabase
     .from('pedidos')
     .insert([{ nombre, whatsapp, resumen, total, metodo_pago, estado: 'Nuevo' }])
-    .select().single()
+    .select().single();
 
-  if (error) return res.status(500).json({ error: error.message })
+  if (error) return res.status(500).json({ error: error.message });
 
-  // Mensaje con comandos sugeridos (links azules)
+  // 2. Texto con comandos rápidos (links azules)
   const msg = 
 `📦 *Nuevo pedido* #${data.id}
 👤 ${nombre}
@@ -29,11 +29,12 @@ export default async function handler(req, res) {
 💰 ${total}
 🛒 ${resumen}
 
-*Acciones rápidas:*
+*Toca para procesar:*
 ✅ /confirmar_${data.id}
 📦 /entregar_${data.id}
-❌ /cancelar_${data.id}`
+❌ /cancelar_${data.id}`;
 
+  // 3. Envío a Telegram
   await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -42,7 +43,7 @@ export default async function handler(req, res) {
       text: msg,
       parse_mode: 'Markdown'
     })
-  })
+  });
 
-  res.json({ ok: true })
+  return res.status(200).json({ ok: true });
 }
