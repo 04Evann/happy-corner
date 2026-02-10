@@ -4,7 +4,6 @@ import fetch from 'node-fetch'
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
 
 export default async function handler(req, res) {
-  // Configuración de CORS
   const origin = req.headers.origin;
   res.setHeader('Access-Control-Allow-Origin', origin || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -13,11 +12,10 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // Extraemos los datos del cuerpo de la petición (req)
     const { nombre, whatsapp, resumen, total, metodo_pago, codigo } = req.body;
     const fecha = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
 
-    // 1. Guardar en Supabase
+    // 1. Guardar en Supabase usando el nombre de columna 'happycodigo'
     const { data, error } = await supabase
       .from('pedidos')
       .insert([{ 
@@ -26,14 +24,14 @@ export default async function handler(req, res) {
         resumen, 
         total, 
         metodo_pago: metodo_pago || 'Nequi', 
-        codigo: codigo || 'Sin código', 
+        happycodigo: codigo || 'Sin código', // Mapeo corregido aquí
         estado: 'Nuevo' 
       }])
       .select().single();
 
     if (error) throw error;
 
-    // 2. Construir el mensaje para Telegram
+    // 2. Mensaje para Telegram
     const msg = `📦 *Nuevo pedido* #${data.id}\n` +
                 `👤 ${nombre}\n` +
                 `📱 ${whatsapp}\n` +
@@ -45,8 +43,8 @@ export default async function handler(req, res) {
                 `*Acciones:* \n` +
                 `/confirmar_${data.id}  /entregar_${data.id}  /cancelar_${data.id}`;
 
-    // 3. Enviar a Telegram usando las variables de entorno
-    const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+    // 3. Envío a Telegram
+    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
@@ -56,14 +54,10 @@ export default async function handler(req, res) {
       })
     });
 
-    const tgData = await tgRes.json();
-    if (!tgData.ok) console.error("Error Telegram:", tgData);
-
-    // 4. Responder éxito a la web
     return res.status(200).json({ ok: true });
 
   } catch (err) {
-    console.error("Error global en ordersbot:", err.message);
+    console.error("Error:", err.message);
     return res.status(500).json({ error: err.message });
   }
 }
