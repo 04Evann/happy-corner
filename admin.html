@@ -3,179 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HappyBlack | MD3 CEO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>ADMIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --md-gold: #d4af37;
-            --md-bg: #050505;
-            --md-surface: #121212;
-            --md-outline: #2a2a2a;
-            --text-main: #e1e1e1;
+            --bg: #0B0E14; --card: #151921; --accent: #D4AF37;
+            --text: #FFFFFF; --text-sec: #717681; --border: #242933;
+        }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* LOGIN OVERLAY */
+        #auth-overlay {
+            position: fixed; inset: 0; background: var(--bg); z-index: 10000;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        body {
-            margin: 0; background: var(--md-bg); color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* HEADER */
+        .header {
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); background: rgba(11, 14, 20, 0.8); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .light-mode { --md-bg: #f5f5f5; --md-surface: #ffffff; --text-main: #1a1a1a; --md-outline: #e0e0e0; }
+        /* BENTO GRID */
+        .dashboard { padding: 30px 5%; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .bento { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid var(--border); }
 
-        .app-bar {
-            position: sticky; top: 0; background: rgba(5,5,5,0.8); backdrop-filter: blur(12px);
-            padding: 16px 24px; border-bottom: 1px solid var(--md-outline); z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
+        /* INPUTS MD3 */
+        input, select { 
+            background: #1C222C; border: 1px solid var(--border); color: white; 
+            padding: 12px; border-radius: 12px; outline: none; width: 100%; box-sizing: border-box;
         }
 
-        .ceo-card {
-            background: var(--md-surface); border: 1px solid var(--md-outline);
-            border-radius: 24px; padding: 24px; margin-bottom: 16px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+        .btn-gold { background: var(--accent); color: black; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-gold:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(212,175,55,0.3); }
 
-        .ceo-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); border-color: var(--md-gold); }
+        .order-card { padding: 15px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; transition: 0.2s; }
+        .order-card:hover { background: #1C222C; border-radius: 15px; }
 
-        .search-box {
-            background: var(--md-surface); border: 1px solid var(--md-outline);
-            border-radius: 16px; padding: 12px 20px; color: white; width: 100%;
-            max-width: 400px; font-family: inherit; margin: 20px 0;
-        }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 2000; }
+        .modal-content { background: var(--card); width: 90%; max-width: 450px; padding: 30px; border-radius: 28px; border: 1px solid var(--accent); }
+        
+        .nav-chips { display: flex; gap: 10px; margin-bottom: 20px; }
+        .chip { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; font-size: 13px; }
+        .chip.active { border-color: var(--accent); color: var(--accent); }
 
-        .btn-fab {
-            background: var(--md-gold); color: black; border: none;
-            padding: 12px 24px; border-radius: 14px; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
-        }
-
-        .status-chip {
-            font-size: 11px; padding: 4px 12px; border-radius: 8px;
-            background: rgba(212, 175, 55, 0.1); color: var(--md-gold); font-weight: 700;
-        }
-
-        .points-badge {
-            background: linear-gradient(135deg, #d4af37, #f1c40f);
-            color: black; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 800;
-        }
-
-        .hidden { display: none !important; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; padding: 20px; }
+        .external-links a { color: var(--text-sec); text-decoration: none; font-size: 12px; margin-left: 15px; transition: 0.3s; }
+        .external-links a:hover { color: var(--accent); }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" style="height:100vh; display:flex; align-items:center; justify-content:center;">
-        <div class="ceo-card" style="text-align:center; width:340px;">
-            <img src="Happylogo.png" width="80">
-            <h1 style="font-size:22px; margin:20px 0;">CEO Auth</h1>
-            <input type="password" id="admin-chatid" class="search-box" placeholder="Chat ID" style="text-align:center;">
-            <button onclick="solicitarAcceso()" class="btn-fab" style="width:100%">Verify</button>
-            <div id="otp-section" class="hidden">
-                <input type="text" id="admin-otp" class="search-box" placeholder="Token" style="text-align:center;">
-                <button onclick="verificarAcceso()" class="btn-fab" style="width:100%; background:white;">Enter</button>
+    <div id="auth-overlay">
+        <div class="bento" style="text-align: center; width: 320px;">
+            <img src="Happylogo.png" width="80" alt="Logo">
+            <h2 style="margin: 20px 0 10px;">CEO Access</h2>
+            <p style="color: var(--text-sec); font-size: 13px; margin-bottom: 20px;">Ingresa tu Chat ID de Telegram</p>
+            <input type="text" id="auth-id" placeholder="Chat ID" style="text-align: center; margin-bottom: 15px;">
+            <button class="btn-gold" style="width: 100%;" onclick="sendToken()">Solicitar Token</button>
+            <div id="otp-area" style="display: none; margin-top: 15px;">
+                <input type="text" id="auth-otp" placeholder="Código de 4 dígitos" style="text-align: center; margin-bottom: 15px;">
+                <button class="btn-gold" style="width: 100%; background: white;" onclick="validateToken()">Entrar</button>
             </div>
         </div>
     </div>
 
-    <div id="admin-content" class="hidden">
-        <div class="app-bar">
-            <div>
-                <span style="color:var(--md-gold); font-weight:800;">HAPPYBLACK</span>
-                <div id="total-monto" style="font-size:24px; font-weight:700;">$0</div>
-            </div>
-            <button onclick="document.body.classList.toggle('light-mode')" style="background:none; border:none; font-size:20px; cursor:pointer;">🌓</button>
+    <header class="header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="Happylogo.png" width="35">
+            <span style="font-weight: 700; font-size: 18px;">HAPPY CORNER</span>
         </div>
-
-        <div style="padding: 0 24px;">
-            <input type="text" id="search-input" class="search-box" placeholder="Search customer or ID..." oninput="cargarPedidos()">
-            
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <button onclick="setSort('recent')" class="status-chip">Recent</button>
-                <button onclick="setSort('price_desc')" class="status-chip">VIP (Higher Price)</button>
-            </div>
+        <div class="external-links">
+            <a href="https://github.com" target="_blank">GITHUB</a>
+            <a href="https://vercel.com" target="_blank">VERCEL</a>
+            <a href="#" onclick="logout()" style="color: #FF4B4B;">LOGOUT</a>
         </div>
+    </header>
 
-        <div class="grid" id="grid-pedidos"></div>
+    <main class="dashboard">
+        <section>
+            <div class="nav-chips">
+                <div class="chip active" onclick="setView('active', this)">Dashboard</div>
+                <div class="chip" onclick="setView('trash', this)">Papelera</div>
+                <input type="date" id="date-picker" onchange="fetchByDate()" style="width: auto; padding: 5px 10px;">
+            </div>
+
+            <div class="bento">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <div>
+                        <span style="color: var(--text-sec); font-size: 12px; font-weight: 600;">GANANCIAS SELECCIÓN</span>
+                        <h1 id="total-val" style="margin: 5px 0; font-size: 32px;">$0</h1>
+                    </div>
+                </div>
+                <div id="orders-container"></div>
+            </div>
+        </section>
+
+        <aside>
+            <div class="bento" style="margin-bottom: 20px;">
+                <h3 style="margin-top: 0; font-size: 16px;">Loyverse Insight</h3>
+                <div id="loyverse-box" style="color: var(--text-sec); font-size: 14px;">
+                    Selecciona una orden para cargar puntos.
+                </div>
+            </div>
+            <div class="bento" style="background: linear-gradient(135deg, #1C222C, #0B0E14);">
+                <h3 style="margin-top: 0; color: var(--accent);">CEO 2026/2027</h3>
+                <p style="font-size: 13px; color: var(--text-sec);">Métricas proyectadas y reportes de inventario.</p>
+                <button class="btn-gold" style="width: 100%; font-size: 12px;">DESCARGAR REPORTES</button>
+            </div>
+        </aside>
+    </main>
+
+    <div class="modal" id="orderModal" onclick="if(event.target == this) closeModal()">
+        <div class="modal-content" id="modalBody"></div>
     </div>
 
     <script>
-        let otpGenerado = "";
-        const API = "https://happy-corner.vercel.app/api/getOrders"; // Usamos solo uno para todo
+        let otpMaster = "";
+        let msgIdMaster = "";
+        const API = "https://happy-corner.vercel.app/api/getOrders";
 
-        // --- AUTH ---
-        async function solicitarAcceso() {
-            const chatId = document.getElementById('admin-chatid').value;
-            otpGenerado = Math.floor(1000 + Math.random() * 9000).toString();
+        // --- AUTH LOGIC ---
+        async function sendToken() {
+            const chatId = document.getElementById('auth-id').value;
+            otpMaster = Math.floor(1000 + Math.random() * 9000).toString();
+            
             const resp = await fetch('https://happy-corner.vercel.app/api/sendotp', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ chatId, otp: otpGenerado })
+                body: JSON.stringify({ chatId, otp: otpMaster })
             });
-            if(resp.ok) document.getElementById('otp-section').classList.remove('hidden');
-        }
-
-        function verificarAcceso() {
-            if(document.getElementById('admin-otp').value === otpGenerado) {
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('admin-content').classList.remove('hidden');
-                cargarPedidos();
+            
+            if(resp.ok) {
+                const data = await resp.json();
+                msgIdMaster = data.msgId; // Capturamos el ID del mensaje
+                document.getElementById('otp-area').style.display = 'block';
+                alert("Token enviado a Telegram");
             }
         }
 
-        // --- LÓGICA DE NEGOCIO ---
-        async function getLoyversePoints(phone) {
-            try {
-                const r = await fetch(`${API}?phone=${phone}`);
-                const data = await r.json();
-                return data.total_points || 0;
-            } catch { return 0; }
+        async function validateToken() {
+            if(document.getElementById('auth-otp').value === otpMaster) {
+                document.getElementById('auth-overlay').style.display = 'none';
+                // Limpiar telegram
+                fetch(`${API}?action=cleanTG&msgId=${msgIdMaster}`);
+                loadOrders();
+            } else { alert("Token incorrecto"); }
         }
 
-        async function cargarPedidos() {
-            const search = document.getElementById('search-input').value;
-            const resp = await fetch(`${API}?search=${search}`);
-            const data = await resp.json();
-            const grid = document.getElementById('grid-pedidos');
-            grid.innerHTML = '';
+        // --- DATA LOGIC ---
+        async function setView(v, el) {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            loadOrders(v);
+        }
+
+        async function fetchByDate() {
+            const date = document.getElementById('date-picker').value;
+            loadOrders(null, date);
+        }
+
+        async function loadOrders(view = 'active', date = null) {
+            let url = `${API}?view=${view}`;
+            if(date) url = `${API}?date=${date}`;
+
+            const r = await fetch(url);
+            const data = await r.json();
+            const container = document.getElementById('orders-container');
             let total = 0;
+            container.innerHTML = '';
 
-            for (const p of data) {
-                if(p.estado === 'Entregado') total += parseInt(p.total.replace(/\D/g,''));
-                
-                // Consultar puntos en tiempo real
-                const puntos = await getLoyversePoints(p.whatsapp);
-
-                grid.innerHTML += `
-                    <div class="ceo-card">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                            <span class="status-chip">${p.estado.toUpperCase()}</span>
-                            <span class="points-badge">LOYVERSE: ${puntos} PTS</span>
+            data.forEach(p => {
+                if(p.estado === 'Entregado') total += parseInt(p.total.replace(/\D/g,'')) || 0;
+                container.innerHTML += `
+                    <div class="order-card" onclick="openOrder(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+                        <div>
+                            <div style="font-weight:700;">${p.nombre}</div>
+                            <div style="font-size:12px; color:var(--text-sec);">${p.whatsapp}</div>
                         </div>
-                        <div style="font-size:20px; font-weight:700;">${p.nombre}</div>
-                        <div style="color:var(--md-gold); margin:8px 0;">${p.total}</div>
-                        <div style="font-size:12px; opacity:0.6;">${p.resumen || 'Sin detalles'}</div>
-                        
-                        <div style="margin-top:20px; display:flex; gap:8px;">
-                            <button onclick="updateStatus(${p.id}, 'Entregado')" class="status-chip" style="background:var(--md-gold); color:black; cursor:pointer;">Complete</button>
-                            <button onclick="updateStatus(${p.id}, 'Cancelado')" class="status-chip" style="border-color:#ff5252; color:#ff5252; cursor:pointer;">Cancel</button>
-                            <button onclick="deleteOrder(${p.id})" class="status-chip" style="opacity:0.3; cursor:pointer;">Delete</button>
+                        <div style="text-align:right;">
+                            <div style="color:var(--accent); font-weight:700;">${p.total}</div>
+                            <div style="font-size:10px; opacity:0.5;">${p.estado}</div>
                         </div>
-                    </div>
-                `;
-            }
-            document.getElementById('total-monto').innerText = `$${total.toLocaleString()}`;
+                    </div>`;
+            });
+            document.getElementById('total-val').innerText = `$${total.toLocaleString()}`;
         }
 
-        async function updateStatus(id, estado) {
-            await fetch(`${API}?id=${id}&estado=${estado}`, { method: 'POST' });
-            cargarPedidos();
+        async function openOrder(p) {
+            document.getElementById('orderModal').style.display = 'flex';
+            const lvRes = await fetch(`${API}?phone=${p.whatsapp}`);
+            const lv = await lvRes.json();
+            
+            document.getElementById('modalBody').innerHTML = `
+                <h2 style="margin:0 0 15px;">${p.nombre}</h2>
+                <div style="background:#1C222C; padding:15px; border-radius:15px; margin-bottom:20px; font-size:14px;">
+                    <p>📱 <b>WhatsApp:</b> ${p.whatsapp}</p>
+                    <p>📦 <b>Pedido:</b> ${p.resumen || 'Detalle no disponible'}</p>
+                    <p>🏆 <b>Loyverse:</b> <span style="color:var(--accent)">${lv.total_points || 0} Puntos</span></p>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <button class="btn-gold" onclick="updateStatus(${p.id}, 'Entregado')">COMPLETAR</button>
+                    <button class="btn-gold" style="background:#242933; color:white;" onclick="updateStatus(${p.id}, 'Cancelado')">CANCELAR</button>
+                    <button class="btn-gold" style="grid-column: span 2; background:#25D366; color:white;" onclick="window.open('https://wa.me/${p.whatsapp}')">ENVIAR WHATSAPP</button>
+                </div>
+            `;
         }
 
-        async function deleteOrder(id) {
-            if(confirm("Destroy record?")) {
-                await fetch(`${API}?id=${id}`, { method: 'DELETE' });
-                cargarPedidos();
-            }
+        async function updateStatus(id, est) {
+            await fetch(`${API}?id=${id}&estado=${est}`, { method: 'POST' });
+            closeModal();
+            loadOrders();
         }
+
+        function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
+        function logout() { location.reload(); }
     </script>
 </body>
 </html>
