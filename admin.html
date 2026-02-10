@@ -3,124 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HappyBlack | CEO Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Georgia&display=swap" rel="stylesheet">
+    <title>HappyBlack | MD3 CEO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --dark-bg: #0a0a0a; --card-bg: #0b0b0b; }
-        body { margin: 0; background: var(--dark-bg); color: #f5f5f5; font-family: Georgia, serif; }
-        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
-        .login-overlay { position: fixed; inset: 0; background: var(--dark-bg); z-index: 5000; display: flex; align-items: center; justify-content: center; }
-        .login-card { background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 6px 20px rgba(0,0,0,0.45); text-align: center; width: 90%; max-width: 400px; border: 1px solid #1b1b1c; }
-        .logo-ceo { width: 96px; margin-bottom: 16px; }
-        input { width: 100%; padding: 15px; margin: 15px 0; background: #151515; border: 1px solid #333; border-radius: 10px; color: white; text-align: center; box-sizing: border-box; }
-        .btn-gold { background: var(--gold); color: black; border: none; padding: 15px 30px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; text-transform: uppercase; transition: 0.3s; }
-        .btn-gold:hover { opacity: 0.8; }
-        .stats-banner { background: #0f0f10; border: 1px solid #1b1b1c; padding: 25px; border-radius: 16px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .order-card { background: #0f0f10; border: 1px solid #1b1b1c; border-radius: 16px; padding: 20px; margin-bottom: 15px; }
-        .status-pill { font-size: 10px; padding: 4px 12px; border-radius: 50px; background: #1b1b1c; color: var(--gold); border: 1px solid var(--gold); }
+        :root {
+            --md-gold: #d4af37;
+            --md-bg: #050505;
+            --md-surface: #121212;
+            --md-outline: #2a2a2a;
+            --text-main: #e1e1e1;
+        }
+
+        body {
+            margin: 0; background: var(--md-bg); color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .light-mode { --md-bg: #f5f5f5; --md-surface: #ffffff; --text-main: #1a1a1a; --md-outline: #e0e0e0; }
+
+        .app-bar {
+            position: sticky; top: 0; background: rgba(5,5,5,0.8); backdrop-filter: blur(12px);
+            padding: 16px 24px; border-bottom: 1px solid var(--md-outline); z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .ceo-card {
+            background: var(--md-surface); border: 1px solid var(--md-outline);
+            border-radius: 24px; padding: 24px; margin-bottom: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ceo-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); border-color: var(--md-gold); }
+
+        .search-box {
+            background: var(--md-surface); border: 1px solid var(--md-outline);
+            border-radius: 16px; padding: 12px 20px; color: white; width: 100%;
+            max-width: 400px; font-family: inherit; margin: 20px 0;
+        }
+
+        .btn-fab {
+            background: var(--md-gold); color: black; border: none;
+            padding: 12px 24px; border-radius: 14px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+        }
+
+        .status-chip {
+            font-size: 11px; padding: 4px 12px; border-radius: 8px;
+            background: rgba(212, 175, 55, 0.1); color: var(--md-gold); font-weight: 700;
+        }
+
+        .points-badge {
+            background: linear-gradient(135deg, #d4af37, #f1c40f);
+            color: black; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 800;
+        }
+
         .hidden { display: none !important; }
-        .divider { width: 72px; height: 2px; background: var(--gold); margin: 20px auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; padding: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="login-overlay">
-        <div class="login-card">
-            <img src="Happylogo.png" class="logo-ceo">
-            <div style="color: var(--gold); letter-spacing: 2px; font-size: 12px; margin-bottom: 10px;">CEO ACCESS</div>
-            <h2 style="font-size: 20px; margin-bottom: 20px;">Verificación</h2>
-            <input type="text" id="admin-chatid" placeholder="Chat ID Personal">
-            <button onclick="solicitarAcceso()" class="btn-gold">Solicitar Token</button>
+    <div id="login-screen" style="height:100vh; display:flex; align-items:center; justify-content:center;">
+        <div class="ceo-card" style="text-align:center; width:340px;">
+            <img src="Happylogo.png" width="80">
+            <h1 style="font-size:22px; margin:20px 0;">CEO Auth</h1>
+            <input type="password" id="admin-chatid" class="search-box" placeholder="Chat ID" style="text-align:center;">
+            <button onclick="solicitarAcceso()" class="btn-fab" style="width:100%">Verify</button>
             <div id="otp-section" class="hidden">
-                <input type="text" id="admin-otp" placeholder="Token de 4 dígitos">
-                <button onclick="verificarAcceso()" class="btn-gold" style="background: #eee;">Entrar</button>
+                <input type="text" id="admin-otp" class="search-box" placeholder="Token" style="text-align:center;">
+                <button onclick="verificarAcceso()" class="btn-fab" style="width:100%; background:white;">Enter</button>
             </div>
         </div>
     </div>
 
-    <div id="admin-content" class="container hidden">
-        <header style="text-align: center; margin-bottom: 40px;">
-            <img src="Happylogo.png" class="logo-ceo">
-            <h1 style="font-size: 30px;">HappyBlack CEO Panel</h1>
-            <div class="divider"></div>
-        </header>
-
-        <div class="stats-banner">
+    <div id="admin-content" class="hidden">
+        <div class="app-bar">
             <div>
-                <div style="color: var(--gold); font-size: 12px;">VENTAS ENTREGADAS</div>
-                <div id="total-monto" style="font-size: 32px; font-weight: 700;">$0</div>
+                <span style="color:var(--md-gold); font-weight:800;">HAPPYBLACK</span>
+                <div id="total-monto" style="font-size:24px; font-weight:700;">$0</div>
             </div>
-            <div id="fecha-actual" style="font-size: 14px; color: #888;"></div>
+            <button onclick="document.body.classList.toggle('light-mode')" style="background:none; border:none; font-size:20px; cursor:pointer;">🌓</button>
         </div>
 
-        <div id="grid-pedidos"></div>
+        <div style="padding: 0 24px;">
+            <input type="text" id="search-input" class="search-box" placeholder="Search customer or ID..." oninput="cargarPedidos()">
+            
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <button onclick="setSort('recent')" class="status-chip">Recent</button>
+                <button onclick="setSort('price_desc')" class="status-chip">VIP (Higher Price)</button>
+            </div>
+        </div>
+
+        <div class="grid" id="grid-pedidos"></div>
     </div>
 
     <script>
         let otpGenerado = "";
-        const API_BASE = "https://happy-corner.vercel.app/api";
+        const API = "https://happy-corner.vercel.app/api/getOrders"; // Usamos solo uno para todo
 
+        // --- AUTH ---
         async function solicitarAcceso() {
             const chatId = document.getElementById('admin-chatid').value;
-            if(!chatId) return alert("Ingrese su Chat ID");
-            
             otpGenerado = Math.floor(1000 + Math.random() * 9000).toString();
-
-            try {
-                const resp = await fetch(`${API_BASE}/sendotp`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ chatId, otp: otpGenerado })
-                });
-
-                if(resp.ok) {
-                    document.getElementById('otp-section').classList.remove('hidden');
-                    alert("🔐 Token enviado a Telegram");
-                } else {
-                    alert("ID no autorizado");
-                }
-            } catch (err) {
-                alert("Error de conexión con la API");
-            }
+            const resp = await fetch('https://happy-corner.vercel.app/api/sendotp', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chatId, otp: otpGenerado })
+            });
+            if(resp.ok) document.getElementById('otp-section').classList.remove('hidden');
         }
 
         function verificarAcceso() {
-            const val = document.getElementById('admin-otp').value;
-            if(val === otpGenerado && otpGenerado !== "") {
+            if(document.getElementById('admin-otp').value === otpGenerado) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('admin-content').classList.remove('hidden');
-                document.getElementById('fecha-actual').innerText = new Date().toLocaleDateString();
                 cargarPedidos();
-            } else {
-                alert("Token incorrecto");
             }
         }
 
-        async function cargarPedidos() {
+        // --- LÓGICA DE NEGOCIO ---
+        async function getLoyversePoints(phone) {
             try {
-                const resp = await fetch(`${API_BASE}/getOrders`);
-                const data = await resp.json();
-                const grid = document.getElementById('grid-pedidos');
-                grid.innerHTML = '';
-                let total = 0;
+                const r = await fetch(`${API}?phone=${phone}`);
+                const data = await r.json();
+                return data.total_points || 0;
+            } catch { return 0; }
+        }
 
-                data.forEach(p => {
-                    if(p.estado === 'Entregado') {
-                        total += parseInt(p.total.replace(/[^0-9]/g, '')) || 0;
-                    }
-                    grid.innerHTML += `
-                        <div class="order-card">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <span style="color:var(--gold); font-size:12px;">ID #${p.id}</span>
-                                <span class="status-pill">${p.estado}</span>
-                            </div>
-                            <div style="font-weight:700; font-size:18px;">${p.nombre}</div>
-                            <div style="color:var(--gold); margin-top:10px;">${p.total}</div>
-                            <div style="font-size:12px; color:#666; margin-top:5px;">📱 ${p.whatsapp} | 💳 ${p.metodo_pago}</div>
-                        </div>`;
-                });
-                document.getElementById('total-monto').innerText = `$${total.toLocaleString()}`;
-            } catch (e) { console.error(e); }
+        async function cargarPedidos() {
+            const search = document.getElementById('search-input').value;
+            const resp = await fetch(`${API}?search=${search}`);
+            const data = await resp.json();
+            const grid = document.getElementById('grid-pedidos');
+            grid.innerHTML = '';
+            let total = 0;
+
+            for (const p of data) {
+                if(p.estado === 'Entregado') total += parseInt(p.total.replace(/\D/g,''));
+                
+                // Consultar puntos en tiempo real
+                const puntos = await getLoyversePoints(p.whatsapp);
+
+                grid.innerHTML += `
+                    <div class="ceo-card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                            <span class="status-chip">${p.estado.toUpperCase()}</span>
+                            <span class="points-badge">LOYVERSE: ${puntos} PTS</span>
+                        </div>
+                        <div style="font-size:20px; font-weight:700;">${p.nombre}</div>
+                        <div style="color:var(--md-gold); margin:8px 0;">${p.total}</div>
+                        <div style="font-size:12px; opacity:0.6;">${p.resumen || 'Sin detalles'}</div>
+                        
+                        <div style="margin-top:20px; display:flex; gap:8px;">
+                            <button onclick="updateStatus(${p.id}, 'Entregado')" class="status-chip" style="background:var(--md-gold); color:black; cursor:pointer;">Complete</button>
+                            <button onclick="updateStatus(${p.id}, 'Cancelado')" class="status-chip" style="border-color:#ff5252; color:#ff5252; cursor:pointer;">Cancel</button>
+                            <button onclick="deleteOrder(${p.id})" class="status-chip" style="opacity:0.3; cursor:pointer;">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('total-monto').innerText = `$${total.toLocaleString()}`;
+        }
+
+        async function updateStatus(id, estado) {
+            await fetch(`${API}?id=${id}&estado=${estado}`, { method: 'POST' });
+            cargarPedidos();
+        }
+
+        async function deleteOrder(id) {
+            if(confirm("Destroy record?")) {
+                await fetch(`${API}?id=${id}`, { method: 'DELETE' });
+                cargarPedidos();
+            }
         }
     </script>
 </body>
