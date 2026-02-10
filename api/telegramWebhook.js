@@ -2,67 +2,62 @@ import { createClient } from '@supabase/supabase-js'
 import fetch from 'node-fetch'
 
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
-const TG_URL = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}`;
-
-// Función auxiliar para esperar
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST' || !req.body.callback_query) return res.status(200).end();
+  // Red de seguridad para evitar crashes
+  if (req.method !== 'POST' || !req.body.message) return res.status(200).end();
 
-  const { data: cbData, id: cbId, message } = req.body.callback_query;
-  const [action, pedidoId] = cbData.split('_');
-  const chatId = message.chat.id;
+  const text = req.body.message.text || "";
+  const chatId = req.body.message.chat.id;
+  const msgCmdId = req.body.message.message_id; // ID del comando que tú enviaste
 
-  // 1. Quitar el relojito de carga
-  await fetch(`${TG_URL}/answerCallbackQuery`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ callback_query_id: cbId })
-  });
+  if (!text.startsWith('/')) return res.status(200).end();
 
-  // 2. Actualizar Supabase
-  const estados = { confirm: 'Confirmado', deliver: 'Entregado', cancel: 'Cancelado' };
+  const [comando, pedidoId] = text.split('_');
+  const action = comando.replace('/', ''); 
+
+  // 1. Buscar pedido
+  const { data: p } = await supabase.from('pedidos').select('*').eq('id', pedidoId).single();
+  if (!p) return res.status(200).end();
+
+  // 2. Actualizar estado en Supabase
+  const estados = { confirmar: 'Confirmado', entregar: 'Entregado', cancelar: 'Cancelado' };
   await supabase.from('pedidos').update({ estado: estados[action] }).eq('id', pedidoId);
 
-  // 3. Obtener datos para WhatsApp
-  const { data: p } = await supabase.from('pedidos').select('*').eq('id', pedidoId).single();
-  
-  const textoWA = action === 'confirm' ? `Hola ${p.nombre}, pedido confirmado! 🎉` : `Hola ${p.nombre}, pedido entregado! 🙌`;
+  // 3. Enviar link de WhatsApp
+  const textoWA = action === 'confirmar' ? `Hola ${p.nombre}, tu pedido de Happy Corner fue CONFIRMADO 🎉` : `Hola ${p.nombre}, tu pedido fue ENTREGADO 🙌`;
   const linkWA = `https://wa.me/57${p.whatsapp}?text=${encodeURIComponent(textoWA)}`;
-
-  // 4. Enviar mensaje de WhatsApp y GUARDAR el ID para borrarlo luego
-  const resWA = await fetch(`${TG_URL}/sendMessage`, {
+  
+  const resWA = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: chatId, text: `📲 [ENVIAR WHATSAPP](${linkWA})`, parse_mode: 'Markdown' })
   });
   const msgWA = await resWA.json();
 
-  // --- INICIO DE LA CUENTA REGRESIVA ---
+  // --- ESPERA 5 SEGUNDOS ---
   await delay(5000);
 
-  // 5. Enviar link al Panel Admin
-  const resAdmin = await fetch(`${TG_URL}/sendMessage`, {
+  // 4. Enviar link al Panel Admin
+  const resAdmin = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, text: `📊 [ENTRAR AL PANEL ADMIN](https://happycorner.lol/admin)` })
+    body: JSON.stringify({ chat_id: chatId, text: `📊 [ENTRAR AL PANEL ADMIN](https://happy-corner.vercel.app/admin.html)` })
   });
   const msgAdmin = await resAdmin.json();
 
+  // --- ESPERA 5 SEGUNDOS MÁS Y BORRA TODO EL RUIDO ---
   await delay(5000);
 
-  // 6. LIMPIEZA: Borrar los mensajes de asistencia
-  await fetch(`${TG_URL}/deleteMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, message_id: msgWA.result.message_id })
-  });
-  await fetch(`${TG_URL}/deleteMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: chatId, message_id: msgAdmin.result.message_id })
-  });
+  const deleteUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/deleteMessage`;
+  
+  // Borra el comando que tú tocaste
+  await fetch(deleteUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ chat_id: chatId, message_id: msgCmdId })});
+  // Borra el link de WhatsApp
+  await fetch(deleteUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ chat_id: chatId, message_id: msgWA.result.message_id })});
+  // Borra el link del Admin
+  await fetch(deleteUrl, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ chat_id: chatId, message_id: msgAdmin.result.message_id })});
 
   return res.status(200).send('OK');
 }
