@@ -1,49 +1,47 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
+import fetch from 'node-fetch';
 
-const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
+const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET);
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const { method } = req;
-  const { id, estado, sort, search } = req.query;
+    const { method, query } = req;
 
-  try {
-    // ACTUALIZAR ESTADO (Aceptar/Cancelar/Entregar)
-    if (method === 'POST' && id && estado) {
-      const { data, error } = await supabase
-        .from('pedidos')
-        .update({ estado })
-        .eq('id', id);
-      if (error) throw error;
-      return res.status(200).json({ ok: true });
-    }
+    try {
+        // --- CONSULTA LOYVERSE (Puntos del Cliente) ---
+        if (method === 'GET' && query.phone) {
+            const lvRes = await fetch(`https://api.loyverse.com/v2/customers?phone_number=${query.phone}`, {
+                headers: { 'Authorization': `Token ${process.env.LOYVERSE_API_KEY}` }
+            });
+            const lvData = await lvRes.json();
+            return res.status(200).json(lvData.customers?.[0] || { points: 0, name: "Nuevo" });
+        }
 
-    // ELIMINAR PEDIDO
-    if (method === 'DELETE' && id) {
-      await supabase.from('pedidos').delete().eq('id', id);
-      return res.status(200).json({ ok: true });
-    }
+        // --- ACCIONES SOBRE PEDIDOS ---
+        if (method === 'POST' && query.id && query.estado) {
+            await supabase.from('pedidos').update({ estado: query.estado }).eq('id', query.id);
+            return res.status(200).json({ ok: true });
+        }
 
-    // LEER PEDIDOS CON FILTROS
-    let query = supabase.from('pedidos').select('*');
+        if (method === 'DELETE' && query.id) {
+            await supabase.from('pedidos').delete().eq('id', query.id);
+            return res.status(200).json({ ok: true });
+        }
 
-    if (search) {
-      query = query.or(`nombre.ilike.%${search}%,whatsapp.ilike.%${search}%`);
-    }
+        // --- LISTAR PEDIDOS CON FILTROS ---
+        let dbQuery = supabase.from('pedidos').select('*');
+        if (query.search) dbQuery = dbQuery.or(`nombre.ilike.%${query.search}%,whatsapp.ilike.%${query.search}%`);
+        
+        // Ordenamiento MD3
+        if (query.sort === 'price_desc') dbQuery = dbQuery.order('total', { ascending: false });
+        else dbQuery = dbQuery.order('id', { ascending: false });
 
-    // Ordenamiento dinámico
-    if (sort === 'price_desc') query = query.order('total', { ascending: false });
-    else if (sort === 'oldest') query = query.order('id', { ascending: true });
-    else query = query.order('id', { ascending: false });
+        const { data, error } = await dbQuery;
+        if (error) throw error;
+        res.status(200).json(data);
 
-    const { data, error } = await query;
-    if (error) throw error;
-    res.status(200).json(data);
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    } catch (e) { res.status(500).json({ error: e.message }); }
 }
