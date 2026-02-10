@@ -201,58 +201,41 @@
         window.onload = renderCart;
     </script>
      
-  <script>
-const pedido = {
-  id: 91,
-  cliente: "Juan Pérez",
-  productos: 3,
-  total: "$8.000",
-  whatsapp: "573001112233"
-};
+   <script>
+document.getElementById('checkout-form').addEventListener('submit', async function (e) {
+  e.preventDefault()
 
-document.querySelectorAll(".confirmado, .entregado, .rechazado").forEach(btn => {
-  btn.addEventListener("click", async () => {
-    const tipo = btn.classList.contains("confirmado") ? "confirmado" :
-                 btn.classList.contains("entregado") ? "entregado" :
-                 "rechazado";
+  const payload = {
+    nombre: document.getElementById('nombre').value,
+    whatsapp: document.getElementById('celular').value,
+    resumen: document.getElementById('hidden-summary').value,
+    total: document.getElementById('hidden-total').value,
+    metodo_pago: document.getElementById('metodo_pago').value,
+    happycodigo: document.getElementById('puntos_code').value || null
+  }
 
-    const fecha = new Date();
-    const hora = fecha.toLocaleTimeString();
-    const dia = fecha.toLocaleDateString();
+  try {
+    const resp = await fetch('https://happy-corner.vercel.app/api/ordersbot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
 
-    let mensaje = "";
+    const data = await resp.json()
 
-    if (tipo === "confirmado") {
-      mensaje = `Hola ${pedido.cliente} 👋 Tu pedido de ${pedido.productos} productos por ${pedido.total} fue CONFIRMADO ✅ el ${dia} a las ${hora}. Gracias por comprar en Happy Corner 🍭`;
+    if (data.ok) {
+      alert('✅ Pedido enviado con éxito')
+      localStorage.removeItem('hc_cart')
+      window.location.href = 'catalogo.html'
+    } else {
+      alert('❌ Error: ' + (data.error || 'Intenta de nuevo'))
     }
-    if (tipo === "entregado") {
-      mensaje = `Hola ${pedido.cliente} 👋 Tu pedido de ${pedido.productos} productos por ${pedido.total} fue ENTREGADO 🚚 el ${dia} a las ${hora}. Gracias por tu compra 🍬`;
-    }
-    if (tipo === "rechazado") {
-      mensaje = `Hola ${pedido.cliente} 👋 Lamentamos informarte que tu pedido fue RECHAZADO ❌. Cualquier duda escríbenos. Happy Corner 🍭`;
-    }
 
-    // Abrir WhatsApp automáticamente
-    const waLink = `https://wa.me/${pedido.whatsapp}?text=${encodeURIComponent(mensaje)}`;
-    window.open(waLink, "_blank");
-
-    // Mandar mensaje a Telegram
-    try {
-      await fetch("/api/ordersbot", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pedido_id: pedido.id,
-          estado: tipo,
-          mensaje: mensaje
-        })
-      });
-    } catch (err) {
-      console.error("Error Telegram:", err);
-    }
-  });
-});
+  } catch (err) {
+    console.error(err)
+    alert('❌ Error enviando el pedido 😓')
+  }
+})
 </script>
-
 </body>
 </html>
