@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     const { nombre, whatsapp, resumen, total, metodo_pago, codigo } = req.body;
     const fecha = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
 
-    // 1. Guardar en Supabase usando el nombre de columna 'happycodigo'
+    // 1. Guardar en Supabase
     const { data, error } = await supabase
       .from('pedidos')
       .insert([{ 
@@ -24,40 +24,40 @@ export default async function handler(req, res) {
         resumen, 
         total, 
         metodo_pago: metodo_pago || 'Nequi', 
-        happycodigo: codigo || 'Sin código', // Mapeo corregido aquí
+        happycodigo: codigo || 'Sin código', 
         estado: 'Nuevo' 
       }])
       .select().single();
 
     if (error) throw error;
 
-    // 2. Mensaje para Telegram
-    const msg = `📦 *Nuevo pedido* #${data.id}\n` +
-                `👤 ${nombre}\n` +
-                `📱 ${whatsapp}\n` +
-                `💳 ${metodo_pago || 'Nequi'}\n` +
-                `🎟️ ${codigo || 'Sin código'} (HAPPYCODIGO)\n\n` +
-                `🛒 ${resumen}\n` +
-                `💰 ${total}\n\n` +
-                `🕒 ${fecha}\n\n` +
-                `*Acciones:* \n` +
-                `/confirmar_${data.id}  /entregar_${data.id}  /cancelar_${data.id}`;
+    // 2. Mensaje en TEXTO PLANO (Sin asteriscos que rompan nada)
+    const msg = `NUEVO PEDIDO #${data.id}\n\n` +
+                `Cliente: ${nombre}\n` +
+                `WhatsApp: ${whatsapp}\n` +
+                `Pago: ${metodo_pago || 'Nequi'}\n` +
+                `HappyCodigo: ${codigo || 'Sin codigo'}\n\n` +
+                `Productos: ${resumen}\n` +
+                `Total: ${total}\n\n` +
+                `Fecha: ${fecha}\n\n` +
+                `ACCIONES:\n` +
+                `/confirmar_${data.id}\n` +
+                `/entregar_${data.id}\n` +
+                `/cancelar_${data.id}`;
 
     // 3. Envío a Telegram
-    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+    const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         chat_id: process.env.TELEGRAM_CHAT_ID, 
-        text: msg, 
-        parse_mode: 'Markdown' 
+        text: msg // Quitamos el parse_mode para evitar errores de Markdown
       })
     });
 
     return res.status(200).json({ ok: true });
 
   } catch (err) {
-    console.error("Error:", err.message);
     return res.status(500).json({ error: err.message });
   }
 }
