@@ -103,12 +103,19 @@
                     <input type="text" name="WhatsApp" id="celular" required>
                 </div>
                 <div class="form-group">
+                    <label>Tipo de Entrega</label>
+                    <select id="tipo_entrega" name="Tipo_Entrega" required>
+                        <option value="colegio">Entrega en el Colegio</option>
+                        <option value="virtual">Entrega Virtual (Servicios Online)</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Método de Pago</label>
                         <select id="metodo_pago" name="Metodo_Pago" required>
                         <option value="nequi">Nequi</option>
                         <option value="efectivo">Efectivo</option>
                         <option value="pse">PSE</option>
-                       <option value="pse">Tarjeta(DEBERAS DE CONTACTARNOS)</option>
+                       <option value="tarjeta">Tarjeta (debes contactarnos)</option>
                     </select>
                 </div>
                 <input type="hidden" name="Resumen_Pedido" id="hidden-summary">
@@ -208,11 +215,13 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
     // Capturamos los datos asegurándonos de que existan los IDs en el HTML
     const payload = {
         nombre: document.getElementById('nombre').value,
+        email: document.getElementById('email').value,
         whatsapp: document.getElementById('celular').value,
         resumen: document.getElementById('hidden-summary').value,
         total: document.getElementById('hidden-total').value,
         // Verifica que tu <select> tenga id="metodo_pago"
         metodo_pago: document.getElementById('metodo_pago').value,
+        tipo_entrega: document.getElementById('tipo_entrega').value,
         happycodigo: document.getElementById('puntos_code').value || null
     };
 
@@ -232,9 +241,29 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
         const data = await resp.json();
 
         if (data.ok) {
-            alert('✅ ¡Pedido enviado! Revisa tu WhatsApp pronto.');
+            const orderId = data.orderId;
+            const happyCode = `HO-${String(orderId).padStart(6, '0')}`;
+
+            const lastHappyOrder = {
+                orderId,
+                happyCode,
+                paymentMethod: payload.metodo_pago,
+                deliveryType: payload.tipo_entrega,
+                itemsSummary: payload.resumen,
+                subtotal: payload.total,
+                shipping: "Gratis",
+                total: payload.total,
+                customer: {
+                    nombre: payload.nombre,
+                    email: payload.email,
+                    whatsapp: payload.whatsapp
+                },
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('lastHappyOrder', JSON.stringify(lastHappyOrder));
             localStorage.removeItem('hc_cart'); // Limpiamos el carrito
-            window.location.href = 'catalogo.html'; // Volvemos al catálogo
+            window.location.href = 'confirmed.html';
         } else {
             throw new Error(data.error || 'Error desconocido');
         }

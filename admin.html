@@ -58,13 +58,9 @@
         <div class="bento" style="text-align: center; width: 320px;">
             <img src="Happylogo.png" width="80" alt="Logo">
             <h2 style="margin: 20px 0 10px;">CEO Access</h2>
-            <p style="color: var(--text-sec); font-size: 13px; margin-bottom: 20px;">Ingresa tu Chat ID de Telegram</p>
-            <input type="text" id="auth-id" placeholder="Chat ID" style="text-align: center; margin-bottom: 15px;">
-            <button class="btn-gold" style="width: 100%;" onclick="sendToken()">Solicitar Token</button>
-            <div id="otp-area" style="display: none; margin-top: 15px;">
-                <input type="text" id="auth-otp" placeholder="Código de 4 dígitos" style="text-align: center; margin-bottom: 15px;">
-                <button class="btn-gold" style="width: 100%; background: white;" onclick="validateToken()">Entrar</button>
-            </div>
+            <p style="color: var(--text-sec); font-size: 13px; margin-bottom: 20px;">Ingresa tu clave de admin</p>
+            <input type="password" id="auth-password" placeholder="Admin password" style="text-align: center; margin-bottom: 15px;">
+            <button class="btn-gold" style="width: 100%;" onclick="login()">Entrar</button>
         </div>
     </div>
 
@@ -119,36 +115,34 @@
     </div>
 
     <script>
-        let otpMaster = "";
-        let msgIdMaster = "";
         const API = "https://happy-corner.vercel.app/api/getOrders";
+        const AUTH = "https://happy-corner.vercel.app/api/adminLogin";
+        let adminToken = sessionStorage.getItem("hc_admin_token") || "";
 
-        // --- AUTH LOGIC ---
-        async function sendToken() {
-            const chatId = document.getElementById('auth-id').value;
-            otpMaster = Math.floor(1000 + Math.random() * 9000).toString();
-            
-            const resp = await fetch('https://happy-corner.vercel.app/api/sendotp', {
+        // --- AUTH LOGIC (SERVER TOKEN) ---
+        async function login() {
+            const password = document.getElementById('auth-password').value;
+            if(!password) return alert("Escribe tu clave");
+
+            const resp = await fetch(AUTH, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ chatId, otp: otpMaster })
+                body: JSON.stringify({ password })
             });
-            
-            if(resp.ok) {
-                const data = await resp.json();
-                msgIdMaster = data.msgId; // Capturamos el ID del mensaje
-                document.getElementById('otp-area').style.display = 'block';
-                alert("Token enviado a Telegram");
+
+            const data = await resp.json().catch(() => ({}));
+            if(!resp.ok || !data.ok || !data.token) {
+                return alert("Acceso denegado");
             }
+
+            adminToken = data.token;
+            sessionStorage.setItem("hc_admin_token", adminToken);
+            document.getElementById('auth-overlay').style.display = 'none';
+            loadOrders();
         }
 
-        async function validateToken() {
-            if(document.getElementById('auth-otp').value === otpMaster) {
-                document.getElementById('auth-overlay').style.display = 'none';
-                // Limpiar telegram
-                fetch(`${API}?action=cleanTG&msgId=${msgIdMaster}`);
-                loadOrders();
-            } else { alert("Token incorrecto"); }
+        function authHeaders() {
+            return adminToken ? { 'Authorization': `Bearer ${adminToken}` } : {};
         }
 
         // --- DATA LOGIC ---
@@ -167,7 +161,7 @@
             let url = `${API}?view=${view}`;
             if(date) url = `${API}?date=${date}`;
 
-            const r = await fetch(url);
+            const r = await fetch(url, { headers: { ...authHeaders() } });
             const data = await r.json();
             const container = document.getElementById('orders-container');
             let total = 0;
@@ -192,7 +186,7 @@
 
         async function openOrder(p) {
             document.getElementById('orderModal').style.display = 'flex';
-            const lvRes = await fetch(`${API}?phone=${p.whatsapp}`);
+            const lvRes = await fetch(`${API}?phone=${p.whatsapp}`, { headers: { ...authHeaders() } });
             const lv = await lvRes.json();
             
             document.getElementById('modalBody').innerHTML = `
@@ -211,13 +205,23 @@
         }
 
         async function updateStatus(id, est) {
-            await fetch(`${API}?id=${id}&estado=${est}`, { method: 'POST' });
+            await fetch(`${API}?id=${id}&estado=${est}`, { method: 'POST', headers: { ...authHeaders() } });
             closeModal();
             loadOrders();
         }
 
         function closeModal() { document.getElementById('orderModal').style.display = 'none'; }
-        function logout() { location.reload(); }
+        function logout() {
+            sessionStorage.removeItem("hc_admin_token");
+            adminToken = "";
+            document.getElementById('auth-overlay').style.display = 'flex';
+        }
+
+        // Auto-unlock if token exists (best effort)
+        if (adminToken) {
+            document.getElementById('auth-overlay').style.display = 'none';
+            loadOrders();
+        }
     </script>
 </body>
 </html>
