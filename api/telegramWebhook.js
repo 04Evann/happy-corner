@@ -1,22 +1,42 @@
 import { createClient } from '@supabase/supabase-js'
 import fetch from 'node-fetch'
+import { applyCors, requireEnv } from "./_lib/http.js";
 
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export default async function handler(req, res) {
+  applyCors(req, res, { methods: ["POST", "OPTIONS"] });
+
+  const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (secret) {
+    const headerSecret = req.headers["x-telegram-bot-api-secret-token"];
+    if (headerSecret !== secret) {
+      res.status(401).send("Unauthorized");
+      return;
+    }
+  }
+
   res.status(200).send('OK'); // Responder siempre
 
-  if (!req.body.message || !req.body.message.text) return;
+  if (!req.body?.message?.text) return;
 
   const text = req.body.message.text;
   const chatId = req.body.message.chat.id;
   const msgCmdId = req.body.message.message_id;
 
+  const allowedChatId = process.env.TELEGRAM_CHAT_ID;
+  if (allowedChatId && String(chatId) !== String(allowedChatId)) return;
+
   // Si no empieza con "/", lo ignoramos
   if (!text.startsWith('/')) return;
 
   try {
+    requireEnv("SB_URL");
+    requireEnv("SB_SECRET");
+    requireEnv("TELEGRAM_TOKEN");
+    requireEnv("TELEGRAM_CHAT_ID");
+
     // Dividimos "/confirmar_30" en ["/confirmar", "30"]
     const partes = text.split('_');
     if (partes.length < 2) return;
