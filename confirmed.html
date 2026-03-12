@@ -3,128 +3,57 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>¡Pedido Confirmado! 🎉</title>
+    <title>Pedido Confirmado | Happy Corner</title>
     
     <link rel="icon" type="image/png" href="/happyfavicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     
     <style>
-        /* Base Styles - REUTILIZADOS DE order.html */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        /* PALETA NAVIDEÑA AZULITA */
-        :root {
-            --navidad-azul-oscuro: #0a3d62; /* Azul Medianoche */
-            --navidad-azul-claro: #1b85b8; /* Azul Brillante */
-            --navidad-plata: #c0c0c0; /* Gris Claro/Plata */
-            --navidad-blanco-nieve: #f0f8ff; /* Blanco Nieve */
-            --navidad-oro: #ffd700; /* Oro */
-            --text-dark: #222;
-            --text-light: #f0f8ff;
-        }
-        
-        @keyframes snowfall-soft {
-            0% { background-position: 0 0; }
-            100% { background-position: 250px 250px; }
-        }
-
-        body {
-            background-color: var(--navidad-blanco-nieve);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5' viewBox='0 0 5 5'%3E%3Ccircle cx='2.5' cy='2.5' r='0.5' fill='%23ffffff60'/%3E%3C/svg%3E");
-            background-size: 5px 5px;
-            animation: snowfall-soft 20s linear infinite;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        header {
-            background: linear-gradient(to right, var(--navidad-azul-oscuro), var(--navidad-azul-claro)); 
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 80px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
-        }
-
-        header img {
-            height: 65px;
-            max-width: 80%;
-            object-fit: contain;
-            object-position: left;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
-        }
-
-        nav { display: none; } /* Ocultar menú en la página de confirmación */
-
-        /* --- Main Content Layout --- */
         main {
-            flex-grow: 1; 
-            padding: 2rem 1rem;
-            max-width: 800px;
+            max-width: 950px;
             margin: 0 auto;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            padding: 28px 16px 60px;
         }
-        
-        /* --- Confirmation Box --- */
+
         .confirmation-box {
             background: white;
-            padding: 2rem;
-            border-radius: 20px;
+            border-radius: 25px;
+            padding: 26px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.06);
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 5px solid var(--navidad-oro);
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .confirmation-box h1 {
-            color: var(--navidad-azul-claro);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 28px;
+            margin-bottom: 10px;
             font-weight: 800;
         }
 
         .confirmation-box p {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: var(--text-dark);
+            font-size: 14px;
+            opacity: 0.9;
         }
 
-        /* --- Happy Code Display --- */
         .happy-code-section {
-            background-color: var(--navidad-azul-oscuro);
-            color: var(--navidad-oro);
-            padding: 15px 30px;
-            border-radius: 12px;
-            margin: 20px 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            background: var(--hp-gradient);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 16px;
+            margin: 18px 0 10px;
             display: inline-block;
+            box-shadow: var(--shadow);
         }
         
         #confirmed-happy-code {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: 3px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 2px;
             margin: 0;
         }
 
-        /* --- Order Details Table --- */
         .order-details-table {
             width: 100%;
             margin-top: 25px;
@@ -138,7 +67,7 @@
         }
         
         .order-details-table th {
-            color: var(--navidad-azul-oscuro);
+            color: #333;
             font-weight: 600;
             width: 40%;
         }
@@ -150,67 +79,84 @@
         
         .order-details-table .total-row th, .order-details-table .total-row td {
             border-bottom: none;
-            border-top: 2px solid var(--navidad-azul-claro);
-            font-size: 1.2rem;
+            border-top: 2px solid #eee;
+            font-size: 1.05rem;
             font-weight: 800;
-            color: var(--navidad-azul-claro);
+            color: #111;
         }
 
         .order-details-table .total-row td {
-            color: var(--navidad-oro);
-            font-size: 1.5rem;
+            color: #ff5299;
+            font-size: 1.15rem;
         }
 
-        .back-button {
-            background-color: var(--navidad-azul-claro); 
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 30px;
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             text-decoration: none;
-            display: inline-block;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .back-button:hover {
-            background-color: var(--navidad-azul-oscuro);
-            transform: translateY(-2px);
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            border: 2px solid #eee;
+            background: white;
+            color: #111;
         }
 
-        /* Footer */
-        footer {
-            background: var(--navidad-azul-oscuro);
-            color: #eee;
-            padding: 1rem;
-            text-align: center;
-            margin-top: 3rem;
+        .action-btn.primary {
+            background: #ff5299;
+            border-color: #ff5299;
+            color: white;
+        }
+
+        .muted {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-top: 6px;
         }
     </style>
 </head>
 <body onload="displayOrderDetails()">
     <header>
-        <img src="loguito.png" alt="Happy Corner Logo" />
-        <nav></nav>
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        <nav class="nav-desktop">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">HappyOrder</a>
+        </nav>
+        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
     </header>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+    <nav class="side-menu" id="sideMenu">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Catálogo</a>
+        <a href="order.html">HappyOrder</a>
+        <a href="puntos.html">Puntos</a>
+        <a href="terminos.html">Términos</a>
+    </nav>
 
     <main>
         <div class="confirmation-box">
-            <h1>¡Happy Order Confirmada!</h1>
-            <p>Tu pedido ha sido registrado con éxito. Te hemos enviado un resumen a tu correo y contactaremos tu WhatsApp para finalizar el pago.</p>
+            <h1>Pedido confirmado</h1>
+            <p>Tu orden fue registrada con éxito. Guarda tu código para cualquier duda.</p>
 
             <div class="happy-code-section">
-                <p style="margin:0; font-size:1rem; color: var(--navidad-oro);">TU HAPPY CÓDIGO</p>
+                <p style="margin:0; font-size:12px; opacity:0.95;">TU CÓDIGO</p>
                 <h2 id="confirmed-happy-code" style="margin:0;">HO-XXXXXX</h2>
             </div>
             
-            <p style="font-size:0.9rem; font-style:italic; margin-bottom: 30px;">
-                Menciona este código al pagar.
-            </p>
+            <div class="muted">Menciona este código al pagar.</div>
 
             <table class="order-details-table">
                 <thead>
@@ -226,26 +172,33 @@
                 </tbody>
             </table>
 
-            <a href="index.html" class="back-button">
-                <i class="fas fa-home"></i> Volver a la Tienda
-            </a>
+            <div class="actions">
+                <a href="factura.html" class="action-btn primary"><i class="fas fa-receipt"></i> Ver factura</a>
+                <a href="catalogo.html" class="action-btn"><i class="fas fa-store"></i> Seguir comprando</a>
+            </div>
         </div>
     </main>
 
-    <footer>
-        <p>&copy; 2025 Happy Shop. Todos los derechos reservados.</p>
-    </footer>
-
     <script>
+        function toggleMenu(force) {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
+            menu.classList.toggle('active', next);
+            overlay.classList.toggle('active', next);
+        }
+
         function displayOrderDetails() {
             const orderDataRaw = localStorage.getItem('lastHappyOrder');
             
             // 1. Verificar y Parsear
             if (!orderDataRaw) {
                 document.querySelector('.confirmation-box').innerHTML = `
-                    <h1>⚠️ ¡Error de Carga!</h1>
-                    <p>No se encontraron datos del último pedido. ¿Quizás ya revisaste esta página?</p>
-                    <a href="index.html" class="back-button"><i class="fas fa-home"></i> Volver a la Tienda</a>
+                    <h1>Ups…</h1>
+                    <p>No se encontraron datos del último pedido en este dispositivo.</p>
+                    <div class="actions">
+                        <a href="catalogo.html" class="action-btn primary">Volver al catálogo</a>
+                    </div>
                 `;
                 return;
             }

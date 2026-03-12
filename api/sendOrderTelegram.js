@@ -1,17 +1,10 @@
 export default async function handler(req, res) {
 
-  // 🔓 CORS HEADERS
-  res.setHeader("Access-Control-Allow-Origin", "https://happycorner.lol");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-  // ⚠️ Responder preflight
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  const { applyCors, json } = await import("./_lib/http.js");
+  if (applyCors(req, res, { methods: ["POST", "OPTIONS"] })) return;
 
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return json(res, 405, { ok: false, error: "Method not allowed" });
   }
 
   const {
@@ -19,9 +12,12 @@ export default async function handler(req, res) {
     email,
     whatsapp,
     metodo,
+    metodo_pago,
     resumen,
     total
   } = req.body;
+
+  const metodoFinal = metodo_pago || metodo || "No especificado";
 
   const mensaje = `
 🍭 NUEVO PEDIDO - HAPPY CORNER
@@ -29,7 +25,7 @@ export default async function handler(req, res) {
 👤 Nombre: ${nombre}
 📧 Correo: ${email}
 📱 WhatsApp: ${whatsapp}
-💳 Pago: ${metodo}
+💳 Pago: ${metodoFinal}
 
 🛒 Pedido:
 ${resumen}
@@ -46,5 +42,5 @@ ${resumen}
     })
   });
 
-  res.status(200).json({ ok: true });
+  return json(res, 200, { ok: true });
 }

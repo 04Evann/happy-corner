@@ -1,28 +1,24 @@
 import fetch from 'node-fetch';
+import { applyCors, json, requireEnv, readJsonBody } from "./_lib/http.js";
 
 export default async function handler(req, res) {
-  // 1. Configurar CORS (Vital para que el navegador no bloquee la petición)
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  // 2. Manejar el preflight de los navegadores
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (applyCors(req, res, { methods: ["POST", "OPTIONS"] })) return;
 
   // 3. Solo permitir POST
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+    return json(res, 405, { ok: false, error: 'Método no permitido' });
   }
 
   try {
-    const { chatId, otp } = req.body;
+    requireEnv("TELEGRAM_CHAT_ID");
+    requireEnv("TELEGRAM_TOKEN");
+
+    const { chatId, otp } = readJsonBody(req);
 
     // 4. Validar que el Chat ID sea el tuyo (Seguridad)
     // Asegúrate de que en Vercel la variable se llame exactamente TELEGRAM_CHAT_ID
     if (chatId.toString() !== process.env.TELEGRAM_CHAT_ID.toString()) {
-      return res.status(401).json({ error: "ID no autorizado" });
+      return json(res, 401, { ok: false, error: "ID no autorizado" });
     }
 
     const msg = `🔐 *ACCESO AL PANEL*\n\nTu código es: \`${otp}\`\n\nSi no fuiste tú, ignora este mensaje.`;
@@ -41,13 +37,13 @@ export default async function handler(req, res) {
     const tgData = await tgRes.json();
 
     if (!tgData.ok) {
-      return res.status(500).json({ error: "Error de Telegram", details: tgData });
+      return json(res, 500, { ok: false, error: "Error de Telegram" });
     }
 
-    return res.status(200).json({ ok: true });
+    return json(res, 200, { ok: true, msgId: tgData?.result?.message_id || null });
 
   } catch (error) {
     console.error("Error en sendOTP:", error.message);
-    return res.status(500).json({ error: error.message });
+    return json(res, 500, { ok: false, error: "Error enviando OTP" });
   }
 }

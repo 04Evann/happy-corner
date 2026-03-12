@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     if (method === "POST" && query.id && query.estado) {
       let updateData = { estado: query.estado };
       if (["Cancelado", "Entregado"].includes(query.estado)) {
-        let expiry = new Date();
+        const expiry = new Date();
         expiry.setDate(expiry.getDate() + 30);
         updateData.deleted_at = expiry.toISOString();
       } else {
