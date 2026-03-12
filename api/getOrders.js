@@ -2,18 +2,22 @@ import { createClient } from '@supabase/supabase-js';
 import fetch from 'node-fetch';
 
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET);
+import { applyCors, json } from "./_lib/http.js";
+import { requireAdmin } from "./_lib/adminAuth.js";
 
 export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+    if (applyCors(req, res, { methods: ["GET", "POST", "OPTIONS"] })) return;
 
     const { method, query } = req;
 
     try {
+        const admin = requireAdmin(req, res);
+        if (!admin) return;
+
         // --- ELIMINAR MENSAJE DE TELEGRAM (Seguridad) ---
         if (query.action === 'cleanTG' && query.msgId) {
             await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/deleteMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&message_id=${query.msgId}`);
-            return res.status(200).json({ ok: true });
+            return json(res, 200, { ok: true });
         }
 
         // --- LÓGICA DE ESTADOS Y PAPELERA ---
@@ -27,7 +31,7 @@ export default async function handler(req, res) {
                 updateData.deleted_at = null;
             }
             await supabase.from('pedidos').update(updateData).eq('id', query.id);
-            return res.status(200).json({ ok: true });
+            return json(res, 200, { ok: true });
         }
 
         // --- FILTROS DE VISTA (Día específico, Mes, etc) ---
@@ -43,7 +47,9 @@ export default async function handler(req, res) {
 
         const { data, error } = await dbQuery.order('id', { ascending: false });
         if (error) throw error;
-        res.status(200).json(data);
+        return json(res, 200, data);
 
-    } catch (e) { res.status(500).json({ error: e.message }); }
+    } catch (e) {
+        return json(res, 500, { ok: false, error: "Server error" });
+    }
 }

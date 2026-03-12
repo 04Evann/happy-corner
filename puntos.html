@@ -1,568 +1,312 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Consulta tus Puntos | HappyCorner</title>
-    
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        /* PALETA NAVIDEÑA VERDE Y ORO/ROJO */
-        :root {
-            --navidad-verde-oscuro: #004d40; /* Verde Bosque */
-            --navidad-verde-claro: #388e3c; /* Verde Pino, para Acentos y Títulos */
-            --navidad-rojo-clasico: #d32f2f; /* Rojo de Baya, para Botones/Importante */
-            --navidad-blanco-nieve: #f0f8ff; /* Fondo principal */
-            --navidad-oro: #ffd700; /* Toque especial */
-            --navidad-crema: #fffdf7; /* Fondo de tarjetas */
-            --text-dark: #222;
-            --text-light: #f0f8ff;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HappyPuntos | Happy Corner</title>
 
-        /* Base Styles & Mobile First */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        /* Colores base */
-        * { color: var(--text-dark); }
-        header * { color: var(--text-light); }
+  <link rel="icon" type="image/png" href="/happyfavicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+  <style>
+    .page {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 24px 16px 70px;
+    }
 
-        body {
-            background: var(--navidad-blanco-nieve); /* Fondo Nieve */
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    .hero {
+      background: white;
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      border: 1px solid rgba(0,0,0,0.06);
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 18px;
+      align-items: center;
+      overflow: hidden;
+    }
 
-        /* --- Header --- */
-        header {
-            background: linear-gradient(to right, var(--navidad-verde-oscuro), var(--navidad-verde-claro)); 
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 100;
-            min-height: 80px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); 
-        }
-        header img {
-            height: 65px;
-            max-width: 80%;
-            object-fit: contain;
-            object-position: left;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); 
-        }
-        .menu-btn {
-            font-size: 2rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 101;
-            color: var(--navidad-blanco-nieve);
-            display: block;
-        }
-        nav {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            z-index: 100;
-        }
-        nav.open { display: flex; }
-        nav a {
-            color: var(--navidad-verde-oscuro);
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            font-weight: 600;
-            transition: color 0.3s ease, background-color 0.3s ease;
-        }
-        nav a:hover {
-            color: var(--navidad-rojo-clasico);
-            background-color: rgba(56, 142, 60, 0.1);
-        }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      font-weight: 900;
+    }
 
-        /* --- Main Content & Puntos Section Styles --- */
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            padding: 1.5rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex-grow: 1; /* Permite que ocupe el espacio para empujar el footer */
-        }
-        .page-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 1rem 0 2rem;
-            color: var(--navidad-verde-claro); /* Verde Pino */
-            position: relative;
-            padding-bottom: 15px;
-        }
-        .page-title::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 5px;
-            background-color: var(--navidad-rojo-clasico); /* Rojo Clásico */
-            border-radius: 3px;
-        }
+    .hero p { margin: 0; opacity: 0.9; }
 
-        /* Puntos Container - Tarjeta Principal */
-        .puntos-container {
-            width: 100%;
-            max-width: 500px;
-            background: var(--navidad-crema); /* Fondo Crema/Blanco */
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--navidad-oro);
-            padding: 2rem;
-            text-align: center;
-        }
-        .puntos-container h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--navidad-verde-oscuro); /* Verde Oscuro */
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--navidad-rojo-clasico); /* Rojo Clásico */
-            padding-bottom: 0.8rem;
-        }
-        
-        /* Campos del formulario */
-        .consulta-form input {
-            width: 100%;
-            padding: 12px 10px;
-            margin-bottom: 15px;
-            border: 2px solid var(--navidad-verde-claro); /* Verde Pino */
-            border-radius: 8px; /* Bordes redondeados */
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        .consulta-form input:focus {
-            outline: none;
-            border-color: var(--navidad-rojo-clasico); /* Rojo en Focus */
-            box-shadow: 0 0 5px rgba(211, 47, 47, 0.5); 
-        }
-        
-        /* Botón de Consulta */
-        .consulta-form button {
-            width: 100%;
-            padding: 12px;
-            background: var(--navidad-rojo-clasico); /* Rojo Clásico */
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .consulta-form button:hover {
-            background: var(--navidad-verde-oscuro); /* Verde Oscuro en Hover */
-        }
-        
-        /* Resultados Card */
-        #resultados-container {
-            margin-top: 25px;
-            text-align: left;
-        }
-        .info-card {
-            background-color: var(--navidad-blanco-nieve);
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid var(--navidad-verde-claro);
-        }
-        .info-card h3 {
-            color: var(--navidad-verde-oscuro);
-            margin-top: 0;
-            border-bottom: 2px solid var(--navidad-oro); /* Oro */
-            padding-bottom: 5px;
-        }
-        .info-card p strong {
-             color: var(--navidad-rojo-clasico);
-        }
-        .info-card ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .info-card ul li {
-            background-color: var(--navidad-crema);
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #eee;
-            margin-bottom: 10px;
-        }
-        .info-card ul li:last-child {
-            margin-bottom: 0;
-        }
-        .info-card a {
-            color: var(--navidad-verde-claro); /* Verde Pino */
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 15px;
-            display: inline-block;
-        }
-        .info-card a:hover {
-            color: var(--navidad-rojo-clasico);
-            text-decoration: underline;
-        }
-        .error {
-            color: var(--navidad-rojo-clasico);
-            font-weight: 600;
-            text-align: center;
-        }
+    .pillRow {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-        /* --- Estilos para la sección de FAQ (Acordeón) --- */
-        .faq-container {
-            width: 100%;
-            max-width: 800px;
-            background: var(--navidad-crema);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--navidad-verde-claro);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-        .faq-container h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--navidad-verde-oscuro);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .accordion-item {
-            border: 1px solid var(--navidad-oro); /* Borde con toque Oro */
-            border-radius: 8px;
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
-        .accordion-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #f9f9f9;
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .accordion-header:hover, .accordion-item.active .accordion-header {
-            background-color: var(--navidad-verde-claro); /* Verde Pino */
-            color: white; 
-        }
-        .accordion-header h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin: 0;
-            color: var(--text-dark); /* Color original */
-        }
-        .accordion-header:hover h3, .accordion-item.active .accordion-header h3 {
-             color: var(--text-light); /* Texto blanco al hacer hover/activo */
-        }
-        .accordion-header i {
-            transition: transform 0.3s ease;
-            color: var(--navidad-rojo-clasico);
-        }
-        .accordion-item.active .accordion-header i {
-             transform: rotate(180deg);
-             color: var(--text-light); /* Ícono blanco en activo */
-        }
-        .accordion-content {
-            display: none;
-            padding: 20px;
-            background-color: #fff;
-            border-top: 1px solid #ddd;
-        }
-        .accordion-item.active .accordion-content {
-            display: block;
-        }
-        .accordion-content p, .accordion-content ul {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 10px;
-        }
-        .accordion-content ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
-        .accordion-content li {
-            margin-bottom: 5px;
-        }
+    .pill {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 2px solid #f1f3f8;
+      background: #fff9f5;
+    }
 
-        /* --- Footer --- */
-        footer {
-            background: var(--navidad-verde-oscuro);
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-        }
+    .card {
+      background: white;
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
 
-        footer * { color: var(--text-light); }
-        .social-icons a { color: var(--navidad-oro); }
-        .social-icons a:hover { color: var(--navidad-rojo-clasico); }
-        .footer-links a { color: var(--navidad-blanco-nieve); }
-        .footer-links a:hover { color: var(--navidad-rojo-clasico); }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
 
-        /* --- Media Queries for Desktop --- */
-        @media (min-width: 768px) {
-            header { padding: 0.5rem 2rem; min-height: 100px; }
-            header img { height: 80px; }
-            .menu-btn { display: none; }
-            nav { position: static; display: flex; flex-direction: row; width: auto; background-color: transparent; backdrop-filter: none; box-shadow: none; padding: 0; }
-            nav a { padding: 0.7rem 1.2rem; color: var(--navidad-blanco-nieve); }
-            nav a:hover { color: var(--navidad-oro); text-decoration: underline; }
+    .inputRow {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
 
-            main { padding-top: 3rem; padding-bottom: 3rem; }
-            .puntos-container { max-width: 600px; }
-        }
-    </style>
+    .inputRow input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #eee;
+      font-family: inherit;
+    }
+
+    .btnPrimary {
+      border: none;
+      background: #ff5299;
+      color: white;
+      font-weight: 900;
+      padding: 12px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btnPrimary:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .result {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8f9ff;
+      border: 2px solid #eef1ff;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 8px 10px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .kv b { font-weight: 900; }
+
+    .txList { margin-top: 10px; }
+    .txList ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .txList li { background: white; border: 2px solid #f1f3f8; border-radius: 16px; padding: 12px; }
+    .txList .small { font-size: 12px; opacity: 0.85; }
+
+    .faq h2 { margin: 0 0 10px; font-size: 18px; font-weight: 900; }
+    .accordion-item { border-top: 1px solid #f1f3f8; padding: 10px 0; }
+    .accordion-header { display: flex; justify-content: space-between; gap: 12px; cursor: pointer; }
+    .accordion-header h3 { margin: 0; font-size: 14px; font-weight: 900; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+    .accordion-item.active .accordion-content { max-height: 520px; }
+    .accordion-content p, .accordion-content ul { margin: 10px 0 0; font-size: 13px; opacity: 0.9; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid2 { grid-template-columns: 1fr; }
+      .kv { grid-template-columns: 120px 1fr; }
+      .inputRow { flex-direction: column; }
+      .btnPrimary { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-
-<header>
-    <img src="loguito.png" alt="Happy Shop Logo" />
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
-    <nav id="menu">
-        <a href="index.html">Inicio</a>
-        <a href="catalogo.html">Catálogo</a>
-        <a href="order.html">Happy Order</a>
-        <a href="puntos.html">Happy Puntos</a>
-        <a href="terminos.html">Términos</a>
+  <header>
+    <img src="loguito.png" alt="HappyCorner" class="logo-img">
+    <nav class="nav-desktop">
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="order.html">HappyOrder</a>
+      <a href="puntos.html">Puntos</a>
+      <a href="terminos.html">Términos</a>
+      <a href="admin.html">Admin</a>
     </nav>
-</header>
-
-<main>
-    <h1 class="page-title">Consulta tus Puntos Happy 🥳</h1>
-    
-    <section class="puntos-container">
-        <h2>Ingresa tu Código</h2>
-        <form class="consulta-form" id="consulta-form">
-            <input type="text" id="happy-code-input" placeholder="Tu HappyCódigo" required>
-            <button type="submit">Consultar</button>
-        </form>
-        <div id="resultados-container"></div>
-    </section>
-
-    <section class="faq-container">
-        <h2>HappyPuntos - Preguntas Frecuentes</h2>
-        <div class="accordion">
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Qué es la HappyCard?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>Es tu tarjeta de HappyCorner para usar HappyCréditos (1 HC = 1 peso colombiano) y comprar en la tienda. También te permite acceder a descuentos y ganar recompensas según tu nivel.</p>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Qué niveles existen?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <ul>
-                        <li><strong>Core:</strong> $0 – $9,999 mensuales. Solo recargas y compras.</li>
-                        <li><strong>Prime:</strong> $10,000 – $49,999 mensuales. Recibes descuentos del 5–10% y acceso a promociones especiales.</li>
-                        <li><strong>Elite:</strong> $50,000+ mensuales. Ganas HC extra por compra, acceso anticipado a Hot Deals y beneficios VIP.</li>
-                        <li><strong>Perú:</strong> tarjeta especial que no da beneficios. Solo existe como curiosidad / coleccionable.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Qué beneficios tiene cada nivel?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <ul>
-                        <li><strong>Core:</strong> solo compras con saldo.</li>
-                        <li><strong>Prime:</strong> descuentos en combos y productos seleccionados.</li>
-                        <li><strong>Elite:</strong> puntos extra por compra, canje flexible y acceso VIP a Hot Deals y productos exclusivos.</li>
-                        <li><strong>Perú:</strong> ninguno 😎</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Cómo subo de nivel?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>Tu nivel se calcula cada mes según tus compras. Si no alcanzas el gasto mínimo, puedes bajar de nivel hasta volver a subir.</p>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Qué beneficios tienen los asociados de HappyCorner?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>Si eres asociado, recibes la tarjeta Platinum, con descuentos especiales y beneficios internos que no están disponibles para el público general.</p>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Cómo funcionan los descuentos y puntos?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <ul>
-                        <li><strong>Prime:</strong> 5–10% de descuento, días especiales con hasta 15% en productos seleccionados.</li>
-                        <li><strong>Elite:</strong> 5–10% de tus compras se acumula como HappyCréditos extra. Los puntos pueden canjearse por productos o descuentos.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Los puntos o descuentos tienen límite?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <ul>
-                        <li>Máximo $2,000 HC de descuento por compra.</li>
-                        <li>Puntos expiran en 3–6 meses.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h3>¿Habrá más tarjetas en el futuro?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="accordion-content">
-                    <p>¡Quizá sí! Estamos pensando en nuevas tarjetas y beneficios, así que siempre hay algo nuevo por descubrir. 🔮</p>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
-
-<footer>
-    <div class="footer-content">
-        <div class="social-icons">
-            <a href="https://www.instagram.com/happycornerca/"><i class="fab fa-instagram"></i></a>
-            <a href="https://wa.me/34641422390"><i class="fab fa-whatsapp"></i></a>
-        </div>
-        <div class="footer-links">
-            <a href="terminos.html">Términos y Condiciones</a>
-            <a href="mailto:soporte@happycorner.lol">Contáctanos</a>
-            <a href="catalogo.html">Ver Todo el Catálogo</a>
-        </div>
+    <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
     </div>
-</footer>
+  </header>
 
-<script>
-    function toggleMenu() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('open');
+  <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+  <nav class="side-menu" id="sideMenu">
+    <a href="index.html">Inicio</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="order.html">HappyOrder</a>
+    <a href="puntos.html">Puntos</a>
+    <a href="terminos.html">Términos</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+
+  <div class="page">
+    <section class="hero">
+      <div>
+        <h1>HappyPuntos</h1>
+        <p>Consulta tus puntos, tu correo y tus últimas compras con tu <b>HappyCódigo</b>.</p>
+        <div class="pillRow">
+          <div class="pill">Rápido</div>
+          <div class="pill">Historial</div>
+          <div class="pill">Siempre actualizado</div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-weight:900; font-size:34px; line-height:1; color:#ff5299;">HC</div>
+        <div style="opacity:0.8; font-size:12px;">1 HC = 1 peso colombiano</div>
+      </div>
+    </section>
+
+    <div class="grid2">
+      <section class="card">
+        <div style="font-weight:900; font-size:16px;">Consulta tus puntos</div>
+        <div style="opacity:0.85; font-size:13px; margin-top:6px;">Escribe tu HappyCódigo (ej: <b>HC123</b>)</div>
+
+        <form id="consulta-form">
+          <div class="inputRow">
+            <input type="text" id="happy-code-input" placeholder="Tu HappyCódigo" required>
+            <button class="btnPrimary" id="btnConsultar" type="submit">Consultar</button>
+          </div>
+        </form>
+
+        <div id="resultados-container"></div>
+      </section>
+
+      <section class="card faq">
+        <h2>Preguntas frecuentes</h2>
+        <div class="accordion">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3>¿Qué es HappyPuntos?</h3>
+              <i class="fas fa-chevron-down" style="opacity:0.7;"></i>
+            </div>
+            <div class="accordion-content">
+              <p>Es tu sistema de puntos/beneficios de Happy Corner. Puedes consultar tu saldo y tu historial reciente con tu HappyCódigo.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3>¿Dónde consigo mi HappyCódigo?</h3>
+              <i class="fas fa-chevron-down" style="opacity:0.7;"></i>
+            </div>
+            <div class="accordion-content">
+              <p>Te lo damos cuando te registras o compras. Si lo perdiste, escríbenos y te ayudamos.</p>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3>¿Por qué no aparece mi correo?</h3>
+              <i class="fas fa-chevron-down" style="opacity:0.7;"></i>
+            </div>
+            <div class="accordion-content">
+              <p>Algunos clientes no tienen correo registrado. Si quieres agregarlo, contáctanos.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu(force) {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('overlay');
+      const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
+      menu.classList.toggle('active', next);
+      overlay.classList.toggle('active', next);
+    }
+
+    const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
+    const form = document.getElementById('consulta-form');
+    const input = document.getElementById('happy-code-input');
+    const resultsContainer = document.getElementById('resultados-container');
+    const btnConsultar = document.getElementById('btnConsultar');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const codigo = input.value.trim();
+      if (!codigo) return;
+
+      btnConsultar.disabled = true;
+      btnConsultar.textContent = "Consultando...";
+      resultsContainer.innerHTML = `<div class="result">Cargando…</div>`;
+
+      try {
+        const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          resultsContainer.innerHTML = `<div class="result"><b>No se encontró</b><div style="opacity:0.85; margin-top:6px;">${data.error || 'Verifica tu código e inténtalo de nuevo.'}</div></div>`;
+          return;
         }
 
-        const API_URL = 'https://happy-corner.vercel.app/api/getPoints';
-        const form = document.getElementById('consulta-form');
-        const input = document.getElementById('happy-code-input');
-        const resultsContainer = document.getElementById('resultados-container');
+        const tx = Array.isArray(data.ultimas_transacciones) ? data.ultimas_transacciones : [];
+        const txHtml = tx.length
+          ? `<div class="txList"><div style="font-weight:900; margin:10px 0 8px;">Últimas compras</div><ul>` +
+            tx.map(t => `
+              <li>
+                <div style="font-weight:900;">Recibo #${t.recibo}</div>
+                <div class="small">${t.fecha} · $${Number(t.total || 0).toLocaleString('es-CO')}</div>
+              </li>
+            `).join('') +
+            `</ul></div>`
+          : `<div style="opacity:0.85; margin-top:10px;">No hay compras recientes.</div>`;
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const codigo = input.value.trim();
-            if (!codigo) {
-                resultsContainer.innerHTML = `<p class="error">Por favor, ingresa tu HappyCódigo.</p>`;
-                return;
-            }
+        resultsContainer.innerHTML = `
+          <div class="result">
+            <div style="font-weight:900; font-size:16px;">Hola, ${data.nombre}</div>
+            <div style="margin-top:10px;" class="kv">
+              <b>HappyCódigo</b><span>${data.happyCodigo}</span>
+              <b>Correo</b><span>${data.correo}</span>
+              <b>Puntos</b><span><b style="color:#ff5299;">${Number(data.puntos || 0).toLocaleString('es-CO')} HC</b></span>
+            </div>
+            ${txHtml}
+          </div>
+        `;
+      } catch (error) {
+        console.error(error);
+        resultsContainer.innerHTML = `<div class="result"><b>Error</b><div style="opacity:0.85; margin-top:6px;">Verifica tu conexión e inténtalo de nuevo.</div></div>`;
+      } finally {
+        btnConsultar.disabled = false;
+        btnConsultar.textContent = "Consultar";
+      }
+    });
 
-            resultsContainer.innerHTML = `<p>Consultando...</p>`;
-
-            try {
-                // ESTA ES LA LLAMADA REAL A TU API.
-                const response = await fetch(`${API_URL}?codigo=${encodeURIComponent(codigo)}`);
-                const data = await response.json();
-
-                if (!response.ok) {
-                    // Maneja errores de la API (ej: código no encontrado)
-                    resultsContainer.innerHTML = `<p class="error">${data.error || 'Error al buscar el código. Asegúrate de que tu HappyCódigo sea correcto.'}</p>`;
-                    return;
-                }
-
-                // Si la respuesta es exitosa
-                const transaccionesHTML = data.ultimas_transacciones.length > 0
-                    ? '<h4>Últimas Compras:</h4>' +
-                    '<ul>' +
-                    data.ultimas_transacciones.map(t => `
-                        <li>
-                            <strong>Recibo #${t.recibo}</strong><br>
-                            Fecha: ${t.fecha}<br>
-                            Total: $${t.total.toLocaleString('es-CO')}
-                        </li>
-                    `).join('') +
-                    '</ul>'
-                    : '<p>No hay compras recientes.</p>';
-
-                resultsContainer.innerHTML = `
-                    <div class="info-card">
-                        <h3>¡Hola, ${data.nombre}!</h3>
-                        <p><strong>Correo:</strong> ${data.correo}</p>
-                        <p><strong>HappyCódigo:</strong> ${data.happyCodigo}</p>
-                        <p><strong>Puntos HappyCorner:</strong> <strong>${data.puntos.toLocaleString('es-CO')} HC</strong></p>
-                        ${transaccionesHTML}
-                        <a href="https://wa.me/34641422390?text=${encodeURIComponent('Hola, tengo un problema con mi HappyCódigo: ' + data.happyCodigo)}" target="_blank" rel="noopener">
-                            <i class="fab fa-whatsapp"></i> ¿Problemas con mi compra?
-                        </a>
-                    </div>
-                `;
-            } catch (error) {
-                console.error("Error de conexión o parseo:", error);
-                resultsContainer.innerHTML = `<p class="error">Ocurrió un error. Verifica tu conexión o contacta a soporte.</p>`;
-            }
+    const accordionItems = document.querySelectorAll('.accordion-item');
+    accordionItems.forEach(item => {
+      const header = item.querySelector('.accordion-header');
+      header.addEventListener('click', () => {
+        accordionItems.forEach(otherItem => {
+          if (otherItem !== item) otherItem.classList.remove('active');
         });
-
-        // Código JavaScript para el acordeón (FAQ)
-        const accordionItems = document.querySelectorAll('.accordion-item');
-
-        accordionItems.forEach(item => {
-            const header = item.querySelector('.accordion-header');
-            header.addEventListener('click', () => {
-                // Cierra todos los otros ítems
-                accordionItems.forEach(otherItem => {
-                    if (otherItem !== item) {
-                        otherItem.classList.remove('active');
-                    }
-                });
-                // Expande o colapsa el ítem actual
-                item.classList.toggle('active');
-            });
-        });
-</script>
-
+        item.classList.toggle('active');
+      });
+    });
+  </script>
 </body>
 </html>
+

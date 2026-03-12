@@ -1,21 +1,19 @@
 // /api/getPoints.js (Versión Final y Corregida)
+import { applyCors, json, requireEnv } from "./_lib/http.js";
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://happycorner.lol');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (applyCors(req, res, { methods: ["GET", "OPTIONS"] })) return;
 
   const { codigo } = req.query;
   if (!codigo) {
-    return res.status(400).json({ error: 'Falta el parámetro "codigo"' });
+    return json(res, 400, { error: 'Falta el parámetro "codigo"' });
   }
 
-  const token = process.env.LOYVERSE_API_KEY;
-  if (!token) {
-    return res.status(500).json({ error: 'Falta LOYVERSE_API_KEY en Vercel' });
+  let token;
+  try {
+    token = requireEnv("LOYVERSE_API_KEY");
+  } catch {
+    return json(res, 500, { error: 'Falta LOYVERSE_API_KEY en Vercel' });
   }
 
   const API = 'https://api.loyverse.com/v1.0';
@@ -88,12 +86,12 @@ export default async function handler(req, res) {
   try {
     const cliente = await findCustomerByCode(codigo);
     if (!cliente) {
-      return res.status(404).json({ error: 'HappyCódigo no encontrado. Por favor, verifica el código.' });
+      return json(res, 404, { error: 'HappyCódigo no encontrado. Por favor, verifica el código.' });
     }
 
     const receipts = await getLastReceiptsForCustomer(cliente.id, 5);
 
-    res.status(200).json({
+    return json(res, 200, {
       nombre: cliente.name,
       happyCodigo: cliente.customer_code,
       correo: cliente.email || 'No registrado',
@@ -102,6 +100,6 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error consultando Loyverse. Por favor, inténtalo de nuevo.' });
+    return json(res, 500, { error: 'Error consultando Loyverse. Por favor, inténtalo de nuevo.' });
   }
 }

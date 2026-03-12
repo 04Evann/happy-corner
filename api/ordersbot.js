@@ -2,20 +2,24 @@ import { createClient } from '@supabase/supabase-js'
 import fetch from 'node-fetch'
 
 const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET)
+import { applyCors, json, readJsonBody, requireEnv } from "./_lib/http.js";
 
 export default async function handler(req, res) {
-  // Configuración de CORS
-  const origin = req.headers.origin;
-  res.setHeader('Access-Control-Allow-Origin', origin || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (applyCors(req, res, { methods: ["POST", "OPTIONS"] })) return;
 
   try {
     // Sincronizado con tu script: extraemos 'happycodigo' directamente
-    const { nombre, whatsapp, resumen, total, metodo_pago, happycodigo } = req.body;
+    requireEnv("SB_URL");
+    requireEnv("SB_SECRET");
+    requireEnv("TELEGRAM_TOKEN");
+    requireEnv("TELEGRAM_CHAT_ID");
+
+    const { nombre, whatsapp, resumen, total, metodo_pago, happycodigo } = readJsonBody(req);
     const fecha = new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+
+    if (!nombre || !whatsapp || !resumen || !total || !metodo_pago) {
+      return json(res, 400, { ok: false, error: "Faltan datos del pedido" });
+    }
 
     // 1. Guardar en Supabase
     const { data, error } = await supabase
@@ -57,10 +61,10 @@ export default async function handler(req, res) {
       })
     });
 
-    return res.status(200).json({ ok: true });
+    return json(res, 200, { ok: true, orderId: data.id });
 
   } catch (err) {
     console.error("Error en ordersbot:", err.message);
-    return res.status(500).json({ error: err.message });
+    return json(res, 500, { ok: false, error: "Error procesando pedido" });
   }
 }
