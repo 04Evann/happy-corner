@@ -1,85 +1,188 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Loyalty Corner | Happy Corner</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Loyalty Corner | Happy Corner</title>
+
+  <link rel="icon" type="image/png" href="/happyfavicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    .page { max-width: 1050px; margin: 0 auto; padding: 24px 16px 70px; }
+
+    /* Estilo Hero idéntico a tu foto */
+    .hero {
+      background: white;
+      border-radius: 25px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+      border: 1px solid rgba(0,0,0,0.06);
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 18px;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .hero h1 { margin: 0 0 8px; font-size: 26px; font-weight: 900; color: #2d3436; }
+    .hero p { margin: 0; opacity: 0.9; font-size: 14px; color: #636e72; }
+
+    .pillRow { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .pill { font-size: 12px; font-weight: 800; padding: 8px 10px; border-radius: 999px; border: 2px solid #f1f3f8; background: #fff9f5; color: #2d3436; }
+
+    .card { background: white; border-radius: 25px; box-shadow: var(--shadow); padding: 22px; border: 1px solid rgba(0,0,0,0.06); }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+
+    .inputRow { display: flex; gap: 10px; margin-top: 12px; }
+    .inputRow input { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid #eee; font-family: inherit; outline: none; }
+
+    .btnPrimary { border: none; background: #ff5299; color: white; font-weight: 900; padding: 12px 16px; border-radius: 14px; cursor: pointer; white-space: nowrap; }
+
+    /* Resultados igualitos a la foto */
+    .result { margin-top: 14px; padding: 14px; border-radius: 16px; background: #f8f9ff; border: 2px solid #eef1ff; }
+    .kv { display: grid; grid-template-columns: 140px 1fr; gap: 8px 10px; font-size: 13px; line-height: 1.4; }
+    .kv b { font-weight: 900; color: #2d3436; }
+    .kv span { color: #636e72; }
+
+    /* FAQ Estilo Acordeón */
+    .accordion-item { border-top: 1px solid #f1f3f8; padding: 10px 0; }
+    .accordion-header { display: flex; justify-content: space-between; cursor: pointer; }
+    .accordion-header h3 { margin: 0; font-size: 14px; font-weight: 900; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+    .accordion-item.active .accordion-content { max-height: 300px; margin-top: 10px; }
+
+    @media (max-width: 900px) {
+      .hero, .grid2 { grid-template-columns: 1fr; }
+      .hero div:last-child { text-align: left !important; margin-top: 10px; }
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img" onclick="window.location.href='index.html'" style="cursor:pointer;">
-        <nav class="nav-desktop">
-            <a href="index.html">Inicio</a>
-            <a href="catalogo.html">Catálogo</a>
-            <a href="order.html">HappyOrder</a>
-            <a href="loyaltycorner.html" class="active">LoyaltyCorner</a>
-        </nav>
-        <div class="cart-icon" onclick="window.location.href='order.html'">
-            🛒 <span id="cart-count">0</span>
-        </div>
-    </header>
-
-    <div class="page">
-        <div style="background: white; border-radius: 25px; padding: 30px; text-align: center; box-shadow: var(--shadow); margin: 20px 0;">
-            <h1 style="font-weight: 800; background: var(--hp-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom:10px;">Loyalty Corner</h1>
-            <p style="color: #666;">Consulta tus HappyPuntos y beneficios exclusivos.</p>
-            
-            <div style="display: flex; gap: 10px; margin-top: 25px;">
-                <input type="text" id="loyalty-input" placeholder="Tu HappyCódigo (Ej: HAPPY-123)" 
-                       style="flex: 1; padding: 15px; border-radius: 15px; border: 1px solid #eee; outline: none; font-family: inherit;"
-                       oninput="this.value = this.value.toUpperCase()">
-                <button onclick="checkLoyalty()" id="btn-search"
-                        style="background: var(--hp-gradient); color: white; border: none; padding: 0 20px; border-radius: 15px; font-weight: 800; cursor: pointer;">
-                    VER
-                </button>
-            </div>
-        </div>
-
-        <div id="loyalty-result" style="display: none; background: white; border-radius: 25px; padding: 25px; box-shadow: var(--shadow); animation: slideUp 0.4s ease;">
-            <h2 id="res-name" style="color: var(--text-dark); margin-bottom: 15px;">¡Hola!</h2>
-            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f3f8;">
-                <span style="color:#888;">Puntos Disponibles</span>
-                <span id="res-points" style="font-weight: 800; color: #ff5299; font-size: 1.2rem;">0 HC</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; padding: 12px 0;">
-                <span style="color:#888;">HappyCódigo</span>
-                <span id="res-code" style="font-weight: 600;">---</span>
-            </div>
-        </div>
+  <header>
+    <img src="loguito.png" alt="HappyCorner" class="logo-img" onclick="window.location.href='index.html'" style="cursor:pointer;">
+    <nav class="nav-desktop">
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="order.html">HappyOrder</a>
+      <a href="loyaltycorner.html" class="active">LoyaltyCorner</a>
+    </nav>
+    <div class="cart-icon" onclick="window.location.href='order.html'">
+      🛒 <span id="cart-count">0</span>
     </div>
+  </header>
 
-    <script>
-        async function checkLoyalty() {
-            const code = document.getElementById('loyalty-input').value;
-            const btn = document.getElementById('btn-search');
-            if(!code) return;
+  <div class="page">
+    <section class="hero">
+      <div>
+        <h1>Loyalty Corner</h1>
+        <p>Consulta tus puntos, tu correo y tus últimas compras con tu <b>HappyCódigo</b>.</p>
+        <div class="pillRow">
+          <div class="pill">Rápido</div>
+          <div class="pill">Historial</div>
+          <div class="pill">Siempre actualizado</div>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-weight:900; font-size:34px; line-height:1; color:#ff5299;">HC</div>
+        <div style="opacity:0.8; font-size:12px;">1 HC = 1 peso colombiano</div>
+      </div>
+    </section>
 
-            btn.disabled = true; btn.innerText = "...";
+    <div class="grid2">
+      <section class="card">
+        <div style="font-weight:900; font-size:16px;">Consulta tus puntos</div>
+        <div style="opacity:0.85; font-size:13px; margin-top:6px;">Escribe tu HappyCódigo (ej: <b>HC123</b>)</div>
 
-            try {
-                const res = await fetch(`/api/getPoints?codigo=${code}`);
-                const data = await res.json();
-                if (data.error) throw new Error(data.error);
+        <form id="loyalty-form">
+          <div class="inputRow">
+            <input type="text" id="loyalty-input" placeholder="Tu HappyCódigo" required oninput="this.value = this.value.toUpperCase()">
+            <button class="btnPrimary" id="btnConsultar" type="submit">Consultar</button>
+          </div>
+        </form>
 
-                document.getElementById('loyalty-result').style.display = 'block';
-                document.getElementById('res-name').innerText = `¡Hola, ${data.nombre}! 👋`;
-                document.getElementById('res-points').innerText = `${data.puntos} HC`;
-                document.getElementById('res-code').innerText = data.happyCodigo;
-            } catch (err) {
-                alert("Código no encontrado. Intenta de nuevo.");
-            } finally {
-                btn.disabled = false; btn.innerText = "VER";
-            }
-        }
+        <div id="resultados-container"></div>
+      </section>
 
-        function updateCartBadge() {
-            const cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
-            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
-        }
-        window.onload = updateCartBadge;
-    </script>
+      <section class="card">
+        <h2 style="margin: 0 0 10px; font-size: 18px; font-weight: 900;">Preguntas frecuentes</h2>
+        <div class="accordion">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3>¿Qué es Loyalty Corner?</h3>
+              <i class="fas fa-chevron-down" style="opacity:0.7;"></i>
+            </div>
+            <div class="accordion-content">
+              <p style="font-size:13px; opacity:0.9;">Es el nuevo nombre de HappyPuntos. Aquí premiamos tu fidelidad con cada galleta que disfrutas.</p>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <h3>¿Cómo redimo mis puntos?</h3>
+              <i class="fas fa-chevron-down" style="opacity:0.7;"></i>
+            </div>
+            <div class="accordion-content">
+              <p style="font-size:13px; opacity:0.9;">Al momento de tu compra, dinos tu código y te descontaremos el valor equivalente de tus HC.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loyalty-form');
+    const container = document.getElementById('resultados-container');
+    const btn = document.getElementById('btnConsultar');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const codigo = document.getElementById('loyalty-input').value.trim();
+      btn.disabled = true; btn.innerText = "Cargando...";
+
+      try {
+        const response = await fetch(`/api/getPoints?codigo=${encodeURIComponent(codigo)}`);
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.error);
+
+        const tx = data.ultimas_transacciones || [];
+        const txHtml = tx.length ? 
+          `<div style="margin-top:10px;"><b style="font-size:13px;">Últimas compras</b><ul style="list-style:none; padding:0; margin-top:8px;">` +
+          tx.map(t => `<li style="background:white; border:2px solid #f1f3f8; border-radius:12px; padding:10px; margin-bottom:6px; font-size:12px;"><b>Recibo #${t.recibo}</b><br><span style="opacity:0.7;">${t.fecha} · $${Number(t.total).toLocaleString()}</span></li>`).join('') +
+          `</ul></div>` : '';
+
+        container.innerHTML = `
+          <div class="result">
+            <div style="font-weight:900; font-size:16px;">Hola, ${data.nombre}</div>
+            <div style="margin-top:10px;" class="kv">
+              <b>HappyCódigo</b><span>${data.happyCodigo}</span>
+              <b>Correo</b><span>${data.correo}</span>
+              <b>Puntos</b><span><b style="color:#ff5299;">${Number(data.puntos).toLocaleString()} HC</b></span>
+            </div>
+            ${txHtml}
+          </div>
+        `;
+      } catch (err) {
+        container.innerHTML = `<div class="result"><b>Error</b><div style="opacity:0.85; margin-top:6px;">${err.message}</div></div>`;
+      } finally {
+        btn.disabled = false; btn.innerText = "Consultar";
+      }
+    });
+
+    // Acordeón
+    document.querySelectorAll('.accordion-header').forEach(h => {
+      h.addEventListener('click', () => h.parentElement.classList.toggle('active'));
+    });
+
+    function updateBadge() {
+        const cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
+        document.getElementById('cart-count').innerText = cart.reduce((s, i) => s + i.qty, 0);
+    }
+    window.onload = updateBadge;
+  </script>
 </body>
 </html>
