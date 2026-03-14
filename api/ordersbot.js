@@ -1,77 +1,76 @@
 import { createClient } from "@supabase/supabase-js";
 import fetch from "node-fetch";
-import { applyCors, json, readJsonBody, requireEnv } from "./_lib/http.js";
+import { applyCors, json, readJsonBody } from "./_lib/http.js";
 
-const SB_URL = process.env.SB_URL;
-const SB_KEY = process.env.SB_SERVICE_ROLE_KEY || process.env.SB_SECRET;
-const supabase = createClient(SB_URL, SB_KEY);
+const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET);
+
+// Generador de código: H-XXXXX (Solo 5 caracteres aleatorios)
+function generateOrderCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let result = '';
+    for (let i = 0; i < 5; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return `H-${result}`;
+}
 
 export default async function handler(req, res) {
-  if (applyCors(req, res, { methods: ["POST", "OPTIONS"] })) return;
-  if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
-
-  try {
-    requireEnv("SB_URL");
-    if (!process.env.SB_SERVICE_ROLE_KEY) requireEnv("SB_SECRET");
-    requireEnv("TELEGRAM_TOKEN");
-    requireEnv("TELEGRAM_CHAT_ID");
-
-    const { nombre, whatsapp, resumen, total, metodo_pago, happycodigo } = readJsonBody(req);
-    const fecha = new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" });
-
-    if (!nombre || !whatsapp || !resumen || !total || !metodo_pago) {
-      return json(res, 400, { ok: false, error: "Faltan datos del pedido" });
-    }
-
-    const { data, error } = await supabase
-      .from("pedidos")
-      .insert([
-        {
-          nombre,
-          whatsapp,
-          resumen,
-          total,
-          metodo_pago,
-          happycodigo: happycodigo || "Sin código",
-          estado: "Nuevo",
-        },
-      ])
-      .select()
-      .single();
-
-    if (error) throw error;
-
-    const msg =
-      `📦 NUEVO PEDIDO #${data.id}\n\n` +
-      `👤 ${nombre}\n` +
-      `📱 ${whatsapp}\n` +
-      `💳 Pago: ${metodo_pago}\n` +
-      `🎟️ Ticket: ${happycodigo || "Sin codigo"} (HAPPYCODIGO)\n\n` +
-      `🛒 ${resumen}\n` +
-      `💰 TOTAL: ${total}\n\n` +
-      `🕒 ${fecha}\n\n` +
-      `Toca para procesar:\n` +
-      `/confirmar_${data.id}\n` +
-      `/entregar_${data.id}\n` +
-      `/cancelar_${data.id}`;
+    if (applyCors(req, res, { methods: ["POST", "OPTIONS"] })) return;
+    if (req.method !== "POST") return json(res, 405, { error: "Method not allowed" });
 
     try {
-      await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: process.env.TELEGRAM_CHAT_ID,
-          text: msg,
-        }),
-      });
-    } catch (tgErr) {
-      console.error("ordersbot: Telegram send failed:", tgErr?.message || tgErr);
-    }
+        const body = readJsonBody(req);
+        const { nombre, whatsapp, resumen, total, metodo_pago, happycodigo, propina, tipo_entrega } = body;
+        
+        const orderCode = generateOrderCode();
+        // Corrección WhatsApp: Asegurar que empiece por 57 y no tenga símbolos
+        const cleanNumber = whatsapp.replace(/\D/g, '');
+        const waLink = `https://wa.me/57${cleanNumber}`;
 
-    return json(res, 200, { ok: true, orderId: data.id });
-  } catch (err) {
-    const message = err?.message || String(err);
-    console.error("Error en ordersbot:", message);
-    return json(res, 500, { ok: false, error: "Error procesando pedido", details: message });
-  }
+        // 1. Guardar en Supabase
+        const { data, error } = await supabase.from("pedidos").insert([{
+            codigo_orden: orderCode,
+            nombre,
+            whatsapp: cleanNumber,
+            resumen,
+            total,
+            metodo_pago,
+            happycodigo: happycodigo || "Sin código",
+            propina: propina || "$0",
+            tipo_entrega,
+            estado: "Nuevo"
+        }]).select().single();
+
+        if (error) throw error;
+
+        // 2. Formato de mensaje para Telegram
+        const msg = 
+            `🍭 *NUEVO PEDIDO: ${orderCode}* 🍭\n\n` +
+            `👤 *Cliente:* ${nombre}\n` +
+            `📱 *WhatsApp:* [${whatsapp}](${waLink})\n` +
+            `🎟️ *Loyalty:* \`${happycodigo || "No registrado"}\`\n` +
+            `📍 *Entrega:* ${tipo_entrega}\n` +
+            `💳 *Pago:* ${metodo_pago}\n` +
+            `🛒 *Pedido:* ${resumen}\n` +
+            `💖 *Propina:* ${propina}\n` +
+            `💰 *TOTAL FINAL:* ${total}\n\n` +
+            `*Acciones:* \n/confirmar_${data.id}  /entregar_${data.id}`;
+
+        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                chat_id: process.env.TELEGRAM_CHAT_ID,
+                text: msg,
+                parse_mode: "Markdown",
+                disable_web_page_preview: true
+            })
+        });
+
+        return json(res, 200, { ok: true, orderId: data.id, orderCode: orderCode });
+
+    } catch (e) {
+        console.error(e);
+        return json(res, 500, { error: e.message });
+    }
 }

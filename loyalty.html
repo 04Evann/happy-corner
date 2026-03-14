@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Loyalty Corner | Happy Corner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <img src="loguito.png" alt="HappyCorner" class="logo-img" onclick="window.location.href='index.html'" style="cursor:pointer;">
+        <nav class="nav-desktop">
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="order.html">HappyOrder</a>
+            <a href="loyaltycorner.html" class="active">LoyaltyCorner</a>
+        </nav>
+        <div class="cart-icon" onclick="window.location.href='order.html'">
+            🛒 <span id="cart-count">0</span>
+        </div>
+    </header>
+
+    <div class="page">
+        <div style="background: white; border-radius: 25px; padding: 30px; text-align: center; box-shadow: var(--shadow); margin: 20px 0;">
+            <h1 style="font-weight: 800; background: var(--hp-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom:10px;">Loyalty Corner</h1>
+            <p style="color: #666;">Consulta tus HappyPuntos y beneficios exclusivos.</p>
+            
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <input type="text" id="loyalty-input" placeholder="Tu HappyCódigo (Ej: HAPPY-123)" 
+                       style="flex: 1; padding: 15px; border-radius: 15px; border: 1px solid #eee; outline: none; font-family: inherit;"
+                       oninput="this.value = this.value.toUpperCase()">
+                <button onclick="checkLoyalty()" id="btn-search"
+                        style="background: var(--hp-gradient); color: white; border: none; padding: 0 20px; border-radius: 15px; font-weight: 800; cursor: pointer;">
+                    VER
+                </button>
+            </div>
+        </div>
+
+        <div id="loyalty-result" style="display: none; background: white; border-radius: 25px; padding: 25px; box-shadow: var(--shadow); animation: slideUp 0.4s ease;">
+            <h2 id="res-name" style="color: var(--text-dark); margin-bottom: 15px;">¡Hola!</h2>
+            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f1f3f8;">
+                <span style="color:#888;">Puntos Disponibles</span>
+                <span id="res-points" style="font-weight: 800; color: #ff5299; font-size: 1.2rem;">0 HC</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 12px 0;">
+                <span style="color:#888;">HappyCódigo</span>
+                <span id="res-code" style="font-weight: 600;">---</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function checkLoyalty() {
+            const code = document.getElementById('loyalty-input').value;
+            const btn = document.getElementById('btn-search');
+            if(!code) return;
+
+            btn.disabled = true; btn.innerText = "...";
+
+            try {
+                const res = await fetch(`/api/getPoints?codigo=${code}`);
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+
+                document.getElementById('loyalty-result').style.display = 'block';
+                document.getElementById('res-name').innerText = `¡Hola, ${data.nombre}! 👋`;
+                document.getElementById('res-points').innerText = `${data.puntos} HC`;
+                document.getElementById('res-code').innerText = data.happyCodigo;
+            } catch (err) {
+                alert("Código no encontrado. Intenta de nuevo.");
+            } finally {
+                btn.disabled = false; btn.innerText = "VER";
+            }
+        }
+
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
+            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+        }
+        window.onload = updateCartBadge;
+    </script>
+</body>
+</html>
