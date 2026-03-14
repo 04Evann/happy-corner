@@ -27,6 +27,25 @@ NEW DROP, CANT RELEASE THE NAMES YET!!
 ROBUX, SNAPCHAT, MM2 GUNS, OFFICE ACTIVATION, ETC.
 Prices and availability may change depending on promotions or seasons.
 
+### Product image filenames (catalog & index)
+
+Place these image files in the project root (same folder as `index.html` / `catalogo.html`). Names use product initials:
+
+| Product | Filename |
+|--------|----------|
+| Bubbaloo | `bb.png` |
+| Bubbaloo Sparkies | `bbs.png` |
+| Quipitos | `qu.png` |
+| Piazza | `pz.png` |
+| Choco Disk | `cd.png` |
+| Bombombum Tajín | `bt.png` |
+| Ring Pop | `rp.png` |
+| Cookie Chips (Galleta de Chispas) | `gdc.png` |
+| Galleta Red Velvet | `grv.png` |
+| Brownie Avellana | `bav.png` |
+| Galleta Choco Arequipe | `gca.png` |
+| Brownie Arequipe | `bar.png` |
+
 ---
 
 ##  Website

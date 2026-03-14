@@ -36,7 +36,7 @@
 
     <header>
         <img src="Happylogo.png" class="logo-img" alt="Logo">
-        <div class="nav-desktop"><a href="index.html">INICIO</a></div>
+        <div class="nav-desktop"><a href="/index">INICIO</a></div>
     </header>
 
     <div class="section-tag">🛒 PRE-ORDER (STOCK LIMITADO)</div>
@@ -60,6 +60,9 @@
     </div>
 
     <script>
+        // Cambia este número por el WhatsApp de atención al cliente (con código país, sin +)
+        const WHATSAPP_ATENCION = '573001234567';
+
         // --- 🛡️ SISTEMA DE SEGURIDAD ---
         const UA_BANEADO = "iPhone17,1"; // iPhone 16 Pro
         if (localStorage.getItem('hc_blacklist') || navigator.userAgent.includes(UA_BANEADO)) {
@@ -146,7 +149,7 @@
                     location.reload();
                 } else if (res.ok) {
                     alert("¡Pedido enviado con éxito! 🍪");
-                    window.location.href = `https://wa.me/573000000000?text=Hola! Soy ${nombre}, pedí: ${resumen}. Total: ${totalStr}`;
+                    window.location.href = `https://wa.me/${WHATSAPP_ATENCION}?text=Hola! Soy ${encodeURIComponent(nombre)}, pedí: ${encodeURIComponent(resumen)}. Total: ${encodeURIComponent(totalStr)}`;
                 }
             } catch (e) {
                 alert("Error de conexión. Intenta de nuevo.");

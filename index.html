@@ -6,6 +6,13 @@
     <title>Happy Corner | Inicio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .product-img-container {
+            width: 100%; height: 120px; background: #f9f9f9; border-radius: 20px; margin-bottom: 10px;
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .product-img-container img { width: 100%; height: 100%; object-fit: cover; }
+    </style>
 </head>
 <body>
 
@@ -14,12 +21,12 @@
     <header>
         <img src="loguito.png" alt="HappyCorner" class="logo-img">
         <nav class="nav-desktop">
-            <a href="index.html">Inicio</a>
-            <a href="catalogo.html">Catálogo</a>
-            <a href="happyorder.html">HappyOrder</a>
-            <a href="loyalty.html">LoyaltyCorner</a>
-            <a href="admin.html">Admin</a>
-            <a href="terminos.html">Terminos</a>
+            <a href="/index">Inicio</a>
+            <a href="/catalogo">Catálogo</a>
+            <a href="/order">HappyOrder</a>
+            <a href="/loyalty">LoyaltyCorner</a>
+            <a href="/admin">Admin</a>
+            <a href="/terminos">Terminos</a>
         </nav>
         <div class="menu-btn" id="menuBtn">
             <span></span><span></span><span></span>
@@ -28,12 +35,12 @@
 
     <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
-        <a href="index.html">Inicio</a>
-        <a href="catalogo.html">Catálogo</a>
-        <a href="happyorder.html">HappyOrder</a>
-        <a href="loyalty.html">LoyaltyCorner</a>
-        <a href="admin.html">Admin</a>
-        <a href="terminos.html">Términos</a>
+        <a href="/index">Inicio</a>
+        <a href="/catalogo">Catálogo</a>
+        <a href="/order">HappyOrder</a>
+        <a href="/loyalty">LoyaltyCorner</a>
+        <a href="/admin">Admin</a>
+        <a href="/terminos">Términos</a>
     </nav>
 
     <div class="carousel-container">
@@ -48,78 +55,143 @@
 
     <h1 style="text-align: center; font-size: 20px; margin: 25px 0 10px;">Hot Products 🔥</h1>
 
-    <div class="section-tag">Dulces Misteriosos</div>
+    <div class="section-tag">Dulces 🍭</div>
     <div class="grid">
-        <script>
-            for(let i=1; i<=4; i++) {
-                document.write(`
-                <div class="card" id="p${i}">
-                    <div class="img-placeholder">❓</div>
-                    <div class="product-name">Dulce Misterioso #${i}</div>
-                    <div class="price">???</div>
-                    <div class="qty-controls">
-                        <button class="qty-btn" onclick="qty('p${i}',-1)">-</button>
-                        <span class="qty-num">1</span>
-                        <button class="qty-btn" onclick="qty('p${i}',1)">+</button>
-                    </div>
-                    <button class="add-btn" onclick="add('p${i}', 'Dulce #${i}')">Añadir</button>
-                </div>
-                `);
-            }
-        </script>
+        <div class="card" id="bubbaloo">
+            <div class="product-img-container"><img src="bb.png" alt="Bubbaloo"></div>
+            <div class="product-name">Bubbaloo</div>
+            <div class="price">$400</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('bubbaloo',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('bubbaloo',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('bubbaloo')">Añadir</button>
+        </div>
+        <div class="card" id="bubbaloo-sparkies">
+            <div class="product-img-container"><img src="bbs.png" alt="Bubbaloo Sparkies"></div>
+            <div class="product-name">Bubbaloo Sparkies</div>
+            <div class="price">$2.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('bubbaloo-sparkies',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('bubbaloo-sparkies',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('bubbaloo-sparkies')">Añadir</button>
+        </div>
+        <div class="card" id="quipitos">
+            <div class="product-img-container"><img src="qu.png" alt="Quipitos"></div>
+            <div class="product-name">Quipitos</div>
+            <div class="price">$1.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('quipitos',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('quipitos',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('quipitos')">Añadir</button>
+        </div>
+        <div class="card" id="piazza">
+            <div class="product-img-container"><img src="pz.png" alt="Piazza"></div>
+            <div class="product-name">Piazza</div>
+            <div class="price">$800</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('piazza',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('piazza',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('piazza')">Añadir</button>
+        </div>
+        <div class="card" id="choco-disk">
+            <div class="product-img-container"><img src="cd.png" alt="Choco Disk"></div>
+            <div class="product-name">Choco Disk</div>
+            <div class="price">$1.500</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('choco-disk',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('choco-disk',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('choco-disk')">Añadir</button>
+        </div>
+        <div class="card" id="bombombum-tajin">
+            <div class="product-img-container"><img src="bt.png" alt="Bombombum Tajín"></div>
+            <div class="product-name">Bombombum Tajín</div>
+            <div class="price">$2.500</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('bombombum-tajin',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('bombombum-tajin',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('bombombum-tajin')">Añadir</button>
+        </div>
+        <div class="card" id="ring-pop">
+            <div class="product-img-container"><img src="rp.png" alt="Ring Pop"></div>
+            <div class="product-name">Ring Pop</div>
+            <div class="price">$3.500</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('ring-pop',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('ring-pop',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('ring-pop')">Añadir</button>
+        </div>
     </div>
 
-    <div class="section-tag">Roblox 💎</div>
+    <div class="section-tag">Galletas y Brownies 🍪</div>
     <div class="grid">
-        <div class="card" id="rbx1000">
-            <div class="ribbon">PROMO!!</div>
-            <div class="img-placeholder">🔥</div>
-            <div class="product-name">1000 RBX</div>
-            <div class="price">$40.000</div>
+        <div class="card" id="cookie-chips">
+            <div class="product-img-container"><img src="gdc.png" alt="Galleta de Chispas"></div>
+            <div class="product-name">Cookie Chips</div>
+            <div class="price">$5.000</div>
             <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('rbx1000',-1)">-</button>
+                <button class="qty-btn" onclick="qty('cookie-chips',-1)">-</button>
                 <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('rbx1000',1)">+</button>
+                <button class="qty-btn" onclick="qty('cookie-chips',1)">+</button>
             </div>
-            <button class="add-btn" onclick="add('rbx1000', '1000 RBX')">Añadir</button>
+            <button class="add-btn" onclick="add('cookie-chips')">Añadir</button>
         </div>
-        <div class="card" id="rbx40">
-            <div class="img-placeholder">💎</div>
-            <div class="product-name">40 RBX</div>
-            <div class="price">$4.000</div>
+        <div class="card" id="galleta-red-velvet">
+            <div class="product-img-container"><img src="grv.png" alt="Galleta Red Velvet"></div>
+            <div class="product-name">Galleta Red Velvet</div>
+            <div class="price">$6.000</div>
             <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('rbx40',-1)">-</button>
+                <button class="qty-btn" onclick="qty('galleta-red-velvet',-1)">-</button>
                 <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('rbx40',1)">+</button>
+                <button class="qty-btn" onclick="qty('galleta-red-velvet',1)">+</button>
             </div>
-            <button class="add-btn" onclick="add('rbx40', '40 RBX')">Añadir</button>
+            <button class="add-btn" onclick="add('galleta-red-velvet')">Añadir</button>
         </div>
-    </div>
-
-    <div class="section-tag">Servicios Online 🌐</div>
-    <div class="grid">
-        <div class="card" id="snap">
-            <div class="ribbon">TOP</div>
-            <div class="img-placeholder">👻</div>
-            <div class="product-name">Snapchat+</div>
-            <div class="price">$12.000</div>
+        <div class="card" id="brownie-avellana">
+            <div class="product-img-container"><img src="bav.png" alt="Brownie Avellana"></div>
+            <div class="product-name">Brownie Avellana</div>
+            <div class="price">$5.000</div>
             <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('snap',-1)">-</button>
+                <button class="qty-btn" onclick="qty('brownie-avellana',-1)">-</button>
                 <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('snap',1)">+</button>
+                <button class="qty-btn" onclick="qty('brownie-avellana',1)">+</button>
             </div>
-            <button class="add-btn" onclick="add('snap', 'Snapchat+')">Añadir</button>
+            <button class="add-btn" onclick="add('brownie-avellana')">Añadir</button>
         </div>
-        <div class="card" id="spot">
-            <div class="img-placeholder">🎵</div>
-            <div class="product-name">Spotify 1 Mes</div>
-            <div class="price">$18.900</div>
+        <div class="card" id="galleta-choco-arequipe">
+            <div class="product-img-container"><img src="gca.png" alt="Galleta Choco Arequipe"></div>
+            <div class="product-name">Galleta Choco Arequipe</div>
+            <div class="price">$6.000</div>
             <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('spot',-1)">-</button>
+                <button class="qty-btn" onclick="qty('galleta-choco-arequipe',-1)">-</button>
                 <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('spot',1)">+</button>
+                <button class="qty-btn" onclick="qty('galleta-choco-arequipe',1)">+</button>
             </div>
-            <button class="add-btn" onclick="add('spot', 'Spotify')">Añadir</button>
+            <button class="add-btn" onclick="add('galleta-choco-arequipe')">Añadir</button>
+        </div>
+        <div class="card" id="brownie-arequipe">
+            <div class="product-img-container"><img src="bar.png" alt="Brownie Arequipe"></div>
+            <div class="product-name">Brownie Arequipe</div>
+            <div class="price">$5.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="qty('brownie-arequipe',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="qty('brownie-arequipe',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="add('brownie-arequipe')">Añadir</button>
         </div>
     </div>
 
@@ -128,7 +200,7 @@
         <span id="toast-text"></span>
     </div>
 
-    <a href="happyorder.html" class="cart-fixed">
+    <a href="/order" class="cart-fixed">
         🛒<div class="badge" id="cart-count">0</div>
     </a>
 
@@ -157,30 +229,46 @@
         }
         setInterval(() => moveSlide(1), 5000);
 
-        // Carrito y Cantidades
-        let totalItems = 0;
-
+        // Carrito (sincronizado con catalogo y order: hc_cart con id, name, price, qty)
         function qty(id, d) {
             let s = document.querySelector(`#${id} .qty-num`);
             let v = parseInt(s.innerText) + d;
-            if(v > 0) s.innerText = v;
+            if (v > 0) s.innerText = v;
         }
 
-        function add(id, name) {
-            document.getElementById('clinkSound').play().catch(()=>{});
-            const qtyVal = parseInt(document.querySelector(`#${id} .qty-num`).innerText);
-            
-            totalItems += qtyVal;
-            document.getElementById('cart-count').innerText = totalItems;
+        function add(id) {
+            document.getElementById('clinkSound').play().catch(() => {});
+            const card = document.getElementById(id);
+            const name = card.querySelector('.product-name').innerText;
+            const priceVal = card.querySelector('.price').innerText.replace(/[^0-9]/g, '');
+            const price = parseInt(priceVal) || 0;
+            const qtyVal = parseInt(card.querySelector('.qty-num').innerText);
+
+            let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
+            const existingIndex = cart.findIndex(item => item.id === id);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += qtyVal;
+            } else {
+                cart.push({ id, name, price, qty: qtyVal });
+            }
+            localStorage.setItem('hc_cart', JSON.stringify(cart));
+
+            const total = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-count').innerText = total;
 
             const toast = document.getElementById('toast');
             document.getElementById('toast-text').innerHTML = `<b>${qtyVal > 1 ? qtyVal + 'x ' : ''}${name}</b> añadido`;
-            
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2000);
-            
-            document.querySelector(`#${id} .qty-num`).innerText = "1";
+
+            card.querySelector('.qty-num').innerText = '1';
         }
+
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
+            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+        }
+        window.onload = updateCartBadge;
     </script>
 </body>
 </html>

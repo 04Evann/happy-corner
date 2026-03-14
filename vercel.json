@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/index", "destination": "/index.html" },
+    { "source": "/catalogo", "destination": "/catalogo.html" },
+    { "source": "/order", "destination": "/order.html" },
+    { "source": "/confirmed", "destination": "/confirmed.html" },
+    { "source": "/factura", "destination": "/factura.html" },
+    { "source": "/puntos", "destination": "/puntos.html" },
+    { "source": "/terminos", "destination": "/terminos.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/loyalty", "destination": "/loyalty.html" },
+    { "source": "/preorder", "destination": "/preorder.html" }
+  ]
+}

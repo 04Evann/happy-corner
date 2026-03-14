@@ -60,9 +60,9 @@
     <header>
         <img src="loguito.png" alt="HappyCorner" class="logo-img">
         <nav class="nav-desktop">
-            <a href="index.html">Inicio</a>
-            <a href="catalogo.html">Catálogo</a>
-            <a href="order.html">HappyOrder</a>
+            <a href="/index">Inicio</a>
+            <a href="/catalogo">Catálogo</a>
+            <a href="/order">HappyOrder</a>
         </nav>
         <div class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     </header>
@@ -72,7 +72,7 @@
             <h2>🛍️ Tu Carrito</h2>
             <ul id="cart-items-list"></ul>
             <div id="empty-cart-msg" style="display:none; text-align:center; padding:20px;">
-                <p>Carrito vacío. <a href="catalogo.html" style="color:#ff5299; font-weight:800;">Ver productos</a></p>
+                <p>Carrito vacío. <a href="/catalogo" style="color:#ff5299; font-weight:800;">Ver productos</a></p>
             </div>
             <div class="total-box" id="total-container">
                 <div class="total-row"><span>Subtotal:</span> <span id="subtotal-price">$0</span></div>
@@ -232,20 +232,25 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
     btn.disabled = true;
 
     try {
-        const resp = await fetch('https://happy-corner.vercel.app/api/ordersbot', {
+        const resp = await fetch('https://happy-corner.vercel.app/api/getOrders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({
+                nombre: payload.nombre,
+                whatsapp: payload.whatsapp,
+                resumen: payload.resumen,
+                total: payload.total
+            })
         });
 
         const data = await resp.json();
 
         if (data.ok) {
-            const orderId = data.orderId;
-            const happyCode = `HO-${String(orderId).padStart(6, '0')}`;
+            const ref = data.orderId || 'TG-' + Date.now();
+            const happyCode = typeof ref === 'number' ? `HO-${String(ref).padStart(6, '0')}` : ref;
 
             const lastHappyOrder = {
-                orderId,
+                orderId: ref,
                 happyCode,
                 paymentMethod: payload.metodo_pago,
                 deliveryType: payload.tipo_entrega,
@@ -262,8 +267,8 @@ document.getElementById('checkout-form').addEventListener('submit', async functi
             };
 
             localStorage.setItem('lastHappyOrder', JSON.stringify(lastHappyOrder));
-            localStorage.removeItem('hc_cart'); // Limpiamos el carrito
-            window.location.href = 'confirmed.html';
+            localStorage.removeItem('hc_cart');
+            window.location.href = '/confirmed';
         } else {
             throw new Error(data.error || 'Error desconocido');
         }

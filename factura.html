@@ -149,9 +149,9 @@
   <header>
     <img src="loguito.png" alt="HappyCorner" class="logo-img">
     <nav class="nav-desktop">
-      <a href="index.html">Inicio</a>
-      <a href="catalogo.html">Catálogo</a>
-      <a href="order.html">HappyOrder</a>
+      <a href="/index">Inicio</a>
+      <a href="/catalogo">Catálogo</a>
+      <a href="/order">HappyOrder</a>
     </nav>
     <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
       <span></span><span></span><span></span>
@@ -160,11 +160,11 @@
 
   <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
   <nav class="side-menu" id="sideMenu">
-    <a href="index.html">Inicio</a>
-    <a href="catalogo.html">Catálogo</a>
-    <a href="order.html">HappyOrder</a>
-    <a href="puntos.html">Puntos</a>
-    <a href="terminos.html">Términos</a>
+    <a href="/index">Inicio</a>
+    <a href="/catalogo">Catálogo</a>
+    <a href="/order">HappyOrder</a>
+    <a href="/puntos">Puntos</a>
+    <a href="/terminos">Términos</a>
   </nav>
 
   <div class="page">
@@ -210,7 +210,7 @@
       </div>
 
       <div class="actions">
-        <a class="action-btn" href="confirmed.html">Volver a confirmación</a>
+        <a class="action-btn" href="/confirmed">Volver a confirmación</a>
         <button class="action-btn primary" onclick="window.print()">Imprimir / Guardar PDF</button>
       </div>
     </div>
@@ -240,7 +240,7 @@
           <div class="invoice-body"><div class="cardish" style="grid-column:1/-1;">
             No encontramos tu última orden en este dispositivo.
           </div></div>
-          <div class="actions"><a class="action-btn primary" href="catalogo.html">Volver al catálogo</a></div>
+          <div class="actions"><a class="action-btn primary" href="/catalogo">Volver al catálogo</a></div>
         `;
         return;
       }
