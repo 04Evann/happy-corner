@@ -133,7 +133,7 @@
                 });
 
                 if (response.ok) {
-                    alert("¡Pedido enviado! Te llegará la notificación a Telegram.");
+                    alert("¡Pedido enviado! Te enviaremos confirmacion por Whatsapp.");
                     // Redirigir a WhatsApp
                     const msg = `¡Hola! Soy ${nombre}. Pedido: ${resumen}. Total: ${totalStr}`;
                     window.location.href = `https://wa.me/573000000000?text=${encodeURIComponent(msg)}`;
