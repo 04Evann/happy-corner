@@ -8,64 +8,70 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         .preorder-container { padding-bottom: 120px; }
-        .form-section {
-            background: white; margin: 15px; padding: 25px;
-            border-radius: 25px; box-shadow: var(--shadow);
-        }
-        .form-section input {
-            width: 100%; padding: 15px; margin-top: 10px;
-            border-radius: 15px; border: 1px solid #eee;
-            background: #f9f9f9; font-family: 'Poppins', sans-serif;
-            font-size: 16px; outline: none;
-        }
-        .footer-cart {
-            position: fixed; bottom: 0; width: 100%;
-            background: white; padding: 20px 25px;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
-            display: flex; justify-content: space-between;
-            align-items: center; z-index: 1000;
-        }
-        .stock-tag {
-            font-size: 10px; color: #ff5299; font-weight: 800;
-            margin-bottom: 5px; text-transform: uppercase;
-        }
+        .form-section { background: white; margin: 15px; padding: 25px; border-radius: 25px; box-shadow: var(--shadow); }
+        .form-section input { width: 100%; padding: 15px; margin-top: 10px; border-radius: 15px; border: 1px solid #eee; background: #f9f9f9; font-family: 'Poppins', sans-serif; font-size: 16px; outline: none; }
+        .footer-cart { position: fixed; bottom: 0; width: 100%; background: white; padding: 20px 25px; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        .stock-tag { font-size: 10px; color: #ff5299; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; }
         .qty-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* PANTALLA BLACKLIST */
+        #blacklist-screen { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
+            background: #121212; color: white; z-index: 10000; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center; padding: 30px; 
+            font-family: 'Poppins', sans-serif;
+        }
     </style>
 </head>
 <body class="preorder-container">
+
+    <div id="blacklist-screen">
+        <h1 style="font-size: 60px; margin: 0;">🚫</h1>
+        <h2 style="color: #ff5299; font-weight: 800;">DISPOSITIVO BLACK-LISTADO</h2>
+        <p style="color: #ccc; max-width: 400px;">Tu acceso ha sido revocado permanentemente por infringir los términos de servicio de <b>Happy Corner</b>.</p>
+        <div style="margin-top: 30px; padding: 10px; border: 1px solid #333; border-radius: 10px; font-size: 10px; color: #555;">
+            CAUSA: USO INDEBIDO DE PLATAFORMA | ID: 191.106.163.182
+        </div>
+    </div>
 
     <header>
         <img src="Happylogo.png" class="logo-img" alt="Logo">
         <div class="nav-desktop"><a href="index.html">INICIO</a></div>
     </header>
 
-    <div class="section-tag">🔥 STOCK MUY LIMITADO</div>
+    <div class="section-tag">🛒 PRE-ORDER (STOCK LIMITADO)</div>
 
     <div class="grid" id="product-list"></div>
 
     <div class="form-section">
-        <h3 style="font-weight: 800;">¿A NOMBRE DE QUIÉN?</h3>
-        <input type="text" id="cliente-nombre" placeholder="Tu nombre...">
-        <input type="tel" id="cliente-whatsapp" placeholder="WhatsApp (ej: 310...)">
+        <h3 style="font-weight: 800; color: #333;">DATOS DE CONTACTO</h3>
+        <input type="text" id="cliente-nombre" placeholder="¿A nombre de quién?">
+        <input type="tel" id="cliente-whatsapp" placeholder="Tu WhatsApp (ej: 310...)">
     </div>
 
     <div class="footer-cart">
         <div>
-            <p style="font-size: 11px; font-weight: 700; color: #888;">TOTAL</p>
-            <h2 id="total-view" style="color: #ff5299; font-weight: 800;">$0</h2>
+            <p style="font-size: 11px; font-weight: 700; color: #888; margin: 0;">TOTAL</p>
+            <h2 id="total-view" style="color: #ff5299; font-weight: 800; margin: 0;">$0</h2>
         </div>
-        <button class="add-btn" id="submit-btn" style="width: auto; padding: 15px 30px;" onclick="procesarPedido()">
+        <button class="add-btn" id="submit-btn" style="width: auto; padding: 15px 35px; border-radius: 20px;" onclick="procesarPedido()">
             ENVIAR PEDIDO 🚀
         </button>
     </div>
 
     <script>
-        // EL STOCK QUE ME PEDISTE
+        // --- 🛡️ SISTEMA DE SEGURIDAD ---
+        const UA_BANEADO = "iPhone17,1"; // iPhone 16 Pro
+        if (localStorage.getItem('hc_blacklist') || navigator.userAgent.includes(UA_BANEADO)) {
+            document.getElementById('blacklist-screen').style.display = 'flex';
+        }
+
+        // --- 🍪 STOCK REAL ---
         const productos = [
-            { id: 1, nombre: "Cookie Chips", precio: 5000, emoji: "🍪", stock: 3 },
-            { id: 2, nombre: "Galleta Red Velvet", precio: 6000, emoji: "🔴", stock: 2 },
+            { id: 1, nombre: "Cookie Chips", precio: 5000, emoji: "🍪", stock: 4 },
+            { id: 2, nombre: "Galleta Red Velvet", precio: 6000, emoji: "🔴", stock: 4 },
             { id: 3, nombre: "Brownie Chocolate", precio: 5000, emoji: "🍫", stock: 4 },
-            { id: 4, nombre: "Brownie Arequipe", precio: 5000, emoji: "🍯", stock: 2 },
+            { id: 4, nombre: "Brownie Arequipe", precio: 5000, emoji: "🍯", stock: 3 },
             { id: 5, nombre: "Galleta Choco Arequipe", precio: 6000, emoji: "✨", stock: 3 }
         ];
 
@@ -81,7 +87,7 @@
                     <div class="price">$${p.precio.toLocaleString()}</div>
                     <div class="qty-controls">
                         <button class="qty-btn" onclick="updateQty(${p.id}, -1)">-</button>
-                        <span id="qty-${p.id}" style="font-weight:800; min-width: 20px;">0</span>
+                        <span id="qty-${p.id}" style="font-weight:800; min-width: 25px;">0</span>
                         <button class="qty-btn" id="btn-add-${p.id}" onclick="updateQty(${p.id}, 1)">+</button>
                     </div>
                 </div>
@@ -92,17 +98,11 @@
             const p = productos.find(x => x.id === id);
             const actual = carrito[id] || 0;
             const nuevo = actual + val;
-
             if (nuevo >= 0 && nuevo <= p.stock) {
                 carrito[id] = nuevo;
                 document.getElementById(`qty-${id}`).innerText = nuevo;
-                
-                // Bloquear botón si llega al límite de stock
                 document.getElementById(`btn-add-${id}`).disabled = (nuevo === p.stock);
-            } else if (nuevo > p.stock) {
-                alert("¡No hay más stock de este producto!");
             }
-            
             let total = 0;
             productos.forEach(x => total += (carrito[x.id] || 0) * x.precio);
             document.getElementById('total-view').innerText = `$${total.toLocaleString()}`;
@@ -113,31 +113,41 @@
             const tel = document.getElementById('cliente-whatsapp').value;
             const btn = document.getElementById('submit-btn');
 
-            let seleccion = productos.filter(p => carrito[p.id] > 0);
-            if (!nombre || !tel || seleccion.length === 0) {
-                alert("Completa tus datos y elige tus galletas 🍪");
+            // --- 🕵️ DETECTOR DE CHISTOSOS ---
+            const soloNumeros = tel.replace(/\D/g, '');
+            if (soloNumeros.includes("6767") || soloNumeros === "67" || nombre.toLowerCase().includes("chiste")) {
+                localStorage.setItem('hc_blacklist', 'true');
+                document.cookie = "hc_banned=true; max-age=31536000; path=/";
+                location.reload();
+                return;
+            }
+
+            let sel = productos.filter(p => carrito[p.id] > 0);
+            if (!nombre || !tel || sel.length === 0) {
+                alert("Oye! Selecciona tus galletas y pon tus datos. 😉");
                 return;
             }
 
             btn.disabled = true;
-            btn.innerText = "ENVIANDO...";
+            btn.innerText = "ESPERA...";
 
-            const resumen = seleccion.map(p => `${carrito[p.id]}x ${p.nombre}`).join(', ');
+            const resumen = sel.map(p => `${carrito[p.id]}x ${p.nombre}`).join(', ');
             const totalStr = document.getElementById('total-view').innerText;
 
             try {
-                const response = await fetch('https://happy-corner.vercel.app/api/getOrders', {
+                const res = await fetch('https://happy-corner.vercel.app/api/getOrders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nombre, whatsapp: tel, resumen, total: totalStr })
                 });
 
-                if (response.ok) {
-                    alert("¡Pedido enviado! Te enviaremos confirmacion por Whatsapp.");
-                    // Redirigir a WhatsApp
-                    const msg = `¡Hola! Soy ${nombre}. Pedido: ${resumen}. Total: ${totalStr}`;
-                    window.location.href = `https://wa.me/573000000000?text=${encodeURIComponent(msg)}`;
-                } else { throw new Error(); }
+                if (res.status === 403) {
+                    localStorage.setItem('hc_blacklist', 'true');
+                    location.reload();
+                } else if (res.ok) {
+                    alert("¡Pedido enviado con éxito! 🍪");
+                    window.location.href = `https://wa.me/573000000000?text=Hola! Soy ${nombre}, pedí: ${resumen}. Total: ${totalStr}`;
+                }
             } catch (e) {
                 alert("Error de conexión. Intenta de nuevo.");
                 btn.disabled = false;
