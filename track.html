@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rastrear Pedido | Happy Corner</title>
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        .page-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .track-box {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.06);
+            text-align: center;
+        }
+
+        .track-box h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+
+        .track-box p {
+            font-size: 14px;
+            color: #636e72;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 14px;
+            border-radius: 14px;
+            border: 2px solid #eee;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #ff5299;
+        }
+
+        .btnPrimary {
+            border: none;
+            background: #ff5299;
+            color: white;
+            font-weight: 800;
+            padding: 14px 24px;
+            border-radius: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btnPrimary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 82, 153, 0.3);
+        }
+
+        .result-container {
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+
+        .result-card {
+            background: #f8f9ff;
+            border: 2px solid #eef1ff;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .result-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            font-weight: 800;
+            color: #2d3436;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            background: #ff5299;
+            color: white;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13.5px;
+        }
+
+        .info-row span:first-child {
+            font-weight: 700;
+            color: #2d3436;
+        }
+
+        .info-row span:last-child {
+            color: #636e72;
+            font-weight: 500;
+        }
+
+        .items-box {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #e1e5f2;
+            font-size: 13px;
+            color: #2d3436;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        <nav class="nav-desktop">
+            <a href="/index">Inicio</a>
+            <a href="/catalogo">Catálogo</a>
+            <a href="/order">HappyOrder</a>
+            <a href="/loyalty">LoyaltyCorner</a>
+            <a href="/track" style="font-weight: 800; color: #ff5299;">Rastrear Pedido</a>
+        </nav>
+        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+    <nav class="side-menu" id="sideMenu">
+        <a href="/index">Inicio</a>
+        <a href="/catalogo">Catálogo</a>
+        <a href="/order">HappyOrder</a>
+        <a href="/loyalty">LoyaltyCorner</a>
+        <a href="/track">Rastrear Pedido</a>
+        <a href="/terminos">Términos</a>
+    </nav>
+
+    <div class="page-container">
+        <div class="track-box">
+            <h1>Rastrear Pedido 📦</h1>
+            <p>Ingresa tu número de orden para revisar el resumen y detalles de tu pedido.</p>
+
+            <div class="input-group">
+                <input type="text" id="order-input" placeholder="Ej: HO-123456 o h-abcde">
+                <button class="btnPrimary" onclick="checkOrder()">Buscar</button>
+            </div>
+
+            <div class="result-container" id="result-container">
+                <div class="result-card">
+                    <h3>Orden: <span id="r-order-id">---</span> <span class="status-badge" id="r-status">Recibido</span></h3>
+                    
+                    <div class="info-row">
+                        <span>Receptor:</span>
+                        <span id="r-name">---</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Método de Pago:</span>
+                        <span id="r-payment">---</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Tipo de Entrega:</span>
+                        <span id="r-delivery">---</span>
+                    </div>
+                    <div class="info-row" style="margin-top: 5px; padding-top: 5px; border-top: 1px solid #eee;">
+                        <span>Total:</span>
+                        <span id="r-total" style="font-weight: 800; color: #ff5299; font-size: 15px;">$0</span>
+                    </div>
+
+                    <div class="items-box">
+                        <strong>Artículos:</strong><br>
+                        <span id="r-items">---</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="error-msg" style="display: none; color: #d63031; font-size: 14px; font-weight: 600; margin-top: 15px;">
+                <i class="fas fa-exclamation-circle"></i> Orden no encontrada en este dispositivo.
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
+        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    </div>
+
+    <script>
+        function toggleMenu(force) {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
+            menu.classList.toggle('active', next);
+            overlay.classList.toggle('active', next);
+        }
+
+        function checkOrder() {
+            const searchInput = document.getElementById('order-input').value.trim().toLowerCase();
+            const resultBox = document.getElementById('result-container');
+            const errorMsg = document.getElementById('error-msg');
+            
+            errorMsg.style.display = 'none';
+            resultBox.style.display = 'none';
+
+            if (!searchInput) return;
+
+            // Al no tener base de datos, buscamos en el LocalStorage
+            const storedData = localStorage.getItem('lastHappyOrder');
+            
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                const isMatch = data.orderId.toLowerCase() === searchInput || 
+                               (data.happyCode && data.happyCode.toLowerCase() === searchInput);
+
+                if (isMatch) {
+                    const paymentMap = { 'nequi': 'Nequi', 'pse': 'PSE', 'tarjeta': 'Tarjeta', 'efectivo': 'Efectivo' };
+                    const deliveryMap = { 'colegio': 'Colegio', 'virtual': 'Virtual' };
+
+                    document.getElementById('r-order-id').innerText = data.happyCode || data.orderId;
+                    document.getElementById('r-name').innerText = data.customer?.nombre || '---';
+                    document.getElementById('r-payment').innerText = paymentMap[data.paymentMethod] || data.paymentMethod;
+                    document.getElementById('r-delivery').innerText = deliveryMap[data.deliveryType] || data.deliveryType;
+                    document.getElementById('r-total').innerText = data.total;
+                    document.getElementById('r-items').innerText = data.itemsSummary;
+
+                    resultBox.style.display = 'block';
+                    return;
+                }
+            }
+
+            // Si no coincide o no hay datos
+            errorMsg.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

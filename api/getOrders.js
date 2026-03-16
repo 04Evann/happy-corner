@@ -47,6 +47,11 @@ export default async function handler(req, res) {
                         `💖 *Propina:* ${pedidoData.propina || "Sin propina"}\n` +
                         `💰 *TOTAL FINAL:* ${totalDisplay}${note}`;
 
+            // Preparar mensajes para WhatsApp
+            const waApproval = `Hola ${pedidoData.nombre}! 🎉 Tu pedido de Happy Corner está confirmado.\n\n📦 Orden: ${orderCode}\n🛍️ Resumen: ${pedidoData.resumen}\n💰 Total: ${totalDisplay}\n\n¡Gracias por preferirnos!`;
+            const waPending = `Hola ${pedidoData.nombre}, tu pedido ${orderCode} por ${totalDisplay} está pendiente de pago. ⏳\n\n🛍️ Resumen: ${pedidoData.resumen}\n\nPor favor envía tu comprobante aquí para procesarlo rápido!`;
+            const waCancel = `Hola ${pedidoData.nombre}. Lamentablemente tu pedido ${orderCode} ha sido cancelado por el siguiente motivo: `;
+
             // ENVIAR SOLO A TELEGRAM
             const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
                 method: 'POST',
@@ -59,13 +64,13 @@ export default async function handler(req, res) {
                     reply_markup: {
                         inline_keyboard: [
                             [
-                                { text: "✅ Aprobar Pedido", url: `https://wa.me/57${cleanNumber}?text=Hola%20${encodeURIComponent(pedidoData.nombre)},%20tu%20pedido%20${orderCode}%20por%20${encodeURIComponent(totalDisplay)}%20ha%20sido%20aprobado!` }
+                                { text: "✅ Aprobar Pedido", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waApproval)}` }
                             ],
                             [
-                                { text: "⏳ Pago Pendiente", url: `https://wa.me/57${cleanNumber}?text=Hola%20${encodeURIComponent(pedidoData.nombre)},%20tu%20pedido%20${orderCode}%20está%20pendiente%20de%20pago.%20Por%20favor%20envía%20el%20comprobante.` }
+                                { text: "⏳ Pago Pendiente", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waPending)}` }
                             ],
                             [
-                                { text: "❌ Cancelar Pedido", url: `https://wa.me/57${cleanNumber}?text=Hola%20${encodeURIComponent(pedidoData.nombre)},%20tu%20pedido%20${orderCode}%20ha%20sido%20cancelado%20por%20el%20siguiente%20motivo:%20` }
+                                { text: "❌ Cancelar Pedido", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waCancel)}` }
                             ]
                         ]
                     }
