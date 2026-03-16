@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,15 +16,26 @@
             grid-template-columns: 1fr 1fr;
             gap: 30px;
         }
+
         .checkout-section {
             background: white;
             border-radius: 25px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             height: fit-content;
         }
-        .checkout-section h2 { font-weight: 800; margin-bottom: 20px; border-bottom: 3px solid #f1f3f8; padding-bottom: 10px; }
-        #cart-items-list { list-style: none; }
+
+        .checkout-section h2 {
+            font-weight: 800;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #f1f3f8;
+            padding-bottom: 10px;
+        }
+
+        #cart-items-list {
+            list-style: none;
+        }
+
         .cart-item {
             display: flex;
             justify-content: space-between;
@@ -31,6 +43,7 @@
             padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
+
         .item-qty-controls {
             display: flex;
             align-items: center;
@@ -39,22 +52,63 @@
             padding: 5px 10px;
             border-radius: 15px;
         }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
-        input, select, textarea {
-            width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #eee; font-family: inherit;
+
+        .form-group {
+            margin-bottom: 18px;
         }
-        .total-box { margin-top: 20px; padding: 20px; background: #fff9f5; border-radius: 15px; }
-        .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
-        .total-row.final { font-size: 20px; font-weight: 800; color: #ff5299; }
-        
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid #eee;
+            font-family: inherit;
+        }
+
+        .total-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff9f5;
+            border-radius: 15px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .total-row.final {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ff5299;
+        }
+
         @media (max-width: 850px) {
-            .order-main { grid-template-columns: 1fr; }
-            .checkout-section:first-child { order: 1; }
-            .checkout-section:last-child { order: 2; }
+            .order-main {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-section:first-child {
+                order: 1;
+            }
+
+            .checkout-section:last-child {
+                order: 2;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -82,12 +136,13 @@
 
         <section class="checkout-section">
             <h2>📝 Datos de Entrega</h2>
-         <form id="checkout-form">
+            <form id="checkout-form">
                 <div class="form-group">
                     <label>¿Tienes HappyCódigo?</label>
                     <div style="display:flex; gap:10px;">
                         <input type="text" id="puntos_code" placeholder="Tu código">
-                        <button type="button" id="consultar-puntos-btn" class="add-btn" style="width:auto; padding:0 15px;">Consultar</button>
+                        <button type="button" id="consultar-puntos-btn" class="add-btn"
+                            style="width:auto; padding:0 15px;">Consultar</button>
                     </div>
                 </div>
                 <div class="form-group">
@@ -111,11 +166,11 @@
                 </div>
                 <div class="form-group">
                     <label>Método de Pago</label>
-                        <select id="metodo_pago" name="Metodo_Pago" required>
+                    <select id="metodo_pago" name="Metodo_Pago" required>
                         <option value="nequi">Nequi</option>
                         <option value="efectivo">Efectivo</option>
                         <option value="pse">PSE</option>
-                       <option value="tarjeta">Tarjeta (debes contactarnos)</option>
+                        <option value="tarjeta">Tarjeta (debes contactarnos)</option>
                     </select>
                 </div>
                 <input type="hidden" name="Resumen_Pedido" id="hidden-summary">
@@ -182,15 +237,15 @@
         }
 
         // Happy Puntos
-        document.getElementById('consultar-puntos-btn').onclick = async function() {
+        document.getElementById('consultar-puntos-btn').onclick = async function () {
             const code = document.getElementById('puntos_code').value.trim();
-            if(!code) return alert("Escribe tu código");
+            if (!code) return alert("Escribe tu código");
             this.innerText = "...";
             try {
                 const res = await fetch(`https://happy-corner.vercel.app/api/getPoints?codigo=${code}`);
                 const data = await res.json();
-                if(data.nombre) {
-                    if(confirm(`¡Hola ${data.nombre}! ¿Usamos tus datos?`)) {
+                if (data.nombre) {
+                    if (confirm(`¡Hola ${data.nombre}! ¿Usamos tus datos?`)) {
                         document.getElementById('nombre').value = data.nombre;
                         document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
                     }
@@ -202,85 +257,86 @@
         function toggleMenu() {
             // Reutiliza la lógica de tu styles.css si existe el side-menu
             const sm = document.getElementById('sideMenu') || document.querySelector('.side-menu');
-            if(sm) sm.classList.toggle('active');
+            if (sm) sm.classList.toggle('active');
         }
 
         window.onload = renderCart;
     </script>
-   
+
     <script>
-document.getElementById('checkout-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
+        document.getElementById('checkout-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
 
-    // Capturamos los datos asegurándonos de que existan los IDs en el HTML
-    const payload = {
-        nombre: document.getElementById('nombre').value,
-        email: document.getElementById('email').value,
-        whatsapp: document.getElementById('celular').value,
-        resumen: document.getElementById('hidden-summary').value,
-        total: document.getElementById('hidden-total').value,
-        // Verifica que tu <select> tenga id="metodo_pago"
-        metodo_pago: document.getElementById('metodo_pago').value,
-        tipo_entrega: document.getElementById('tipo_entrega').value,
-        happycodigo: document.getElementById('puntos_code').value || null
-    };
-
-    // Animación simple en el botón
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalText = btn.innerText;
-    btn.innerText = "Enviando...";
-    btn.disabled = true;
-
-    try {
-        const resp = await fetch('https://happy-corner.vercel.app/api/getOrders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nombre: payload.nombre,
-                whatsapp: payload.whatsapp,
-                resumen: payload.resumen,
-                total: payload.total
-            })
-        });
-
-        const data = await resp.json();
-
-        if (data.ok) {
-            const ref = data.orderId || 'TG-' + Date.now();
-            const happyCode = typeof ref === 'number' ? `HO-${String(ref).padStart(6, '0')}` : ref;
-
-            const lastHappyOrder = {
-                orderId: ref,
-                happyCode,
-                paymentMethod: payload.metodo_pago,
-                deliveryType: payload.tipo_entrega,
-                itemsSummary: payload.resumen,
-                subtotal: payload.total,
-                shipping: "Gratis",
-                total: payload.total,
-                customer: {
-                    nombre: payload.nombre,
-                    email: payload.email,
-                    whatsapp: payload.whatsapp
-                },
-                createdAt: new Date().toISOString()
+            // Capturamos los datos asegurándonos de que existan los IDs en el HTML
+            const payload = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                whatsapp: document.getElementById('celular').value,
+                resumen: document.getElementById('hidden-summary').value,
+                total: document.getElementById('hidden-total').value,
+                // Verifica que tu <select> tenga id="metodo_pago"
+                metodo_pago: document.getElementById('metodo_pago').value,
+                tipo_entrega: document.getElementById('tipo_entrega').value,
+                happycodigo: document.getElementById('puntos_code').value || null
             };
 
-            localStorage.setItem('lastHappyOrder', JSON.stringify(lastHappyOrder));
-            localStorage.removeItem('hc_cart');
-            window.location.href = '/confirmed';
-        } else {
-            throw new Error(data.error || 'Error desconocido');
-        }
+            // Animación simple en el botón
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = "Enviando...";
+            btn.disabled = true;
 
-    } catch (err) {
-        console.error(err);
-        alert('❌ No pudimos enviar el pedido: ' + err.message);
-    } finally {
-        btn.innerText = originalText;
-        btn.disabled = false;
-    }
-});
-</script>
+            try {
+                const resp = await fetch('https://happy-corner.vercel.app/api/getOrders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nombre: payload.nombre,
+                        whatsapp: payload.whatsapp,
+                        resumen: payload.resumen,
+                        total: payload.total
+                    })
+                });
+
+                const data = await resp.json();
+
+                if (data.ok) {
+                    const ref = data.orderId || 'TG-' + Date.now();
+                    const happyCode = typeof ref === 'number' ? `HO-${String(ref).padStart(6, '0')}` : ref;
+
+                    const lastHappyOrder = {
+                        orderId: ref,
+                        happyCode,
+                        paymentMethod: payload.metodo_pago,
+                        deliveryType: payload.tipo_entrega,
+                        itemsSummary: payload.resumen,
+                        subtotal: payload.total,
+                        shipping: "Gratis",
+                        total: payload.total,
+                        customer: {
+                            nombre: payload.nombre,
+                            email: payload.email,
+                            whatsapp: payload.whatsapp
+                        },
+                        createdAt: new Date().toISOString()
+                    };
+
+                    localStorage.setItem('lastHappyOrder', JSON.stringify(lastHappyOrder));
+                    localStorage.removeItem('hc_cart');
+                    window.location.href = '/confirmed';
+                } else {
+                    throw new Error(data.error || 'Error desconocido');
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert('❌ No pudimos enviar el pedido: ' + err.message);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+    </script>
 </body>
+
 </html>
