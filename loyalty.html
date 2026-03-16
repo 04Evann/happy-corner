@@ -99,7 +99,7 @@
 
         <form id="loyalty-form">
           <div class="inputRow">
-            <input type="text" id="loyalty-input" placeholder="Tu HappyCódigo" required oninput="this.value = this.value.toUpperCase()">
+            <input type="text" id="loyalty-input" placeholder="Tu HappyCódigo" required>
             <button class="btnPrimary" id="btnConsultar" type="submit">Consultar</button>
           </div>
         </form>
@@ -132,6 +132,10 @@
       </section>
     </div>
   </div>
+
+    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
+        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    </div>
 
   <script>
     const form = document.getElementById('loyalty-form');

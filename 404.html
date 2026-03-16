@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página No Encontrada | Happy Corner</title>
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .error-code {
+            font-size: 150px;
+            font-weight: 800;
+            background: var(--hp-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .error-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #2d3436;
+            margin-bottom: 15px;
+        }
+
+        .error-desc {
+            font-size: 16px;
+            color: #636e72;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btnPrimary {
+            display: inline-block;
+            border: none;
+            background: #ff5299;
+            color: white;
+            font-weight: 800;
+            padding: 14px 28px;
+            border-radius: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 15px;
+            box-shadow: 0 4px 15px rgba(255, 82, 153, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btnPrimary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 82, 153, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        <nav class="nav-desktop">
+            <a href="/index">Inicio</a>
+            <a href="/catalogo">Catálogo</a>
+            <a href="/order">HappyOrder</a>
+            <a href="/loyalty">LoyaltyCorner</a>
+        </nav>
+        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+    <nav class="side-menu" id="sideMenu">
+        <a href="/index">Inicio</a>
+        <a href="/catalogo">Catálogo</a>
+        <a href="/order">HappyOrder</a>
+        <a href="/loyalty">LoyaltyCorner</a>
+        <a href="/terminos">Términos</a>
+    </nav>
+
+    <div class="page">
+        <div class="error-container">
+            <div class="error-code">404</div>
+            <h1 class="error-title">tan bobo se perdio JAAAA JAAA BABOSITO LOL</h1>
+            <p class="error-desc">Parece que la página que estás buscando no existe, ha sido movida, o marian se la comio.</p>
+            <a href="/index" class="btnPrimary">Volver al Inicio</a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu(force) {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
+            menu.classList.toggle('active', next);
+            overlay.classList.toggle('active', next);
+        }
+    </script>
+</body>
+</html>

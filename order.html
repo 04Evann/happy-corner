@@ -117,9 +117,20 @@
             <a href="/index">Inicio</a>
             <a href="/catalogo">Catálogo</a>
             <a href="/order">HappyOrder</a>
+            <a href="/loyalty">LoyaltyCorner</a>
+            <a href="/terminos">Términos</a>
         </nav>
         <div class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
     </header>
+
+    <div class="overlay" id="overlay"></div>
+    <nav class="side-menu" id="sideMenu">
+        <a href="/index">Inicio</a>
+        <a href="/catalogo">Catálogo</a>
+        <a href="/order">HappyOrder</a>
+        <a href="/loyalty">LoyaltyCorner</a>
+        <a href="/terminos">Términos</a>
+    </nav>
 
     <main class="order-main">
         <section class="checkout-section">
@@ -193,6 +204,10 @@
             </form>
         </section>
     </main>
+
+    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
+        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    </div>
 
     <script>
         // SINCRONIZADO CON CATALOGO: Usamos 'hc_cart' y la propiedad 'qty'

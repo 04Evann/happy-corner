@@ -25,7 +25,6 @@
             <a href="/catalogo">Catálogo</a>
             <a href="/order">HappyOrder</a>
             <a href="/loyalty">LoyaltyCorner</a>
-            <a href="/admin">Admin</a>
             <a href="/terminos">Terminos</a>
         </nav>
         <div class="menu-btn" id="menuBtn">
@@ -39,7 +38,6 @@
         <a href="/catalogo">Catálogo</a>
         <a href="/order">HappyOrder</a>
         <a href="/loyalty">LoyaltyCorner</a>
-        <a href="/admin">Admin</a>
         <a href="/terminos">Términos</a>
     </nav>
 
@@ -69,17 +67,7 @@
             </div>
             <button class="add-btn" onclick="add('pizza-normal')">Añadir</button>
         </div>
-        <div class="card" id="pizza-x2-queso">
-            <div class="product-img-container"><img src="pizza.png" alt="Pizza x2 Queso"></div>
-            <div class="product-name">Pizza x2 Queso</div>
-            <div class="price">$13.000</div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('pizza-x2-queso',-1)">-</button>
-                <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('pizza-x2-queso',1)">+</button>
-            </div>
-            <button class="add-btn" onclick="add('pizza-x2-queso')">Añadir</button>
-        </div>
+
 
         <!-- Galleta Red Velvet -->
         <div class="card" id="galleta-red-velvet">
@@ -108,84 +96,7 @@
         </div>
     </div>
 
-    <div class="section-tag">Robux 🟢</div>
-    <div class="grid">
-        <div class="card" id="robux-40">
-            <div class="product-img-container"><img src="Robux_icon.png" alt="40 Robux"></div>
-            <div class="product-name">40 Robux</div>
-            <div class="price">$4.000</div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('robux-40',-1)">-</button>
-                <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('robux-40',1)">+</button>
-            </div>
-            <button class="add-btn" onclick="add('robux-40')">Añadir</button>
-        </div>
-        <div class="card" id="robux-80">
-            <div class="product-img-container"><img src="Robux_icon.png" alt="80 Robux"></div>
-            <div class="product-name">80 Robux</div>
-            <div class="price">$6.500</div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('robux-80',-1)">-</button>
-                <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('robux-80',1)">+</button>
-            </div>
-            <button class="add-btn" onclick="add('robux-80')">Añadir</button>
-        </div>
-        <div class="card" id="robux-200">
-            <div class="product-img-container"><img src="Robux_icon.png" alt="200 Robux"></div>
-            <div class="product-name">200 Robux</div>
-            <div class="price">$14.000</div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('robux-200',-1)">-</button>
-                <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('robux-200',1)">+</button>
-            </div>
-            <button class="add-btn" onclick="add('robux-200')">Añadir</button>
-        </div>
-        <div class="card" id="robux-500">
-            <div class="product-img-container"><img src="Robux_icon.png" alt="500 Robux"></div>
-            <div class="product-name">500 Robux</div>
-            <div class="price">$26.500</div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('robux-500',-1)">-</button>
-                <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('robux-500',1)">+</button>
-            </div>
-            <button class="add-btn" onclick="add('robux-500')">Añadir</button>
-        </div>
-        <div class="card" id="robux-1000">
-            <div class="product-img-container"><img src="Robux_icon.png" alt="1000 Robux"></div>
-            <div class="product-name">1000 Robux</div>
-            <div class="price">$42.000</div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('robux-1000',-1)">-</button>
-                <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('robux-1000',1)">+</button>
-            </div>
-            <button class="add-btn" onclick="add('robux-1000')">Añadir</button>
-        </div>
-        <div class="card" id="robux-4500">
-            <div class="product-img-container"><img src="Robux_icon.png" alt="4500 Robux"></div>
-            <div class="product-name">4500 Robux</div>
-            <div class="price">$151.000</div>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="qty('robux-4500',-1)">-</button>
-                <span class="qty-num">1</span>
-                <button class="qty-btn" onclick="qty('robux-4500',1)">+</button>
-            </div>
-            <button class="add-btn" onclick="add('robux-4500')">Añadir</button>
-        </div>
-        <div class="card" id="robux-custom">
-            <div class="product-img-container"><img src="Robux_icon.png" alt="Robux Personalizado"></div>
-            <div class="product-name">Robux Personalizado</div>
-            <div class="price">A Convenir</div>
-            <div style="margin: 10px 0;">
-                <input type="number" id="custom-robux-amount" placeholder="¿Cuántos Robux?" style="width: 100%; padding: 8px; border-radius: 10px; border: 2px solid #eee; text-align: center; font-family: inherit;">
-            </div>
-            <button class="add-btn" onclick="addCustomRobux()">Añadir Personalizado</button>
-        </div>
-    </div>
+
 
     <div id="toast">
         <div class="toast-check">✓</div>
@@ -195,6 +106,10 @@
     <a href="/order" class="cart-fixed">
         🛒<div class="badge" id="cart-count">0</div>
     </a>
+
+    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
+        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    </div>
 
     <script>
         // Menú Lateral

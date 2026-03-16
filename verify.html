@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verificar Orden | Happy Corner</title>
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .verify-box {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.06);
+            text-align: center;
+            max-width: 500px;
+            margin: 40px auto;
+        }
+
+        .success-icon {
+            background: #2ecc71;
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+        }
+
+        .verify-box h1 {
+            font-weight: 800;
+            color: #2d3436;
+            margin-bottom: 5px;
+        }
+
+        .verify-box p {
+            font-size: 15px;
+            color: #636e72;
+            margin-bottom: 20px;
+        }
+
+        .order-badge {
+            background: #f1f3f8;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 18px;
+            color: #ff5299;
+            display: inline-block;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .btnPrimary {
+            display: inline-block;
+            border: none;
+            background: #ff5299;
+            color: white;
+            font-weight: 800;
+            padding: 14px 24px;
+            border-radius: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        <nav class="nav-desktop">
+            <a href="/index">Inicio</a>
+            <a href="/catalogo">Catálogo</a>
+            <a href="/order">HappyOrder</a>
+        </nav>
+        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+    <nav class="side-menu" id="sideMenu">
+        <a href="/index">Inicio</a>
+        <a href="/catalogo">Catálogo</a>
+        <a href="/order">HappyOrder</a>
+        <a href="/loyalty">LoyaltyCorner</a>
+        <a href="/terminos">Términos</a>
+    </nav>
+
+    <div class="page" style="padding: 20px;">
+        <div class="verify-box">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h1>Orden Auténtica</h1>
+            <p>Este recibo ha sido emitido y verificado oficialmente por el sistema de Happy Corner.</p>
+            
+            <div class="order-badge" id="order-id">Consultando...</div>
+            
+            <div>
+                <a href="/index" class="btnPrimary">Volver a la Tienda</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu(force) {
+            const menu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
+            menu.classList.toggle('active', next);
+            overlay.classList.toggle('active', next);
+        }
+
+        window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order');
+            if(orderId) {
+                document.getElementById('order-id').innerText = orderId;
+            } else {
+                document.getElementById('order-id').innerText = "Orden no especificada";
+            }
+        };
+    </script>
+</body>
+</html>

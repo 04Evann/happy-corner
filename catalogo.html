@@ -55,6 +55,32 @@
         <h1 style="font-size: 24px; font-weight: 800; margin-bottom: 5px;">Catálogo Completo 🛒</h1>
     </div>
 
+    <div class="section-tag">Pizzas 🍕</div>
+    <div class="grid">
+        <div class="card" id="pizza-normal">
+            <div class="product-img-container"><img src="pizza.png" alt="Pizza Normal"></div>
+            <h3 class="product-name">Pizza Normal</h3>
+            <div class="price">$11.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('pizza-normal', -1)">−</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('pizza-normal', 1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('pizza-normal')">Añadir</button>
+        </div>
+        <div class="card" id="pizza-x2-queso">
+            <div class="product-img-container"><img src="pizza.png" alt="Pizza x2 Queso"></div>
+            <h3 class="product-name">Pizza x2 Queso</h3>
+            <div class="price">$13.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('pizza-x2-queso', -1)">−</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('pizza-x2-queso', 1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('pizza-x2-queso')">Añadir</button>
+        </div>
+    </div>
+
     <div class="section-tag">Dulces 🍭</div>
     <div class="grid">
         <div class="card" id="bubbaloo">
@@ -195,6 +221,85 @@
         </div>
     </div>
 
+    <div class="section-tag">Robux 🟢</div>
+    <div class="grid">
+        <div class="card" id="robux-40">
+            <div class="product-img-container"><img src="Robux_icon.png" alt="40 Robux"></div>
+            <h3 class="product-name">40 Robux</h3>
+            <div class="price">$4.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('robux-40',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('robux-40',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('robux-40')">Añadir</button>
+        </div>
+        <div class="card" id="robux-80">
+            <div class="product-img-container"><img src="Robux_icon.png" alt="80 Robux"></div>
+            <h3 class="product-name">80 Robux</h3>
+            <div class="price">$6.500</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('robux-80',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('robux-80',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('robux-80')">Añadir</button>
+        </div>
+        <div class="card" id="robux-200">
+            <div class="product-img-container"><img src="Robux_icon.png" alt="200 Robux"></div>
+            <h3 class="product-name">200 Robux</h3>
+            <div class="price">$14.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('robux-200',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('robux-200',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('robux-200')">Añadir</button>
+        </div>
+        <div class="card" id="robux-500">
+            <div class="product-img-container"><img src="Robux_icon.png" alt="500 Robux"></div>
+            <h3 class="product-name">500 Robux</h3>
+            <div class="price">$26.500</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('robux-500',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('robux-500',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('robux-500')">Añadir</button>
+        </div>
+        <div class="card" id="robux-1000">
+            <div class="product-img-container"><img src="Robux_icon.png" alt="1000 Robux"></div>
+            <h3 class="product-name">1000 Robux</h3>
+            <div class="price">$42.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('robux-1000',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('robux-1000',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('robux-1000')">Añadir</button>
+        </div>
+        <div class="card" id="robux-4500">
+            <div class="product-img-container"><img src="Robux_icon.png" alt="4500 Robux"></div>
+            <h3 class="product-name">4500 Robux</h3>
+            <div class="price">$151.000</div>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="changeQty('robux-4500',-1)">-</button>
+                <span class="qty-num">1</span>
+                <button class="qty-btn" onclick="changeQty('robux-4500',1)">+</button>
+            </div>
+            <button class="add-btn" onclick="addToCart('robux-4500')">Añadir</button>
+        </div>
+        <div class="card" id="robux-custom">
+            <div class="product-img-container"><img src="Robux_icon.png" alt="Robux Personalizado"></div>
+            <h3 class="product-name">Robux Personalizado</h3>
+            <div class="price">A Convenir</div>
+            <div style="margin: 10px 0;">
+                <input type="number" id="custom-robux-amount" placeholder="¿Cuántos Robux?" style="width: 100%; padding: 8px; border-radius: 10px; border: 2px solid #eee; text-align: center; font-family: inherit;">
+            </div>
+            <button class="add-btn" onclick="addCustomRobux()">Añadir Personalizado</button>
+        </div>
+    </div>
+
     <div class="section-tag">Otros 🛍️</div>
     <div class="grid">
         <div class="card" id="c-wa">
@@ -217,6 +322,10 @@
     <a href="/order" class="cart-fixed">
         🛒<div class="badge" id="cart-count">0</div>
     </a>
+
+    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
+        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    </div>
 
     <script>
         // Mantenemos la lógica de carrito y menú que ya te pasé
@@ -257,6 +366,32 @@
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2000);
             card.querySelector('.qty-num').innerText = "1";
+        }
+
+        function addCustomRobux() {
+            const amountInput = document.getElementById('custom-robux-amount').value;
+            const amount = parseInt(amountInput);
+            if (!amount || amount <= 0) {
+                alert("Por favor ingresa una cantidad válida de Robux.");
+                return;
+            }
+
+            document.getElementById('clinkSound').play().catch(() => {});
+            const name = `Robux Personalizado (${amount} R$)`;
+            const price = 0; // A convenir
+            const id = `robux-custom-${Date.now()}`;
+
+            let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
+            cart.push({ id, name, price, qty: 1, isCustomRobux: true });
+            localStorage.setItem('hc_cart', JSON.stringify(cart));
+
+            updateCartBadge();
+            
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerHTML = `<b>${name}</b> añadido`;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+            document.getElementById('custom-robux-amount').value = '';
         }
 
         function updateCartBadge() {

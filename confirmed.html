@@ -172,6 +172,11 @@
                 </tbody>
             </table>
 
+            <div style="text-align: center; margin: 25px 0 10px;">
+                <div id="qrcode" style="display: inline-block; padding: 10px; background: white; border-radius: 10px; border: 2px solid #eee;"></div>
+                <div style="font-size: 11px; color: #666; margin-top: 5px;">Escanea para verificar</div>
+            </div>
+
             <div class="actions">
                 <a href="/factura" class="action-btn primary"><i class="fas fa-receipt"></i> Ver factura</a>
                 <a href="/catalogo" class="action-btn"><i class="fas fa-store"></i> Seguir comprando</a>
@@ -179,6 +184,7 @@
         </div>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         function toggleMenu(force) {
             const menu = document.getElementById('sideMenu');
@@ -232,6 +238,19 @@
             // Mostrar los ítems
             document.getElementById('detail-items-summary').textContent = data.itemsSummary || 'Sin resumen de productos.';
             
+            const code = data.happyCode || 'HO-XXXXXX';
+            const num = `HC-${code}`;
+
+            // Generar código QR de verificación
+            new QRCode(document.getElementById("qrcode"), {
+                text: `https://happycorner.lol/verify?order=${num}`,
+                width: 120,
+                height: 120,
+                colorDark : "#2d3436",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
             // 4. (Opcional pero recomendado) Limpiar el dato del localStorage para que no se vea en futuras visitas
             // localStorage.removeItem('lastHappyOrder'); 
         }

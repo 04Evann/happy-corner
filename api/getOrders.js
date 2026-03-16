@@ -33,18 +33,18 @@ export default async function handler(req, res) {
             let totalDisplay = pedidoData.total;
             let note = '';
             if (hasCustomRobux) {
-                note = '\\n\\n⚠️ *Sera necesario contactarse con el cliente para acordar el precio de los robux.*';
+                note = '\n\n⚠️ *Sera necesario contactarse con el cliente para acordar el precio de los robux.*';
                 totalDisplay = 'Por definir';
             }
 
-            const msg = `🍭 *NUEVO PEDIDO: ${orderCode}* 🍭\\n\\n` +
-                        `👤 *Cliente:* ${pedidoData.nombre}\\n` +
-                        `📱 *WhatsApp:* [${pedidoData.whatsapp}](${waLink})\\n` +
-                        `🎟️ *Loyalty:* \`${pedidoData.happycodigo || "No registrado"}\`\\n` +
-                        `📍 *Entrega:* ${pedidoData.tipo_entrega || "No especificada"}\\n` +
-                        `💳 *Pago:* ${pedidoData.metodo_pago || "No especificado"}\\n` +
-                        `🛒 *Pedido:* ${pedidoData.resumen}\\n` +
-                        `💖 *Propina:* ${pedidoData.propina || "Sin propina"}\\n` +
+            const msg = `🍭 *NUEVO PEDIDO: ${orderCode}* 🍭\n\n` +
+                        `👤 *Cliente:* ${pedidoData.nombre}\n` +
+                        `📱 *WhatsApp:* [${pedidoData.whatsapp}](${waLink})\n` +
+                        `🎟️ *Loyalty:* \`${pedidoData.happycodigo || "No registrado"}\`\n` +
+                        `📍 *Entrega:* ${pedidoData.tipo_entrega || "No especificada"}\n` +
+                        `💳 *Pago:* ${pedidoData.metodo_pago || "No especificado"}\n` +
+                        `🛒 *Pedido:* ${pedidoData.resumen}\n` +
+                        `💖 *Propina:* ${pedidoData.propina || "Sin propina"}\n` +
                         `💰 *TOTAL FINAL:* ${totalDisplay}${note}`;
 
             // ENVIAR SOLO A TELEGRAM
@@ -55,7 +55,20 @@ export default async function handler(req, res) {
                     chat_id: process.env.TELEGRAM_CHAT_ID,
                     text: msg,
                     parse_mode: 'Markdown',
-                    disable_web_page_preview: true
+                    disable_web_page_preview: true,
+                    reply_markup: {
+                        inline_keyboard: [
+                            [
+                                { text: "✅ Aprobar Pedido", url: `https://wa.me/57${cleanNumber}?text=Hola%20${encodeURIComponent(pedidoData.nombre)},%20tu%20pedido%20${orderCode}%20por%20${encodeURIComponent(totalDisplay)}%20ha%20sido%20aprobado!` }
+                            ],
+                            [
+                                { text: "⏳ Pago Pendiente", url: `https://wa.me/57${cleanNumber}?text=Hola%20${encodeURIComponent(pedidoData.nombre)},%20tu%20pedido%20${orderCode}%20está%20pendiente%20de%20pago.%20Por%20favor%20envía%20el%20comprobante.` }
+                            ],
+                            [
+                                { text: "❌ Cancelar Pedido", url: `https://wa.me/57${cleanNumber}?text=Hola%20${encodeURIComponent(pedidoData.nombre)},%20tu%20pedido%20${orderCode}%20ha%20sido%20cancelado%20por%20el%20siguiente%20motivo:%20` }
+                            ]
+                        ]
+                    }
                 })
             });
 
