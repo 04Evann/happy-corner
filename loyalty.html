@@ -153,9 +153,23 @@
 
         if (!response.ok) throw new Error(data.error);
 
+        let localTxHtml = '';
+        try {
+          const localOrderRaw = localStorage.getItem('lastHappyOrder');
+          if (localOrderRaw) {
+            const localOrder = JSON.parse(localOrderRaw);
+            if (localOrder.happyCode && (localOrder.happyCode.toUpperCase() === data.happyCodigo.toUpperCase() || localOrder.happyCode.toUpperCase() === codigo.toUpperCase())) {
+              const d = new Date(localOrder.createdAt);
+              const fecha = d.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+              localTxHtml = `<li style="background:#fff0f5; border:2px solid #ffb6c1; border-radius:12px; padding:10px; margin-bottom:6px; font-size:12px;"><b>Recibo #${localOrder.orderId} (Orden Local)</b><br><span style="opacity:0.7;">${fecha} · ${localOrder.total}</span></li>`;
+            }
+          }
+        } catch(e) {}
+
         const tx = data.ultimas_transacciones || [];
-        const txHtml = tx.length ? 
+        const txHtml = (tx.length || localTxHtml) ? 
           `<div style="margin-top:10px;"><b style="font-size:13px;">Últimas compras</b><ul style="list-style:none; padding:0; margin-top:8px;">` +
+          localTxHtml +
           tx.map(t => `<li style="background:white; border:2px solid #f1f3f8; border-radius:12px; padding:10px; margin-bottom:6px; font-size:12px;"><b>Recibo #${t.recibo}</b><br><span style="opacity:0.7;">${t.fecha} · $${Number(t.total).toLocaleString()}</span></li>`).join('') +
           `</ul></div>` : '';
 
