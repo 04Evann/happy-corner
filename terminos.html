@@ -11,572 +11,135 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Base Styles & Mobile First - Unificado */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            color: #222;
-            /* Default text color */
-        }
-
-        body {
-            background: #f0f2f5;
-            /* Light grey background for a clean look */
-        }
-
-        /* --- Header --- Unificado */
-        header {
-            background: linear-gradient(to right, #ff69b4, #ffa500, #f0e68c);
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-            z-index: 100;
-            min-height: 80px;
-            /* Ensure header has enough height */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            /* Subtle shadow */
-        }
-
-        header img {
-            height: 65px;
-            /* Adjust logo size for mobile */
-            max-width: 80%;
-            object-fit: contain;
-            object-position: left;
-        }
-
-        .menu-btn {
-            font-size: 2rem;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 101;
-            color: #222;
-            display: block;
-            /* Visible on mobile */
-        }
-
-        nav {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            /* Slightly less transparent */
-            backdrop-filter: blur(10px);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding: 1rem 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            /* More pronounced shadow for menu */
-            z-index: 100;
-        }
-
-        nav.open {
-            display: flex;
-        }
-
-        nav a {
-            color: #333;
-            /* Slightly darker for better readability */
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            /* Smooth transition */
-        }
-
-        nav a:hover {
-            color: #ff69b4;
-            transform: scale(1.05);
-            /* Subtle hover effect */
-        }
-
-        /* --- Main Content Section for Terms --- */
-        main {
-            padding: 1.5rem 1rem;
-            /* More padding for content */
-            max-width: 800px;
-            margin: 2rem auto;
-            line-height: 1.8;
-            /* Improved readability */
-            background: white;
-            /* White background for the content area */
-            border-radius: 12px;
-            /* Soft rounded corners */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            /* Subtle shadow */
-            position: relative;
-            z-index: 1;
-        }
-
-        main h2 {
-            font-size: 2rem;
-            /* Larger and more prominent */
-            font-weight: 600;
-            margin: 0 0 1.5rem;
-            /* Adjusted margin for better spacing */
-            color: #ff69b4;
-            /* Your brand color */
-            text-align: center;
-            padding-bottom: 10px;
-            /* Space for a potential line */
-            position: relative;
-        }
-
-        /* Optional: Add a subtle line under the main title */
-        main h2::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: 0;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: #ffa500;
-            border-radius: 2px;
-        }
-
-        main p {
-            margin-bottom: 1rem;
-            color: #444;
-            /* Slightly darker for main text */
-        }
-
-        main strong {
-            color: #333;
-            /* Stronger color for bold text */
-        }
-
-        main h3 {
-            font-size: 1.3rem;
-            font-weight: 500;
-            margin-top: 2rem;
-            /* More space above sub-sections */
-            margin-bottom: 0.8rem;
-            color: #ffa500;
-            /* Accent color for sub-titles */
-        }
-
-        main hr {
-            border: 0;
-            border-top: 1px dashed #ddd;
-            /* Dashed line for subtle separation */
-            margin: 2rem 0;
-            /* More space around horizontal rules */
-        }
-
-        main ul {
-            padding-left: 1.8rem;
-            /* More indentation */
-            margin-bottom: 1.5rem;
-            list-style: disc;
-            /* Default disc bullets */
-            color: #444;
-        }
-
-        main li {
-            margin-bottom: 0.7rem;
-        }
-
-        main a {
-            color: #ff69b4;
-            /* Link color matching brand */
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        main a:hover {
-            color: #e6569f;
-            text-decoration: underline;
-        }
-
-        /* --- Footer --- Unificado */
-        footer {
-            background: #222;
-            color: #eee;
-            padding: 2rem 1rem;
-            text-align: center;
-            margin-top: 3rem;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .footer-content p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            color: #bbb;
-        }
-
-        .social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
-            transition: color 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            color: #ff69b4;
-            /* Pink hover for social icons */
-        }
-
-        .footer-links {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .footer-links a {
-            color: #eee;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #ff69b4;
-        }
-
-        /* --- Cart Icon --- Unificado */
-        .cart-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            border: 2px solid #ff69b4;
-            border-radius: 50%;
-            width: 55px;
-            /* Slightly larger */
-            height: 55px;
-            /* Slightly larger */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            /* Larger icon */
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            /* More pronounced shadow */
-            z-index: 10;
-            text-decoration: none;
-            color: #222;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .cart-icon:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .cart-quantity {
-            position: absolute;
-            top: -8px;
-            /* Adjusted position */
-            right: -8px;
-            /* Adjusted position */
-            background-color: #ffa500;
-            color: white;
-            font-size: 0.9rem;
-            /* Slightly larger text */
-            font-weight: bold;
-            border-radius: 50%;
-            padding: 3px 8px;
-            /* More padding */
-            min-width: 24px;
-            /* Minimum width for double digits */
-            text-align: center;
-            display: none;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        /* --- Toast Notification Styles --- Unificado */
-        .toast-container {
-            position: fixed;
-            bottom: 90px;
-            /* Above the cart icon */
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column-reverse;
-            /* Newest toast on top */
-            gap: 10px;
-            pointer-events: none;
-            /* Allows clicks through to elements underneath */
-        }
-
-        .toast {
-            background-color: rgba(50, 50, 50, 0.9);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transform: translateX(100%);
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-            min-width: 200px;
-            max-width: 300px;
-            text-align: center;
-            pointer-events: auto;
-            /* Allows interaction with the toast itself */
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* --- Media Queries for Desktop --- Unificado */
-        @media (min-width: 768px) {
-            header {
-                padding: 0.5rem 2rem;
-                min-height: 100px;
-            }
-
-            header img {
-                height: 80px;
-                /* Larger logo for desktop */
-            }
-
-            .menu-btn {
-                display: none;
-                /* Hide hamburger menu */
-            }
-
-            nav {
-                position: static;
-                /* Static position for desktop nav */
-                display: flex;
-                flex-direction: row;
-                width: auto;
-                background-color: transparent;
-                backdrop-filter: none;
-                box-shadow: none;
-                padding: 0;
-            }
-
-            nav a {
-                padding: 0.7rem 1.2rem;
-                color: #222;
-                /* Text color for desktop nav */
-            }
-
-            nav a:hover {
-                color: #ff69b4;
-                text-decoration: underline;
-                transform: none;
-                /* Remove scale effect */
-            }
-
-            main {
-                padding: 2.5rem 2rem;
-                /* More padding for desktop */
-            }
-
-            main h2 {
-                font-size: 2.5rem;
-            }
-
-            main h3 {
-                font-size: 1.5rem;
-            }
-
-            .cart-icon {
-                bottom: 30px;
-                right: 30px;
-                width: 65px;
-                height: 65px;
-                font-size: 1.8rem;
-            }
-
-            .cart-quantity {
-                font-size: 1rem;
-                padding: 4px 9px;
-                min-width: 28px;
-            }
-
-            .toast-container {
-                bottom: 100px;
-                /* Adjust for larger cart icon on desktop */
-                right: 30px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
+    <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
+
     <header>
-        <img src="loguito.png" alt="Happy Corner Logo" />
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        <nav id="menu">
+        <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        <nav class="nav-desktop">
             <a href="/index">Inicio</a>
             <a href="/catalogo">Catálogo</a>
-            <a href="/order">Happy Order</a>
-            <a href="/puntos">Happy Puntos</a>
-            <a href="/terminos">Términos</a>
-
+            <a href="/order">HappyOrder</a>
+            <a href="/loyalty">LoyaltyCorner</a>
+            <a href="/terminos" class="active" style="text-decoration: underline;">Términos</a>
         </nav>
+        <div class="menu-btn" id="menuBtn">
+            <span></span><span></span><span></span>
+        </div>
     </header>
 
-    <main>
-        <h2>📝 Términos y Condiciones de Happy Corner</h2>
-        <p><strong>Última actualización: 20 de Agosto del 2025</strong></p>
-        <hr>
+    <div class="overlay" id="overlay"></div>
+    <nav class="side-menu" id="sideMenu">
+        <a href="/index">Inicio</a>
+        <a href="/catalogo">Catálogo</a>
+        <a href="/order">HappyOrder</a>
+        <a href="/loyalty">LoyaltyCorner</a>
+        <a href="/terminos">Términos</a>
+    </nav>
 
-        <h3>1. 📦 Ventas y disponibilidad</h3>
-        <ul>
-            <li>Todos los productos están sujetos a disponibilidad.</li>
-            <li>Las promociones y precios pueden cambiar o finalizar sin previo aviso.</li>
-            <li>No se garantiza un stock constante de todos los productos.</li>
-        </ul>
-        <hr>
+    <div style="padding: 20px; text-align: center;">
+        <h1 style="font-size: 24px; font-weight: 800; margin-bottom: 5px;">Términos y Condiciones 📝</h1>
+        <p style="font-size: 14px; color: #666; font-weight: 600;">Última actualización: 16 de Marzo del 2026</p>
+    </div>
 
-        <h3>2. 💳 Pagos y HappyPuntos</h3>
-        <ul>
-            <li>Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, PSE, Apple Pay y Tarjeta.</li>
-            <li>❌ Ya no se aceptan transferencias desde el Banco Caja Social ni PayPal.</li>
-            <li>HappyPuntos para clientes: todos podrán usar sus créditos para comprar en la tienda.</li>
-            <li>Niveles disponibles para el público general:
-                <ul>
-                    <li><span style="color:red;"><strong>Peru:</strong></span> tarjeta coleccionable que no da
-                        beneficios.</li>
-                    <li><span style="color:gold;"><strong>Core:</strong></span> solo recargas y compras.</li>
-                    <li><span style="color:lightblue;"><strong>Prime:</strong></span> descuentos en productos
-                        seleccionados (5–10%).</li>
-                    <li><span style="color:darkcyan;"><strong>Elite:</strong></span> HappyCréditos extra por compra y
-                        acceso VIP a Hot Deals y productos exclusivos.</li>
-                </ul>
-            </li>
-            <li>Los asociados de HappyCorner reciben la <strong>tarjeta Platinum</strong> con descuentos y beneficios
-                internos exclusivos.</li>
-            <li>El lanzamiento oficial de HappyPuntos aún no se ha realizado.</li>
-            <li>Responsabilidad del usuario: cada usuario debe <strong>no compartir su HappyCódigo ni su
-                    HappyPIN</strong> con terceros.</li>
-            <li>Al realizar el pago con tarjeta bancaria o Apple Pay, la información proporcionada será utilizada
-                únicamente para procesar la transacción, garantizando la seguridad de sus datos en todo momento.</li>
-            <li>Los pagos con tarjeta bancaria o Apple Pay son gestionados a través de <strong>REVOLUT</strong>, entidad
-                bancaria reconocida en Europa como banco virtual, asegurando un procesamiento confiable y seguro.</li>
-            <li>Envío de tarjetas digitales: puede demorar ya que es manual y se realizará únicamente por correo
-                electrónico.</li>
-            <li>Futuras tarjetas o niveles: podrían lanzarse nuevas tarjetas y beneficios en el futuro para clientes y
-                asociados.</li>
-        </ul>
-        </ul>
-        <hr>
+    <!-- Reutilizamos la clase grid/card para el texto para que se vea moderno -->
+    <div style="max-width: 900px; margin: 0 auto; padding: 0 15px 40px;">
+        
+        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">1. 📦 Ventas y disponibilidad</h3>
+            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">Todos los productos están sujetos a disponibilidad.</li>
+                <li style="margin-bottom: 8px;">Las promociones y precios pueden cambiar o finalizar sin previo aviso.</li>
+                <li style="margin-bottom: 8px;">No se garantiza un stock constante de todos los productos.</li>
+            </ul>
+        </div>
 
-        <h3>3. 🚚 Entrega y compras online</h3>
-        <ul>
-            <li>Si pagas desde casa, puedes recibir el pedido al día siguiente en el colegio.</li>
-            <li>Las entregas son personales y seguras.</li>
-            <li>Para pagos por la página (Nequi, Bancolombia, PSE, Apple Pay o Tarjeta), debes enviar el comprobante de
-                pago al WhatsApp.</li>
-            <li>Si vas a pagar por PSE, Apple Pay o Tarjeta debes contactarnos vía WhatsApp.</li>
-            <li>Envía el comprobante antes de las 8:00 p.m. para que tu pedido sea válido para el día siguiente.</li>
-        </ul>
-        <hr>
+        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">2. 💳 Pagos y Loyalty Corner</h3>
+            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, PSE, Apple Pay y Tarjeta.</li>
+                <li style="margin-bottom: 8px;">❌ Ya no se aceptan transferencias desde el Banco Caja Social ni PayPal.</li>
+                <li style="margin-bottom: 8px;">Loyalty Corner para clientes: todos podrán usar sus créditos para comprar en la tienda.</li>
+                <li style="margin-bottom: 8px;">Niveles disponibles para el público general:
+                    <ul style="margin-top: 5px; padding-left: 20px;">
+                        <li style="margin-bottom: 4px;"><span style="color:red; font-weight: bold;">Peru:</span> tarjeta coleccionable que no da beneficios.</li>
+                        <li style="margin-bottom: 4px;"><span style="color:goldenrod; font-weight: bold;">Core:</span> solo recargas y compras.</li>
+                        <li style="margin-bottom: 4px;"><span style="color:teal; font-weight: bold;">Prime:</span> descuentos en productos seleccionados (5–10%).</li>
+                        <li style="margin-bottom: 4px;"><span style="color:purple; font-weight: bold;">Elite:</span> LoyaltyCréditos extra por compra y acceso VIP a Hot Deals y productos exclusivos.</li>
+                    </ul>
+                </li>
+                <li style="margin-bottom: 8px; margin-top: 8px;">Los asociados de HappyCorner reciben la <strong>tarjeta Platinum</strong> con descuentos y beneficios internos exclusivos.</li>
+                <li style="margin-bottom: 8px;">El lanzamiento oficial de todos los niveles de Loyalty Corner está en progreso.</li>
+                <li style="margin-bottom: 8px;">Responsabilidad del usuario: cada usuario debe <strong>no compartir su HappyCódigo ni su HappyPIN</strong> con terceros.</li>
+                <li style="margin-bottom: 8px;">Al realizar el pago con tarjeta bancaria o Apple Pay, la información proporcionada será utilizada únicamente para procesar la transacción, garantizando la seguridad de sus datos en todo momento.</li>
+                <li style="margin-bottom: 8px;">Los pagos con tarjeta bancaria o Apple Pay son gestionados a través de <strong>REVOLUT</strong> o pasarelas seguras.</li>
+            </ul>
+        </div>
 
-        <h3>4. 💸 Costos por operación</h3>
-        <ul>
-            <li>Hasta $6.999 → Sin costo adicional</li>
-            <li>$7.000 - $14.999 → $500 adicional</li>
-            <li>$15.000 o más → $1.000 adicional</li>
-        </ul>
-        <p>⚠️ Solo aplica para retiros bancarios.</p>
-        <hr>
+        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">3. 🚚 Entrega y compras online</h3>
+            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">Si pagas desde casa, puedes recibir el pedido al día siguiente en el colegio.</li>
+                <li style="margin-bottom: 8px;">Las entregas son personales y seguras.</li>
+                <li style="margin-bottom: 8px;">Para pagos por la página (Nequi, Bancolombia, PSE, Apple Pay o Tarjeta), debes enviar el comprobante de pago al WhatsApp cuando te contactemos.</li>
+                <li style="margin-bottom: 8px;">Si vas a pagar por PSE, Apple Pay o Tarjeta debes contactarnos vía WhatsApp.</li>
+            </ul>
+        </div>
 
-        <h3>5. 🔁 Cambios y devoluciones</h3>
-        <ul>
-            <li>No se hacen devoluciones salvo productos vencidos y otros productos.</li>
-            <li>Reclamos deben hacerse el mismo día con el producto en mano.</li>
-        </ul>
-        <hr>
+        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">4. 💸 Costos por operación</h3>
+            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">Hasta $6.999 → Sin costo adicional</li>
+                <li style="margin-bottom: 8px;">$7.000 - $14.999 → $500 adicional</li>
+                <li style="margin-bottom: 8px;">$15.000 o más → $1.000 adicional</li>
+            </ul>
+            <p style="font-size: 12px; color: #888; font-style: italic; margin-top: 10px;">⚠️ Solo aplica para retiros bancarios y pagos digitales con sobrecostos.</p>
+        </div>
 
-        <h3>6. 🕹️ Compras de Robux</h3>
-        <ul>
-            <li>Pedidos de 1.000 Robux o mas se entregan por código digital mediante tarjeta.</li>
-            <li>Pedidos de 500 Robux o menos deben hacerse iniciando sesión desde el celular del vendedor.</li>
-            <li>Después del pago, se cerrará la sesión inmediatamente frente al cliente.</li>
-        </ul>
-        <hr>
+        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">5. 🔁 Cambios y devoluciones</h3>
+            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">No se hacen devoluciones salvo productos dañados de fábrica.</li>
+                <li style="margin-bottom: 8px;">Reclamos deben hacerse el mismo día con el producto en mano.</li>
+            </ul>
+        </div>
 
-        <h3>7. 📬 Contacto</h3>
-        <ul>
-            <li>👉 Visítanos: <a href="https://happycorner.lol" target="_blank">happycorner.lol</a></li>
-            <li>📩 Correo: <a href="mailto:soporte@happycorner.lol">soporte@happycorner.lol</a></li>
-            <li>📩 Whatsapp: <a href="https://wa.me/34641422390" target="_blank">Haz clic aquí</a>
-            </li>
-        </ul>
-    </main>
+        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">6. 🕹️ Compras de Robux</h3>
+            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
+                <li style="margin-bottom: 8px;">Pedidos grandes se entregan por código digital mediante tarjeta o recarga directa si es posible.</li>
+                <li style="margin-bottom: 8px;">El precio de compras personalizadas será acordado por WhatsApp.</li>
+            </ul>
+        </div>
 
+        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
+            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">7. 📬 Contacto</h3>
+            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6; list-style: none; margin-left: -20px;">
+                <li style="margin-bottom: 8px;">👉 <b>Visítanos:</b> <a href="https://happycorner.lol" target="_blank" style="color: #ff5299; text-decoration: none;">happycorner.lol</a></li>
+                <li style="margin-bottom: 8px;">📩 <b>Correo:</b> <a href="mailto:soporte@happycorner.lol" style="color: #ff5299; text-decoration: none;">soporte@happycorner.lol</a></li>
+                <li style="margin-bottom: 8px;">📱 <b>Whatsapp:</b> <a href="https://wa.me/57" target="_blank" style="color: #ff5299; text-decoration: none;">Contactar Soporte</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Script del menú (igual al resto de páginas) -->
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById('menu');
-            menu.classList.toggle('open');
-        }
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
 
-        // --- Cart functionality (Copied from index.html) ---
-        // Note: addToCartAndNotify is not needed here as there are no products to add.
-        // But updateCartIconQuantity and showToast are useful.
-        function updateCartIconQuantity() {
-            let cart = JSON.parse(localStorage.getItem('happyCart')) || [];
-            const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const cartIcon = document.querySelector('.cart-icon');
+        menuBtn.onclick = () => {
+            sideMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        };
 
-            let quantitySpan = cartIcon.querySelector('.cart-quantity');
-            if (!quantitySpan) {
-                quantitySpan = document.createElement('span');
-                quantitySpan.classList.add('cart-quantity');
-                cartIcon.appendChild(quantitySpan);
-            }
-
-            if (totalQuantity > 0) {
-                quantitySpan.textContent = totalQuantity;
-                quantitySpan.style.display = 'block';
-            } else {
-                quantitySpan.style.display = 'none';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', updateCartIconQuantity);
-
-        // --- Toast Notification Functionality (Copied from index.html) ---
-        function showToast(message, type = 'info') {
-            const toastContainer = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.classList.add('toast');
-            toast.textContent = message;
-
-            // Optional: Add specific styling based on type (e.g., 'success', 'error')
-            if (type === 'success') {
-                toast.style.backgroundColor = 'rgba(76, 175, 80, 0.9)'; /* Green for success */
-            } else if (type === 'error') {
-                toast.style.backgroundColor = 'rgba(244, 67, 54, 0.9)'; /* Red for error */
-            }
-
-            toastContainer.appendChild(toast);
-
-            // Trigger the animation
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10); // Small delay to allow reflow
-
-            // Hide and remove the toast after a few seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                toast.addEventListener('transitionend', () => toast.remove());
-            }, 3000); // Toast disappears after 3 seconds
-        }
+        overlay.onclick = () => {
+            sideMenu.classList.remove('active');
+            overlay.classList.remove('active');
+        };
     </script>
 </body>
 

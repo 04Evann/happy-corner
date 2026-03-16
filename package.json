@@ -8,7 +8,6 @@
     "start": "node api/get-customer-data.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
     "node-fetch": "^3.3.2",
     "pdfkit": "^0.17.2",
     "resend": "^4.0.0"

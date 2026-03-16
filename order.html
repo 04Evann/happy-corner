@@ -130,7 +130,8 @@
             </div>
             <div class="total-box" id="total-container">
                 <div class="total-row"><span>Subtotal:</span> <span id="subtotal-price">$0</span></div>
-                <div class="total-row final"><span>Total:</span> <span id="total-price">$0</span></div>
+                <div class="total-row" id="propina-row" style="display:none; color: #666; font-size: 14px;"><span>Propina:</span> <span id="propina-price">$0</span></div>
+                <div class="total-row final" style="margin-top: 5px;"><span>Total:</span> <span id="total-price">$0</span></div>
             </div>
         </section>
 
@@ -172,6 +173,19 @@
                         <option value="pse">PSE</option>
                         <option value="tarjeta">Tarjeta (debes contactarnos)</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Propina (Opcional) 💖</label>
+                    <select id="propina_pago" name="Propina_Pago" onchange="renderCart()">
+                        <option value="0">Sin propina</option>
+                        <option value="5">5% del pedido</option>
+                        <option value="10">10% del pedido</option>
+                        <option value="15">15% del pedido</option>
+                        <option value="custom">Otro monto...</option>
+                    </select>
+                    <div id="custom_propina_div" style="display:none; margin-top: 10px;">
+                        <input type="number" id="custom_propina" placeholder="Ej: 2000" oninput="renderCart()">
+                    </div>
                 </div>
                 <input type="hidden" name="Resumen_Pedido" id="hidden-summary">
                 <input type="hidden" name="Total_Pagar" id="hidden-total">
@@ -222,10 +236,37 @@
                 list.appendChild(li);
             });
 
-            const totalTxt = `$${subtotal.toLocaleString()}`;
-            document.getElementById('subtotal-price').textContent = totalTxt;
-            document.getElementById('total-price').textContent = totalTxt;
-            document.getElementById('hidden-total').value = totalTxt;
+            const propinaSelect = document.getElementById('propina_pago').value;
+            let propinaAmount = 0;
+            const customPropinaDiv = document.getElementById('custom_propina_div');
+
+            if (propinaSelect === 'custom') {
+                customPropinaDiv.style.display = 'block';
+                propinaAmount = parseInt(document.getElementById('custom_propina').value) || 0;
+            } else {
+                customPropinaDiv.style.display = 'none';
+                propinaAmount = Math.round(subtotal * (parseInt(propinaSelect) / 100));
+            }
+
+            const isCustomRobux = cart.some(item => item.isCustomRobux);
+            const total = subtotal + propinaAmount;
+            
+            const totalTxtDisplay = isCustomRobux ? 'Por definir' : `$${total.toLocaleString()}`;
+            
+            document.getElementById('subtotal-price').textContent = `$${subtotal.toLocaleString()}`;
+            
+            const propinaRow = document.getElementById('propina-row');
+            if (propinaAmount > 0) {
+                propinaRow.style.display = 'flex';
+                document.getElementById('propina-price').textContent = `$${propinaAmount.toLocaleString()}`;
+            } else {
+                propinaRow.style.display = 'none';
+            }
+
+            document.getElementById('total-price').textContent = totalTxtDisplay;
+            document.getElementById('hidden-total').value = totalTxtDisplay;
+            // Guardamos tambien la propina por separado
+            document.getElementById('hidden-total').setAttribute('data-propina', propinaAmount > 0 ? `$${propinaAmount.toLocaleString()}` : "$0");
             document.getElementById('hidden-summary').value = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
         }
 
@@ -277,7 +318,8 @@
                 // Verifica que tu <select> tenga id="metodo_pago"
                 metodo_pago: document.getElementById('metodo_pago').value,
                 tipo_entrega: document.getElementById('tipo_entrega').value,
-                happycodigo: document.getElementById('puntos_code').value || null
+                happycodigo: document.getElementById('puntos_code').value || null,
+                propina: document.getElementById('hidden-total').getAttribute('data-propina') || "$0"
             };
 
             // Animación simple en el botón
@@ -294,7 +336,11 @@
                         nombre: payload.nombre,
                         whatsapp: payload.whatsapp,
                         resumen: payload.resumen,
-                        total: payload.total
+                        total: payload.total,
+                        metodo_pago: payload.metodo_pago,
+                        tipo_entrega: payload.tipo_entrega,
+                        happycodigo: payload.happycodigo,
+                        propina: payload.propina
                     })
                 });
 
