@@ -27,6 +27,8 @@
             <a href="/catalogo" class="nav-btn">Catálogo</a>
             <a href="/order" class="nav-btn active">HappyOrder</a>
             <a href="/loyalty" class="nav-btn">Loyalty</a>
+            <a href="/track" class="nav-btn">Rastrear Pedido</a>
+            <a href="/terminos" class="nav-btn">Términos</a>
         </nav>
         <div style="display:flex; align-items:center; gap:10px;">
             <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
@@ -175,10 +177,20 @@
         // --- CART LOGIC ---
         let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
         
-        // Catálogo para Upselling Dinámico
+        // Catálogo para Upselling Dinámico y Rendereo de Carrito
         const catalogItems = [
+            { id: 'bubbaloo', name: 'Bubbaloo', price: 400, img: 'bb.png' },
+            { id: 'bubbaloo-sparkies', name: 'Bubbaloo Sparkies', price: 2000, img: 'bbs.png' },
+            { id: 'quipitos', name: 'Quipitos', price: 1000, img: 'qu.png' },
+            { id: 'piazza', name: 'Piazza', price: 800, img: 'pz.png' },
+            { id: 'choco-disk', name: 'Choco Disk', price: 1500, img: 'cd.png' },
+            { id: 'bombombum-tajin', name: 'Bombombum Tajín', price: 2500, img: 'bt.png' },
             { id: 'ring-pop', name: 'Ring Pop', price: 3500, img: 'rp.png' },
+            { id: 'cookie-chips', name: 'Cookie Chips', price: 5000, img: 'gdc.png' },
             { id: 'galleta-red-velvet', name: 'Galleta Red Velvet', price: 6000, img: 'grv.png' },
+            { id: 'brownie-avellana', name: 'Brownie Avellana', price: 5000, img: 'bav.png' },
+            { id: 'galleta-choco-arequipe', name: 'Galleta Choco Arequipe', price: 6000, img: 'gca.png' },
+            { id: 'brownie-arequipe', name: 'Brownie Arequipe', price: 5000, img: 'bar.png' },
             { id: 'pizza-normal', name: 'Pizza', price: 11000, img: 'pizza.png' }
         ];
 
@@ -238,9 +250,9 @@
                 const itemTotal = price * item.qty;
                 subtotal += itemTotal;
 
-                // Intentar sacar imagen del catálogo o usar genérica
-                let imgSource = 'https://cdn-icons-png.flaticon.com/512/3595/3595458.png';
-                const catItem = catalogItems.find(c => c.id === item.id || c.name === item.name);
+                // Intentar sacar imagen del catálogo o usar logo por defecto
+                let imgSource = 'loguito.png';
+                const catItem = catalogItems.find(c => c.id === item.id || item.name.toLowerCase().includes(c.name.toLowerCase()));
                 if(catItem) imgSource = catItem.img;
 
                 const row = document.createElement('div');
@@ -248,7 +260,7 @@
                 row.innerHTML = `
                     <div style="display: flex; gap: 15px; align-items: center;">
                         <div style="width: 50px; height: 50px; background: var(--input-bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 5px;">
-                            <img src="${imgSource}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3595/3595458.png'" style="width: 100%; height: 100%; object-fit: contain;">
+                            <img src="${imgSource}" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                         <div>
                             <div style="font-weight: 700; font-size: 14px;">${item.name}</div>

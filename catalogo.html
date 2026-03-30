@@ -24,6 +24,8 @@
             <a href="/catalogo" class="nav-btn active">Catálogo</a>
             <a href="/order" class="nav-btn">HappyOrder</a>
             <a href="/loyalty" class="nav-btn">Loyalty</a>
+            <a href="/track" class="nav-btn">Rastrear Pedido</a>
+            <a href="/terminos" class="nav-btn">Términos</a>
         </nav>
         <div style="display:flex; align-items:center; gap:10px;">
             <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
@@ -228,7 +230,42 @@
                 </div>
                 <button class="btn-add" onclick="addToCart('robux-40', event)">Añadir a Carrito</button>
             </div>
-            <!-- Otros robux se podrían agregar aquí con el mismo patrón -->
+            <!-- Otros robux -->
+            <div class="card" id="robux-80">
+                <div class="img-container"><img src="Robux_icon.png" alt="80 Robux"></div>
+                <div class="product-name">80 Robux</div>
+                <div class="price">$8.000</div>
+                <div class="qty-row">
+                    <button class="qty-btn" onclick="changeQty('robux-80',-1)">-</button>
+                    <span class="qty-num">1</span>
+                    <button class="qty-btn" onclick="changeQty('robux-80',1)">+</button>
+                </div>
+                <button class="btn-add" onclick="addToCart('robux-80', event)">Añadir a Carrito</button>
+            </div>
+            
+            <div class="card" id="robux-400">
+                <div class="img-container"><img src="Robux_icon.png" alt="400 Robux"></div>
+                <div class="product-name">400 Robux</div>
+                <div class="price">$40.000</div>
+                <div class="qty-row">
+                    <button class="qty-btn" onclick="changeQty('robux-400',-1)">-</button>
+                    <span class="qty-num">1</span>
+                    <button class="qty-btn" onclick="changeQty('robux-400',1)">+</button>
+                </div>
+                <button class="btn-add" onclick="addToCart('robux-400', event)">Añadir a Carrito</button>
+            </div>
+
+            <div class="card" id="robux-800">
+                <div class="img-container"><img src="Robux_icon.png" alt="800 Robux"></div>
+                <div class="product-name">800 Robux</div>
+                <div class="price">$80.000</div>
+                <div class="qty-row">
+                    <button class="qty-btn" onclick="changeQty('robux-800',-1)">-</button>
+                    <span class="qty-num">1</span>
+                    <button class="qty-btn" onclick="changeQty('robux-800',1)">+</button>
+                </div>
+                <button class="btn-add" onclick="addToCart('robux-800', event)">Añadir a Carrito</button>
+            </div>
             <div class="card" id="robux-custom">
                 <div class="img-container"><img src="Robux_icon.png" alt="Robux Personalizado"></div>
                 <div class="product-name">Robux Personalizado</div>

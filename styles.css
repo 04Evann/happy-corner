@@ -504,3 +504,68 @@ header {
 }
 .prev { left: 10px; }
 .next { right: 10px; }
+
+/* =========================================
+   10. ORDER LAYOUT Y CART (ORDER.HTML)
+   ========================================= */
+.order-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 30px;
+}
+
+@media (max-width: 800px) {
+    .order-layout { grid-template-columns: 1fr; }
+    .checkout-box:first-child { order: 2; } /* Forms abajo en celular */
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border-color);
+}
+.cart-item:last-child { border-bottom: none; }
+
+.cart-item-img {
+    width: 50px; height: 50px;
+    background: var(--input-bg);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 5px;
+}
+.cart-item-img img { width: 100%; height: 100%; object-fit: contain; }
+
+.upsell-banner {
+    background: linear-gradient(135deg, rgba(255,157,92,0.1), rgba(255,82,153,0.1));
+    border: 1px solid var(--hp-orange);
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+    animation: slideIn 0.5s ease;
+}
+.upsell-banner img { width: 40px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+
+.total-row {
+    display: flex; justify-content: space-between;
+    margin-top: 10px; font-weight: 700; font-size: 15px; color: var(--text-color);
+}
+.total-final {
+    font-size: 22px; font-weight: 900; color: var(--hp-pink); margin-top: 10px;
+    padding-top: 10px; border-top: 2px solid var(--border-color);
+}
+.showcase-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+.section-subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
