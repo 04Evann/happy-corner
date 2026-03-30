@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rastrear Pedido | Happy Corner</title>
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     
@@ -17,11 +16,11 @@
         }
 
         .track-box {
-            background: white;
+            background: var(--surface-color);
             border-radius: 25px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
             text-align: center;
         }
 
@@ -29,12 +28,12 @@
             font-size: 24px;
             font-weight: 800;
             margin-bottom: 10px;
-            color: #2d3436;
+            color: var(--text-color);
         }
 
         .track-box p {
             font-size: 14px;
-            color: #636e72;
+            color: var(--text-muted);
             margin-bottom: 25px;
         }
 
@@ -48,43 +47,46 @@
             flex: 1;
             padding: 14px;
             border-radius: 14px;
-            border: 2px solid #eee;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-color);
             font-family: inherit;
             font-size: 15px;
             outline: none;
-            transition: border-color 0.2s;
+            transition: 0.3s;
         }
 
         .input-group input:focus {
-            border-color: #ff5299;
+            border-color: var(--hp-pink);
         }
 
         .btnPrimary {
             border: none;
-            background: #ff5299;
+            background: var(--hp-gradient);
             color: white;
             font-weight: 800;
             padding: 14px 24px;
             border-radius: 14px;
             cursor: pointer;
             white-space: nowrap;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: 0.3s;
         }
 
         .btnPrimary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 82, 153, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px var(--hp-pink-glow);
         }
 
         .result-container {
             margin-top: 20px;
             text-align: left;
             display: none;
+            animation: slideIn 0.4s ease;
         }
 
         .result-card {
-            background: #f8f9ff;
-            border: 2px solid #eef1ff;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 20px;
         }
@@ -93,14 +95,14 @@
             margin: 0 0 15px 0;
             font-size: 16px;
             font-weight: 800;
-            color: #2d3436;
+            color: var(--text-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .status-badge {
-            background: #ff5299;
+            background: var(--hp-pink);
             color: white;
             font-size: 12px;
             padding: 4px 10px;
@@ -113,24 +115,20 @@
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 13.5px;
-        }
-
-        .info-row span:first-child {
-            font-weight: 700;
-            color: #2d3436;
+            color: var(--text-color);
         }
 
         .info-row span:last-child {
-            color: #636e72;
+            color: var(--text-muted);
             font-weight: 500;
         }
 
         .items-box {
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 2px dashed #e1e5f2;
+            border-top: 2px dashed var(--border-color);
             font-size: 13px;
-            color: #2d3436;
+            color: var(--text-color);
             font-weight: 500;
             line-height: 1.5;
         }
@@ -139,30 +137,37 @@
 <body>
 
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
-            <a href="/catalogo">Catálogo</a>
-            <a href="/order">HappyOrder</a>
-            <a href="/loyalty">LoyaltyCorner</a>
-            <a href="/track" style="font-weight: 800; color: #ff5299;">Rastrear Pedido</a>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+        <nav class="header-nav nav-desktop">
+            <a href="/index" class="nav-btn">Inicio</a>
+            <a href="/catalogo" class="nav-btn">Catálogo</a>
+            <a href="/order" class="nav-btn">HappyOrder</a>
+            <a href="/track" class="nav-btn active">Rastrear Pedido</a>
         </nav>
-        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-            <span></span><span></span><span></span>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
         </div>
     </header>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+    <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
         <a href="/order">HappyOrder</a>
         <a href="/loyalty">LoyaltyCorner</a>
-        <a href="/track">Rastrear Pedido</a>
+        <a href="/track" class="active">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
+        <a href="/wallet">Happy Passes</a>
     </nav>
 
-    <div class="page-container">
+    <div class="page-container showcase-container">
         <div class="track-box">
             <h1>Rastrear Pedido 📦</h1>
             <p>Ingresa tu número de orden para revisar el resumen y detalles de tu pedido.</p>
@@ -188,36 +193,52 @@
                         <span>Tipo de Entrega:</span>
                         <span id="r-delivery">---</span>
                     </div>
-                    <div class="info-row" style="margin-top: 5px; padding-top: 5px; border-top: 1px solid #eee;">
+                    <div class="info-row" style="margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border-color);">
                         <span>Total:</span>
-                        <span id="r-total" style="font-weight: 800; color: #ff5299; font-size: 15px;">$0</span>
+                        <span id="r-total" style="font-weight: 800; color: var(--hp-pink); font-size: 15px;">$0</span>
                     </div>
 
                     <div class="items-box">
                         <strong>Artículos:</strong><br>
-                        <span id="r-items">---</span>
+                        <span id="r-items" style="color: var(--text-muted);">---</span>
                     </div>
                 </div>
             </div>
 
-            <div id="error-msg" style="display: none; color: #d63031; font-size: 14px; font-weight: 600; margin-top: 15px;">
+            <div id="error-msg" style="display: none; color: #ff3333; font-size: 14px; font-weight: 600; margin-top: 15px;">
                 <i class="fas fa-exclamation-circle"></i> Orden no encontrada en este dispositivo.
             </div>
         </div>
     </div>
     
-    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
-        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    <div class="footer-admin">
+        <a href="/admin">Administración Empresarial</a>
     </div>
 
     <script>
-        function toggleMenu(force) {
-            const menu = document.getElementById('sideMenu');
-            const overlay = document.getElementById('overlay');
-            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
-            menu.classList.toggle('active', next);
-            overlay.classList.toggle('active', next);
+        let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+            const themeBtn = document.getElementById('theme-icon');
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeBtn.innerText = '🌙';
+            }
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) toggleTheme();
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+        menuBtn.onclick = () => { sideMenu.classList.toggle('active'); overlay.classList.toggle('active'); };
+        overlay.onclick = () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); };
 
         function checkOrder() {
             const searchInput = document.getElementById('order-input').value.trim().toLowerCase();
@@ -229,7 +250,6 @@
 
             if (!searchInput) return;
 
-            // Al no tener base de datos, buscamos en el LocalStorage
             const storedData = localStorage.getItem('lastHappyOrder');
             
             if (storedData) {
@@ -253,7 +273,6 @@
                 }
             }
 
-            // Si no coincide o no hay datos
             errorMsg.style.display = 'block';
         }
     </script>

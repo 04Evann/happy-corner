@@ -1,35 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Shop - Terminos y Condiciones</title>
-
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-</head>
+    
+    <style>
+        .terms-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 15px 40px;
+        }
 
+        .term-card {
+            background: var(--surface-color);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: left;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: 0.3s;
+        }
+        .term-card:hover {
+            box-shadow: 0 10px 30px var(--hp-pink-glow);
+            border-color: var(--hp-pink);
+        }
+
+        .term-card h3 {
+            color: var(--hp-pink);
+            font-weight: 800;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .term-card ul, .term-card p {
+            padding-left: 20px;
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .term-card li { margin-bottom: 8px; }
+        .term-card a { color: var(--hp-pink); text-decoration: none; font-weight: 700; transition: 0.2s; }
+        .term-card a:hover { color: var(--hp-orange); text-decoration: underline; }
+    </style>
+</head>
 <body>
-    <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
 
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
-            <a href="/catalogo">Catálogo</a>
-            <a href="/order">HappyOrder</a>
-            <a href="/loyalty">LoyaltyCorner</a>
-            <a href="/track">Rastrear Pedido</a>
-            <a href="/terminos" class="active" style="text-decoration: underline;">Términos</a>
-            <a href="/wallet">Happy Passes</a>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+        <nav class="header-nav nav-desktop">
+            <a href="/index" class="nav-btn">Inicio</a>
+            <a href="/catalogo" class="nav-btn">Catálogo</a>
+            <a href="/order" class="nav-btn">HappyOrder</a>
+            <a href="/track" class="nav-btn">Rastrear Pedido</a>
         </nav>
-        <div class="menu-btn" id="menuBtn">
-            <span></span><span></span><span></span>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
         </div>
     </header>
 
@@ -40,115 +78,124 @@
         <a href="/order">HappyOrder</a>
         <a href="/loyalty">LoyaltyCorner</a>
         <a href="/track">Rastrear Pedido</a>
-        <a href="/terminos">Términos</a>
+        <a href="/terminos" class="active">Términos</a>
         <a href="/wallet">Happy Passes</a>
     </nav>
 
-    <div style="padding: 20px; text-align: center;">
-        <h1 style="font-size: 24px; font-weight: 800; margin-bottom: 5px;">Términos y Condiciones 📝</h1>
-        <p style="font-size: 14px; color: #666; font-weight: 600;">Última actualización: 16 de Marzo del 2026</p>
+    <div class="showcase-container">
+        <div style="padding: 20px; text-align: center;">
+            <h1 class="page-title" style="margin-bottom: 5px;">Términos y Condiciones 📝</h1>
+            <p style="font-size: 14px; color: var(--text-muted); font-weight: 600;">Última actualización: 16 de Marzo del 2026</p>
+        </div>
+
+        <div class="terms-container">
+            
+            <div class="term-card">
+                <h3>1. 📦 Ventas y disponibilidad</h3>
+                <ul>
+                    <li>Todos los productos están sujetos a disponibilidad.</li>
+                    <li>Las promociones y precios pueden cambiar o finalizar sin previo aviso.</li>
+                    <li>No se garantiza un stock constante de todos los productos.</li>
+                </ul>
+            </div>
+
+            <div class="term-card">
+                <h3>2. 💳 Pagos y Loyalty Corner</h3>
+                <ul>
+                    <li>Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, PSE, Apple Pay y Tarjeta.</li>
+                    <li>❌ Ya no se aceptan transferencias desde el Banco Caja Social ni PayPal.</li>
+                    <li>Loyalty Corner para clientes: todos podrán usar sus créditos para comprar en la tienda.</li>
+                    <li>Niveles disponibles para el público general:
+                        <ul style="margin-top: 5px; padding-left: 20px;">
+                            <li><span style="color:#ff3333; font-weight: bold;">Peru:</span> tarjeta coleccionable que no da beneficios.</li>
+                            <li><span style="color:#ffd45e; font-weight: bold;">Core:</span> solo recargas y compras.</li>
+                            <li><span style="color:#00cec9; font-weight: bold;">Prime:</span> descuentos en productos seleccionados (5–10%).</li>
+                            <li><span style="color:#6c5ce7; font-weight: bold;">Elite:</span> LoyaltyCréditos extra por compra y acceso VIP a Hot Deals y productos exclusivos.</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 8px;">Los asociados de HappyCorner reciben la <strong>tarjeta Platinum</strong> con descuentos y beneficios internos exclusivos.</li>
+                    <li>El lanzamiento oficial de todos los niveles de Loyalty Corner está en progreso.</li>
+                    <li>Responsabilidad del usuario: cada usuario debe <strong>no compartir su HappyCódigo ni su HappyPIN</strong> con terceros.</li>
+                    <li>Al realizar el pago con tarjeta bancaria o Apple Pay, la información proporcionada será utilizada únicamente para procesar la transacción, garantizando la seguridad de sus datos en todo momento.</li>
+                    <li>Los pagos con tarjeta bancaria o Apple Pay son gestionados a través de <strong>REVOLUT</strong> o pasarelas seguras.</li>
+                </ul>
+            </div>
+
+            <div class="term-card">
+                <h3>3. 🚚 Entrega y compras online</h3>
+                <ul>
+                    <li>Si pagas desde casa, puedes recibir el pedido al día siguiente en el colegio.</li>
+                    <li>Las entregas son personales y seguras.</li>
+                    <li>Para pagos por la página (Nequi, Bancolombia, PSE, Apple Pay o Tarjeta), debes enviar el comprobante de pago al WhatsApp cuando te contactemos.</li>
+                    <li>Si vas a pagar por PSE, Apple Pay o Tarjeta debes contactarnos vía WhatsApp.</li>
+                </ul>
+            </div>
+
+            <div class="term-card">
+                <h3>4. 💸 Costos por operación</h3>
+                <ul>
+                    <li>Hasta $6.999 → Sin costo adicional</li>
+                    <li>$7.000 - $14.999 → $500 adicional</li>
+                    <li>$15.000 o más → $1.000 adicional</li>
+                </ul>
+                <p style="font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 10px;">⚠️ Solo aplica para retiros bancarios y pagos digitales con sobrecostos.</p>
+            </div>
+
+            <div class="term-card">
+                <h3>5. 🔁 Cambios y devoluciones</h3>
+                <ul>
+                    <li>No se hacen devoluciones salvo productos dañados de fábrica.</li>
+                    <li>Reclamos deben hacerse el mismo día con el producto en mano.</li>
+                </ul>
+            </div>
+
+            <div class="term-card">
+                <h3>6. 🕹️ Compras de Robux</h3>
+                <ul>
+                    <li>Pedidos grandes se entregan por código digital mediante tarjeta o recarga directa si es posible.</li>
+                    <li>El precio de compras personalizadas será acordado por WhatsApp.</li>
+                </ul>
+            </div>
+
+            <div class="term-card">
+                <h3>7. 📬 Contacto</h3>
+                <ul style="list-style: none; margin-left: -20px;">
+                    <li>👉 <b>Visítanos:</b> <a href="https://happycorner.lol" target="_blank">happycorner.lol</a></li>
+                    <li>📩 <b>Correo:</b> <a href="mailto:soporte@happycorner.lol">soporte@happycorner.lol</a></li>
+                    <li>📱 <b>Whatsapp:</b> <a href="https://wa.me/57" target="_blank">Contactar Soporte</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <!-- Reutilizamos la clase grid/card para el texto para que se vea moderno -->
-    <div style="max-width: 900px; margin: 0 auto; padding: 0 15px 40px;">
-        
-        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">1. 📦 Ventas y disponibilidad</h3>
-            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">Todos los productos están sujetos a disponibilidad.</li>
-                <li style="margin-bottom: 8px;">Las promociones y precios pueden cambiar o finalizar sin previo aviso.</li>
-                <li style="margin-bottom: 8px;">No se garantiza un stock constante de todos los productos.</li>
-            </ul>
-        </div>
-
-        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">2. 💳 Pagos y Loyalty Corner</h3>
-            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">Métodos de pago aceptados: Efectivo, Nequi, Bancolombia, PSE, Apple Pay y Tarjeta.</li>
-                <li style="margin-bottom: 8px;">❌ Ya no se aceptan transferencias desde el Banco Caja Social ni PayPal.</li>
-                <li style="margin-bottom: 8px;">Loyalty Corner para clientes: todos podrán usar sus créditos para comprar en la tienda.</li>
-                <li style="margin-bottom: 8px;">Niveles disponibles para el público general:
-                    <ul style="margin-top: 5px; padding-left: 20px;">
-                        <li style="margin-bottom: 4px;"><span style="color:red; font-weight: bold;">Peru:</span> tarjeta coleccionable que no da beneficios.</li>
-                        <li style="margin-bottom: 4px;"><span style="color:goldenrod; font-weight: bold;">Core:</span> solo recargas y compras.</li>
-                        <li style="margin-bottom: 4px;"><span style="color:teal; font-weight: bold;">Prime:</span> descuentos en productos seleccionados (5–10%).</li>
-                        <li style="margin-bottom: 4px;"><span style="color:purple; font-weight: bold;">Elite:</span> LoyaltyCréditos extra por compra y acceso VIP a Hot Deals y productos exclusivos.</li>
-                    </ul>
-                </li>
-                <li style="margin-bottom: 8px; margin-top: 8px;">Los asociados de HappyCorner reciben la <strong>tarjeta Platinum</strong> con descuentos y beneficios internos exclusivos.</li>
-                <li style="margin-bottom: 8px;">El lanzamiento oficial de todos los niveles de Loyalty Corner está en progreso.</li>
-                <li style="margin-bottom: 8px;">Responsabilidad del usuario: cada usuario debe <strong>no compartir su HappyCódigo ni su HappyPIN</strong> con terceros.</li>
-                <li style="margin-bottom: 8px;">Al realizar el pago con tarjeta bancaria o Apple Pay, la información proporcionada será utilizada únicamente para procesar la transacción, garantizando la seguridad de sus datos en todo momento.</li>
-                <li style="margin-bottom: 8px;">Los pagos con tarjeta bancaria o Apple Pay son gestionados a través de <strong>REVOLUT</strong> o pasarelas seguras.</li>
-            </ul>
-        </div>
-
-        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">3. 🚚 Entrega y compras online</h3>
-            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">Si pagas desde casa, puedes recibir el pedido al día siguiente en el colegio.</li>
-                <li style="margin-bottom: 8px;">Las entregas son personales y seguras.</li>
-                <li style="margin-bottom: 8px;">Para pagos por la página (Nequi, Bancolombia, PSE, Apple Pay o Tarjeta), debes enviar el comprobante de pago al WhatsApp cuando te contactemos.</li>
-                <li style="margin-bottom: 8px;">Si vas a pagar por PSE, Apple Pay o Tarjeta debes contactarnos vía WhatsApp.</li>
-            </ul>
-        </div>
-
-        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">4. 💸 Costos por operación</h3>
-            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">Hasta $6.999 → Sin costo adicional</li>
-                <li style="margin-bottom: 8px;">$7.000 - $14.999 → $500 adicional</li>
-                <li style="margin-bottom: 8px;">$15.000 o más → $1.000 adicional</li>
-            </ul>
-            <p style="font-size: 12px; color: #888; font-style: italic; margin-top: 10px;">⚠️ Solo aplica para retiros bancarios y pagos digitales con sobrecostos.</p>
-        </div>
-
-        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">5. 🔁 Cambios y devoluciones</h3>
-            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">No se hacen devoluciones salvo productos dañados de fábrica.</li>
-                <li style="margin-bottom: 8px;">Reclamos deben hacerse el mismo día con el producto en mano.</li>
-            </ul>
-        </div>
-
-        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">6. 🕹️ Compras de Robux</h3>
-            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6;">
-                <li style="margin-bottom: 8px;">Pedidos grandes se entregan por código digital mediante tarjeta o recarga directa si es posible.</li>
-                <li style="margin-bottom: 8px;">El precio de compras personalizadas será acordado por WhatsApp.</li>
-            </ul>
-        </div>
-
-        <div class="card" style="padding: 25px; text-align: left; cursor: default; transform: none; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px;">
-            <h3 style="color: #ff5299; font-weight: 800; margin-bottom: 15px; font-size: 18px;">7. 📬 Contacto</h3>
-            <ul style="padding-left: 20px; font-size: 14px; color: #444; line-height: 1.6; list-style: none; margin-left: -20px;">
-                <li style="margin-bottom: 8px;">👉 <b>Visítanos:</b> <a href="https://happycorner.lol" target="_blank" style="color: #ff5299; text-decoration: none;">happycorner.lol</a></li>
-                <li style="margin-bottom: 8px;">📩 <b>Correo:</b> <a href="mailto:soporte@happycorner.lol" style="color: #ff5299; text-decoration: none;">soporte@happycorner.lol</a></li>
-                <li style="margin-bottom: 8px;">📱 <b>Whatsapp:</b> <a href="https://wa.me/57" target="_blank" style="color: #ff5299; text-decoration: none;">Contactar Soporte</a></li>
-            </ul>
-        </div>
+    <div class="footer-admin">
+        <a href="/admin">Administración Empresarial</a>
     </div>
 
-    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
-        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
-    </div>
-
-    <!-- Script del menú (igual al resto de páginas) -->
     <script>
+        let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+            const themeBtn = document.getElementById('theme-icon');
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeBtn.innerText = '🌙';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) toggleTheme();
+        });
+
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
-
-        menuBtn.onclick = () => {
-            sideMenu.classList.toggle('active');
-            overlay.classList.toggle('active');
-        };
-
-        overlay.onclick = () => {
-            sideMenu.classList.remove('active');
-            overlay.classList.remove('active');
-        };
+        menuBtn.onclick = () => { sideMenu.classList.toggle('active'); overlay.classList.toggle('active'); };
+        overlay.onclick = () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); };
     </script>
 </body>
-
 </html>

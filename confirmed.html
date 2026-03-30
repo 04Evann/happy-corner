@@ -5,53 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pedido Confirmado | Happy Corner</title>
     
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     
     <style>
-        main {
-            max-width: 950px;
-            margin: 0 auto;
-            padding: 28px 16px 60px;
-        }
-
         .confirmation-box {
-            background: white;
+            background: var(--surface-color);
             border-radius: 25px;
-            padding: 26px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.06);
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
             text-align: center;
+            max-width: 650px;
+            margin: 40px auto;
+            animation: slideIn 0.5s ease;
         }
 
         .confirmation-box h1 {
             font-size: 28px;
             margin-bottom: 10px;
-            font-weight: 800;
+            font-weight: 900;
+            color: var(--text-color);
         }
 
         .confirmation-box p {
             font-size: 14px;
-            opacity: 0.9;
+            color: var(--text-muted);
         }
 
         .happy-code-section {
             background: var(--hp-gradient);
             color: white;
-            padding: 14px 18px;
-            border-radius: 16px;
-            margin: 18px 0 10px;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 25px 0 15px;
             display: inline-block;
-            box-shadow: var(--shadow);
+            box-shadow: 0 10px 25px var(--hp-pink-glow);
+            width: 80%;
         }
         
         #confirmed-happy-code {
-            font-size: 24px;
-            font-weight: 800;
+            font-size: 28px;
+            font-weight: 900;
             letter-spacing: 2px;
             margin: 0;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .order-details-table {
@@ -59,35 +58,41 @@
             margin-top: 25px;
             border-collapse: collapse;
             text-align: left;
+            background: var(--input-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
         }
         
         .order-details-table th, .order-details-table td {
-            padding: 10px;
-            border-bottom: 1px dashed var(--navidad-plata);
+            padding: 15px;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 14px;
         }
         
         .order-details-table th {
-            color: #333;
-            font-weight: 600;
+            color: var(--text-color);
+            font-weight: 800;
             width: 40%;
         }
         
         .order-details-table td {
-            color: var(--text-dark);
+            color: var(--text-muted);
             font-weight: 500;
         }
         
         .order-details-table .total-row th, .order-details-table .total-row td {
             border-bottom: none;
-            border-top: 2px solid #eee;
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: #111;
+            border-top: 2px solid var(--border-color);
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--text-color);
+            background: var(--surface-color);
         }
 
         .order-details-table .total-row td {
-            color: #ff5299;
-            font-size: 1.15rem;
+            color: var(--hp-pink);
+            font-size: 18px;
         }
 
         .actions {
@@ -95,7 +100,7 @@
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 18px;
+            margin-top: 25px;
         }
 
         .action-btn {
@@ -103,106 +108,145 @@
             align-items: center;
             gap: 10px;
             text-decoration: none;
-            padding: 12px 16px;
+            padding: 14px 20px;
             border-radius: 14px;
             font-weight: 800;
-            border: 2px solid #eee;
-            background: white;
-            color: #111;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            border-color: var(--hp-pink);
+            color: var(--hp-pink);
+            transform: translateY(-2px);
         }
 
         .action-btn.primary {
-            background: #ff5299;
-            border-color: #ff5299;
+            background: var(--hp-gradient);
+            border: none;
+            color: white;
+            box-shadow: 0 5px 15px var(--hp-pink-glow);
+        }
+        .action-btn.primary:hover {
+            transform: scale(1.05);
             color: white;
         }
 
-        .muted {
-            font-size: 12px;
-            opacity: 0.85;
-            margin-top: 6px;
+        #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
+            margin-top: 25px;
         }
     </style>
 </head>
 <body onload="displayOrderDetails()">
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
-            <a href="/catalogo">Catálogo</a>
-            <a href="/order">HappyOrder</a>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+        <nav class="header-nav nav-desktop">
+            <a href="/index" class="nav-btn">Inicio</a>
+            <a href="/catalogo" class="nav-btn">Catálogo</a>
+            <a href="/order" class="nav-btn">HappyOrder</a>
+            <a href="/track" class="nav-btn">Rastrear Pedido</a>
         </nav>
-        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-            <span></span><span></span><span></span>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
         </div>
     </header>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+    <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
         <a href="/order">HappyOrder</a>
-        <a href="/puntos">Puntos</a>
+        <a href="/loyalty">LoyaltyCorner</a>
+        <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
-            <a href="/wallet">Happy Passes</a>
         <a href="/wallet">Happy Passes</a>
     </nav>
 
-    <main>
+    <div class="showcase-container">
         <div class="confirmation-box">
-            <h1>Pedido confirmado</h1>
+            <h1>Pedido confirmado 🎉</h1>
             <p>Tu orden fue registrada con éxito. Guarda tu código para cualquier duda.</p>
 
             <div class="happy-code-section">
-                <p style="margin:0; font-size:12px; opacity:0.95;">TU CÓDIGO</p>
-                <h2 id="confirmed-happy-code" style="margin:0;">HO-XXXXXX</h2>
+                <p style="margin:0; font-size:12px; opacity:0.95; font-weight:700;">TU CÓDIGO</p>
+                <h2 id="confirmed-happy-code">HO-XXXXXX</h2>
             </div>
             
-            <div class="muted">Menciona este código al pagar.</div>
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Menciona este código al pagar o recibir tu pedido.</div>
 
             <table class="order-details-table">
-                <thead>
-                    <tr><th colspan="2" style="text-align: center; padding-bottom: 15px; color: var(--navidad-azul-claro);">RESUMEN DE LA ORDEN</th></tr>
-                </thead>
                 <tbody>
-                    <tr><th>Método de Pago Seleccionado:</th><td id="detail-payment-method">N/A</td></tr>
+                    <tr><th>Método de Pago:</th><td id="detail-payment-method">N/A</td></tr>
                     <tr><th>Tipo de Entrega:</th><td id="detail-delivery-type">N/A</td></tr>
                     <tr><th>Ítems Pedidos:</th><td id="detail-items-summary">N/A</td></tr>
                     <tr><th>Subtotal:</th><td id="detail-subtotal">N/A</td></tr>
-                    <tr><th>Costo de Envío:</th><td id="detail-shipping">N/A</td></tr>
-                    <tr class="total-row"><th>TOTAL DE LA COMPRA:</th><td id="detail-total">N/A</td></tr>
+                    <tr><th>Envío / Recargo:</th><td id="detail-shipping">N/A</td></tr>
+                    <tr class="total-row"><th>TOTAL COMPRA:</th><td id="detail-total">N/A</td></tr>
                 </tbody>
             </table>
 
-            <div style="text-align: center; margin: 25px 0 10px;">
-                <div id="qrcode" style="display: inline-block; padding: 10px; background: white; border-radius: 10px; border: 2px solid #eee;"></div>
-                <div style="font-size: 11px; color: #666; margin-top: 5px;">Escanea para verificar</div>
+            <div style="text-align: center;">
+                <div id="qrcode"></div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px; font-weight: 600;">Escanea para verificar validez</div>
             </div>
 
             <div class="actions">
-                <a href="/factura" class="action-btn primary"><i class="fas fa-receipt"></i> Ver factura</a>
+                <a href="/factura" class="action-btn primary"><i class="fas fa-receipt"></i> Ver factura digital</a>
                 <a href="/catalogo" class="action-btn"><i class="fas fa-store"></i> Seguir comprando</a>
             </div>
         </div>
-    </main>
+    </div>
+
+    <div class="footer-admin">
+        <a href="/admin">Administración Empresarial</a>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        function toggleMenu(force) {
-            const menu = document.getElementById('sideMenu');
-            const overlay = document.getElementById('overlay');
-            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
-            menu.classList.toggle('active', next);
-            overlay.classList.toggle('active', next);
+        let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+            const themeBtn = document.getElementById('theme-icon');
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeBtn.innerText = '🌙';
+            }
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) toggleTheme();
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+        menuBtn.onclick = () => { sideMenu.classList.toggle('active'); overlay.classList.toggle('active'); };
+        overlay.onclick = () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); };
 
         function displayOrderDetails() {
             const orderDataRaw = localStorage.getItem('lastHappyOrder');
             
-            // 1. Verificar y Parsear
             if (!orderDataRaw) {
                 document.querySelector('.confirmation-box').innerHTML = `
-                    <h1>Ups…</h1>
+                    <h1>Ups… 😵</h1>
                     <p>No se encontraron datos del último pedido en este dispositivo.</p>
                     <div class="actions">
                         <a href="/catalogo" class="action-btn primary">Volver al catálogo</a>
@@ -213,37 +257,31 @@
 
             const data = JSON.parse(orderDataRaw);
 
-            // 2. Mapeo de valores
             const paymentMap = {
                 'nequi': 'Nequi 💸',
-                'pse': 'PSE (Transferencia en Línea) 🏦',
-                'applepay': 'Apple Pay (Link Revolut) 🍎',
-                'tarjeta': 'Tarjeta Crédito/Débito (Link Revolut) 💳',
-                'efectivo': 'Efectivo (Pago al Recibir) 💵'
+                'pse': 'PSE (Transferencia) 🏦',
+                'applepay': 'Apple Pay 🍎',
+                'tarjeta': 'Tarjeta Crédito/Débito 💳',
+                'efectivo': 'Efectivo 💵'
             };
             
             const deliveryMap = {
-                'colegio': 'Entrega en el Colegio 🏫',
-                'virtual': 'Entrega Virtual (Servicios Online) 💻'
+                'colegio': 'Entrega Colegio 🏫',
+                'virtual': 'Entrega Virtual 💻'
             };
             
-            // 3. Rellenar la UI
             document.getElementById('confirmed-happy-code').textContent = data.happyCode || 'HO-XXXXXX';
             document.getElementById('detail-total').textContent = data.total || '$0';
             document.getElementById('detail-subtotal').textContent = data.subtotal || '$0';
             document.getElementById('detail-shipping').textContent = data.shipping || 'Gratis';
             
-            // Usar el mapeo para mostrar un texto más amigable
-            document.getElementById('detail-payment-method').textContent = paymentMap[data.paymentMethod] || 'Método no especificado';
-            document.getElementById('detail-delivery-type').textContent = deliveryMap[data.deliveryType] || 'Entrega no especificada';
-
-            // Mostrar los ítems
-            document.getElementById('detail-items-summary').textContent = data.itemsSummary || 'Sin resumen de productos.';
+            document.getElementById('detail-payment-method').textContent = paymentMap[data.paymentMethod] || 'En tienda';
+            document.getElementById('detail-delivery-type').textContent = deliveryMap[data.deliveryType] || 'Presencial';
+            document.getElementById('detail-items-summary').textContent = data.itemsSummary || 'Sin resumen';
             
             const code = data.happyCode || 'HO-XXXXXX';
             const num = `HC-${code}`;
 
-            // Generar código QR de verificación
             new QRCode(document.getElementById("qrcode"), {
                 text: `https://happycorner.lol/verify?order=${num}`,
                 width: 120,
@@ -252,9 +290,6 @@
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.H
             });
-
-            // 4. (Opcional pero recomendado) Limpiar el dato del localStorage para que no se vea en futuras visitas
-            // localStorage.removeItem('lastHappyOrder'); 
         }
     </script>
 </body>

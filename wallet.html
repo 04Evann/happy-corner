@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Passes | Happy Corner</title>
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     
@@ -14,27 +13,28 @@
             max-width: 600px;
             margin: 40px auto;
             padding: 0 20px;
+            animation: slideIn 0.5s ease;
         }
 
         .pass-box {
-            background: white;
+            background: var(--surface-color);
             border-radius: 25px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
             text-align: center;
         }
 
         .pass-box h1 {
             font-size: 24px;
-            font-weight: 800;
+            font-weight: 900;
             margin-bottom: 10px;
-            color: #2d3436;
+            color: var(--text-color);
         }
 
         .pass-box p {
             font-size: 14px;
-            color: #636e72;
+            color: var(--text-muted);
             margin-bottom: 25px;
             line-height: 1.5;
         }
@@ -47,119 +47,166 @@
         .form-group label {
             display: block;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 5px;
-            color: #2d3436;
+            color: var(--text-color);
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 2px solid #eee;
+            padding: 14px;
+            border-radius: 14px;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-color);
             font-family: inherit;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.2s;
+            transition: 0.3s;
         }
 
         .form-group input:focus {
-            border-color: #ff5299;
+            border-color: var(--hp-pink);
         }
 
         .btnPrimary {
             display: inline-block;
             border: none;
-            background: #ff5299;
+            background: var(--hp-gradient);
             color: white;
-            font-weight: 800;
+            font-weight: 900;
             padding: 14px 24px;
             border-radius: 14px;
             cursor: pointer;
             width: 100%;
             text-decoration: none;
             font-size: 15px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px var(--hp-pink-glow);
         }
 
         .btnPrimary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 82, 153, 0.3);
+            box-shadow: 0 6px 20px var(--hp-pink-glow);
         }
 
-        .btnSecondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: 2px solid #111;
-            background: #111;
-            color: white;
-            font-weight: 800;
-            padding: 14px 24px;
-            border-radius: 14px;
-            cursor: pointer;
-            width: 100%;
-            text-decoration: none;
-            font-size: 15px;
-            transition: transform 0.2s;
-            margin-top: 10px;
-        }
-
-        .btnSecondary:hover {
-            transform: translateY(-2px);
-        }
-
-        .wallet-buttons {
+        /* Digital Card CSS */
+        .wallet-card-container {
             display: none;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px dashed #e1e5f2;
+            margin-top: 30px;
+            animation: slideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .pass-preview {
+        .digital-pass {
             background: var(--hp-gradient);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 25px;
+            padding: 30px;
             color: white;
             text-align: left;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 15px 35px var(--hp-pink-glow);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            aspect-ratio: 9/16;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
-        .pass-preview::after {
-            content: "✨";
+        .digital-pass::before {
+            content: "";
             position: absolute;
-            right: 20px;
-            top: 20px;
-            font-size: 24px;
-            opacity: 0.5;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            transform: rotate(45deg);
+            pointer-events: none;
         }
 
-        .pass-preview h3 { margin: 0 0 5px; font-size: 18px; font-weight: 800; }
-        .pass-preview p { margin: 0; font-size: 12px; opacity: 0.9; }
+        .pass-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
 
+        .pass-logo {
+            font-weight: 900;
+            font-size: 20px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pass-body {
+            z-index: 2;
+            margin-top: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .pass-name {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .pass-code {
+            font-size: 16px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .pass-qr-wrapper {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 30px auto 0;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .pass-footer {
+            z-index: 2;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-top: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
-            <a href="/catalogo">Catálogo</a>
-            <a href="/order">HappyOrder</a>
-            <a href="/loyalty">LoyaltyCorner</a>
-            <a href="/track">Rastrear Pedido</a>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+        <nav class="header-nav nav-desktop">
+            <a href="/index" class="nav-btn">Inicio</a>
+            <a href="/catalogo" class="nav-btn">Catálogo</a>
+            <a href="/order" class="nav-btn">HappyOrder</a>
+            <a href="/loyalty" class="nav-btn">Loyalty</a>
         </nav>
-        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-            <span></span><span></span><span></span>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
         </div>
     </header>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+    <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
@@ -167,94 +214,124 @@
         <a href="/loyalty">LoyaltyCorner</a>
         <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
-        <a href="/wallet">Happy Passes</a>
+        <a href="/wallet" class="active">Happy Passes</a>
     </nav>
 
-    <div class="page-container">
-        <div class="pass-box">
+    <div class="page-container showcase-container">
+        <div class="pass-box" id="form-section">
             <h1>Happy Passes 🎟️</h1>
-            <p>Obtén tu tarjeta Loyalty Corner digital directa en tu Apple Wallet o Google Wallet y llévanos siempre contigo.</p>
+            <p>Genera tu tarjeta Loyalty Corner digital gratuita. Tómale screenshot y guárdala en tus favoritos para usar tu código en todas tus compras.</p>
 
             <div id="request-form">
                 <div class="form-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" id="pass-name" placeholder="Tu nombre">
+                    <label>Tu Nombre Completo</label>
+                    <input type="text" id="pass-name" placeholder="Ej: Juan Pérez">
                 </div>
                 <div class="form-group">
-                    <label>HappyCódigo</label>
-                    <input type="text" id="pass-code" placeholder="Ej: HC123">
+                    <label>Tu HappyCódigo</label>
+                    <input type="text" id="pass-code" placeholder="Ej: HC12345">
                 </div>
                 
-                <button class="btnPrimary" onclick="requestPass()">
-                    <i class="fab fa-whatsapp"></i> Solicitar Pase por WhatsApp
+                <button class="btnPrimary" onclick="generatePass()">
+                    ✨ Generar Pase Digital
                 </button>
             </div>
+        </div>
 
-            <div class="wallet-buttons" id="wallet-buttons">
-                <div class="pass-preview">
-                    <h3>Loyalty Corner</h3>
-                    <p id="preview-name">Tu Nombre</p>
-                    <p id="preview-code" style="font-weight: 800; margin-top: 10px; font-size: 16px;">HC-XXXXX</p>
+        <div class="wallet-card-container" id="pass-section">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <h2 style="font-size: 20px; font-weight: 900; color: var(--text-color);">¡Tu Pase está Listo! 🎉</h2>
+                <p style="font-size: 13px; color: var(--text-muted);">Tómale una captura de pantalla a la tarjeta de abajo y guárdala con cariño.</p>
+            </div>
+
+            <div class="digital-pass">
+                <div class="pass-header">
+                    <div class="pass-logo">
+                        <div style="background: white; color: var(--hp-pink); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 14px;">HC</div>
+                        HappyCorner
+                    </div>
+                    <div style="font-weight: 800; font-size: 12px; background: rgba(0,0,0,0.2); padding: 5px 10px; border-radius: 10px;">LOYALTY</div>
                 </div>
-                <h3 style="font-size: 16px; margin-bottom: 15px;">¡Tu pase está listo!</h3>
-                <a href="#" class="btnSecondary" onclick="alert('Funcionalidad Apple Wallet pendiente de configurar con Pass2U.')">
-                    <i class="fab fa-apple"></i> Añadir a Apple Wallet
-                </a>
-                <a href="#" class="btnSecondary" style="background: white; color: #111; border-color: #eee;" onclick="alert('Funcionalidad Google Wallet pendiente de configurar con Pass2U.')">
-                    <i class="fab fa-google"></i> Añadir a Google Wallet
-                </a>
+
+                <div class="pass-body">
+                    <div class="pass-name" id="display-name">JUAN PÉREZ</div>
+                    <div class="pass-code" id="display-code">HC12345</div>
+
+                    <div class="pass-qr-wrapper" id="qrcode"></div>
+                </div>
+
+                <div class="pass-footer">
+                    VÁLIDO EN TODAS LAS COMPRAS ✨
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btnPrimary" style="background: var(--input-bg); color: var(--text-color); border: 2px solid var(--border-color); box-shadow: none;" onclick="location.reload()">Crear Otro Pase</button>
             </div>
         </div>
     </div>
     
-    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
-        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    <div class="footer-admin">
+        <a href="/admin">Administración Empresarial</a>
     </div>
 
+    <!-- Librería para el código QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script>
-        function toggleMenu(force) {
-            const menu = document.getElementById('sideMenu');
-            const overlay = document.getElementById('overlay');
-            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
-            menu.classList.toggle('active', next);
-            overlay.classList.toggle('active', next);
+        let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+            const themeBtn = document.getElementById('theme-icon');
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeBtn.innerText = '🌙';
+            }
         }
 
-        function requestPass() {
+        window.addEventListener('DOMContentLoaded', () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) toggleTheme();
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+        menuBtn.onclick = () => { sideMenu.classList.toggle('active'); overlay.classList.toggle('active'); };
+        overlay.onclick = () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); };
+
+        function generatePass() {
             const name = document.getElementById('pass-name').value.trim();
             const code = document.getElementById('pass-code').value.trim();
 
-            if (!name || !code) {
-                alert("Por favor rellena tu nombre y HappyCódigo.");
+            if(!name || !code) {
+                alert("Por favor ingresa tu nombre y un HappyCódigo.");
                 return;
             }
 
-            // Guardar estado local
-            localStorage.setItem('wallet_requested', 'true');
-            localStorage.setItem('wallet_name', name);
-            localStorage.setItem('wallet_code', code);
-
-            // Mensaje a WhatsApp
-            const msg = `Hola! Quiero mi pase de Loyalty Corner para mi Wallet. 🎟️\n\n*Nombre:* ${name}\n*HappyCódigo:* ${code}\n\nQuedo pendiente para habilitar mi botón en la página! ✨`;
-            const waUrl = `https://wa.me/573502678529?text=${encodeURIComponent(msg)}`;
+            document.getElementById('form-section').style.display = 'none';
             
-            window.open(waUrl, '_blank');
+            document.getElementById('display-name').innerText = name.toUpperCase();
+            document.getElementById('display-code').innerText = code.toUpperCase();
 
-            // Mostrar botones
-            checkWalletState();
+            // Evitar duplicar QR si genera varias veces
+            document.getElementById('qrcode').innerHTML = ""; 
+
+            // Crear el código QR
+            new QRCode(document.getElementById("qrcode"), {
+                text: `https://happycorner.lol/loyalty?codigo=${code}`,
+                width: 140,
+                height: 140,
+                colorDark : "#2d3436",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('pass-section').style.display = 'block';
         }
-
-        function checkWalletState() {
-            if (localStorage.getItem('wallet_requested') === 'true') {
-                document.getElementById('request-form').style.display = 'none';
-                document.getElementById('wallet-buttons').style.display = 'block';
-                
-                document.getElementById('preview-name').innerText = localStorage.getItem('wallet_name') || 'Tu Nombre';
-                document.getElementById('preview-code').innerText = localStorage.getItem('wallet_code') || 'HC-XXXXX';
-            }
-        }
-
-        window.onload = checkWalletState;
     </script>
 </body>
 </html>
