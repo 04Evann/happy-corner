@@ -4,44 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Corner | Inicio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- CSS y Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .product-img-container {
-            width: 100%; height: 120px; background: #f9f9f9; border-radius: 20px; margin-bottom: 10px;
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-        }
-        .product-img-container img { width: 100%; height: 100%; object-fit: cover; }
-    </style>
+    
+    <!-- Librería Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
     <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
 
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
         <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
+            <a href="/index" class="active">Inicio</a>
             <a href="/catalogo">Catálogo</a>
             <a href="/order">HappyOrder</a>
             <a href="/loyalty">LoyaltyCorner</a>
             <a href="/track">Rastrear Pedido</a>
-            <a href="/terminos">Terminos</a>
         </nav>
-        <div class="menu-btn" id="menuBtn">
-            <span></span><span></span><span></span>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
         </div>
     </header>
 
     <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
-        <a href="/index">Inicio</a>
+        <a href="/index" class="active">Inicio</a>
         <a href="/catalogo">Catálogo</a>
         <a href="/order">HappyOrder</a>
         <a href="/loyalty">LoyaltyCorner</a>
         <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
-            <a href="/wallet">Happy Passes</a>
         <a href="/wallet">Happy Passes</a>
     </nav>
 
@@ -55,53 +57,66 @@
         </div>
     </div>
 
-    <h1 style="text-align: center; font-size: 20px; margin: 25px 0 10px;">Hot Products 🔥</h1>
+    <h1 class="page-title">Top Products</h1>
 
-    <div class="section-tag">Combos & Favoritos 🍕🍪</div>
+    <div class="section-tag">Combos & Favoritos</div>
     <div class="grid">
         <!-- Pizza -->
         <div class="card" id="pizza-normal">
-            <div class="product-img-container"><img src="pizza.png" alt="Pizza Normal"></div>
+            <div class="badge-top">TOP</div>
+            <div class="img-container"><img src="pizza.png" alt="Pizza Normal"></div>
             <div class="product-name">Pizza</div>
             <div class="price">$11.000</div>
-            <div class="qty-controls">
+            <div class="qty-row">
                 <button class="qty-btn" onclick="qty('pizza-normal',-1)">-</button>
                 <span class="qty-num">1</span>
                 <button class="qty-btn" onclick="qty('pizza-normal',1)">+</button>
             </div>
-            <button class="add-btn" onclick="add('pizza-normal')">Añadir</button>
+            <button class="btn-add" onclick="add('pizza-normal', event)">Añadir a Carrito</button>
         </div>
-
 
         <!-- Galleta Red Velvet -->
         <div class="card" id="galleta-red-velvet">
-            <div class="product-img-container"><img src="grv.png" alt="Galleta Red Velvet"></div>
+            <div class="img-container"><img src="grv.png" alt="Galleta Red Velvet"></div>
             <div class="product-name">Galleta Red Velvet</div>
             <div class="price">$6.000</div>
-            <div class="qty-controls">
+            <div class="qty-row">
                 <button class="qty-btn" onclick="qty('galleta-red-velvet',-1)">-</button>
                 <span class="qty-num">1</span>
                 <button class="qty-btn" onclick="qty('galleta-red-velvet',1)">+</button>
             </div>
-            <button class="add-btn" onclick="add('galleta-red-velvet')">Añadir</button>
+            <button class="btn-add" onclick="add('galleta-red-velvet', event)">Añadir a Carrito</button>
         </div>
 
         <!-- Ring Pop -->
         <div class="card" id="ring-pop">
-            <div class="product-img-container"><img src="rp.png" alt="Ring Pop"></div>
+            <div class="img-container"><img src="happyshop.png" alt="Ring Pop" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2632/2632066.png'"></div>
             <div class="product-name">Ring Pop</div>
             <div class="price">$3.500</div>
-            <div class="qty-controls">
+            <div class="qty-row">
                 <button class="qty-btn" onclick="qty('ring-pop',-1)">-</button>
                 <span class="qty-num">1</span>
                 <button class="qty-btn" onclick="qty('ring-pop',1)">+</button>
             </div>
-            <button class="add-btn" onclick="add('ring-pop')">Añadir</button>
+            <button class="btn-add" onclick="add('ring-pop', event)">Añadir a Carrito</button>
         </div>
     </div>
 
-
-
+    <!-- TOAST (Notificación pequeña abajo en el centro) -->
+    <style>
+        #toast {
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--surface-color); padding: 12px 25px; border-radius: 50px;
+            box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px;
+            z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--border-color); color: var(--text-color);
+        }
+        #toast.show { bottom: 30px; }
+        .toast-check {
+            background: #2ecc71; color: white; width: 20px; height: 20px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;
+        }
+    </style>
     <div id="toast">
         <div class="toast-check">✓</div>
         <span id="toast-text"></span>
@@ -111,12 +126,27 @@
         🛒<div class="badge" id="cart-count">0</div>
     </a>
 
-    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
-        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    <div class="footer-admin">
+        <a href="/admin">Administración Empresarial</a>
     </div>
 
     <script>
-        // Menú Lateral
+        // -----------------------
+        // INTERFAZ Y DARK MODE
+        // -----------------------
+        let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+            const themeBtn = document.getElementById('theme-icon');
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeBtn.innerText = '🌙';
+            }
+        }
+
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
@@ -125,13 +155,11 @@
             sideMenu.classList.toggle('active');
             overlay.classList.toggle('active');
         };
-
         overlay.onclick = () => {
             sideMenu.classList.remove('active');
             overlay.classList.remove('active');
         };
 
-        // Carousel
         let currentIdx = 0;
         const track = document.getElementById('track');
         function moveSlide(step) {
@@ -140,15 +168,38 @@
         }
         setInterval(() => moveSlide(1), 5000);
 
-        // Carrito (sincronizado con catalogo y order: hc_cart con id, name, price, qty)
+        // Auto-detect Night Mode
+        window.addEventListener('DOMContentLoaded', () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) toggleTheme();
+            updateCartBadge();
+        });
+
+        // -----------------------
+        // CARRITO Y LÓGICA
+        // -----------------------
         function qty(id, d) {
             let s = document.querySelector(`#${id} .qty-num`);
             let v = parseInt(s.innerText) + d;
             if (v > 0) s.innerText = v;
+            else s.innerText = 1; // Mínimo 1 en el input
         }
 
-        function add(id) {
-            document.getElementById('clinkSound').play().catch(() => {});
+        function checkPizzaLimit(cart, newPizzaQty) {
+            let currentPizzas = 0;
+            // Sumamos la cantidad actual de pizzas en el carrito
+            cart.forEach(item => {
+                if(item.name.toLowerCase().includes('pizza')) {
+                    currentPizzas += item.qty;
+                }
+            });
+            if (currentPizzas + newPizzaQty > 5) {
+                return false;
+            }
+            return true;
+        }
+
+        function add(id, event) {
             const card = document.getElementById(id);
             const name = card.querySelector('.product-name').innerText;
             const priceVal = card.querySelector('.price').innerText.replace(/[^0-9]/g, '');
@@ -156,6 +207,31 @@
             const qtyVal = parseInt(card.querySelector('.qty-num').innerText);
 
             let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
+            
+            // Verificación del límite de pizzas (Máximo 5)
+            if (name.toLowerCase().includes('pizza')) {
+                if (!checkPizzaLimit(cart, qtyVal)) {
+                    alert("¡Límite alcanzado! Solo puedes pedir un máximo de 5 porciones de pizza por orden.");
+                    return;
+                }
+            }
+
+            // Si pasa todo, reproducimos el sonido
+            document.getElementById('clinkSound').play().catch(() => {});
+
+            // Lógica de Confeti
+            const btn = event.currentTarget;
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => { btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 150); }, 100);
+            const rect = btn.getBoundingClientRect();
+            const x = (rect.left + (rect.width / 2)) / window.innerWidth;
+            const y = (rect.top + (rect.height / 2)) / window.innerHeight;
+            confetti({
+                particleCount: 50, spread: 60, origin: { x: x, y: y },
+                colors: ['#ff5299', '#ff9d5c', '#ffd45e', '#ffffff']
+            });
+
+            // Añadir al Carrito
             const existingIndex = cart.findIndex(item => item.id === id);
             if (existingIndex > -1) {
                 cart[existingIndex].qty += qtyVal;
@@ -163,49 +239,20 @@
                 cart.push({ id, name, price, qty: qtyVal });
             }
             localStorage.setItem('hc_cart', JSON.stringify(cart));
-
-            const total = cart.reduce((sum, item) => sum + item.qty, 0);
-            document.getElementById('cart-count').innerText = total;
+            updateCartBadge();
 
             const toast = document.getElementById('toast');
             document.getElementById('toast-text').innerHTML = `<b>${qtyVal > 1 ? qtyVal + 'x ' : ''}${name}</b> añadido`;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2000);
 
-            card.querySelector('.qty-num').innerText = '1';
-        }
-
-        function addCustomRobux() {
-            const amountInput = document.getElementById('custom-robux-amount').value;
-            const amount = parseInt(amountInput);
-            if (!amount || amount <= 0) {
-                alert("Por favor ingresa una cantidad válida de Robux.");
-                return;
-            }
-
-            document.getElementById('clinkSound').play().catch(() => {});
-            const name = `Robux Personalizado (${amount} R$)`;
-            const price = 0; // A convenir
-            const id = `robux-custom-${Date.now()}`;
-
-            let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
-            cart.push({ id, name, price, qty: 1, isCustomRobux: true });
-            localStorage.setItem('hc_cart', JSON.stringify(cart));
-
-            updateCartBadge();
-            
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-text').innerHTML = `<b>${name}</b> añadido`;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-            document.getElementById('custom-robux-amount').value = '';
+            card.querySelector('.qty-num').innerText = '1'; // Reseteamos el selector
         }
 
         function updateCartBadge() {
             const cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
             document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
         }
-        window.onload = updateCartBadge;
     </script>
 </body>
 </html>

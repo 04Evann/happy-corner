@@ -1,232 +1,232 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Happy Shop - Finalizar Pedido</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Fonts and CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .order-main {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        .checkout-section {
-            background: white;
-            border-radius: 25px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            height: fit-content;
-        }
-
-        .checkout-section h2 {
-            font-weight: 800;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #f1f3f8;
-            padding-bottom: 10px;
-        }
-
-        #cart-items-list {
-            list-style: none;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .item-qty-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f8f9fa;
-            padding: 5px 10px;
-            border-radius: 15px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 2px solid #eee;
-            font-family: inherit;
-        }
-
-        .total-box {
-            margin-top: 20px;
-            padding: 20px;
-            background: #fff9f5;
-            border-radius: 15px;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-
-        .total-row.final {
-            font-size: 20px;
-            font-weight: 800;
-            color: #ff5299;
-        }
-
-        @media (max-width: 850px) {
-            .order-main {
-                grid-template-columns: 1fr;
-            }
-
-            .checkout-section:first-child {
-                order: 1;
-            }
-
-            .checkout-section:last-child {
-                order: 2;
-            }
-        }
-    </style>
+    
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 
 <body>
 
+    <!-- Audios -->
+    <audio id="sadViolin" src="https://www.myinstants.com/media/sounds/sad-violin.mp3" preload="auto"></audio>
+
+    <!-- HEADER NUEVO -->
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
-            <a href="/catalogo">Catálogo</a>
-            <a href="/order">HappyOrder</a>
-            <a href="/loyalty">LoyaltyCorner</a>
-            <a href="/track">Rastrear Pedido</a>
-            <a href="/terminos">Términos</a>
-            <a href="/wallet">Happy Passes</a>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+        <nav class="header-nav nav-desktop">
+            <a href="/index" class="nav-btn">Inicio</a>
+            <a href="/catalogo" class="nav-btn">Catálogo</a>
+            <a href="/order" class="nav-btn active">HappyOrder</a>
+            <a href="/loyalty" class="nav-btn">Loyalty</a>
         </nav>
-        <div class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
     </header>
 
     <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
-        <a href="/order">HappyOrder</a>
+        <a href="/order" class="active">HappyOrder</a>
         <a href="/loyalty">LoyaltyCorner</a>
         <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
         <a href="/wallet">Happy Passes</a>
     </nav>
 
-    <main class="order-main">
-        <section class="checkout-section">
-            <h2>🛍️ Tu Carrito</h2>
-            <ul id="cart-items-list"></ul>
-            <div id="empty-cart-msg" style="display:none; text-align:center; padding:20px;">
-                <p>Carrito vacío. <a href="/catalogo" style="color:#ff5299; font-weight:800;">Ver productos</a></p>
-            </div>
-            <div class="total-box" id="total-container">
-                <div class="total-row"><span>Subtotal:</span> <span id="subtotal-price">$0</span></div>
-                <div class="total-row" id="propina-row" style="display:none; color: #666; font-size: 14px;"><span>Propina:</span> <span id="propina-price">$0</span></div>
-                <div class="total-row final" style="margin-top: 5px;"><span>Total:</span> <span id="total-price">$0</span></div>
-            </div>
-        </section>
+    <main class="showcase-container">
+        <h1 class="section-title">Completa tu Orden</h1>
+        <p class="section-subtitle">Revisa tus productos y asegura tus datos de entrega.</p>
 
-        <section class="checkout-section">
-            <h2>📝 Datos de Entrega</h2>
-            <form id="checkout-form">
-                <div class="form-group">
-                    <label>¿Tienes HappyCódigo?</label>
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="puntos_code" placeholder="Tu código">
-                        <button type="button" id="consultar-puntos-btn" class="add-btn"
-                            style="width:auto; padding:0 15px;">Consultar</button>
+        <div class="order-layout">
+            
+            <!-- CAJA 1: RESUMEN DEL CARRITO -->
+            <div class="checkout-box">
+                <h3 style="font-size: 18px; margin-bottom: 20px;">Tu Carrito</h3>
+                
+                <div id="cart-items-list">
+                    <!-- Javascript listará esto -->
+                </div>
+
+                <div id="empty-cart-msg" style="display:none; text-align:center; padding:20px; color:var(--text-muted);">
+                    <p>Carrito vacío. <br><br> <a href="/index" class="btn-secondary" style="text-decoration:none;">Ver productos</a></p>
+                </div>
+
+                <!-- UPSELL BANNER DINÁMICO -->
+                <div id="upsell-container" style="display:none;">
+                    <div class="upsell-banner" style="background: linear-gradient(135deg, rgba(255,157,92,0.1), rgba(255,82,153,0.1)); border: 1px solid var(--hp-orange); border-radius: 16px; padding: 15px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px; animation: slideIn 0.5s ease;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img id="upsell-img" src="" alt="Upsell" style="width: 40px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); border-radius: 8px;">
+                            <div>
+                                <div style="color: var(--hp-orange); font-weight: 900; font-size: 13px;">¿TE FALTA ALGO MÁS?</div>
+                                <div id="upsell-text" style="font-size: 11px; font-weight: 600; color: var(--text-color);">Añade X por solo $Y</div>
+                            </div>
+                        </div>
+                        <button class="nav-btn" style="background: var(--hp-orange); color: white; padding: 6px 15px; font-size: 12px;" onclick="addUpsell(event)">+ Añadir</button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" name="Nombre" id="nombre" required>
+
+                <div id="total-container" style="margin-top: 30px; display:none;">
+                    <div class="total-row"><span>Subtotal</span> <span style="font-weight: 900;" id="subtotal-price">$0</span></div>
+                    <div class="total-row" id="propina-row" style="display:none; color: var(--text-muted); font-size: 13px;"><span>Propina</span> <span id="propina-price">$0</span></div>
+                    <div class="total-row total-final"><span>Total</span> <span id="total-price">$0</span></div>
                 </div>
-                <div class="form-group">
-                    <label>Correo</label>
-                    <input type="email" name="Email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label>WhatsApp</label>
-                    <input type="text" name="WhatsApp" id="celular" required>
-                </div>
-                <div class="form-group">
-                    <label>Tipo de Entrega</label>
-                    <select id="tipo_entrega" name="Tipo_Entrega" required>
+            </div>
+
+            <!-- CAJA 2: FORMULARIO DE PAGO -->
+            <div class="checkout-box">
+                <form id="checkout-form">
+                    <h3 style="font-size: 18px; margin-bottom: 20px;">Datos de Entrega</h3>
+
+                    <label class="input-label">¿Tienes HappyCódigo?</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="puntos_code" class="input-text" placeholder="Tu código" style="margin-bottom: 15px;">
+                        <button type="button" id="consultar-puntos-btn" class="btn-secondary" style="width:auto; padding:0 20px; height: 50px;">Consultar</button>
+                    </div>
+
+                    <label class="input-label">Nombre Completo</label>
+                    <input type="text" name="Nombre" id="nombre" class="input-text" required placeholder="Ej: Juan Pérez">
+
+                    <label class="input-label">Correo</label>
+                    <input type="email" name="Email" id="email" class="input-text" required placeholder="correo@ejemplo.com">
+
+                    <label class="input-label">WhatsApp</label>
+                    <input type="tel" name="WhatsApp" id="celular" class="input-text" required placeholder="Número para contactarte">
+
+                    <label class="input-label">Tipo de Entrega</label>
+                    <select id="tipo_entrega" class="input-select" name="Tipo_Entrega" required>
                         <option value="colegio">Entrega en el Colegio</option>
                         <option value="virtual">Entrega Virtual (Servicios Online)</option>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label>Método de Pago</label>
-                    <select id="metodo_pago" name="Metodo_Pago" required>
+
+                    <label class="input-label">Método de Pago</label>
+                    <select id="metodo_pago" class="input-select" name="Metodo_Pago" required>
                         <option value="nequi">Nequi</option>
                         <option value="efectivo">Efectivo</option>
                         <option value="pse">PSE</option>
-                        <option value="tarjeta">Tarjeta (debes contactarnos)</option>
+                        <option value="tarjeta">Tarjeta (contáctanos)</option>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label>Propina (Opcional) 💖</label>
-                    <select id="propina_pago" name="Propina_Pago" onchange="renderCart()">
-                        <option value="0">Sin propina</option>
-                        <option value="5">5% del pedido</option>
+
+                    <label class="input-label">Propina Opcional</label>
+                    <select id="propina_pago" class="input-select" name="Propina_Pago" onchange="checkPropina(this)">
                         <option value="10">10% del pedido</option>
+                        <option value="5">5% del pedido</option>
                         <option value="15">15% del pedido</option>
-                        <option value="custom">Otro monto...</option>
+                        <option value="0">0% - Sin propina :(</option>
                     </select>
-                    <div id="custom_propina_div" style="display:none; margin-top: 10px;">
-                        <input type="number" id="custom_propina" placeholder="Ej: 2000" oninput="renderCart()">
-                    </div>
-                </div>
-                <input type="hidden" name="Resumen_Pedido" id="hidden-summary">
-                <input type="hidden" name="Total_Pagar" id="hidden-total">
-                <button type="submit" class="add-btn" style="padding:15px; font-size:16px;">🚀 PEDIR AHORA</button>
-            </form>
-        </section>
+
+                    <input type="hidden" name="Resumen_Pedido" id="hidden-summary">
+                    <input type="hidden" name="Total_Pagar" id="hidden-total">
+                    <button type="submit" class="btn-add" style="padding:16px; font-size:16px;">🚀 PEDIR AHORA</button>
+                </form>
+            </div>
+        </div>
     </main>
 
-    <div style="text-align: center; padding: 30px; margin-bottom: 20px;">
-        <a href="/manager" style="color: #bbb; text-decoration: none; font-size: 11px;">🛠️ Administración</a>
+    <div class="footer-admin">
+        <a href="/admin">Administración Empresarial</a>
     </div>
 
+    <!-- SCRIPT PRINCIPAL DEL CARRITO -->
     <script>
-        // SINCRONIZADO CON CATALOGO: Usamos 'hc_cart' y la propiedad 'qty'
+        // --- THEME & NAV ---
+        let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+            const themeBtn = document.getElementById('theme-icon');
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeBtn.innerText = '🌙';
+            }
+        }
+
+        window.onload = () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) toggleTheme();
+            renderCart();
+        };
+
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+
+        menuBtn.onclick = () => { sideMenu.classList.toggle('active'); overlay.classList.toggle('active'); };
+        overlay.onclick = () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); };
+
+
+        // --- CART LOGIC ---
         let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
+        
+        // Catálogo para Upselling Dinámico
+        const catalogItems = [
+            { id: 'ring-pop', name: 'Ring Pop', price: 3500, img: 'happyshop.png' },
+            { id: 'galleta-red-velvet', name: 'Galleta Red Velvet', price: 6000, img: 'grv.png' },
+            { id: 'pizza-normal', name: 'Pizza', price: 11000, img: 'pizza.png' }
+        ];
+
+        let currentUpsellItem = null;
+
+        function checkPizzaLimit(newCart) {
+            let currentPizzas = 0;
+            newCart.forEach(item => {
+                if(item.name.toLowerCase().includes('pizza')) {
+                    currentPizzas += item.qty;
+                }
+            });
+            return currentPizzas <= 5;
+        }
+
+        function updateQty(index, delta) {
+            let tempCart = JSON.parse(JSON.stringify(cart));
+            tempCart[index].qty += delta;
+
+            // Bloquear si intentan pasar de 5 pizzas EN TOTAL
+            if (tempCart[index].name.toLowerCase().includes('pizza') && delta > 0) {
+                if (!checkPizzaLimit(tempCart)) {
+                    alert("¡Límite alcanzado! Solo puedes pedir un máximo de 5 porciones de pizza por orden.");
+                    return;
+                }
+            }
+
+            if (tempCart[index].qty <= 0) {
+                tempCart.splice(index, 1);
+            }
+            
+            cart = tempCart;
+            localStorage.setItem('hc_cart', JSON.stringify(cart));
+            renderCart();
+        }
 
         function renderCart() {
             const list = document.getElementById('cart-items-list');
             const emptyMsg = document.getElementById('empty-cart-msg');
             const totalContainer = document.getElementById('total-container');
+            const upsellContainer = document.getElementById('upsell-container');
             list.innerHTML = '';
             let subtotal = 0;
 
             if (cart.length === 0) {
                 emptyMsg.style.display = 'block';
                 totalContainer.style.display = 'none';
+                upsellContainer.style.display = 'none';
                 return;
             }
 
@@ -238,38 +238,53 @@
                 const itemTotal = price * item.qty;
                 subtotal += itemTotal;
 
-                const li = document.createElement('li');
-                li.className = 'cart-item';
-                li.innerHTML = `
-                    <div>
-                        <b style="font-size:14px;">${item.name}</b><br>
-                        <small>$${price.toLocaleString()}</small>
+                // Intentar sacar imagen del catálogo o usar genérica
+                let imgSource = 'https://cdn-icons-png.flaticon.com/512/3595/3595458.png';
+                const catItem = catalogItems.find(c => c.id === item.id || c.name === item.name);
+                if(catItem) imgSource = catItem.img;
+
+                const row = document.createElement('div');
+                row.className = 'cart-item';
+                row.innerHTML = `
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <div style="width: 50px; height: 50px; background: var(--input-bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; padding: 5px;">
+                            <img src="${imgSource}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3595/3595458.png'" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 14px;">${item.name}</div>
+                            <div style="color: var(--hp-pink); font-weight: 800; font-size: 12px;">$${price.toLocaleString()}</div>
+                        </div>
                     </div>
-                    <div class="item-qty-controls">
-                        <button type="button" class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
-                        <span>${item.qty}</span>
-                        <button type="button" class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                    <div style="display:flex; align-items:center; gap: 8px;">
+                        <button type="button" class="btn-secondary" style="padding: 2px 10px; font-weight:900;" onclick="updateQty(${index}, -1)">-</button>
+                        <div style="font-weight: 800; background: var(--input-bg); padding: 5px 12px; border-radius: 10px;">${item.qty}</div>
+                        <button type="button" class="btn-secondary" style="padding: 2px 10px; font-weight:900;" onclick="updateQty(${index}, 1)">+</button>
                     </div>
-                    <div style="font-weight:800">$${itemTotal.toLocaleString()}</div>
                 `;
-                list.appendChild(li);
+                list.appendChild(row);
             });
 
-            const propinaSelect = document.getElementById('propina_pago').value;
-            let propinaAmount = 0;
-            const customPropinaDiv = document.getElementById('custom_propina_div');
-
-            if (propinaSelect === 'custom') {
-                customPropinaDiv.style.display = 'block';
-                propinaAmount = parseInt(document.getElementById('custom_propina').value) || 0;
+            // Upselling Dinámico (Aleatorio)
+            const itemsNotInCart = catalogItems.filter(cat => !cart.some(c => c.id === cat.id));
+            if (itemsNotInCart.length > 0) {
+                // Elegir aleatorio
+                currentUpsellItem = itemsNotInCart[Math.floor(Math.random() * itemsNotInCart.length)];
+                document.getElementById('upsell-img').src = currentUpsellItem.img;
+                document.getElementById('upsell-text').innerText = `Añade ${currentUpsellItem.name} por $${currentUpsellItem.price.toLocaleString()}`;
+                upsellContainer.style.display = 'block';
             } else {
-                customPropinaDiv.style.display = 'none';
-                propinaAmount = Math.round(subtotal * (parseInt(propinaSelect) / 100));
+                upsellContainer.style.display = 'none';
             }
 
-            const isCustomRobux = cart.some(item => item.isCustomRobux);
+            // Totales
+            const propinaSelect = document.getElementById('propina_pago').value;
+            let propinaAmount = 0;
+            propinaAmount = Math.round(subtotal * (parseInt(propinaSelect) / 100));
+
             const total = subtotal + propinaAmount;
             
+            // Caso especial si tiene robux genérico o items sin precio definido (poco probable)
+            const isCustomRobux = cart.some(item => item.isCustomRobux);
             const totalTxtDisplay = isCustomRobux ? 'Por definir' : `$${total.toLocaleString()}`;
             
             document.getElementById('subtotal-price').textContent = `$${subtotal.toLocaleString()}`;
@@ -284,19 +299,49 @@
 
             document.getElementById('total-price').textContent = totalTxtDisplay;
             document.getElementById('hidden-total').value = totalTxtDisplay;
-            // Guardamos tambien la propina por separado
             document.getElementById('hidden-total').setAttribute('data-propina', propinaAmount > 0 ? `$${propinaAmount.toLocaleString()}` : "$0");
             document.getElementById('hidden-summary').value = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
         }
 
-        function updateQty(index, d) {
-            cart[index].qty += d;
-            if (cart[index].qty <= 0) cart.splice(index, 1);
+        // Action when UPSELL button clicked
+        function addUpsell(event) {
+            if(!currentUpsellItem) return;
+            const btn = event.currentTarget;
+            
+            // Animation and confetti ONLY on ADD
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => { btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 150); }, 100);
+            const rect = btn.getBoundingClientRect();
+            const x = (rect.left + (rect.width / 2)) / window.innerWidth;
+            const y = (rect.top + (rect.height / 2)) / window.innerHeight;
+            confetti({
+                particleCount: 50, spread: 60, origin: { x: x, y: y }, colors: ['#ff5299', '#ff9d5c', '#ffd45e', '#ffffff']
+            });
+
+            if (currentUpsellItem.name.toLowerCase().includes('pizza')) {
+                if (!checkPizzaLimit(cart)) {
+                    alert("¡Límite alcanzado! Solo puedes pedir un máximo de 5 porciones de pizza por orden.");
+                    return;
+                }
+            }
+
+            cart.push({ id: currentUpsellItem.id, name: currentUpsellItem.name, price: currentUpsellItem.price, qty: 1 });
             localStorage.setItem('hc_cart', JSON.stringify(cart));
             renderCart();
         }
 
-        // Happy Puntos
+        // --- EASTER EGG SAD VIOLIN ---
+        function checkPropina(selectEl) {
+            if (selectEl.value === "0") {
+                const sadAudio = document.getElementById('sadViolin');
+                sadAudio.volume = 0.5;
+                sadAudio.play().catch(e => console.log('Audio autoplay blocked', e));
+                alert("¿0% de propina? 💔 ... Entendido, estamos llorando un poquito por dentro, pero tu pedido sigue en pie.");
+            }
+            renderCart();
+        }
+
+        // --- FETCH PUNTOS ---
         document.getElementById('consultar-puntos-btn').onclick = async function () {
             const code = document.getElementById('puntos_code').value.trim();
             if (!code) return alert("Escribe tu código");
@@ -314,34 +359,26 @@
             this.innerText = "Consultar";
         };
 
-        function toggleMenu() {
-            // Reutiliza la lógica de tu styles.css si existe el side-menu
-            const sm = document.getElementById('sideMenu') || document.querySelector('.side-menu');
-            if (sm) sm.classList.toggle('active');
-        }
-
-        window.onload = renderCart;
-    </script>
-
-    <script>
+        // --- SUBMIT FORM ---
         document.getElementById('checkout-form').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            // Capturamos los datos asegurándonos de que existan los IDs en el HTML
+            if (cart.length === 0) {
+                return alert("El carrito está vacío.");
+            }
+
             const payload = {
                 nombre: document.getElementById('nombre').value,
                 email: document.getElementById('email').value,
                 whatsapp: document.getElementById('celular').value,
                 resumen: document.getElementById('hidden-summary').value,
                 total: document.getElementById('hidden-total').value,
-                // Verifica que tu <select> tenga id="metodo_pago"
                 metodo_pago: document.getElementById('metodo_pago').value,
                 tipo_entrega: document.getElementById('tipo_entrega').value,
                 happycodigo: document.getElementById('puntos_code').value || null,
                 propina: document.getElementById('hidden-total').getAttribute('data-propina') || "$0"
             };
 
-            // Animación simple en el botón
             const btn = e.target.querySelector('button[type="submit"]');
             const originalText = btn.innerText;
             btn.innerText = "Enviando...";
@@ -351,16 +388,7 @@
                 const resp = await fetch('https://happy-corner.vercel.app/api/getOrders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        nombre: payload.nombre,
-                        whatsapp: payload.whatsapp,
-                        resumen: payload.resumen,
-                        total: payload.total,
-                        metodo_pago: payload.metodo_pago,
-                        tipo_entrega: payload.tipo_entrega,
-                        happycodigo: payload.happycodigo,
-                        propina: payload.propina
-                    })
+                    body: JSON.stringify(payload)
                 });
 
                 const data = await resp.json();
@@ -370,19 +398,10 @@
                     const happyCode = typeof ref === 'number' ? `HO-${String(ref).padStart(6, '0')}` : ref;
 
                     const lastHappyOrder = {
-                        orderId: ref,
-                        happyCode,
-                        paymentMethod: payload.metodo_pago,
-                        deliveryType: payload.tipo_entrega,
-                        itemsSummary: payload.resumen,
-                        subtotal: payload.total,
-                        shipping: "Gratis",
-                        total: payload.total,
-                        customer: {
-                            nombre: payload.nombre,
-                            email: payload.email,
-                            whatsapp: payload.whatsapp
-                        },
+                        orderId: ref, happyCode, paymentMethod: payload.metodo_pago,
+                        deliveryType: payload.tipo_entrega, itemsSummary: payload.resumen,
+                        subtotal: payload.total, shipping: "Gratis", total: payload.total,
+                        customer: { nombre: payload.nombre, email: payload.email, whatsapp: payload.whatsapp },
                         createdAt: new Date().toISOString()
                     };
 
@@ -392,7 +411,6 @@
                 } else {
                     throw new Error(data.error || 'Error desconocido');
                 }
-
             } catch (err) {
                 console.error(err);
                 alert('❌ No pudimos enviar el pedido: ' + err.message);
@@ -403,5 +421,4 @@
         });
     </script>
 </body>
-
 </html>

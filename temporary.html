@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HappyCorner | Design Showcase V2</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* CSS VARIABLES FOR THEME SWITCHING */
+        :root {
+            --bg-color: #fafbfa;
+            --surface-color: #ffffff;
+            --text-color: #2d3436;
+            --text-muted: #636e72;
+            
+            --hp-pink: #ff5299;
+            --hp-pink-glow: rgba(255, 82, 153, 0.4);
+            --hp-orange: #ff9d5c;
+            --hp-yellow: #ffd45e;
+            
+            --hp-gradient: linear-gradient(135deg, var(--hp-pink) 0%, var(--hp-orange) 100%);
+            --border-color: rgba(0,0,0,0.05);
+            --shadow-sm: 0 4px 15px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
+            
+            --input-bg: #f5f6fa;
+            --input-border: #dcdde1;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0b0c10;
+            --surface-color: #1a1b24;
+            --text-color: #ffffff;
+            --text-muted: #a0a5b5;
+            
+            --hp-pink: #ff3385;
+            --hp-pink-glow: rgba(255, 51, 133, 0.6);
+            --hp-orange: #ff8533;
+            
+            --border-color: rgba(255,255,255,0.05);
+            --shadow-sm: 0 4px 15px rgba(0,0,0,0.3);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+            
+            --input-bg: #252736;
+            --input-border: #35384e;
+        }
+
+        /* RESET & BASE */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* =========================================
+           NUEVO HEADER (MÁS DINÁMICO Y MODERNO)
+           ========================================= */
+        header {
+            background: var(--surface-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+            width: calc(100% - 30px);
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            border-radius: 20px;
+            transition: background 0.4s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Logo animado */
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            background: var(--hp-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo-icon {
+            background: var(--hp-pink);
+            color: white;
+            width: 32px; height: 32px;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        /* Botones del Header */
+        .header-nav {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 10px 18px;
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            background: var(--input-bg);
+            color: var(--hp-pink);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--hp-gradient);
+            color: white;
+            box-shadow: 0 4px 15px var(--hp-pink-glow);
+        }
+
+        /* CONTROLS (Night Mode Toggle) */
+        .theme-toggle {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            border-color: var(--hp-pink);
+            color: var(--hp-pink);
+        }
+
+        /* Responsive Header */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                width: 100%;
+                top: 0;
+                border-radius: 0 0 20px 20px;
+            }
+            .header-nav { width: 100%; justify-content: space-around; flex-wrap: wrap; }
+            .nav-btn { padding: 8px 12px; font-size: 13px; }
+            .theme-toggle { position: absolute; top: 15px; right: 15px; }
+        }
+
+        /* MAIN SHOWCASE AREA */
+        .showcase-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        /* =========================================
+           MICRO-ANIMATED PRODUCT CARD (IMÁGENES DENTRO DEL CUADRITO)
+           ========================================= */
+        .card {
+            background: var(--surface-color);
+            border-radius: 24px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--hp-pink-glow);
+            border-color: var(--hp-pink);
+        }
+
+        /* El OVERFLOW HIDDEN ES CLAVE AQUÍ PARA QUE LA IMAGEN NO SALGA */
+        .img-container {
+            width: 100%;
+            height: 150px;
+            background: var(--bg-color);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.4s;
+            position: relative;
+            overflow: hidden; /* Esto evita que la imagen salga del cuadrito */
+        }
+
+        /* Image Pulse effect on hover (Solo se agranda y brilla, sin salir) */
+        .card:hover .img-container img {
+            transform: scale(1.08); /* Agranda un poquito, no exagerado */
+            filter: drop-shadow(0 10px 15px var(--hp-pink-glow));
+        }
+
+        .img-container img {
+            width: 85%;
+            height: 85%;
+            object-fit: contain;
+            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .price {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--hp-pink);
+            margin-bottom: 12px;
+        }
+
+        /* BUTTONS */
+        .btn-add {
+            background: var(--hp-gradient);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 14px;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-add:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px var(--hp-pink-glow);
+        }
+
+        .btn-add:active {
+            transform: scale(0.95);
+        }
+
+        /* =========================================
+           NUEVA SECCIÓN DE ORDER.HTML (REVAMPED)
+           ========================================= */
+        .order-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .checkout-box {
+            background: var(--surface-color);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        /* Estilos del Carrito */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .cart-item:last-child { border-bottom: none; }
+
+        .cart-item-img {
+            width: 50px; height: 50px;
+            background: var(--input-bg);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 5px;
+        }
+        .cart-item-img img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Upsell Banner */
+        .upsell-banner {
+            background: linear-gradient(135deg, rgba(255,157,92,0.1), rgba(255,82,153,0.1));
+            border: 1px solid var(--hp-orange);
+            border-radius: 16px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            animation: slideIn 0.5s ease;
+        }
+
+        .upsell-banner img { width: 40px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tipografía totalizador */
+        .total-row {
+            display: flex; justify-content: space-between;
+            margin-top: 10px; font-weight: 700; font-size: 15px; color: var(--text-color);
+        }
+        .total-final {
+            font-size: 22px; font-weight: 900; color: var(--hp-pink); margin-top: 10px;
+            padding-top: 10px; border-top: 2px solid var(--border-color);
+        }
+
+        /* Inputs de Order */
+        .input-label {
+            display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-muted);
+        }
+
+        .input-text, .input-select {
+            width: 100%; padding: 14px; background: var(--input-bg);
+            border: 2px solid var(--input-border); border-radius: 14px;
+            color: var(--text-color); font-size: 14px; font-weight: 600;
+            transition: all 0.3s ease; outline: none; margin-bottom: 20px;
+        }
+
+        .input-text:focus, .input-select:focus {
+            border-color: var(--hp-pink); background: var(--surface-color);
+            box-shadow: 0 0 0 4px var(--hp-pink-glow);
+        }
+
+        @media (max-width: 800px) {
+            .order-layout { grid-template-columns: 1fr; }
+            .checkout-box:first-child { order: 2; } /* Forms abajo en celular */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ======================= HEADER ======================= -->
+    <header>
+        <div class="logo">
+            <div class="logo-icon">✨</div>
+            HappyCorner
+        </div>
+        <nav class="header-nav">
+            <a href="#" class="nav-btn active">🏠 Inicio</a>
+            <a href="#" class="nav-btn">🛒 HappyOrder</a>
+            <a href="#" class="nav-btn">🎟️ Loyalty</a>
+            <a href="#" class="nav-btn">📍 Rastrear</a>
+        </nav>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+            <span id="theme-icon">🌙</span>
+        </button>
+    </header>
+
+    <div class="showcase-container">
+        <!-- ======================= CATÁLOGO SHOWCASE ======================= -->
+        <h1 class="section-title">🔥 Catálogo Premium</h1>
+        <p class="section-subtitle">Pasa el mouse sobre el cuadrito: La imagen ya no se sale, pero tiene un efecto de profundidad hermoso.</p>
+
+        <div class="grid">
+            <!-- Producto 1 -->
+            <div class="card">
+                <div class="img-container">
+                    <img src="pizza.png" alt="Pizza" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3595/3595458.png'">
+                </div>
+                <div class="product-name">Slice de Pizza</div>
+                <div class="price">$11.000</div>
+                <button class="btn-add" onclick="animateButton(this, event)">🛍️ Añadir</button>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="card">
+                <div class="img-container">
+                    <img src="grv.png" alt="Galleta" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3014/3014521.png'">
+                </div>
+                <div class="product-name">Galleta Red Velvet</div>
+                <div class="price">$6.000</div>
+                <button class="btn-add" onclick="animateButton(this, event)">🛍️ Añadir</button>
+            </div>
+            
+            <!-- Producto 3 -->
+            <div class="card">
+                <div class="img-container">
+                    <img src="happyshop.png" alt="Ring Pop" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2632/2632066.png'">
+                </div>
+                <div class="product-name">Ring Pop</div>
+                <div class="price">$3.500</div>
+                <button class="btn-add" onclick="animateButton(this, event)">🛍️ Añadir</button>
+            </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 60px 0;">
+
+        <!-- ======================= ORDER REVAMPED ======================= -->
+        <h1 class="section-title">🛒 Completa tu Orden</h1>
+        <p class="section-subtitle">Así se verá el nuevo Order.html con el banner de Upselling y Checkout elegante.</p>
+
+        <div class="order-layout">
+            
+            <!-- CAJA 1: RESUMEN DEL CARRITO -->
+            <div class="checkout-box">
+                <h3 style="font-size: 18px; margin-bottom: 20px;">Tu Carrito</h3>
+                
+                <div class="cart-item">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <div class="cart-item-img"><img src="pizza.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3595/3595458.png'"></div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 15px;">Slice de Pizza</div>
+                            <div style="color: var(--hp-pink); font-weight: 800; font-size: 13px;">$11.000</div>
+                        </div>
+                    </div>
+                    <div style="font-weight: 800; background: var(--input-bg); padding: 5px 12px; border-radius: 10px;">x2</div>
+                </div>
+
+                <div class="cart-item">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <div class="cart-item-img"><img src="grv.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3014/3014521.png'"></div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 15px;">Galleta Red Velvet</div>
+                            <div style="color: var(--hp-pink); font-weight: 800; font-size: 13px;">$6.000</div>
+                        </div>
+                    </div>
+                    <div style="font-weight: 800; background: var(--input-bg); padding: 5px 12px; border-radius: 10px;">x1</div>
+                </div>
+
+                <!-- EL UPSELL BANNER AQUÍ -->
+                <div class="upsell-banner">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2632/2632066.png" alt="Jewel">
+                        <div>
+                            <div style="color: var(--hp-orange); font-weight: 900; font-size: 13px;">¿TE FALTA EL POSTRE?</div>
+                            <div style="font-size: 11px; font-weight: 600; color: var(--text-color);">Añade un Ring Pop por solo $3.500</div>
+                        </div>
+                    </div>
+                    <button class="nav-btn" style="background: var(--hp-orange); color: white; padding: 6px 15px; font-size: 12px;" onclick="animateButton(this, event)">+ Añadir</button>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <div class="total-row"><span>Subtotal</span> <span style="font-weight: 900;">$28.000</span></div>
+                    <div class="total-row" style="color: var(--text-muted); font-size: 13px;"><span>Propina (10%)</span> <span>$2.800</span></div>
+                    <div class="total-row total-final"><span>Total</span> <span>$30.800</span></div>
+                </div>
+            </div>
+
+            <!-- CAJA 2: FORMULARIO DE PAGO -->
+            <div class="checkout-box">
+                <h3 style="font-size: 18px; margin-bottom: 20px;">📝 Datos de Entrega</h3>
+
+                <label class="input-label">¿Tienes HappyCódigo?</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" class="input-text" placeholder="Tu código" style="margin-bottom: 15px;">
+                    <button class="btn-add" style="width: auto; padding: 0 20px; height: 52px;" onclick="animateButton(this, event)">Consultar</button>
+                </div>
+
+                <label class="input-label">Nombre Completo</label>
+                <input type="text" class="input-text" placeholder="Ej: Juan Pérez">
+
+                <label class="input-label">WhatsApp</label>
+                <input type="tel" class="input-text" placeholder="Número para contactarte">
+
+                <label class="input-label">Método de Pago</label>
+                <select class="input-select">
+                    <option value="nequi">🔵 Nequi</option>
+                    <option value="efectivo">💵 Efectivo (Contra Entrega)</option>
+                    <option value="pse">🏦 PSE</option>
+                </select>
+
+                <button class="btn-add" style="padding: 16px; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;" onclick="animateButton(this, event)">🚀 PEDIR AHORA ($30.800)</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let isDark = false;
+        function toggleTheme() {
+            isDark = !isDark;
+            const themeBtn = document.getElementById('theme-icon');
+            
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = '☀️';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeBtn.innerText = '🌙';
+            }
+        }
+
+        window.onload = () => {
+            const hour = new Date().getHours();
+            if (hour >= 18 || hour < 6) toggleTheme();
+        };
+
+        function animateButton(btn, event) {
+            btn.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1.05)';
+                setTimeout(() => btn.style.transform = 'scale(1)', 150);
+            }, 100);
+
+            const rect = btn.getBoundingClientRect();
+            const x = (rect.left + (rect.width / 2)) / window.innerWidth;
+            const y = (rect.top + (rect.height / 2)) / window.innerHeight;
+
+            confetti({
+                particleCount: 50, spread: 60, origin: { x: x, y: y },
+                colors: ['#ff5299', '#ff9d5c', '#ffd45e', '#ffffff']
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,64 +1,146 @@
 /* =========================================
-   1. RESET Y VARIABLES (EL CEREBRO)
+   1. VARIABLES & THEMES 
    ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
+
 :root {
-    --hp-gradient: linear-gradient(90deg, #ff5299 0%, #ff9d5c 50%, #ffd45e 100%);
-    --bg-body: #f1f3f8;
-    --text-dark: #2d3436;
-    --white: #ffffff;
-    --shadow: 0 10px 30px rgba(0,0,0,0.08);
+    /* Light Theme (Pastel & Vibrant) */
+    --bg-color: #fafbfa;
+    --surface-color: #ffffff;
+    --text-color: #2d3436;
+    --text-muted: #636e72;
+    
+    --hp-pink: #ff5299;
+    --hp-pink-glow: rgba(255, 82, 153, 0.4);
+    --hp-orange: #ff9d5c;
+    --hp-yellow: #ffd45e;
+    
+    --hp-gradient: linear-gradient(135deg, var(--hp-pink) 0%, var(--hp-orange) 100%);
+    --border-color: rgba(0,0,0,0.05);
+    --shadow-sm: 0 4px 15px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
+    
+    --input-bg: #f5f6fa;
+    --input-border: #dcdde1;
 }
 
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+[data-theme="dark"] {
+    /* Candy / Neon Dark Mode */
+    --bg-color: #0b0c10;
+    --surface-color: #1a1b24;
+    --text-color: #ffffff;
+    --text-muted: #a0a5b5;
+    
+    --hp-pink: #ff3385;
+    --hp-pink-glow: rgba(255, 51, 133, 0.6);
+    --hp-orange: #ff8533;
+    
+    --border-color: rgba(255,255,255,0.05);
+    --shadow-sm: 0 4px 15px rgba(0,0,0,0.3);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+    
+    --input-bg: #252736;
+    --input-border: #35384e;
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--bg-body);
-    color: var(--text-dark);
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.4s ease, color 0.4s ease;
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
+    min-height: 100vh;
+    padding-bottom: 80px;
 }
 
 /* =========================================
-   2. HEADER UNIFICADO (CHAU DOBLE BARRA)
+   2. HEADER DINÁMICO
    ========================================= */
 header {
-    background: var(--hp-gradient);
-    padding: 10px 20px;
+    background: var(--surface-color);
+    padding: 15px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     position: sticky;
-    top: 0;
+    top: 15px;
     z-index: 1000;
-    height: 70px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: calc(100% - 30px);
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 20px;
+    transition: background 0.4s ease;
+    border: 1px solid var(--border-color);
 }
 
-.logo-img { height: 40px; width: auto; }
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
 
-/* Navegación Desktop: Se oculta en móvil */
-.nav-desktop { 
-    display: flex; 
-    gap: 10px; 
+.logo-img {
+    height: 40px; width: auto; 
+    transition: transform 0.3s;
+}
+.logo-img:hover { transform: scale(1.05); }
+
+.nav-desktop {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 .nav-desktop a {
-    color: white;
+    color: var(--text-color);
     text-decoration: none;
-    font-size: 13px;
     font-weight: 700;
-    background: rgba(255,255,255,0.2);
-    padding: 8px 15px;
-    border-radius: 15px;
-    transition: 0.3s;
+    font-size: 15px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-/* Botón Hamburguesa: Solo se ve en móvil */
+.nav-desktop a:hover {
+    background: var(--input-bg);
+    color: var(--hp-pink);
+    transform: translateY(-2px);
+}
+
+.nav-desktop a.active {
+    background: var(--hp-gradient);
+    color: white;
+    box-shadow: 0 4px 15px var(--hp-pink-glow);
+}
+
+.theme-toggle {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.theme-toggle:hover {
+    transform: rotate(15deg);
+    border-color: var(--hp-pink);
+    color: var(--hp-pink);
+}
+
+/* Hamburguesa en celular */
 .menu-btn {
     display: none;
     flex-direction: column;
@@ -66,66 +148,319 @@ header {
     cursor: pointer;
     padding: 10px;
 }
-
 .menu-btn span {
-    width: 25px;
-    height: 3px;
-    background: white;
+    width: 25px; height: 3px;
+    background: var(--text-color);
     border-radius: 2px;
     transition: 0.3s;
 }
 
-/* =========================================
-   3. MENÚ LATERAL Y OVERLAY (MÓVIL)
-   ========================================= */
 .side-menu {
     position: fixed;
-    top: 0;
-    right: -100%; /* Escondido a la derecha */
-    width: 280px;
-    height: 100%;
-    background: white;
+    top: 0; right: -100%;
+    width: 280px; height: 100%;
+    background: var(--surface-color);
     z-index: 1100;
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 100px 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+    display: flex; flex-direction: column; gap: 20px;
 }
-
-.side-menu.active { right: 0; }
-
+.side-menu.active { right: 0; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
 .side-menu a {
-    color: #333;
+    color: var(--text-color);
     text-decoration: none;
     font-size: 18px;
     font-weight: 800;
-    border-bottom: 2px solid #f1f1f1;
-    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 15px;
 }
 
 .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    z-index: 1050;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); display: none; z-index: 1050;
     backdrop-filter: blur(3px);
 }
-
 .overlay.active { display: block; }
 
-/* Responsive Header */
-@media (max-width: 768px) {
+@media (max-width: 850px) {
+    header {
+        flex-direction: row;
+        width: 100%; top: 0; border-radius: 0;
+        margin-bottom: 0; border-left: none; border-right: none;
+        padding: 15px 20px;
+    }
     .nav-desktop { display: none; }
     .menu-btn { display: flex; }
+    .theme-toggle { margin-right: 15px; } /* Ajuste del icono de luna/sol */
 }
 
 /* =========================================
-   4. CAROUSEL (OPTIMIZADO)
+   3. SECCIONES Y TEXTOS
+   ========================================= */
+.section-tag {
+    background: var(--hp-gradient);
+    color: white;
+    display: inline-block;
+    padding: 8px 25px;
+    border-radius: 0 20px 20px 0;
+    font-weight: 900;
+    margin: 35px 0 20px;
+    font-size: 16px;
+    box-shadow: 0 4px 10px var(--hp-pink-glow);
+}
+
+.page-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 900;
+    margin: 30px 0 10px;
+}
+
+/* =========================================
+   4. GRID Y TARJETAS (CARDS)
+   ========================================= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 15px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+@media (min-width: 768px) {
+    .grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+}
+
+.card {
+    background: var(--surface-color);
+    border-radius: 24px;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px var(--hp-pink-glow);
+    border-color: var(--hp-pink);
+}
+
+.img-container {
+    width: 100%;
+    height: 140px;
+    background: var(--bg-color);
+    border-radius: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.4s;
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover .img-container img {
+    transform: scale(1.08);
+    filter: drop-shadow(0 10px 15px var(--hp-pink-glow));
+}
+
+.img-container img {
+    width: 85%; height: 85%;
+    object-fit: contain;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s;
+}
+
+.product-name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+.price {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--hp-pink);
+    margin-bottom: 12px;
+}
+
+.badge-top {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff3333;
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 20px;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(255, 51, 51, 0.4);
+}
+
+/* =========================================
+   5. CONTROLES Y BOTONES
+   ========================================= */
+.qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    background: var(--input-bg);
+    padding: 6px;
+    border-radius: 20px;
+}
+
+.qty-btn {
+    background: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    font-size: 18px; font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+}
+.qty-btn:hover {
+    background: var(--hp-pink); color: white; border-color: var(--hp-pink); transform: scale(1.1);
+}
+
+.qty-num { font-weight: 900; font-size: 16px; width: 25px; text-align: center; color: var(--text-color); }
+
+.btn-add {
+    background: var(--hp-gradient);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-add:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px var(--hp-pink-glow);
+}
+.btn-add:active { transform: scale(0.95); }
+
+/* Botón secundario sin gradiente agresivo */
+.btn-secondary {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-secondary:hover {
+    border-color: var(--hp-pink); color: var(--hp-pink);
+}
+
+/* =========================================
+   6. CARRITO FLOTANTE Y TOAST PUSH NOTIFICATIONS
+   ========================================= */
+.cart-fixed {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: var(--surface-color);
+    width: 65px; height: 65px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    text-decoration: none;
+    z-index: 999;
+    border: 2px solid var(--border-color);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 24px;
+}
+.cart-fixed:hover { transform: scale(1.1) rotate(5deg); border-color: var(--hp-pink); }
+
+.badge {
+    position: absolute;
+    top: -5px; right: -5px;
+    background: var(--hp-pink);
+    color: white;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    font-size: 12px; font-weight: 900;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid var(--surface-color);
+}
+
+/* =========================================
+   7. FORMULARIOS & CHECKOUT (ORDER.HTML)
+   ========================================= */
+.checkout-box {
+    background: var(--surface-color);
+    border-radius: 24px;
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    height: fit-content;
+    margin-bottom: 25px;
+}
+
+.input-label {
+    display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-muted);
+}
+
+.input-text, .input-select {
+    width: 100%; padding: 14px; background: var(--input-bg);
+    border: 2px solid var(--input-border); border-radius: 14px;
+    color: var(--text-color); font-size: 14px; font-weight: 600;
+    transition: all 0.3s ease; outline: none; margin-bottom: 20px;
+    font-family: inherit;
+}
+
+.input-text:focus, .input-select:focus {
+    border-color: var(--hp-pink); background: var(--surface-color);
+    box-shadow: 0 0 0 4px var(--hp-pink-glow);
+}
+
+/* =========================================
+   8. ANIMACIONES Y UTILIDADES
+   ========================================= */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.footer-admin {
+    text-align: center;
+    padding: 30px;
+    margin-top: 50px;
+}
+.footer-admin a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+.footer-admin a:hover { opacity: 1; color: var(--hp-pink); }
+
+/* =========================================
+   9. CAROUSEL
    ========================================= */
 .carousel-container {
     width: calc(100% - 30px);
@@ -134,27 +469,24 @@ header {
     position: relative;
     border-radius: 25px;
     overflow: hidden;
-    height: 220px; /* Altura para móvil */
-    box-shadow: var(--shadow);
+    height: 220px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
 }
-
 @media (min-width: 768px) {
     .carousel-container { height: 450px; }
 }
-
 .track {
     display: flex;
     height: 100%;
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
-
 .slide {
     min-width: 100%;
     height: 100%;
     background-size: cover;
     background-position: center;
 }
-
 .arrow {
     position: absolute;
     top: 50%;
@@ -170,177 +502,5 @@ header {
     color: var(--hp-pink);
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
-
 .prev { left: 10px; }
 .next { right: 10px; }
-
-/* =========================================
-   5. GRID DE PRODUCTOS (2 COLUMNAS EN CELULAR)
-   ========================================= */
-.section-tag {
-    background: var(--hp-gradient);
-    color: white;
-    display: inline-block;
-    padding: 6px 20px;
-    border-radius: 0 20px 20px 0;
-    font-weight: 800;
-    margin: 25px 0 10px;
-    font-size: 15px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* ¡Aquí la magia para celular! */
-    gap: 12px;
-    padding: 15px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-@media (min-width: 768px) {
-    .grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-}
-
-/* =========================================
-   6. TARJETAS (CARDS)
-   ========================================= */
-.card {
-    background: white;
-    border-radius: 25px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.04);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 1px solid rgba(0,0,0,0.02);
-}
-
-.img-placeholder { 
-    width: 100%; 
-    height: 110px; 
-    background: #f9f9f9; 
-    border-radius: 20px; 
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 35px;
-}
-
-.product-name { font-size: 13px; font-weight: 700; margin-bottom: 5px; line-height: 1.2; }
-.price-mystery { font-size: 16px; font-weight: 800; color: #ff5299; margin-bottom: 10px; }
-.price { font-size: 16px; font-weight: 800; color: #ff5299; margin-bottom: 10px; }
-
-/* Listón de promo */
-.ribbon {
-    position: absolute;
-    top: 10px; right: -5px;
-    background: #ff3333;
-    color: white;
-    font-size: 9px;
-    font-weight: 900;
-    padding: 4px 10px;
-    border-radius: 5px 0 0 5px;
-    z-index: 10;
-}
-
-/* =========================================
-   7. CONTROLES Y BOTONES
-   ========================================= */
-.qty-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.qty-btn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
-    background: var(--hp-gradient);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.add-btn {
-    background: var(--hp-gradient);
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 12px;
-    width: 100%;
-    cursor: pointer;
-}
-
-/* =========================================
-   8. TOAST Y CARRITO FLOTANTE
-   ========================================= */
-#toast {
-    position: fixed;
-    bottom: -100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 12px 25px;
-    border-radius: 50px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 2000;
-    transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#toast.show { bottom: 30px; }
-
-.toast-check {
-    background: #2ecc71;
-    color: white;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-}
-
-.cart-fixed {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    text-decoration: none;
-    z-index: 999;
-}
-
-.badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff5299;
-    color: white;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    font-size: 11px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid white;
-}
