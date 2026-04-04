@@ -216,6 +216,18 @@ header {
     margin: 30px 0 10px;
 }
 
+@media (min-width: 1240px) {
+    .section-tag {
+        margin-left: calc((100vw - 1200px) / 2 + 15px);
+        border-radius: 20px;
+        padding: 8px 30px;
+    }
+    .page-title {
+        font-size: 36px;
+        margin-top: 50px;
+    }
+}
+
 /* =========================================
    4. GRID Y TARJETAS (CARDS)
    ========================================= */
@@ -229,7 +241,7 @@ header {
 }
 
 @media (min-width: 768px) {
-    .grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .grid { gap: 25px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
 }
 
 .card {
@@ -377,10 +389,9 @@ header {
 /* =========================================
    6. CARRITO FLOTANTE Y TOAST PUSH NOTIFICATIONS
    ========================================= */
-.cart-fixed {
+.cart-fixed, .wa-fixed {
     position: fixed;
     bottom: 25px;
-    right: 25px;
     background: var(--surface-color);
     width: 65px; height: 65px;
     border-radius: 50%;
@@ -392,7 +403,11 @@ header {
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-size: 24px;
 }
-.cart-fixed:hover { transform: scale(1.1) rotate(5deg); border-color: var(--hp-pink); }
+.cart-fixed { right: 25px; }
+.wa-fixed { left: 25px; border-color: #25D366; background: #25D366; color: white; }
+.cart-fixed:hover, .wa-fixed:hover { transform: scale(1.1) rotate(5deg); }
+.cart-fixed:hover { border-color: var(--hp-pink); }
+.wa-fixed:hover { background: #1ebd5a; }
 
 .badge {
     position: absolute;
@@ -464,17 +479,17 @@ header {
    ========================================= */
 .carousel-container {
     width: calc(100% - 30px);
-    max-width: 1000px;
-    margin: 20px auto;
+    max-width: 1170px;
+    margin: 30px auto;
     position: relative;
     border-radius: 25px;
     overflow: hidden;
-    height: 220px;
+    height: 200px;
     box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-color);
 }
 @media (min-width: 768px) {
-    .carousel-container { height: 450px; }
+    .carousel-container { height: 350px; border-radius: 35px; }
 }
 .track {
     display: flex;
