@@ -10,6 +10,7 @@
     { "source": "/terminos", "destination": "/terminos.html" },
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/loyalty", "destination": "/loyalty.html" },
-    { "source": "/preorder", "destination": "/preorder.html" }
+    { "source": "/preorder", "destination": "/preorder.html" },
+    { "source": "/verify", "destination": "/verify.html" }
   ]
 }

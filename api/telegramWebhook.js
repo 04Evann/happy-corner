@@ -81,7 +81,7 @@ export default async function handler(req, res) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ 
         chat_id: chatId, 
-        text: `📊 [ABRIR PANEL ADMIN](https://happy-corner.vercel.app/admin.html)`,
+        text: `📊 [ABRIR PANEL ADMIN](https://happycorner.lol/admin)`,
         parse_mode: "Markdown",
       }),
     });

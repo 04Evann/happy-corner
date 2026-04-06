@@ -232,10 +232,10 @@
             const rect = btn.getBoundingClientRect();
             const x = (rect.left + (rect.width / 2)) / window.innerWidth;
             const y = (rect.top + (rect.height / 2)) / window.innerHeight;
-            confetti({
+            try { confetti({
                 particleCount: 50, spread: 60, origin: { x: x, y: y },
                 colors: ['#ff5299', '#ff9d5c', '#ffd45e', '#ffffff']
-            });
+            }); } catch(e){ console.error(e); }
 
             // Añadir al Carrito
             const existingIndex = cart.findIndex(item => item.id === id);

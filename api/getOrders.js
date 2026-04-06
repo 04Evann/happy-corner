@@ -51,6 +51,9 @@ export default async function handler(req, res) {
             const waApproval = `Hola ${pedidoData.nombre}! 🎉 Tu pedido de Happy Corner está confirmado.\n\n📦 Orden: ${orderCode}\n🛍️ Resumen: ${pedidoData.resumen}\n💰 Total: ${totalDisplay}\n\n¡Gracias por preferirnos!`;
             const waPending = `Hola ${pedidoData.nombre}, tu pedido ${orderCode} por ${totalDisplay} está pendiente de pago. ⏳\n\n🛍️ Resumen: ${pedidoData.resumen}\n\nPor favor envía tu comprobante aquí para procesarlo rápido!`;
             const waCancel = `Hola ${pedidoData.nombre}. Lamentablemente tu pedido ${orderCode} ha sido cancelado por el siguiente motivo: `;
+            
+            const verifyLink = `https://happycorner.lol/verify?n=${encodeURIComponent(pedidoData.nombre)}&o=${encodeURIComponent(orderCode)}&p=${encodeURIComponent(totalDisplay)}&w=${encodeURIComponent(cleanNumber)}&res=${encodeURIComponent(pedidoData.resumen)}`;
+            const waPreorder = `Hola ${pedidoData.nombre} tienes una preorden de ${pedidoData.resumen} por ${totalDisplay}. Recuerda traer el dinero o tenerlo listo para transferir y pagar. ¡Gracias!\n\nPor favor, ingresa a este enlace para *Confirmar* o *Cancelar* tu pedido para el día de mañana:\n${verifyLink}`;
 
             // ENVIAR SOLO A TELEGRAM
             const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
@@ -71,6 +74,9 @@ export default async function handler(req, res) {
                             ],
                             [
                                 { text: "❌ Cancelar Pedido", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waCancel)}` }
+                            ],
+                            [
+                                { text: "📩 Enviar WA Pre-Orden", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waPreorder)}` }
                             ]
                         ]
                     }

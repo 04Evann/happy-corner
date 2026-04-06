@@ -95,6 +95,7 @@ export default async function handler(req, res) {
       nombre: cliente.name,
       happyCodigo: cliente.customer_code,
       correo: cliente.email || 'No registrado',
+      telefono: cliente.phone_number || '',
       puntos: cliente.total_points,
       ultimas_transacciones: receipts
     });

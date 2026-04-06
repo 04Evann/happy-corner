@@ -1,135 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verificar Orden | Happy Corner</title>
-    <link rel="icon" type="image/png" href="/happyfavicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Confirmación de Pre-orden | Happy Corner</title>
+    <!-- Fonts and CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=3">
+    <!-- SweetAlert2 + Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
-        .verify-box {
-            background: white;
-            border-radius: 25px;
-            padding: 40px 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.06);
+        .verify-container {
+            max-width: 600px;
+            margin: 80px auto 40px auto;
             text-align: center;
-            max-width: 500px;
-            margin: 40px auto;
+            padding: 20px;
         }
 
-        .success-icon {
+        .verify-card {
+            background: var(--surface-color);
+            border-radius: 25px;
+            padding: 30px 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            margin-top: 20px;
+        }
+
+        .verify-title {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .verify-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        .verify-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--hp-pink);
+            background: rgba(255, 82, 153, 0.1);
+            padding: 10px;
+            border-radius: 12px;
+            display: inline-block;
+            word-break: break-first;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .btn-confirm {
             background: #2ecc71;
             color: white;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            margin: 0 auto 20px;
-        }
-
-        .verify-box h1 {
-            font-weight: 800;
-            color: #2d3436;
-            margin-bottom: 5px;
-        }
-
-        .verify-box p {
-            font-size: 15px;
-            color: #636e72;
-            margin-bottom: 20px;
-        }
-
-        .order-badge {
-            background: #f1f3f8;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 18px;
-            color: #ff5299;
-            display: inline-block;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-        }
-
-        .btnPrimary {
-            display: inline-block;
             border: none;
-            background: #ff5299;
-            color: white;
+            padding: 18px 30px;
+            border-radius: 16px;
+            font-size: 18px;
             font-weight: 800;
-            padding: 14px 24px;
-            border-radius: 14px;
             cursor: pointer;
-            text-decoration: none;
+            width: 100%;
+            margin-top: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.4);
         }
+
+        .btn-cancel {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2);
+        }
+
+        .btn-confirm:active, .btn-cancel:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
+
     <header>
-        <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
-            <a href="/catalogo">Catálogo</a>
-            <a href="/order">HappyOrder</a>
-        </nav>
-        <div class="menu-btn" id="menuBtn" onclick="toggleMenu()">
-            <span></span><span></span><span></span>
-        </div>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
     </header>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
-    <nav class="side-menu" id="sideMenu">
-        <a href="/index">Inicio</a>
-        <a href="/catalogo">Catálogo</a>
-        <a href="/order">HappyOrder</a>
-        <a href="/loyalty">LoyaltyCorner</a>
-        <a href="/track">Rastrear Pedido</a>
-            <a href="/track">Rastrear Pedido</a>
-        <a href="/terminos">Términos</a>
-            <a href="/wallet">Happy Passes</a>
-        <a href="/wallet">Happy Passes</a>
-    </nav>
+    <div class="verify-container">
+        <div class="page-title">Gestión de Pre-órdenes</div>
+        <p style="color: var(--text-color); margin-top:-5px;">Bienvenido al portal seguro de tus pedidos programados.</p>
 
-    <div class="page" style="padding: 20px;">
-        <div class="verify-box">
-            <div class="success-icon">
-                <i class="fas fa-check"></i>
-            </div>
-            <h1>Orden Auténtica</h1>
-            <p>Este recibo ha sido emitido y verificado oficialmente por el sistema de Happy Corner.</p>
+        <div class="verify-card" id="main-card">
+            <div class="verify-title">🛒 Detalle de tu Pedido</div>
             
-            <div class="order-badge" id="order-id">Consultando...</div>
-            
-            <div>
-                <a href="/index" class="btnPrimary">Volver a la Tienda</a>
-            </div>
+            <div class="verify-label">Cliente</div>
+            <div class="verify-value" id="disp-name">--</div>
+
+            <div class="verify-label">Código de Orden</div>
+            <div class="verify-value" style="color:var(--hp-purple); background: rgba(142, 68, 173, 0.1);" id="disp-order">--</div>
+
+            <div class="verify-label">Resumen de Compra</div>
+            <div class="verify-value" style="color:var(--hp-orange); background: rgba(255, 157, 92, 0.1);" id="disp-resumen">--</div>
+
+            <div class="verify-label">Total a Pagar Mañana</div>
+            <div class="verify-value" style="font-size: 24px; font-weight: 900; background: #fdfdfd; border: 2px dashed #ddd; color: #2ecc71;" id="disp-price">--</div>
+
+            <button class="btn-confirm" onclick="verifyAction('confirmed', event)">✅ CONFIRMAR Y LLEVAR EL DINERO MAÑANA</button>
+            <button class="btn-cancel" onclick="verifyAction('cancelled', event)">❌ CANCELAR Y DESHACER PEDIDO</button>
         </div>
     </div>
 
+    <!-- SCRIPT LOGIC -->
     <script>
-        function toggleMenu(force) {
-            const menu = document.getElementById('sideMenu');
-            const overlay = document.getElementById('overlay');
-            const next = typeof force === 'boolean' ? force : !menu.classList.contains('active');
-            menu.classList.toggle('active', next);
-            overlay.classList.toggle('active', next);
-        }
+        const params = new URLSearchParams(window.location.search);
+        const uNombre = params.get('n') || 'Cliente';
+        const uOrder = params.get('o') || 'h-00000';
+        const uResumen = params.get('res') || 'Producto (No especificado)';
+        const uPrecio = params.get('p') || '$0';
+        const uWa = params.get('w') || '';
 
-        window.onload = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const orderId = urlParams.get('order');
-            if(orderId) {
-                document.getElementById('order-id').innerText = orderId;
-            } else {
-                document.getElementById('order-id').innerText = "Orden no especificada";
+        document.getElementById('disp-name').innerText = uNombre;
+        document.getElementById('disp-order').innerText = uOrder;
+        document.getElementById('disp-resumen').innerText = uResumen;
+        document.getElementById('disp-price').innerText = uPrecio;
+
+        async function verifyAction(status, event) {
+            // Confirm Dialog
+            const text = status === 'confirmed' 
+                ? "¿Seguro que deseas confirmar tu pre-orden de mañana y tener el dinero listo en físico/transferencia?"
+                : "¿Estás COMPLETAMENTE SEGURO de cancelar tu pedido? Esta acción no se puede deshacer.";
+
+            const result = await Swal.fire({
+                title: status === 'confirmed' ? "¡Último paso!" : "⚠️ Cancelación",
+                text: text,
+                icon: status === 'confirmed' ? 'question' : 'warning',
+                showCancelButton: true,
+                confirmButtonColor: status === 'confirmed' ? '#2ecc71' : '#e74c3c',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: status === 'confirmed' ? 'Sí, confirmar pre-orden' : 'Sí, cancelar pedido',
+                cancelButtonText: 'Regresar'
+            });
+
+            if (!result.isConfirmed) return;
+
+            // Trigger Animation and Show Loading
+            if (status === 'confirmed') {
+                try {
+                    confetti({
+                        particleCount: 100, spread: 70, origin: { y: 0.6 },
+                        colors: ['#2ecc71', '#ff5299', '#ff9d5c']
+                    });
+                } catch(e) {}
             }
-        };
+
+            Swal.fire({
+                title: 'Procesando...',
+                html: 'Avisando al sistema interno...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            try {
+                const res = await fetch('/api/verifyPreorder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        orderId: uOrder,
+                        nombre: uNombre,
+                        resumen: uResumen,
+                        status: status,
+                        whatsapp: uWa
+                    })
+                });
+
+                const data = await res.json();
+                
+                if (data.ok) {
+                    Swal.fire({
+                        icon: status === 'confirmed' ? 'success' : 'info',
+                        title: status === 'confirmed' ? '¡Confirmado Exitosamente!' : 'Pedido Cancelado',
+                        text: status === 'confirmed' 
+                            ? 'Muchas gracias. La información se envió a la tienda.' 
+                            : 'El pedido fue dado de baja del sistema.',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: varColor = status === 'confirmed' ? '#2ecc71' : '#e74c3c'
+                    }).then(() => {
+                        window.location.href = '/index.html';
+                    });
+                } else {
+                    Swal.fire('Error', 'Hubo un error contactando la base de datos', 'error');
+                }
+            } catch (error) {
+                Swal.fire('Error', 'Inténtalo de nuevo, falla de conexión.', 'error');
+            }
+        }
     </script>
 </body>
 </html>
