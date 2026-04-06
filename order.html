@@ -370,7 +370,7 @@
                     if (confirm(`¡Hola ${data.nombre}! ¿Usamos tus datos?`)) {
                         document.getElementById('nombre').value = data.nombre;
                         document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
-                        document.getElementById('celular').value = (data.telefono || '').replace(/\s+/g,'');
+                        document.getElementById('celular').value = String(data.telefono || '').replace(/\s+/g,'');
                     }
                 } else { alert("Código no válido"); }
             } catch (e) { alert("Error al conectar"); }

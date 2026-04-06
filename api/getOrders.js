@@ -56,7 +56,16 @@ export default async function handler(req, res) {
                 n: pedidoData.nombre, o: orderCode, p: totalDisplay, w: cleanNumber, res: pedidoData.resumen
             };
             const tokenBase64 = Buffer.from(JSON.stringify(payloadObj)).toString('base64');
-            const verifyLink = `https://happycorner.lol/verify?auth=${encodeURIComponent(tokenBase64)}`;
+            const verifyLinkRaw = `https://happycorner.lol/verify?auth=${encodeURIComponent(tokenBase64)}`;
+
+            // Acortar el enlace para que WhatsApp se vea súper limpio
+            let verifyLink = verifyLinkRaw;
+            try {
+                const tinyRes = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(verifyLinkRaw)}`);
+                if (tinyRes.ok) verifyLink = await tinyRes.text();
+            } catch(e) {
+                console.error("Error acortando URL");
+            }
 
             const waPreorder = `¡Hola ${pedidoData.nombre}! 👋\n\n` +
                                `📝 Registramos tu pre-orden de:\n*${pedidoData.resumen}*\n\n` +
