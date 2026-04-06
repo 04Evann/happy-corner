@@ -52,8 +52,17 @@ export default async function handler(req, res) {
             const waPending = `Hola ${pedidoData.nombre}, tu pedido ${orderCode} por ${totalDisplay} está pendiente de pago. ⏳\n\n🛍️ Resumen: ${pedidoData.resumen}\n\nPor favor envía tu comprobante aquí para procesarlo rápido!`;
             const waCancel = `Hola ${pedidoData.nombre}. Lamentablemente tu pedido ${orderCode} ha sido cancelado por el siguiente motivo: `;
             
-            const verifyLink = `https://happycorner.lol/verify?n=${encodeURIComponent(pedidoData.nombre)}&o=${encodeURIComponent(orderCode)}&p=${encodeURIComponent(totalDisplay)}&w=${encodeURIComponent(cleanNumber)}&res=${encodeURIComponent(pedidoData.resumen)}`;
-            const waPreorder = `Hola ${pedidoData.nombre} tienes una preorden de ${pedidoData.resumen} por ${totalDisplay}. Recuerda traer el dinero o tenerlo listo para transferir y pagar. ¡Gracias!\n\nPor favor, ingresa a este enlace para *Confirmar* o *Cancelar* tu pedido para el día de mañana:\n${verifyLink}`;
+            const payloadObj = {
+                n: pedidoData.nombre, o: orderCode, p: totalDisplay, w: cleanNumber, res: pedidoData.resumen
+            };
+            const tokenBase64 = Buffer.from(JSON.stringify(payloadObj)).toString('base64');
+            const verifyLink = `https://happycorner.lol/verify?auth=${encodeURIComponent(tokenBase64)}`;
+
+            const waPreorder = `¡Hola ${pedidoData.nombre}! 👋\n\n` +
+                               `📝 Registramos tu pre-orden de:\n*${pedidoData.resumen}*\n\n` +
+                               `💰 *Total a pagar:* ${totalDisplay}\n\n` +
+                               `👉 Por favor ingresa a este enlace seguro para *CONFIRMAR* tu pedido para el día de mañana:\n${verifyLink}\n\n` +
+                               `¡Mil gracias por ser parte de Happy Corner! ✨ Recuerda tener tu dinero físico o transferencia listos.`;
 
             // ENVIAR SOLO A TELEGRAM
             const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
