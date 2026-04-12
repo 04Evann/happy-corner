@@ -67,6 +67,32 @@ export default async function handler(req, res) {
                 console.error("Error acortando URL");
             }
 
+            try {
+            // == SUPABASE INSERT para mantener actividad ==
+            // Se usa dynamic import para evitar problemas mjs/cjs si los hay, 
+            // o destructuring directo en el handler. En entorno serverless lo mejor es usar fetch directo aquí para no romper imports antiguos si los hay.
+            const SUPABASE_URL = process.env.SUPABASE_URL || 'https://eiqbenebtmfolqxjwubc.supabase.co';
+            const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpcWJlbmVidG1mb2xxeGp3dWJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMjQ1NTIsImV4cCI6MjA5MTYwMDU1Mn0.vycF5redWe7_R4vc9GRHbOpj9EZR9MOAeKxF8AG-Rfg';
+            
+            await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apiKey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({
+                    ordercode: orderCode,
+                    nombre: pedidoData.nombre,
+                    whatsapp: cleanNumber,
+                    resumen: pedidoData.resumen,
+                    total: totalDisplay,
+                    estado: 'pendiente'
+                })
+            });
+        } catch(e) { console.log('Supabase orders fallback', e) }
+
             const waPreorder = `¡Hola ${pedidoData.nombre}! 👋\n\n` +
                                `📝 Registramos tu pre-orden de:\n*${pedidoData.resumen}*\n\n` +
                                `💰 *Total a pagar:* ${totalDisplay}\n\n` +
