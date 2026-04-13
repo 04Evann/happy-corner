@@ -34,22 +34,50 @@ export default async function handler(req, res) {
             return res.status(200).json({ msg: texto, rawNames: rawNames });
         }
 
-        // 2. NUEVA DEUDA
+        // 2. NUEVA DEUDA (Punto de Venta - POS)
         if (accion === 'NUEVA') {
-            if (!nombre || !monto) return res.status(400).json({ msg: "🔴 Falta nombre o monto." });
-            let sumMonto = parseInt(monto);
+            const abonoFijo = req.body.abono ? parseInt(req.body.abono) : 0;
+            const productosString = req.body.productos || req.body.detalle || ""; // ej: "Pizza, Bubbaloo"
             
-            // Buscar si ya existe
+            if (!nombre) return res.status(400).json({ msg: "🔴 Falta nombre." });
+
+            // Calcular suma de productos desde el Catálogo
+            // Importación dinámica limpia (ya que este archivo es serverless, pero Next soporta imports arriba. Lo movemos arriba)
+            let sumMonto = 0;
+            // req.body.monto (opcional si mandan precio manual en vez de productos)
+            if (monto && parseInt(monto) > 0) {
+                sumMonto = parseInt(monto);
+            } else if (typeof productosString === 'string' || Array.isArray(productosString)) {
+                // Si es un array desde Shortcuts o un string separado por comas
+                let prodArray = Array.isArray(productosString) ? productosString : productosString.split(',');
+                // Import the catlog module internally to avoid breaking old handler if moving things
+                // Since we need to read from file, let's fetch it via HTTP from ourselves or just do dynamic import
+                const { getPriceByName } = await import('./_lib/catalog.js');
+                prodArray.forEach(p => {
+                    sumMonto += getPriceByName(p.trim());
+                });
+            }
+
+            let deudaFinal = sumMonto - abonoFijo;
+            let strProductos = Array.isArray(productosString) ? productosString.join(', ') : productosString;
+
+            // Si el monto quedó en 0 o negativo porque pagó todo de contado!
+            if (deudaFinal <= 0) {
+                // Registrarlo tal vez como venta normal o decirle que todo okay sin deuda
+                return res.status(200).json({ msg: `✅ Cobro completo de contado. Total: $${sumMonto}. \n¡Cambio a devolver: $${Math.abs(deudaFinal)}!` });
+            }
+            
+            // Buscar si ya existe el deudor
             const users = await supabaseFetch(`deudas?nombre=eq.${encodeURIComponent(nombreClean)}`);
             if (users && users.length > 0) {
                 const existing = users[0];
-                const newMonto = parseInt(existing.monto) + sumMonto;
-                const newDetalle = existing.detalle ? `${existing.detalle}, ${detalle}` : detalle;
+                const newMonto = parseInt(existing.monto) + deudaFinal;
+                const newDetalle = existing.detalle ? `${existing.detalle}, ${strProductos}` : strProductos;
                 await supabaseFetch(`deudas?id=eq.${existing.id}`, 'PATCH', { monto: newMonto, detalle: newDetalle });
-                return res.status(200).json({ msg: `✅ Se sumó $${sumMonto} a la deuda de ${nombreClean}. Deuda actual: $${newMonto}` });
+                return res.status(200).json({ msg: `✅ Se agregaron los productos.\nTotal Comprado: $${sumMonto}\nAbono: $${abonoFijo}\nSe sumó $${deudaFinal} a su deuda.\n💰 NUEVA DEUDA TOTAL: $${newMonto}` });
             } else {
-                await supabaseFetch(`deudas`, 'POST', { nombre: nombreClean, monto: sumMonto, detalle });
-                return res.status(200).json({ msg: `✅ Se creó la deuda de $${sumMonto} para ${nombreClean}.` });
+                await supabaseFetch(`deudas`, 'POST', { nombre: nombreClean, monto: deudaFinal, detalle: strProductos });
+                return res.status(200).json({ msg: `✅ Deuda Creada.\nTotal Comprado: $${sumMonto}\nAbono: $${abonoFijo}\n💰 DEBE: $${deudaFinal}` });
             }
         }
 
