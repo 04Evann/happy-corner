@@ -24,12 +24,14 @@ export default async function handler(req, res) {
                 return res.status(200).json({ msg: "💸 ¡Nadie te debe dinero! Todo limpio." });
             }
             let texto = "🔥 LISTA DE DEUDAS:\n\n";
+            let rawNames = [];
             data.forEach(d => {
                 // Capitalizar primera letra
                 let name = d.nombre.charAt(0).toUpperCase() + d.nombre.slice(1);
                 texto += `👤 ${name}: $${d.monto}\n`;
+                rawNames.push(name);
             });
-            return res.status(200).json({ msg: texto });
+            return res.status(200).json({ msg: texto, rawNames: rawNames });
         }
 
         // 2. NUEVA DEUDA

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HappyDeudas | Manager Oculto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=5">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .admin-box {
+            max-width: 600px;
+            margin: 40px auto;
+            text-align: center;
+            padding: 20px;
+        }
+        .debt-list {
+            text-align: left;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .debt-item {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .debt-info h3 { margin-bottom: 5px; color: var(--text-color); font-size: 18px; text-transform: capitalize; }
+        .debt-info p { color: var(--text-muted); font-size: 14px; }
+        .debt-amount { font-size: 22px; font-weight: 900; color: #e74c3c; }
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--hp-pink); font-weight: 700; }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <header>
+        <a href="/" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+    </header>
+
+    <div class="admin-box">
+        <div class="page-title">🔥 HappyDeudas</div>
+        <p class="section-subtitle">Panel Financiero Privado</p>
+
+        <div class="checkout-box" id="login-section">
+            <p style="margin-bottom: 15px; font-weight: 700;">Ingresa tu código de seguridad secreto:</p>
+            <input type="password" id="secretPass" class="input-text" placeholder="happycorner-secreto-12345" style="text-align: center;">
+            <button class="btn-add" onclick="loadDebts()">🔓 ACCEDER</button>
+        </div>
+
+        <div id="data-section" style="display: none;">
+            <div class="debt-list" id="deudores-container">
+                <!-- Se llenará con JS -->
+            </div>
+            
+            <button class="btn-add" style="margin-top:30px; background: #2ecc71;" onclick="abonarDeuda()">
+                💰 REGISTRAR ABONO
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        let currentSecret = "";
+
+        async function fetchPost(accion, bodyParams = {}) {
+            bodyParams.accion = accion;
+            const res = await fetch('https://happy-corner.vercel.app/api/managerDeudas', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': currentSecret
+                },
+                body: JSON.stringify(bodyParams)
+            });
+            if (res.status === 403) throw new Error("Contraseña incorrecta");
+            return await res.json();
+        }
+
+        async function loadDebts() {
+            const pass = document.getElementById('secretPass').value;
+            if (!pass) return;
+            currentSecret = pass;
+
+            document.getElementById('login-section').innerHTML = '<div class="spinner-border">Cargando datos...</div>';
+
+            try {
+                // Buscamos directo a BD usando una consulta REST simple acá,
+                // Pero como la API nuestra Manager devuelve texto, 
+                // vamos a hacer que la API responda JSON estructurado en el futuro,
+                // O consultamos Supabase vía un nuevo fetch directo.
+                // Como Vercel expone el checkDeuda, es más fácil hacer un ajuste temporal:
+                const resText = await fetchPost('DEUDORES');
+                
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('data-section').style.display = 'block';
+
+                const container = document.getElementById('deudores-container');
+                container.innerHTML = '';
+
+                // Truco: La API Manager devuelve todo en texto "🔥 LISTA DE DEUDAS:\n👤 Evan: $100".
+                // Extraemos para armar cajitas.
+                const lineas = resText.msg.split('\n');
+                let count = 0;
+                lineas.forEach(linea => {
+                    if (linea.includes('👤')) {
+                        count++;
+                        let partes = linea.split(': $');
+                        let nombre = partes[0].replace('👤 ', '').trim();
+                        let monto = partes[1].trim();
+
+                        container.innerHTML += `
+                            <div class="debt-item">
+                                <div class="debt-info">
+                                    <h3>${nombre}</h3>
+                                    <p>Deuda Activa 🔥</p>
+                                </div>
+                                <div class="debt-amount">$${monto}</div>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (count === 0) {
+                    container.innerHTML = `<div class="empty-state">✅ No hay deudas pendientes. Todos han pagado.</div>`;
+                }
+
+            } catch(e) {
+                Swal.fire("Acceso Denegado", "Clave incorrecta.", "error").then(() => location.reload());
+            }
+        }
+
+        async function abonarDeuda() {
+            const { value: formValues } = await Swal.fire({
+                title: 'Descontar Deuda',
+                html:
+                    '<input id="swal-input1" class="swal2-input" placeholder="Nombre exacto del cliente">' +
+                    '<input id="swal-input2" type="number" class="swal2-input" placeholder="Monto a restar ($)">',
+                focusConfirm: false,
+                background: 'var(--surface-color)', color: 'var(--text-color)',
+                showCancelButton: true,
+                preConfirm: () => {
+                    return [
+                        document.getElementById('swal-input1').value,
+                        document.getElementById('swal-input2').value
+                    ]
+                }
+            });
+
+            if (formValues && formValues[0] && formValues[1]) {
+                try {
+                    const r = await fetchPost('PAGAR', { nombre: formValues[0], monto: formValues[1] });
+                    Swal.fire("Éxito", r.msg, "success").then(() => {
+                        document.getElementById('login-section').innerHTML = '<p>Actualizando...</p>';
+                        document.getElementById('login-section').style.display = 'block';
+                        document.getElementById('data-section').style.display = 'none';
+                        loadDebts();
+                    });
+                } catch(e) {
+                    Swal.fire("Error", e.message, "error");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

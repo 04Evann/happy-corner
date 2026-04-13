@@ -11,6 +11,7 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/loyalty", "destination": "/loyalty.html" },
     { "source": "/preorder", "destination": "/preorder.html" },
-    { "source": "/verify", "destination": "/verify.html" }
+    { "source": "/verify", "destination": "/verify.html" },
+    { "source": "/deudores/:secret", "destination": "/deudores-admin.html" }
   ]
 }
