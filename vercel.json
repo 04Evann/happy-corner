@@ -1,17 +1,17 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/index", "destination": "/index.html" },
-    { "source": "/catalogo", "destination": "/catalogo.html" },
-    { "source": "/order", "destination": "/order.html" },
-    { "source": "/confirmed", "destination": "/confirmed.html" },
-    { "source": "/factura", "destination": "/factura.html" },
-    { "source": "/puntos", "destination": "/puntos.html" },
-    { "source": "/terminos", "destination": "/terminos.html" },
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/loyalty", "destination": "/loyalty.html" },
-    { "source": "/preorder", "destination": "/preorder.html" },
-    { "source": "/verify", "destination": "/verify.html" },
+    { "source": "/", "destination": "/maintenance.html" },
+    { "source": "/index", "destination": "/maintenance.html" },
+    { "source": "/catalogo", "destination": "/maintenance.html" },
+    { "source": "/order", "destination": "/maintenance.html" },
+    { "source": "/confirmed", "destination": "/maintenance.html" },
+    { "source": "/factura", "destination": "/maintenance.html" },
+    { "source": "/puntos", "destination": "/maintenance.html" },
+    { "source": "/terminos", "destination": "/maintenance.html" },
+    { "source": "/admin", "destination": "/maintenance.html" },
+    { "source": "/loyalty", "destination": "/maintenance.html" },
+    { "source": "/preorder", "destination": "/maintenance.html" },
+    { "source": "/verify", "destination": "/maintenance.html" },
     { "source": "/deudores/:secret", "destination": "/deudores-admin.html" }
   ]
 }
