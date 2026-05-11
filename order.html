@@ -150,10 +150,16 @@
     </div>
 
     <!-- SCRIPT PRINCIPAL DEL CARRITO -->
-    <script>
+    <script type="module">
+        import { initPromise, auth, db, onAuthStateChanged } from './firebase-auth.js';
+        import { doc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // Import the auth state UI script dynamically to apply to this page
+        import './auth-state.js';
+
         // --- THEME & NAV ---
         let isDark = false;
-        function toggleTheme() {
+        window.toggleTheme = function() {
             isDark = !isDark;
             const themeBtn = document.getElementById('theme-icon');
             if (isDark) {
@@ -163,7 +169,7 @@
                 document.documentElement.removeAttribute('data-theme');
                 themeBtn.innerText = '🌙';
             }
-        }
+        };
 
         window.onload = () => {
             const hour = new Date().getHours();
@@ -201,7 +207,7 @@
 
         let currentUpsellItem = null;
 
-        function checkPizzaLimit(newCart) {
+        window.checkPizzaLimit = function(newCart) {
             let currentPizzas = 0;
             newCart.forEach(item => {
                 if(item.name.toLowerCase().includes('pizza')) {
@@ -209,15 +215,15 @@
                 }
             });
             return currentPizzas <= 5;
-        }
+        };
 
-        function updateQty(index, delta) {
+        window.updateQty = function(index, delta) {
             let tempCart = JSON.parse(JSON.stringify(cart));
             tempCart[index].qty += delta;
 
             // Bloquear si intentan pasar de 5 pizzas EN TOTAL
             if (tempCart[index].name.toLowerCase().includes('pizza') && delta > 0) {
-                if (!checkPizzaLimit(tempCart)) {
+                if (!window.checkPizzaLimit(tempCart)) {
                     alert("¡Límite alcanzado! Solo puedes pedir un máximo de 5 porciones de pizza por orden.");
                     return;
                 }
@@ -230,7 +236,7 @@
             cart = tempCart;
             localStorage.setItem('hc_cart', JSON.stringify(cart));
             renderCart();
-        }
+        };
 
         function renderCart() {
             const list = document.getElementById('cart-items-list');
@@ -321,7 +327,7 @@
         }
 
         // Action when UPSELL button clicked
-        function addUpsell(event) {
+        window.addUpsell = function(event) {
             if(!currentUpsellItem) return;
             const btn = event.currentTarget;
             
@@ -336,7 +342,7 @@
             });
 
             if (currentUpsellItem.name.toLowerCase().includes('pizza')) {
-                if (!checkPizzaLimit(cart)) {
+                if (!window.checkPizzaLimit(cart)) {
                     alert("¡Límite alcanzado! Solo puedes pedir un máximo de 5 porciones de pizza por orden.");
                     return;
                 }
@@ -345,10 +351,10 @@
             cart.push({ id: currentUpsellItem.id, name: currentUpsellItem.name, price: currentUpsellItem.price, qty: 1 });
             localStorage.setItem('hc_cart', JSON.stringify(cart));
             renderCart();
-        }
+        };
 
         // --- EASTER EGG SAD VIOLIN ---
-        function checkPropina(selectEl) {
+        window.checkPropina = function(selectEl) {
             if (selectEl.value === "0") {
                 const sadAudio = document.getElementById('sadViolin');
                 sadAudio.volume = 0.5;
@@ -356,7 +362,7 @@
                 alert("¿0% de propina? 💔 ... Entendido, estamos llorando un poquito por dentro, pero tu pedido sigue en pie.");
             }
             renderCart();
-        }
+        };
 
         // --- FETCH PUNTOS ---
         document.getElementById('consultar-puntos-btn').onclick = async function () {
@@ -460,6 +466,27 @@
                         customer: { nombre: payload.nombre, email: payload.email, whatsapp: payload.whatsapp },
                         createdAt: new Date().toISOString()
                     };
+
+                    // Guardar compra en Firestore si el usuario está logueado
+                    initPromise.then(async () => {
+                        if (auth.currentUser) {
+                            try {
+                                const userRef = doc(db, 'users', auth.currentUser.uid);
+                                // Extraemos el valor numérico del total (ej: "$15,000" -> 15000)
+                                const numericTotal = parseInt(payload.total.replace(/[^0-9]/g, '')) || 0;
+                                await updateDoc(userRef, {
+                                    transactions: arrayUnion({
+                                        date: new Date().toISOString(),
+                                        amount: numericTotal, // La compra es un valor positivo de gasto (aunque no afecta a deuda directamente aquí, es solo historial)
+                                        description: `Compra Web - Pedido ${ref} (${payload.resumen})`
+                                    })
+                                });
+                            } catch(firebaseErr) {
+                                console.error("Error guardando historial de compra en Firestore:", firebaseErr);
+                                // No interrumpimos el flujo si falla el guardado en el historial
+                            }
+                        }
+                    });
 
                     localStorage.setItem('lastHappyOrder', JSON.stringify(lastHappyOrder));
                     localStorage.removeItem('hc_cart');

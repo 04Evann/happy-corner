@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Corner | Iniciar Sesión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 40px 20px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+        }
+        .login-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+        .login-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-google:hover {
+            background: #f8f8f8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .btn-google img {
+            width: 24px;
+            height: 24px;
+        }
+        .loading-spinner {
+            display: none;
+            margin: 20px auto;
+            border: 4px solid rgba(255, 82, 153, 0.2);
+            border-top: 4px solid var(--hp-pink);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <header>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+    </header>
+
+    <div class="login-container">
+        <div class="login-title">Bienvenido a<br><span style="color: var(--hp-pink);">Happy Corner</span></div>
+        <div class="login-subtitle">Inicia sesión para ver tus HappyPuntos, deudas y hacer pedidos más rápido.</div>
+        
+        <button class="btn-google" id="googleLoginBtn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+            Continuar con Google
+        </button>
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <p id="errorMsg" style="color: #e74c3c; margin-top: 15px; font-weight: 500; display: none;"></p>
+    </div>
+
+    <!-- Script de autenticación -->
+    <script type="module">
+        import { initPromise, auth, provider, signInWithPopup, db, doc, getDoc, setDoc } from './firebase-auth.js';
+
+        const loginBtn = document.getElementById('googleLoginBtn');
+        const spinner = document.getElementById('loadingSpinner');
+        const errorMsg = document.getElementById('errorMsg');
+
+        loginBtn.addEventListener('click', async () => {
+            loginBtn.style.display = 'none';
+            spinner.style.display = 'block';
+            errorMsg.style.display = 'none';
+
+            try {
+                await initPromise; // Esperar inicialización
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Verificar si el usuario ya existe en Firestore
+                const userRef = doc(db, 'users', user.uid);
+                const userSnap = await getDoc(userRef);
+
+                if (!userSnap.exists()) {
+                    // Es la primera vez que entra, creamos su documento
+                    await setDoc(userRef, {
+                        uid: user.uid,
+                        name: user.displayName,
+                        email: user.email,
+                        current_debt: 0,
+                        loyalty_code: null, // Aún no lo ha vinculado
+                        created_at: new Date().toISOString()
+                    });
+                    
+                    // Redirigir al onboarding de Loyverse
+                    window.location.href = '/onboarding.html';
+                } else {
+                    const userData = userSnap.data();
+                    if (!userData.loyalty_code) {
+                        window.location.href = '/onboarding.html';
+                    } else {
+                        // Ya tiene código, redirigir al dashboard
+                        window.location.href = '/dashboard';
+                    }
+                }
+            } catch (error) {
+                console.error("Error signing in: ", error);
+                spinner.style.display = 'none';
+                loginBtn.style.display = 'flex';
+                errorMsg.innerText = "Ocurrió un error al iniciar sesión. Inténtalo de nuevo.";
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

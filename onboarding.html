@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Corner | Vincular Cuenta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .onboarding-container {
+            max-width: 450px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 40px 30px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+        }
+        .onboarding-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        .onboarding-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        .loyalty-input {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: 2px solid var(--border-color);
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 20px;
+            text-align: center;
+            font-weight: 700;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .loyalty-input:focus {
+            border-color: var(--hp-pink);
+            box-shadow: 0 0 10px rgba(255, 82, 153, 0.2);
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 16px;
+            background: var(--hp-pink);
+            color: white;
+            font-weight: 900;
+            font-size: 18px;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(255, 82, 153, 0.3);
+        }
+        .btn-primary:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <header>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
+        </a>
+    </header>
+
+    <div class="onboarding-container">
+        <div class="onboarding-title">¡Ya casi estamos! 🚀</div>
+        <div class="onboarding-subtitle">
+            Para ver tus <b>HappyPuntos</b> y deudas, ingresa tu código de Loyverse. Lo puedes encontrar en tu app de Wallet o en recibos anteriores.
+        </div>
+        
+        <input type="text" id="loyaltyCode" class="loyalty-input" placeholder="HC-12345" maxlength="15">
+        <button class="btn-primary" id="saveCodeBtn">Vincular mi Cuenta</button>
+        <p id="statusMsg" style="margin-top: 15px; font-weight: 500; display: none;"></p>
+    </div>
+
+    <script type="module">
+        import { initPromise, auth, db, doc, setDoc, onAuthStateChanged } from './firebase-auth.js';
+
+        const saveCodeBtn = document.getElementById('saveCodeBtn');
+        const codeInput = document.getElementById('loyaltyCode');
+        const statusMsg = document.getElementById('statusMsg');
+
+        let currentUser = null;
+
+        initPromise.then(() => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                } else {
+                    window.location.href = '/login.html'; // Redirigir si no está logueado
+                }
+            });
+        });
+
+        saveCodeBtn.addEventListener('click', async () => {
+            const code = codeInput.value.trim().toUpperCase();
+            
+            if (!code) {
+                showMsg('Por favor ingresa un código válido.', '#e74c3c');
+                return;
+            }
+            if (!currentUser) return;
+
+            saveCodeBtn.disabled = true;
+            saveCodeBtn.innerText = "Guardando...";
+
+            try {
+                // Guardar el código en Firestore haciendo merge para no sobreescribir otros datos
+                const userRef = doc(db, 'users', currentUser.uid);
+                await setDoc(userRef, { loyalty_code: code }, { merge: true });
+                
+                showMsg('¡Cuenta vinculada con éxito! Redirigiendo...', '#2ecc71');
+                
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 1500);
+
+            } catch (error) {
+                console.error("Error saving loyalty code:", error);
+                showMsg('Error al guardar el código. Intenta nuevamente.', '#e74c3c');
+                saveCodeBtn.disabled = false;
+                saveCodeBtn.innerText = "Vincular mi Cuenta";
+            }
+        });
+
+        function showMsg(text, color) {
+            statusMsg.innerText = text;
+            statusMsg.style.color = color;
+            statusMsg.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
