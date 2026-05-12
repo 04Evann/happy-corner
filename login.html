@@ -67,20 +67,121 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--text-muted);
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .divider:not(:empty)::before { margin-right: .25em; }
+        .divider:not(:empty)::after { margin-left: .25em; }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--hp-pink);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--hp-pink);
+            border: 1px solid var(--hp-pink);
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 82, 153, 0.1);
+        }
     </style>
 </head>
 <body data-theme="dark">
 
-    <header>
+        <header>
         <a href="/index" class="logo">
             <img src="loguito.png" alt="HappyCorner" class="logo-img">
         </a>
+        <nav class="nav-desktop">
+            <a href="/index">Inicio</a>
+            <a href="/catalogo">Catálogo</a>
+            <a href="/order">HappyOrder</a>
+            <a href="/track">Rastrear Pedido</a>
+        </nav>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
     </header>
 
     <div class="login-container">
         <div class="login-title">Bienvenido a<br><span style="color: var(--hp-pink);">Happy Corner</span></div>
         <div class="login-subtitle">Inicia sesión para ver tus HappyPuntos, deudas y hacer pedidos más rápido.</div>
         
+        <form id="emailLoginForm" style="margin-bottom: 20px;">
+            <div class="input-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" required placeholder="tu@correo.com">
+            </div>
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" required placeholder="********">
+            </div>
+            <button type="submit" class="btn-primary" id="loginEmailBtn">Iniciar Sesión</button>
+            <button type="button" class="btn-secondary" id="registerEmailBtn">Crear Cuenta Nueva</button>
+        </form>
+
+        <div class="divider">O</div>
+
         <button class="btn-google" id="googleLoginBtn">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
             Continuar con Google
@@ -91,54 +192,113 @@
 
     <!-- Script de autenticación -->
     <script type="module">
-        import { initPromise, auth, provider, signInWithPopup, db, doc, getDoc, setDoc } from './firebase-auth.js';
+        import { initPromise, auth, provider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, db, doc, getDoc, setDoc } from './firebase-auth.js';
 
         const loginBtn = document.getElementById('googleLoginBtn');
+        const loginEmailBtn = document.getElementById('loginEmailBtn');
+        const registerEmailBtn = document.getElementById('registerEmailBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
         const spinner = document.getElementById('loadingSpinner');
         const errorMsg = document.getElementById('errorMsg');
+        const emailLoginForm = document.getElementById('emailLoginForm');
 
-        loginBtn.addEventListener('click', async () => {
+        function showLoading() {
             loginBtn.style.display = 'none';
+            emailLoginForm.style.display = 'none';
+            document.querySelector('.divider').style.display = 'none';
             spinner.style.display = 'block';
             errorMsg.style.display = 'none';
+        }
 
-            try {
-                await initPromise; // Esperar inicialización
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                // Verificar si el usuario ya existe en Firestore
-                const userRef = doc(db, 'users', user.uid);
-                const userSnap = await getDoc(userRef);
+        function hideLoading(errorText) {
+            spinner.style.display = 'none';
+            loginBtn.style.display = 'flex';
+            emailLoginForm.style.display = 'block';
+            document.querySelector('.divider').style.display = 'flex';
+            if (errorText) {
+                errorMsg.innerText = errorText;
+                errorMsg.style.display = 'block';
+            }
+        }
 
-                if (!userSnap.exists()) {
-                    // Es la primera vez que entra, creamos su documento
-                    await setDoc(userRef, {
-                        uid: user.uid,
-                        name: user.displayName,
-                        email: user.email,
-                        current_debt: 0,
-                        loyalty_code: null, // Aún no lo ha vinculado
-                        created_at: new Date().toISOString()
-                    });
-                    
-                    // Redirigir al onboarding de Loyverse
+        async function handleUserDocument(user) {
+            const userRef = doc(db, 'users', user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                await setDoc(userRef, {
+                    uid: user.uid,
+                    name: user.displayName || user.email.split('@')[0], // Fallback para email/password
+                    email: user.email,
+                    current_debt: 0,
+                    loyalty_code: null,
+                    created_at: new Date().toISOString()
+                });
+                window.location.href = '/onboarding.html';
+            } else {
+                const userData = userSnap.data();
+                if (!userData.loyalty_code) {
                     window.location.href = '/onboarding.html';
                 } else {
-                    const userData = userSnap.data();
-                    if (!userData.loyalty_code) {
-                        window.location.href = '/onboarding.html';
-                    } else {
-                        // Ya tiene código, redirigir al dashboard
-                        window.location.href = '/dashboard';
-                    }
+                    window.location.href = '/dashboard';
                 }
+            }
+        }
+
+        // Email / Password Login
+        emailLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            showLoading();
+
+            try {
+                await initPromise;
+                const result = await signInWithEmailAndPassword(auth, email, password);
+                await handleUserDocument(result.user);
             } catch (error) {
-                console.error("Error signing in: ", error);
-                spinner.style.display = 'none';
-                loginBtn.style.display = 'flex';
-                errorMsg.innerText = "Ocurrió un error al iniciar sesión. Inténtalo de nuevo.";
+                console.error("Error signing in with email:", error);
+                let msg = "Error al iniciar sesión.";
+                if (error.code === 'auth/invalid-credential') msg = "Correo o contraseña incorrectos.";
+                hideLoading(msg);
+            }
+        });
+
+        // Email / Password Register
+        registerEmailBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            if (!email || !password) {
+                errorMsg.innerText = "Por favor ingresa correo y contraseña para registrarte.";
                 errorMsg.style.display = 'block';
+                return;
+            }
+            showLoading();
+
+            try {
+                await initPromise;
+                const result = await createUserWithEmailAndPassword(auth, email, password);
+                await handleUserDocument(result.user);
+            } catch (error) {
+                console.error("Error registering:", error);
+                let msg = "Error al crear la cuenta.";
+                if (error.code === 'auth/email-already-in-use') msg = "Ese correo ya está registrado.";
+                if (error.code === 'auth/weak-password') msg = "La contraseña debe tener al menos 6 caracteres.";
+                hideLoading(msg);
+            }
+        });
+
+        // Google Login
+        loginBtn.addEventListener('click', async () => {
+            showLoading();
+            try {
+                await initPromise;
+                const result = await signInWithPopup(auth, provider);
+                await handleUserDocument(result.user);
+            } catch (error) {
+                console.error("Error signing in with Google:", error);
+                hideLoading("Ocurrió un error al iniciar sesión con Google.");
             }
         });
     </script>

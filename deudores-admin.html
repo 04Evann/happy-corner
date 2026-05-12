@@ -51,10 +51,30 @@
 </head>
 <body data-theme="dark">
 
-    <header>
-        <a href="/" class="logo">
-            <img src="/loguito.png" alt="HappyCorner" class="logo-img">
+        <header>
+        <a href="/index" class="logo">
+            <img src="loguito.png" alt="HappyCorner" class="logo-img">
         </a>
+        <nav class="nav-desktop">
+            <a href="/index">Inicio</a>
+            <a href="/catalogo">Catálogo</a>
+            <a href="/order">HappyOrder</a>
+            <a href="/track">Rastrear Pedido</a>
+        </nav>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+                <span id="theme-icon">🌙</span>
+            </button>
+            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+            <div class="menu-btn" id="menuBtn">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
     </header>
 
     <div class="admin-box">
@@ -81,20 +101,77 @@
         import { collection, getDocs, doc, updateDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         let allUsers = [];
+        let currentPinHash = null;
 
         // 1. Escuchar autenticación
         initPromise.then(() => {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    // TODO: En producción, verifica que el user.email sea el tuyo antes de mostrar datos.
                     document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('data-section').style.display = 'block';
-                    await loadDebts();
+                    // Mostrar pantalla de PIN
+                    document.getElementById('pin-section').style.display = 'block';
                 } else {
                     document.getElementById('login-section').style.display = 'block';
+                    document.getElementById('pin-section').style.display = 'none';
                     document.getElementById('data-section').style.display = 'none';
                 }
             });
+        });
+
+        // 1.5 PIN Logic
+        const requestPinBtn = document.getElementById('requestPinBtn');
+        const verifyPinBtn = document.getElementById('verifyPinBtn');
+        const pinInputArea = document.getElementById('pinInputArea');
+        const pinErrorMsg = document.getElementById('pinErrorMsg');
+
+        requestPinBtn.addEventListener('click', async () => {
+            requestPinBtn.innerText = 'Enviando...';
+            requestPinBtn.disabled = true;
+            try {
+                const res = await fetch('/api/requestAdminPin', { method: 'POST' });
+                const data = await res.json();
+                if (data.success) {
+                    currentPinHash = data.hash;
+                    requestPinBtn.style.display = 'none';
+                    pinInputArea.style.display = 'block';
+                    pinErrorMsg.style.display = 'none';
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                pinErrorMsg.innerText = "Error solicitando PIN.";
+                pinErrorMsg.style.display = 'block';
+                requestPinBtn.innerText = 'Solicitar PIN por Telegram';
+                requestPinBtn.disabled = false;
+            }
+        });
+
+        verifyPinBtn.addEventListener('click', async () => {
+            const pin = document.getElementById('pinInput').value;
+            if (!pin || pin.length < 6) return;
+            
+            verifyPinBtn.innerText = 'Verificando...';
+            try {
+                const res = await fetch('/api/verifyAdminPin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pin, hash: currentPinHash })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('pin-section').style.display = 'none';
+                    document.getElementById('data-section').style.display = 'block';
+                    await loadDebts();
+                } else {
+                    pinErrorMsg.innerText = "PIN Incorrecto.";
+                    pinErrorMsg.style.display = 'block';
+                    verifyPinBtn.innerText = 'Verificar PIN';
+                }
+            } catch (error) {
+                pinErrorMsg.innerText = "Error verificando PIN.";
+                pinErrorMsg.style.display = 'block';
+                verifyPinBtn.innerText = 'Verificar PIN';
+            }
         });
 
         // 2. Login
