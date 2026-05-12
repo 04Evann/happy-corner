@@ -18,9 +18,6 @@ const initPromise = fetch('/api/getConfig')
         auth = getAuth(app);
         db = getFirestore(app);
         provider = new GoogleAuthProvider();
-    })
-    .catch(err => {
-        console.error("Error inicializando Firebase:", err);
     });
 
 export { initPromise, auth, db, provider, signInWithPopup, signOut, onAuthStateChanged, doc, getDoc, setDoc };
