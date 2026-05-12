@@ -1,17 +1,7 @@
 {
+  "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/maintenance.html" },
-    { "source": "/index", "destination": "/maintenance.html" },
-    { "source": "/catalogo", "destination": "/maintenance.html" },
-    { "source": "/order", "destination": "/maintenance.html" },
-    { "source": "/confirmed", "destination": "/maintenance.html" },
-    { "source": "/factura", "destination": "/maintenance.html" },
-    { "source": "/puntos", "destination": "/maintenance.html" },
-    { "source": "/terminos", "destination": "/maintenance.html" },
-    { "source": "/admin", "destination": "/maintenance.html" },
-    { "source": "/loyalty", "destination": "/maintenance.html" },
-    { "source": "/preorder", "destination": "/maintenance.html" },
-    { "source": "/verify", "destination": "/maintenance.html" },
-    { "source": "/deudores/:secret", "destination": "/deudores-admin.html" }
+    { "source": "/admin-deudas", "destination": "/deudores-admin.html" },
+    { "source": "/deudas", "destination": "/deudores-admin.html" }
   ]
 }
