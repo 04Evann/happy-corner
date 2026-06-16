@@ -1,7 +1,6 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/admin-deudas", "destination": "/deudores-admin.html" },
-    { "source": "/deudas", "destination": "/deudores-admin.html" }
+  "redirects": [
+    { "source": "/((?!$).*)", "destination": "/", "permanent": false }
   ]
 }
