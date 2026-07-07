@@ -660,6 +660,10 @@
             <input type="text" class="mc-input" id="edit-nombre" placeholder="Nombre completo">
             <input type="text" class="mc-input" id="edit-telefono" placeholder="Teléfono / WhatsApp">
             <input type="text" class="mc-input" id="edit-curso" placeholder="Curso (ej: 11A)">
+            <div style="margin-bottom: 14px;">
+                <input type="email" class="mc-input" id="edit-email-display" placeholder="correo@ejemplo.com" readonly style="opacity:0.55; cursor:not-allowed;">
+                <p style="font-size:11px; color: var(--text-muted, #888); margin-top:4px; padding-left:2px;">📧 El correo está vinculado a tu cuenta y no se puede cambiar aquí.</p>
+            </div>
             <button class="mc-btn-primary" id="save-profile-btn" onclick="saveProfile()">Guardar Cambios</button>
         </div>
     </div>
@@ -673,7 +677,6 @@
             doc, getDoc, updateDoc, collection, query, where,
             orderBy, limit, onSnapshot, addDoc, serverTimestamp
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
         import { updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         // ============================================================
@@ -1064,6 +1067,15 @@
         // ============================================================
         document.getElementById('editar-perfil-btn').onclick = () => {
             document.getElementById('edit-profile-modal').classList.add('active');
+            // Pre-populate fields
+            if (currentUserData) {
+                document.getElementById('edit-nombre').value = currentUserData.displayName || currentUserData.name || '';
+                document.getElementById('edit-telefono').value = currentUserData.phone || '';
+                document.getElementById('edit-curso').value = currentUserData.grade || '';
+            }
+            // Always show the auth email as read-only
+            const authEmail = currentUser?.email || currentUserData?.email || '';
+            document.getElementById('edit-email-display').value = authEmail;
         };
 
         window.saveProfile = async function() {
@@ -1103,15 +1115,25 @@
             
             showToast('📤 Subiendo foto...');
             try {
-                const storage = getStorage();
-                const storageRef = ref(storage, `avatars/${currentUser.uid}`);
-                await uploadBytes(storageRef, file);
-                const downloadURL = await getDownloadURL(storageRef);
-                
-                await updateDoc(doc(db, 'users', currentUser.uid), { photoURL: downloadURL, updatedAt: new Date().toISOString() });
-                await updateProfile(currentUser, { photoURL: downloadURL });
-                
-                showToast('✅ Foto actualizada');
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = async () => {
+                    const base64Data = reader.result;
+                    const res = await fetch('/api/uploadAvatar', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ uid: currentUser.uid, imageData: base64Data })
+                    });
+                    
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error || 'Error del servidor');
+                    
+                    const downloadURL = data.url;
+                    await updateProfile(currentUser, { photoURL: downloadURL });
+                    document.getElementById('mc-avatar').src = downloadURL;
+                    showToast('✅ Foto actualizada');
+                };
+                reader.onerror = () => { throw new Error('Error al leer el archivo'); };
             } catch(e) {
                 showToast('❌ Error subiendo foto: ' + e.message);
             }

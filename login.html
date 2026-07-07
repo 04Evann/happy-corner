@@ -168,6 +168,17 @@
         <div class="login-title">Bienvenido a<br><span style="color: var(--hp-pink);">Happy Corner</span></div>
         <div class="login-subtitle">Inicia sesión para ver tus HappyPuntos, deudas y hacer pedidos más rápido.</div>
         
+        <button class="btn-google" id="googleLoginBtn">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+            Continuar con Google
+        </button>
+
+        <div class="divider" id="divider-o">O con correo electrónico</div>
+
+        <div id="account-creation-notice" style="display:none; background: rgba(255, 82, 153, 0.1); border: 1px solid var(--hp-pink); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-size: 14px; color: var(--hp-pink); text-align: center;">
+            🎉 Estás creando tu cuenta <strong>HappyCorner</strong>
+        </div>
+
         <form id="emailLoginForm" style="margin-bottom: 20px;">
             <div class="input-group">
                 <label for="email">Correo Electrónico</label>
@@ -203,12 +214,6 @@
             </div>
         </div>
 
-        <div class="divider">O</div>
-
-        <button class="btn-google" id="googleLoginBtn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
-            Continuar con Google
-        </button>
         <div class="loading-spinner" id="loadingSpinner"></div>
         <p id="errorMsg" style="color: #e74c3c; margin-top: 15px; font-weight: 500; display: none;"></p>
     </div>
@@ -265,15 +270,16 @@
         async function handleUserDocument(user) {
             const userRef = doc(db, 'users', user.uid);
             const userSnap = await getDoc(userRef);
+            const email = user.email || null; // Google always provides email; email/password always has it too
 
             if (!userSnap.exists()) {
                 // New user: create profile with new schema
-                const displayName = user.displayName || user.email.split('@')[0];
+                const displayName = user.displayName || (email ? email.split('@')[0] : 'Cliente HappyCorner');
                 await setDoc(userRef, {
                     uid: user.uid,
                     displayName: displayName,
                     name: displayName,
-                    email: user.email,
+                    email: email,
                     photoURL: user.photoURL || null,
                     activeDebt: 0,
                     happyPoints: 0,
@@ -346,14 +352,20 @@
         });
 
         // Email / Password Register
+        const accountNotice = document.getElementById('account-creation-notice');
         registerEmailBtn.addEventListener('click', async () => {
             const email = emailInput.value;
             const password = passwordInput.value;
+
+            // If fields are empty, just show the creation notice as a hint
             if (!email || !password) {
-                errorMsg.innerText = "Por favor ingresa correo y contraseña para registrarte.";
-                errorMsg.style.display = 'block';
+                accountNotice.style.display = 'block';
+                if (!email) emailInput.focus();
+                else passwordInput.focus();
                 return;
             }
+
+            accountNotice.style.display = 'block';
             showLoading();
 
             try {
@@ -363,7 +375,7 @@
             } catch (error) {
                 console.error("Error registering:", error);
                 let msg = "Error al crear la cuenta.";
-                if (error.code === 'auth/email-already-in-use') msg = "Ese correo ya está registrado.";
+                if (error.code === 'auth/email-already-in-use') msg = "Ese correo ya está registrado. ¿Querías iniciar sesión?";
                 if (error.code === 'auth/weak-password') msg = "La contraseña debe tener al menos 6 caracteres.";
                 hideLoading(msg);
             }

@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import { Resend } from 'resend';
-import { db, bucket } from './_lib/firebaseAdmin.js';
+import { db } from './_lib/firebaseAdmin.js';
+import { s3Client, bucketName, publicUrl } from './_lib/r2Client.js';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { applyCors, json } from './_lib/http.js';
 
 export default async function handler(req, res) {
@@ -45,7 +47,7 @@ export default async function handler(req, res) {
             });
 
             const emailResult = await resend.emails.send({
-                from: 'Happy Corner <no-reply@happycorner.lol>',
+                from: 'Happy Corner <no-reply@alertas.happycorner.lol>',
                 to: [email],
                 subject: 'Tu PIN para firmar el Contrato de Happy Corner',
                 html: `
@@ -104,17 +106,27 @@ export default async function handler(req, res) {
             if (!match) return json(res, 400, { error: 'Formato de imagen de firma no válido.' });
             const imageBuffer = Buffer.from(match[2], 'base64');
             const fileName = `signatures/${uid}/contract_v1.png`;
-            const file = bucket.file(fileName);
-            await file.save(imageBuffer, {
-                metadata: { contentType: `image/${match[1]}` },
-                public: true
+            
+            // Subir a R2
+            if (!s3Client) {
+                return json(res, 500, { error: 'R2 Storage no está configurado.' });
+            }
+            const command = new PutObjectCommand({
+                Bucket: bucketName,
+                Key: fileName,
+                Body: imageBuffer,
+                ContentType: `image/${match[1]}`
             });
+            await s3Client.send(command);
 
             const timestamp = now.toISOString();
-            await db.collection('debtContracts').add({
+            
+            // Guardar contrato con uid como ID del documento
+            await db.collection('debtContracts').doc(uid).set({
                 uid,
+                customerUID: uid, // redundante pero util para busquedas si se necesitara
                 typedName,
-                signatureUrl: `https://storage.googleapis.com/${bucket.name}/${fileName}`,
+                signatureUrl: `${publicUrl}/${fileName}`,
                 version: 'v1',
                 signedAt: timestamp,
                 ip: ip || 'unknown',

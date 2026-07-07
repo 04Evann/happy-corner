@@ -187,7 +187,7 @@
         const overlay = document.getElementById('overlay');
         if (menuBtn) {
             menuBtn.onclick = () => { sideMenu?.classList.toggle('active'); overlay?.classList.toggle('active'); };
-            overlay.onclick = () => { sideMenu?.classList.remove('active'); overlay?.classList.remove('active'); };
+            if (overlay) overlay.onclick = () => { sideMenu?.classList.remove('active'); overlay?.classList.remove('active'); };
         }
 
         const saveCodeBtn = document.getElementById('saveCodeBtn');

@@ -34,8 +34,8 @@ service cloud.firestore {
 
     // orders collection rules
     match /orders/{orderId} {
-      // Allow read if user owns the order
-      allow read: if request.auth != null && resource.data.customerUID == request.auth.uid;
+      // Allow read and list if user owns the order
+      allow get, list: if request.auth != null && resource.data.customerUID == request.auth.uid;
       // Allow creation by logged-in user
       allow create: if request.auth != null && request.resource.data.customerUID == request.auth.uid;
       allow update, delete: if false; // Server-only update
@@ -43,13 +43,13 @@ service cloud.firestore {
 
     // movements collection rules (server-only write, client-read-only)
     match /movements/{movementId} {
-      allow read: if request.auth != null && resource.data.customerUID == request.auth.uid;
+      allow get, list: if request.auth != null && resource.data.customerUID == request.auth.uid;
       allow write: if false; // Admin SDK only
     }
 
     // debtContracts collection rules (server-only write, client-read-only)
-    match /debtContracts/{contractId} {
-      allow read: if request.auth != null && resource.data.customerUID == request.auth.uid;
+    match /debtContracts/{uid} {
+      allow read: if isOwner(uid);
       allow write: if false; // Admin SDK only
     }
   }
