@@ -117,7 +117,7 @@
 
     <script>
         const API = "https://happy-corner.vercel.app/api/getOrders";
-        const AUTH = "https://happy-corner.vercel.app/api/adminLogin";
+        const AUTH = "/api/adminAuth";
         let adminToken = sessionStorage.getItem("hc_admin_token") || "";
 
         // --- AUTH LOGIC (SERVER TOKEN) ---
@@ -126,9 +126,9 @@
             if(!password) return alert("Escribe tu clave");
 
             const resp = await fetch(AUTH, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ password })
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password, action: "login" })
             });
 
             const data = await resp.json().catch(() => ({}));

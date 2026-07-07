@@ -989,10 +989,10 @@
             if (!email) { showToast('❌ No tienes correo registrado'); btn.disabled = false; btn.textContent = '📧 Enviar PIN por correo'; return; }
             
             try {
-                const resp = await fetch('/api/sendContractPin', {
+                const resp = await fetch('/api/contract', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ uid: currentUser.uid, email })
+                    body: JSON.stringify({ action: 'sendPin', uid: currentUser.uid, email: currentUser.email })
                 });
                 const data = await resp.json();
                 if (!resp.ok) throw new Error(data.error || 'Error enviando PIN');
@@ -1032,10 +1032,11 @@
             btn.textContent = 'Verificando...';
 
             try {
-                const resp = await fetch('/api/signContract', {
+                const resp = await fetch('/api/contract', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        action: 'sign',
                         uid: currentUser.uid,
                         typedName: document.getElementById('contrato-nombre').value.trim(),
                         signatureImage: signatureData,

@@ -128,7 +128,11 @@
             requestPinBtn.innerText = 'Enviando...';
             requestPinBtn.disabled = true;
             try {
-                const res = await fetch('/api/requestAdminPin', { method: 'POST' });
+                const res = await fetch('/api/adminAuth', { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'requestPin' })
+                });
                 const data = await res.json();
                 if (data.success) {
                     currentPinHash = data.hash;
@@ -152,10 +156,10 @@
             
             verifyPinBtn.innerText = 'Verificando...';
             try {
-                const res = await fetch('/api/verifyAdminPin', {
+                const res = await fetch('/api/adminAuth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pin, hash: currentPinHash })
+                    body: JSON.stringify({ action: 'verifyPin', pin, hash: currentPinHash })
                 });
                 const data = await res.json();
                 if (data.success) {
