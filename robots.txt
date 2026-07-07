@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Páginas privadas - no indexar
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /mi-cuenta
+Disallow: /mi-cuenta.html
+Disallow: /order
+Disallow: /order.html
+Disallow: /onboarding
+Disallow: /onboarding.html
+Disallow: /dashboard
+Disallow: /dashboard.html
+Disallow: /deudores-admin
+Disallow: /deudores-admin.html
+Disallow: /manager
+Disallow: /manager.html
+Disallow: /wallet
+Disallow: /wallet.html
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://happycorner.lol/sitemap.xml

@@ -1,13 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
 import fetch from "node-fetch";
+import { db } from "./_lib/firebaseAdmin.js";
 import { applyCors, requireEnv } from "./_lib/http.js";
 
-const supabase = createClient(process.env.SB_URL, process.env.SB_SECRET);
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export default async function handler(req, res) {
   // Webhook: respond quick, but only if authorized.
-  // (Telegram ignores CORS, but applyCors makes local testing consistent.)
   if (applyCors(req, res, { methods: ["POST", "OPTIONS"] })) return;
   if (req.method !== "POST") return;
 
@@ -35,8 +33,6 @@ export default async function handler(req, res) {
   if (!text.startsWith("/")) return;
 
   try {
-    requireEnv("SB_URL");
-    requireEnv("SB_SECRET");
     requireEnv("TELEGRAM_TOKEN");
     requireEnv("TELEGRAM_CHAT_ID");
 
@@ -45,19 +41,34 @@ export default async function handler(req, res) {
     if (partes.length < 2) return;
 
     const action = partes[0].replace("/", ""); // "confirmar"
-    const pedidoId = partes[1]; // "30"
+    const pedidoId = partes[1]; // "h-XXXXX" or order ID
     
     const estados = { confirmar: "Confirmado", entregar: "Entregado", cancelar: "Cancelado" };
     const nuevoEstado = estados[action];
 
     if (!nuevoEstado) return;
 
-    // 1. Actualizar en Supabase
-    await supabase.from("pedidos").update({ estado: nuevoEstado }).eq("id", pedidoId);
+    // 1. Actualizar en Firestore
+    const statusMap = {
+      'Confirmado': 'preparing',
+      'Entregado': 'completed',
+      'Cancelado': 'cancelled'
+    };
+    const status = statusMap[nuevoEstado] || 'pending';
+    const now = new Date().toISOString();
+    
+    const orderRef = db.collection('orders').doc(pedidoId);
+    
+    await orderRef.update({
+      status,
+      updatedAt: now,
+      ...(status === 'completed' ? { completedAt: now } : {})
+    });
 
     // 2. Traer el pedido para el WhatsApp
-    const { data: p } = await supabase.from("pedidos").select("*").eq("id", pedidoId).single();
-    if (!p) return;
+    const doc = await orderRef.get();
+    if (!doc.exists) return;
+    const p = doc.data();
 
     const linkWA = `https://wa.me/57${p.whatsapp}?text=Hola ${p.nombre}, tu pedido fue ${nuevoEstado} 🍭`;
     

@@ -1,5 +1,5 @@
-// /api/getPoints.js (Versión Final y Corregida)
-import { applyCors, json, requireEnv } from "./_lib/http.js";
+import { db } from "./_lib/firebaseAdmin.js";
+import { applyCors, json } from "./_lib/http.js";
 
 export default async function handler(req, res) {
   if (applyCors(req, res, { methods: ["GET", "OPTIONS"] })) return;
@@ -9,98 +9,69 @@ export default async function handler(req, res) {
     return json(res, 400, { error: 'Falta el parámetro "codigo"' });
   }
 
-  let token;
   try {
-    token = requireEnv("LOYVERSE_API_KEY");
-  } catch {
-    return json(res, 500, { error: 'Falta LOYVERSE_API_KEY en Vercel' });
-  }
+    // 1. Look up UID from customerCodes lookup collection
+    const codeSnap = await db.collection('customerCodes').doc(codigo.trim().toUpperCase()).get();
+    let uid = null;
 
-  const API = 'https://api.loyverse.com/v1.0';
-
-  async function lvFetch(path) {
-    const r = await fetch(`${API}${path}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (!r.ok) {
-      throw new Error(`Loyverse ${r.status}: ${r.statusText}`);
-    }
-    return r.json();
-  }
-
-  async function findCustomerByCode(happyCode) {
-    let cursor = null;
-    let pageCount = 0;
-    const MAX_PAGES = 100;
-    while (pageCount < MAX_PAGES) {
-      const q = cursor ? `?cursor=${encodeURIComponent(cursor)}&limit=250` : `?limit=250`;
-      const data = await lvFetch(`/customers${q}`);
-      const lista = data.customers || [];
-      const hit = lista.find(c => c.customer_code === happyCode);
-      if (hit) {
-        return hit;
-      }
-      cursor = data.cursor;
-      if (!cursor) {
-        break;
-      }
-      pageCount++;
-    }
-    return null;
-  }
-
-  async function getLastReceiptsForCustomer(customerId, max = 5) {
-    const receipts = [];
-    let cursor = null;
-    
-    // Bucle para obtener las últimas ventas, optimizado para ser robusto
-    while (receipts.length < max) {
-      const q = cursor ? `?cursor=${encodeURIComponent(cursor)}&limit=200&order=created_at_desc` : `?limit=200&order=created_at_desc`;
-      const data = await lvFetch(`/receipts${q}`);
+    if (codeSnap.exists) {
+      uid = codeSnap.data().uid;
+    } else {
+      // Fallback: search users collection directly in case of sync issues
+      const userQuery = await db.collection('users')
+        .where('customerCode', '==', codigo.trim().toUpperCase())
+        .limit(1)
+        .get();
       
-      const newReceipts = data.receipts || [];
-      
-      // Itera sobre los nuevos recibos para encontrar los del cliente
-      for (const r of newReceipts) {
-        if (r.customer_id === customerId) {
-          receipts.push({
-            recibo: r.receipt_number,
-            fecha: new Date(r.created_at).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' }),
-            total: r.total_money,
-            tienda: r.store_id
-          });
-        }
-        if (receipts.length >= max) {
-          break; // Salimos del bucle si ya tenemos suficientes recibos
-        }
-      }
-
-      cursor = data.cursor;
-      if (!cursor || newReceipts.length === 0) {
-        break; // No hay más páginas o ventas
+      if (!userQuery.empty) {
+        uid = userQuery.docs[0].id;
       }
     }
-    return receipts;
-  }
 
-  try {
-    const cliente = await findCustomerByCode(codigo);
-    if (!cliente) {
+    if (!uid) {
       return json(res, 404, { error: 'HappyCódigo no encontrado. Por favor, verifica el código.' });
     }
 
-    const receipts = await getLastReceiptsForCustomer(cliente.id, 5);
+    // 2. Fetch user details
+    const userSnap = await db.collection('users').doc(uid).get();
+    if (!userSnap.exists) {
+      return json(res, 404, { error: 'Usuario no encontrado en la base de datos.' });
+    }
+
+    const u = userSnap.data();
+
+    // 3. Fetch last 5 movements
+    const movementsSnap = await db.collection('movements')
+      .where('customerUID', '==', uid)
+      .orderBy('createdAt', 'desc')
+      .limit(5)
+      .get();
+
+    const receipts = [];
+    movementsSnap.forEach(doc => {
+      const m = doc.data();
+      receipts.push({
+        recibo: m.movementId ? m.movementId.substring(0, 8).toUpperCase() : doc.id.substring(0, 8).toUpperCase(),
+        fecha: m.createdAt 
+          ? new Date(m.createdAt).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })
+          : 'Sin fecha',
+        total: m.amount,
+        tienda: m.type.toUpperCase() // e.g. PURCHASE, PAYMENT, POINTS
+      });
+    });
+
+    const fullName = u.displayName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Usuario';
 
     return json(res, 200, {
-      nombre: cliente.name,
-      happyCodigo: cliente.customer_code,
-      correo: cliente.email || 'No registrado',
-      telefono: cliente.phone_number || cliente.phone || '',
-      puntos: cliente.total_points,
+      nombre: fullName,
+      happyCodigo: u.customerCode || codigo.trim().toUpperCase(),
+      correo: u.email || 'No registrado',
+      telefono: u.phone || '',
+      puntos: u.happyPoints || 0,
       ultimas_transacciones: receipts
     });
   } catch (err) {
-    console.error(err);
-    return json(res, 500, { error: 'Error consultando Loyverse. Por favor, inténtalo de nuevo.' });
+    console.error("Error getPoints:", err);
+    return json(res, 500, { error: 'Error consultando datos. Por favor, inténtalo de nuevo.' });
   }
 }

@@ -10,6 +10,7 @@
   "dependencies": {
     "node-fetch": "^3.3.2",
     "pdfkit": "^0.17.2",
-    "resend": "^4.0.0"
+    "resend": "^4.0.0",
+    "firebase-admin": "^12.1.0"
   }
 }

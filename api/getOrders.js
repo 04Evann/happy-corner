@@ -1,19 +1,52 @@
 import fetch from 'node-fetch';
+import { db } from './_lib/firebaseAdmin.js';
+import { requireAdmin } from './_lib/adminAuth.js';
 
 export default async function handler(req, res) {
     // Configuración de CORS
     res.setHeader('Access-Control-Allow-Origin', '*'); 
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    const { method, body } = req;
+    const { method, body, query } = req;
 
     try {
         if (method === 'POST') {
+            // Check if it's an admin status update (query has id and estado)
+            if (query.id && query.estado) {
+                const adminPayload = requireAdmin(req, res);
+                if (!adminPayload) return; // Response is already handled by requireAdmin
+
+                const orderId = query.id;
+                const estado = query.estado; // 'Entregado' | 'Cancelado' | 'Confirmado'
+                
+                const statusMap = {
+                    'Entregado': 'completed',
+                    'Cancelado': 'cancelled',
+                    'Confirmado': 'preparing'
+                };
+                
+                const status = statusMap[estado] || 'pending';
+                const now = new Date().toISOString();
+                
+                const updateData = {
+                    status,
+                    updatedAt: now
+                };
+                
+                if (status === 'completed') {
+                    updateData.completedAt = now;
+                }
+                
+                await db.collection('orders').doc(orderId).update(updateData);
+                return res.status(200).json({ ok: true });
+            }
+
+            // Otherwise, it's a new order submission
             const pedidoData = body;
 
             // Generate order code h-xxxxx
@@ -25,7 +58,7 @@ export default async function handler(req, res) {
             const orderCode = `h-${orderCodeId}`;
 
             // Clean whatsapp number
-            const cleanNumber = (pedidoData.whatsapp || '').replace(/\\D/g, '');
+            const cleanNumber = (pedidoData.whatsapp || '').replace(/\D/g, '');
             const waLink = `https://wa.me/57${cleanNumber}`;
 
             // Check for custom Robux
@@ -67,31 +100,25 @@ export default async function handler(req, res) {
                 console.error("Error acortando URL");
             }
 
+            // Save to Firestore
             try {
-            // == SUPABASE INSERT para mantener actividad ==
-            // Se usa dynamic import para evitar problemas mjs/cjs si los hay, 
-            // o destructuring directo en el handler. En entorno serverless lo mejor es usar fetch directo aquí para no romper imports antiguos si los hay.
-            const SUPABASE_URL = process.env.SUPABASE_URL || 'https://eiqbenebtmfolqxjwubc.supabase.co';
-            const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpcWJlbmVidG1mb2xxeGp3dWJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMjQ1NTIsImV4cCI6MjA5MTYwMDU1Mn0.vycF5redWe7_R4vc9GRHbOpj9EZR9MOAeKxF8AG-Rfg';
-            
-            await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apiKey': SUPABASE_KEY,
-                    'Authorization': `Bearer ${SUPABASE_KEY}`,
-                    'Prefer': 'return=minimal'
-                },
-                body: JSON.stringify({
-                    ordercode: orderCode,
+                await db.collection('orders').doc(orderCode).set({
+                    orderId: orderCode,
+                    customerUID: pedidoData.customerUID || null,
+                    customerCode: pedidoData.customerCode || pedidoData.happycodigo || null,
                     nombre: pedidoData.nombre,
                     whatsapp: cleanNumber,
                     resumen: pedidoData.resumen,
                     total: totalDisplay,
-                    estado: 'pendiente'
-                })
-            });
-        } catch(e) { console.log('Supabase orders fallback', e) }
+                    paymentMethod: pedidoData.metodo_pago,
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    completedAt: null
+                });
+            } catch(e) { 
+                console.error('Firestore orders save failed:', e);
+            }
 
             const waPreorder = `¡Hola ${pedidoData.nombre}! 👋\n\n` +
                                `📝 Registramos tu pre-orden de:\n*${pedidoData.resumen}*\n\n` +
@@ -136,13 +163,78 @@ export default async function handler(req, res) {
             return res.status(200).json({ ok: true, orderId: orderCode, message: "Telegram enviado" });
         }
 
-        // Si es GET (para el admin), devolvemos un array vacío por ahora
+        // GET method (Admin view)
         if (method === 'GET') {
-            return res.status(200).json([]);
+            const adminPayload = requireAdmin(req, res);
+            if (!adminPayload) return; // Response is already handled by requireAdmin
+
+            // If phone is passed, return user's total points (compat with admin.html modal load)
+            if (query.phone) {
+                const cleanPhone = query.phone.replace(/\D/g, '');
+                const usersSnap = await db.collection('users')
+                    .where('phone', '==', cleanPhone)
+                    .limit(1)
+                    .get();
+                
+                let points = 0;
+                if (!usersSnap.empty) {
+                    points = usersSnap.docs[0].data().happyPoints || 0;
+                }
+                return res.status(200).json({ total_points: points });
+            }
+
+            let ordersQuery = db.collection('orders');
+
+            if (query.date) {
+                // Filter by date prefix: YYYY-MM-DD
+                const searchDate = query.date; // e.g. "2026-07-06"
+                ordersQuery = ordersQuery
+                    .where('createdAt', '>=', `${searchDate}T00:00:00`)
+                    .where('createdAt', '<=', `${searchDate}T23:59:59`);
+            } else if (query.view === 'active') {
+                // Return non-completed and non-cancelled orders
+                // Firestore doesn't easily support multiple "not in" or != on fields without complex queries.
+                // We'll just fetch all orders from the last 7 days and filter in memory to keep it simple and robust.
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                ordersQuery = ordersQuery.where('createdAt', '>=', oneWeekAgo.toISOString());
+            }
+
+            const snapshot = await ordersQuery.get();
+            const orders = [];
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                
+                // Map status to Spanish display status
+                let estado = 'pendiente';
+                if (data.status === 'completed') estado = 'Entregado';
+                else if (data.status === 'cancelled') estado = 'Cancelado';
+                else if (data.status === 'preparing') estado = 'Confirmado';
+
+                // Filter in memory for active view
+                if (query.view === 'active' && (data.status === 'completed' || data.status === 'cancelled')) {
+                    return;
+                }
+
+                orders.push({
+                    id: doc.id,
+                    nombre: data.nombre,
+                    whatsapp: data.whatsapp,
+                    total: data.total,
+                    estado,
+                    resumen: data.resumen
+                });
+            });
+
+            // Sort orders descending by creation date
+            orders.sort((a, b) => b.id.localeCompare(a.id));
+
+            return res.status(200).json(orders);
         }
 
     } catch (e) {
-        console.error("Error CEO:", e.message);
+        console.error("Error getOrders API:", e.message);
         res.status(500).json({ error: e.message });
     }
 }

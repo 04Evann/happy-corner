@@ -1,9 +1,10 @@
-import { supabaseFetch } from './_lib/supabase.js';
+import { db } from './_lib/firebaseAdmin.js';
+import { addMovement } from './_lib/movementsHelper.js';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') return res.status(405).json({ error: 'POST required' });
 
-    // String secreto oculto
+    // Secret verification
     const secret = req.headers['authorization'] || req.body.secret;
     const MI_STRING_SECRETO = process.env.DEUDAS_SECRET || "happycorner-secreto-12345";
     
@@ -17,18 +18,41 @@ export default async function handler(req, res) {
         
         let nombreClean = nombre ? nombre.trim().toLowerCase() : '';
 
+        // Helper to find a user by matching their name
+        async function findUserByName(searchStr) {
+            if (!searchStr) return null;
+            const usersSnap = await db.collection('users').get();
+            const matches = [];
+            usersSnap.forEach(doc => {
+                const u = doc.data();
+                const fullName = (u.displayName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || '').toLowerCase();
+                if (fullName.includes(searchStr) || searchStr.includes(fullName)) {
+                    matches.push({ uid: doc.id, data: u, fullName });
+                }
+            });
+            return matches;
+        }
+
         // 1. OBTENER LISTA DE DEUDORES
         if (accion === 'DEUDORES') {
-            const data = await supabaseFetch(`deudas?monto=gt.0&select=nombre,monto`);
-            if (!data || data.length === 0) {
+            const snapshot = await db.collection('users')
+                .where('activeDebt', '>', 0)
+                .get();
+
+            if (snapshot.empty) {
                 return res.status(200).json({ msg: "💸 ¡Nadie te debe dinero! Todo limpio." });
             }
+
             let texto = "🔥 LISTA DE DEUDAS:\n\n";
-            let rawNames = [];
-            data.forEach(d => {
-                // Capitalizar primera letra
-                let name = d.nombre.charAt(0).toUpperCase() + d.nombre.slice(1);
-                texto += `👤 ${name}: $${d.monto}\n`;
+            const rawNames = [];
+            snapshot.forEach(doc => {
+                const u = doc.data();
+                const displayName = u.displayName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Estudiante';
+                // Capitalize name
+                let name = displayName.split(' ')
+                    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                    .join(' ');
+                texto += `👤 ${name}: $${u.activeDebt}\n`;
                 rawNames.push(name);
             });
             return res.status(200).json({ msg: texto, rawNames: rawNames });
@@ -41,44 +65,55 @@ export default async function handler(req, res) {
             
             if (!nombre) return res.status(400).json({ msg: "🔴 Falta nombre." });
 
-            // Calcular suma de productos desde el Catálogo
-            // Importación dinámica limpia (ya que este archivo es serverless, pero Next soporta imports arriba. Lo movemos arriba)
+            // Find user
+            const matches = await findUserByName(nombreClean);
+            if (!matches || matches.length === 0) {
+                return res.status(200).json({ msg: `🧐 No encontré a "${nombre}" en la lista de usuarios. Por favor regístralo primero.` });
+            }
+            if (matches.length > 1) {
+                const namesList = matches.map(m => m.data.displayName || m.data.name || `${m.data.firstName || ''} ${m.data.lastName || ''}`.trim()).join(', ');
+                return res.status(200).json({ msg: `🧐 Múltiples coincidencias para "${nombre}": [${namesList}]. Sé más específico.` });
+            }
+
+            const targetUser = matches[0];
+
+            // Calculate product sums from catalog
             let sumMonto = 0;
-            // req.body.monto (opcional si mandan precio manual en vez de productos)
             if (monto && parseInt(monto) > 0) {
                 sumMonto = parseInt(monto);
             } else if (typeof productosString === 'string' || Array.isArray(productosString)) {
-                // Si es un array desde Shortcuts o un string separado por comas
                 let prodArray = Array.isArray(productosString) ? productosString : productosString.split(',');
-                // Import the catlog module internally to avoid breaking old handler if moving things
-                // Since we need to read from file, let's fetch it via HTTP from ourselves or just do dynamic import
                 const { getPriceByName } = await import('./_lib/catalog.js');
                 prodArray.forEach(p => {
                     sumMonto += getPriceByName(p.trim());
                 });
             }
 
-            let deudaFinal = sumMonto - abonoFijo;
+            let debtFinal = sumMonto - abonoFijo;
             let strProductos = Array.isArray(productosString) ? productosString.join(', ') : productosString;
 
-            // Si el monto quedó en 0 o negativo porque pagó todo de contado!
-            if (deudaFinal <= 0) {
-                // Registrarlo tal vez como venta normal o decirle que todo okay sin deuda
-                return res.status(200).json({ msg: `✅ Cobro completo de contado. Total: $${sumMonto}. \n¡Cambio a devolver: $${Math.abs(deudaFinal)}!` });
+            if (debtFinal <= 0) {
+                return res.status(200).json({ msg: `✅ Cobro completo de contado. Total: $${sumMonto}. \n¡Cambio a devolver: $${Math.abs(debtFinal)}!` });
             }
-            
-            // Buscar si ya existe el deudor
-            const users = await supabaseFetch(`deudas?nombre=eq.${encodeURIComponent(nombreClean)}`);
-            if (users && users.length > 0) {
-                const existing = users[0];
-                const newMonto = parseInt(existing.monto) + deudaFinal;
-                const newDetalle = existing.detalle ? `${existing.detalle}, ${strProductos}` : strProductos;
-                await supabaseFetch(`deudas?id=eq.${existing.id}`, 'PATCH', { monto: newMonto, detalle: newDetalle });
-                return res.status(200).json({ msg: `✅ Se agregaron los productos.\nTotal Comprado: $${sumMonto}\nAbono: $${abonoFijo}\nSe sumó $${deudaFinal} a su deuda.\n💰 NUEVA DEUDA TOTAL: $${newMonto}` });
-            } else {
-                await supabaseFetch(`deudas`, 'POST', { nombre: nombreClean, monto: deudaFinal, detalle: strProductos });
-                return res.status(200).json({ msg: `✅ Deuda Creada.\nTotal Comprado: $${sumMonto}\nAbono: $${abonoFijo}\n💰 DEBE: $${deudaFinal}` });
-            }
+
+            // Create purchase movement
+            const description = abonoFijo > 0 
+                ? `${strProductos} (Abonado $${abonoFijo} en compra)`
+                : strProductos;
+                
+            await addMovement(targetUser.uid, {
+                type: 'purchase',
+                amount: debtFinal,
+                description: description
+            });
+
+            // Read updated user to display final balance
+            const updatedSnap = await db.collection('users').doc(targetUser.uid).get();
+            const updatedUser = updatedSnap.data();
+
+            return res.status(200).json({ 
+                msg: `✅ Se agregaron los productos a ${targetUser.data.displayName || targetUser.data.name}.\nTotal Comprado: $${sumMonto}\nAbono: $${abonoFijo}\nSe sumó $${debtFinal} a su deuda.\n💰 NUEVA DEUDA TOTAL: $${updatedUser.activeDebt}` 
+            });
         }
 
         // 3. PAGAR DEUDA
@@ -86,20 +121,32 @@ export default async function handler(req, res) {
             if (!nombre || !monto) return res.status(400).json({ msg: "🔴 Falta nombre o monto a restar." });
             let restMonto = parseInt(monto);
 
-            const users = await supabaseFetch(`deudas?nombre=eq.${encodeURIComponent(nombreClean)}`);
-            if (users && users.length > 0) {
-                const existing = users[0];
-                const newMonto = parseInt(existing.monto) - restMonto;
-                if (newMonto <= 0) {
-                     // Deuda saldada, se puede eliminar o dejar en 0
-                     await supabaseFetch(`deudas?id=eq.${existing.id}`, 'PATCH', { monto: 0, detalle: "Saldado" });
-                     return res.status(200).json({ msg: `🎉 ¡${nombreClean} te ha pagado todo! Deuda en 0.` });
-                } else {
-                     await supabaseFetch(`deudas?id=eq.${existing.id}`, 'PATCH', { monto: newMonto });
-                     return res.status(200).json({ msg: `✅ Se restó $${restMonto}. ${nombreClean} aún debe: $${newMonto}` });
-                }
+            const matches = await findUserByName(nombreClean);
+            if (!matches || matches.length === 0) {
+                return res.status(200).json({ msg: `🧐 No encontré a "${nombre}" en la lista de deudores.` });
+            }
+            if (matches.length > 1) {
+                const namesList = matches.map(m => m.data.displayName || m.data.name || `${m.data.firstName || ''} ${m.data.lastName || ''}`.trim()).join(', ');
+                return res.status(200).json({ msg: `🧐 Múltiples coincidencias para "${nombre}": [${namesList}]. Sé más específico.` });
+            }
+
+            const targetUser = matches[0];
+
+            // Create payment movement (negative amount)
+            await addMovement(targetUser.uid, {
+                type: 'payment',
+                amount: -restMonto,
+                description: detalle || 'Abono / Pago de deuda'
+            });
+
+            // Read updated user to check remaining balance
+            const updatedSnap = await db.collection('users').doc(targetUser.uid).get();
+            const updatedUser = updatedSnap.data();
+
+            if (updatedUser.activeDebt <= 0) {
+                 return res.status(200).json({ msg: `🎉 ¡${targetUser.data.displayName || targetUser.data.name} ha pagado toda su deuda! Saldo en 0.` });
             } else {
-                return res.status(200).json({ msg: `🧐 No encontré a ${nombreClean} en la lista de deudores.` });
+                 return res.status(200).json({ msg: `✅ Se restó $${restMonto}. ${targetUser.data.displayName || targetUser.data.name} aún debe: $${updatedUser.activeDebt}` });
             }
         }
 

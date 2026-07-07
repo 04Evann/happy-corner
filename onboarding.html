@@ -3,66 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Corner | Vincular Cuenta</title>
+    <meta name="robots" content="noindex, nofollow">
+    <title>Happy Corner | Crear tu HappyCódigo</title>
+    <link rel="icon" href="/happyfavicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
         .onboarding-container {
-            max-width: 450px;
+            max-width: 460px;
             margin: 60px auto;
             text-align: center;
             padding: 40px 30px;
             background: var(--surface-color);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
+            border-radius: 28px;
             box-shadow: var(--shadow-lg);
+        }
+        .onboarding-icon {
+            font-size: 56px;
+            margin-bottom: 16px;
         }
         .onboarding-title {
             font-size: 28px;
             font-weight: 900;
             color: var(--text-color);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .onboarding-subtitle {
-            font-size: 16px;
+            font-size: 15px;
             color: var(--text-muted);
             margin-bottom: 30px;
-            line-height: 1.5;
+            line-height: 1.6;
+        }
+        .code-input-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .code-prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--hp-pink);
+            pointer-events: none;
+            z-index: 1;
         }
         .loyalty-input {
             width: 100%;
-            padding: 16px;
-            border-radius: 14px;
+            padding: 16px 16px 16px 50px;
+            border-radius: 16px;
             border: 2px solid var(--border-color);
             background: var(--input-bg);
             color: var(--text-color);
-            font-size: 20px;
-            text-align: center;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 900;
             outline: none;
             transition: 0.3s;
-            margin-bottom: 20px;
             text-transform: uppercase;
+            letter-spacing: 3px;
+            font-family: 'Outfit', monospace;
         }
         .loyalty-input:focus {
             border-color: var(--hp-pink);
-            box-shadow: 0 0 10px rgba(255, 82, 153, 0.2);
+            box-shadow: 0 0 0 4px var(--hp-pink-glow);
         }
+        .code-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .availability-indicator {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            min-height: 20px;
+            transition: all 0.3s;
+        }
+        .available { color: #2ecc71; }
+        .unavailable { color: #ff5252; }
+        .checking { color: var(--text-muted); }
         .btn-primary {
             width: 100%;
             padding: 16px;
-            background: var(--hp-pink);
+            background: var(--hp-gradient);
             color: white;
             font-weight: 900;
             font-size: 18px;
             border: none;
-            border-radius: 14px;
+            border-radius: 16px;
             cursor: pointer;
             transition: 0.3s;
+            font-family: inherit;
         }
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(255, 82, 153, 0.3);
+            box-shadow: 0 8px 20px var(--hp-pink-glow);
         }
         .btn-primary:disabled {
             background: #555;
@@ -70,11 +107,22 @@
             transform: none;
             box-shadow: none;
         }
+        .rules-list {
+            text-align: left;
+            background: var(--input-bg);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 2;
+        }
+        #statusMsg { margin-top: 14px; font-weight: 600; font-size: 14px; display: none; }
     </style>
 </head>
 <body data-theme="dark">
 
-        <header>
+    <header>
         <a href="/index" class="logo">
             <img src="loguito.png" alt="HappyCorner" class="logo-img">
         </a>
@@ -82,7 +130,6 @@
             <a href="/index">Inicio</a>
             <a href="/catalogo">Catálogo</a>
             <a href="/order">HappyOrder</a>
-            <a href="/track">Rastrear Pedido</a>
         </nav>
         <div style="display:flex; align-items:center; gap:10px;">
             <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
@@ -94,70 +141,151 @@
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
             </a>
-            <div class="menu-btn" id="menuBtn">
-                <span></span><span></span><span></span>
-            </div>
+            <div class="menu-btn" id="menuBtn"><span></span><span></span><span></span></div>
         </div>
     </header>
 
     <div class="onboarding-container">
-        <div class="onboarding-title">¡Ya casi estamos! 🚀</div>
+        <div class="onboarding-icon">🎉</div>
+        <div class="onboarding-title">¡Elige tu HappyCódigo!</div>
         <div class="onboarding-subtitle">
-            Para ver tus <b>HappyPuntos</b> y deudas, ingresa tu código de Loyverse. Lo puedes encontrar en tu app de Wallet o en recibos anteriores.
+            Crea tu código único personalizado para identificarte en Happy Corner y acumular puntos.
         </div>
-        
-        <input type="text" id="loyaltyCode" class="loyalty-input" placeholder="HC-12345" maxlength="15">
-        <button class="btn-primary" id="saveCodeBtn">Vincular mi Cuenta</button>
-        <p id="statusMsg" style="margin-top: 15px; font-weight: 500; display: none;"></p>
+
+        <div class="rules-list">
+            ✅ Empieza con <b>HC</b><br>
+            ✅ 4 a 6 letras o números después del HC<br>
+            ✅ Sin espacios ni caracteres especiales<br>
+            🔒 Una vez elegido, <b>no se puede cambiar</b>
+        </div>
+
+        <div class="code-input-wrapper">
+            <span class="code-prefix">HC</span>
+            <input type="text" id="loyaltyCode" class="loyalty-input"
+                placeholder="TUCODE" maxlength="6" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="code-hint">Tu código completo: <b id="code-preview">HC—</b></div>
+        <div class="availability-indicator" id="availability-msg"></div>
+
+        <button class="btn-primary" id="saveCodeBtn" disabled>Reservar HappyCódigo 🔒</button>
+        <p id="statusMsg"></p>
     </div>
 
     <script type="module">
-        import { initPromise, auth, db, doc, setDoc, onAuthStateChanged } from './firebase-auth.js';
+        import { initPromise, auth, db, doc, onAuthStateChanged } from './firebase-auth.js';
+        import './auth-state.js';
+
+        let isDark = true;
+        window.toggleTheme = function() {
+            isDark = !isDark;
+            document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+        };
+
+        const menuBtn = document.getElementById('menuBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('overlay');
+        if (menuBtn) {
+            menuBtn.onclick = () => { sideMenu?.classList.toggle('active'); overlay?.classList.toggle('active'); };
+            overlay.onclick = () => { sideMenu?.classList.remove('active'); overlay?.classList.remove('active'); };
+        }
 
         const saveCodeBtn = document.getElementById('saveCodeBtn');
         const codeInput = document.getElementById('loyaltyCode');
         const statusMsg = document.getElementById('statusMsg');
+        const availMsg = document.getElementById('availability-msg');
+        const codePreview = document.getElementById('code-preview');
 
         let currentUser = null;
+        let debounceTimer = null;
 
-        initPromise.then(() => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    currentUser = user;
-                } else {
-                    window.location.href = '/login.html'; // Redirigir si no está logueado
+        await initPromise;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                // Check if user already has a code, redirect
+                const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+                const snap = await getDoc(doc(db, 'users', user.uid));
+                if (snap.exists() && snap.data().customerCode) {
+                    window.location.href = '/mi-cuenta';
                 }
-            });
+            } else {
+                window.location.href = '/login.html';
+            }
         });
 
-        saveCodeBtn.addEventListener('click', async () => {
-            const code = codeInput.value.trim().toUpperCase();
-            
-            if (!code) {
-                showMsg('Por favor ingresa un código válido.', '#e74c3c');
+        // Live input handler
+        codeInput.addEventListener('input', function() {
+            // Allow only alphanumeric
+            this.value = this.value.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 6);
+            const full = 'HC' + this.value;
+            codePreview.textContent = full;
+            saveCodeBtn.disabled = true;
+
+            if (this.value.length < 4) {
+                availMsg.textContent = this.value.length > 0 ? 'Mínimo 4 caracteres después de HC' : '';
+                availMsg.className = 'availability-indicator checking';
                 return;
             }
+
+            availMsg.textContent = 'Verificando disponibilidad...';
+            availMsg.className = 'availability-indicator checking';
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => checkAvailability(full), 500);
+        });
+
+        async function checkAvailability(fullCode) {
+            try {
+                const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+                const snap = await getDoc(doc(db, 'customerCodes', fullCode));
+                if (snap.exists()) {
+                    availMsg.textContent = '❌ Ese código ya está tomado. Prueba otro.';
+                    availMsg.className = 'availability-indicator unavailable';
+                    saveCodeBtn.disabled = true;
+                } else {
+                    availMsg.textContent = '✅ ¡Disponible! Este código es tuyo.';
+                    availMsg.className = 'availability-indicator available';
+                    saveCodeBtn.disabled = false;
+                }
+            } catch(e) {
+                availMsg.textContent = 'Error verificando disponibilidad';
+                availMsg.className = 'availability-indicator checking';
+            }
+        }
+
+        // Claim code
+        saveCodeBtn.addEventListener('click', async () => {
+            const suffix = codeInput.value.trim().toUpperCase();
+            const fullCode = 'HC' + suffix;
+
             if (!currentUser) return;
 
             saveCodeBtn.disabled = true;
-            saveCodeBtn.innerText = "Guardando...";
+            saveCodeBtn.innerText = 'Reservando...';
 
             try {
-                // Guardar el código en Firestore haciendo merge para no sobreescribir otros datos
-                const userRef = doc(db, 'users', currentUser.uid);
-                await setDoc(userRef, { loyalty_code: code }, { merge: true });
-                
-                showMsg('¡Cuenta vinculada con éxito! Redirigiendo...', '#2ecc71');
-                
-                setTimeout(() => {
-                    window.location.href = '/dashboard';
-                }, 1500);
+                const resp = await fetch('/api/verifyOnboardingCode', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customerUID: currentUser.uid, customerCode: fullCode })
+                });
+                const data = await resp.json();
+
+                if (!resp.ok || !data.ok) {
+                    throw new Error(data.error || 'Error al reservar el código.');
+                }
+
+                showMsg('🎉 ¡Código reservado! Redirigiendo a tu cuenta...', '#2ecc71');
+                setTimeout(() => { window.location.href = '/mi-cuenta'; }, 1800);
 
             } catch (error) {
-                console.error("Error saving loyalty code:", error);
-                showMsg('Error al guardar el código. Intenta nuevamente.', '#e74c3c');
+                showMsg('❌ ' + error.message, '#ff5252');
                 saveCodeBtn.disabled = false;
-                saveCodeBtn.innerText = "Vincular mi Cuenta";
+                saveCodeBtn.innerText = 'Reservar HappyCódigo 🔒';
+                // Re-check availability
+                checkAvailability('HC' + suffix);
             }
         });
 

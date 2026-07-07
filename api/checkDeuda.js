@@ -1,4 +1,4 @@
-import { supabaseFetch } from './_lib/supabase.js';
+import { db } from './_lib/firebaseAdmin.js';
 
 export default async function handler(req, res) {
     // CORS
@@ -18,33 +18,43 @@ export default async function handler(req, res) {
 
         let searchName = nombre.trim().toLowerCase();
 
-        // Busqueda exacta o que contenga la palabra (usando ilike)
-        // Usamos eq si queremos exacto, pero ilike sirve para coincidencias. 
-        // Supabase REST usa ?nombre=ilike.*searchName*, pero para simplificar
-        // buscaremos exacto, o sacamos la lista y filtramos en Node para mayor control de similitud.
-        
-        const data = await supabaseFetch(`deudas?monto=gt.0&select=nombre,monto,detalle`);
-        
-        if (!data || data.length === 0) {
+        // Get all users with active debt
+        const snapshot = await db.collection('users')
+            .where('activeDebt', '>', 0)
+            .get();
+
+        const deudores = [];
+        snapshot.forEach(doc => {
+            const u = doc.data();
+            const fullName = u.displayName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Estudiante';
+            deudores.push({
+                nombre: fullName,
+                monto: u.activeDebt,
+                detalle: u.debtStatus || "Pendientes"
+            });
+        });
+
+        if (deudores.length === 0) {
             return res.status(200).json({ hasDeuda: false });
         }
 
-        // Buscamos manualmente en node (rápido ya que no serán miles)
-        // si el nombre escrito en el input está contenido o contiene alguno de los deudores
-        let match = data.find(d => {
+        // Search for matching name (similarity check)
+        let match = deudores.find(d => {
             let n = d.nombre.toLowerCase();
             return searchName.includes(n) || n.includes(searchName);
         });
 
         if (match) {
-            // Capitalizamos
-            let capitalizedName = match.nombre.charAt(0).toUpperCase() + match.nombre.slice(1);
+            // Capitalize first letter of each word
+            let capitalizedName = match.nombre.split(' ')
+                .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+                .join(' ');
             return res.status(200).json({ 
                 hasDeuda: true, 
                 deudorData: {
                     nombre: capitalizedName,
                     monto: match.monto,
-                    detalle: match.detalle || "Pendientes"
+                    detalle: match.detalle || "Pendiente en tienda"
                 }
             });
         }

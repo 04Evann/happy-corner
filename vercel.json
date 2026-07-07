@@ -1,6 +1,13 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/mi-cuenta", "destination": "/mi-cuenta.html" },
+    { "source": "/onboarding", "destination": "/onboarding.html" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
+    { "source": "/robots.txt", "destination": "/robots.txt" }
+  ],
   "redirects": [
-    { "source": "/((?!$).*)", "destination": "/", "permanent": false }
+    { "source": "/dashboard", "destination": "/mi-cuenta", "permanent": true },
+    { "source": "/dashboard.html", "destination": "/mi-cuenta", "permanent": true }
   ]
 }

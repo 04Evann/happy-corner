@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Corner | Iniciar Sesión</title>
+    <meta name="robots" content="noindex, nofollow">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -266,21 +267,30 @@
             const userSnap = await getDoc(userRef);
 
             if (!userSnap.exists()) {
+                // New user: create profile with new schema
+                const displayName = user.displayName || user.email.split('@')[0];
                 await setDoc(userRef, {
                     uid: user.uid,
-                    name: user.displayName || user.email.split('@')[0], // Fallback para email/password
+                    displayName: displayName,
+                    name: displayName,
                     email: user.email,
-                    current_debt: 0,
-                    loyalty_code: null,
-                    created_at: new Date().toISOString()
+                    photoURL: user.photoURL || null,
+                    activeDebt: 0,
+                    happyPoints: 0,
+                    debtStatus: 'clear',
+                    customerCode: null,
+                    contractSigned: false,
+                    contractVersion: null,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 });
-                window.location.href = '/onboarding.html';
+                window.location.href = '/onboarding';
             } else {
                 const userData = userSnap.data();
-                if (!userData.loyalty_code) {
-                    window.location.href = '/onboarding.html';
+                if (!userData.customerCode) {
+                    window.location.href = '/onboarding';
                 } else {
-                    window.location.href = '/dashboard';
+                    window.location.href = '/mi-cuenta';
                 }
             }
         }

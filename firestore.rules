@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper to check if user is authenticated and is their own doc
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    // Users collection rules
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow create: if request.auth != null && request.auth.uid == uid;
+      
+      // Updates: owner can update, but cannot touch activeDebt or happyPoints,
+      // and customerCode is immutable once set.
+      allow update: if isOwner(uid) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['activeDebt', 'happyPoints']) &&
+        (
+          !('customerCode' in resource.data) ||
+          request.resource.data.customerCode == resource.data.customerCode
+        );
+    }
+
+    // customerCodes collection (lookup to guarantee uniqueness)
+    match /customerCodes/{code} {
+      allow read: if request.auth != null;
+      // Allow creation during onboarding if it maps to user's UID and is not already taken
+      allow create: if request.auth != null && 
+                    request.resource.data.uid == request.auth.uid &&
+                    resource == null;
+      allow update, delete: if false; // Immutable
+    }
+
+    // orders collection rules
+    match /orders/{orderId} {
+      // Allow read if user owns the order
+      allow read: if request.auth != null && resource.data.customerUID == request.auth.uid;
+      // Allow creation by logged-in user
+      allow create: if request.auth != null && request.resource.data.customerUID == request.auth.uid;
+      allow update, delete: if false; // Server-only update
+    }
+
+    // movements collection rules (server-only write, client-read-only)
+    match /movements/{movementId} {
+      allow read: if request.auth != null && resource.data.customerUID == request.auth.uid;
+      allow write: if false; // Admin SDK only
+    }
+
+    // debtContracts collection rules (server-only write, client-read-only)
+    match /debtContracts/{contractId} {
+      allow read: if request.auth != null && resource.data.customerUID == request.auth.uid;
+      allow write: if false; // Admin SDK only
+    }
+  }
+}
