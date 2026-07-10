@@ -106,7 +106,7 @@ export default async function handler(req, res) {
             if (!match) return json(res, 400, { error: 'Formato de imagen de firma no válido.' });
             const imageBuffer = Buffer.from(match[2], 'base64');
             const fileName = `signatures/${uid}/contract_v1.png`;
-            
+
             // Subir a R2
             if (!s3Client) {
                 return json(res, 500, { error: 'R2 Storage no está configurado.' });
@@ -120,11 +120,12 @@ export default async function handler(req, res) {
             await s3Client.send(command);
 
             const timestamp = now.toISOString();
-            
+
             // Guardar contrato con uid como ID del documento
             await db.collection('debtContracts').doc(uid).set({
                 uid,
                 customerUID: uid, // redundante pero util para busquedas si se necesitara
+                signed: true,
                 typedName,
                 signatureUrl: `${publicUrl}/${fileName}`,
                 version: 'v1',
