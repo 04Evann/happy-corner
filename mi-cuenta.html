@@ -1282,9 +1282,9 @@
         function initCanvas() {
             canvas.width = canvas.offsetWidth * window.devicePixelRatio;
             canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+            // Sin ctx.scale() aquí - las coordenadas ya se escalan manualmente en getPos()
             ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#fff';
-            ctx.lineWidth = 2.5;
+            ctx.lineWidth = 2.5 * window.devicePixelRatio;
             ctx.lineCap = 'round';
         }
 
