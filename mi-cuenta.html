@@ -1253,13 +1253,16 @@
             goToStep(1);
         };
 
-        document.getElementById('ver-contrato-btn').onclick = () => {
-            document.getElementById('contract-modal').classList.add('active');
-            setTimeout(initCanvas, 50);
+        document.getElementById('ver-contrato-btn').onclick = async () => {
+            const snap = await getDoc(doc(db, 'debtContracts', currentUser.uid));
+            if (snap.exists() && snap.data().signed && snap.data().pdfUrl) {
+                window.open(snap.data().pdfUrl, '_blank');
+            } else {
+                document.getElementById('contract-modal').classList.add('active');
+            }
         };
         document.getElementById('firmar-contrato-btn').onclick = () => {
             document.getElementById('contract-modal').classList.add('active');
-            setTimeout(initCanvas, 50);
         };
         // Signature Canvas
         const canvas = document.getElementById('signature-canvas');
