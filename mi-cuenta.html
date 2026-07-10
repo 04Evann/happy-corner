@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,41 +30,76 @@
             position: relative;
             overflow: hidden;
         }
+
         .mc-hero::before {
             content: '';
             position: absolute;
-            top: -40px; right: -40px;
-            width: 180px; height: 180px;
+            top: -40px;
+            right: -40px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
         }
+
         .mc-hero::after {
             content: '';
             position: absolute;
-            bottom: -60px; left: 50%;
-            width: 260px; height: 260px;
+            bottom: -60px;
+            left: 50%;
+            width: 260px;
+            height: 260px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
         }
+
         .mc-avatar {
             width: 72px;
             height: 72px;
             border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.5);
+            border: 3px solid rgba(255, 255, 255, 0.5);
             object-fit: cover;
-            background: rgba(255,255,255,0.2);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; font-weight: 900;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 900;
             cursor: pointer;
             flex-shrink: 0;
             position: relative;
             z-index: 1;
         }
-        .mc-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .mc-hero-text { flex: 1; z-index: 1; }
-        .mc-hero-greeting { font-size: 14px; opacity: 0.85; font-weight: 500; }
-        .mc-hero-name { font-size: 26px; font-weight: 900; line-height: 1.1; }
-        .mc-hero-code { font-size: 13px; opacity: 0.75; margin-top: 4px; }
+
+        .mc-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .mc-hero-text {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .mc-hero-greeting {
+            font-size: 14px;
+            opacity: 0.85;
+            font-weight: 500;
+        }
+
+        .mc-hero-name {
+            font-size: 26px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        .mc-hero-code {
+            font-size: 13px;
+            opacity: 0.75;
+            margin-top: 4px;
+        }
 
         /* ====== SECTION CARDS ====== */
         .mc-section {
@@ -74,12 +110,14 @@
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
         }
+
         .mc-section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
         }
+
         .mc-section-title {
             font-size: 17px;
             font-weight: 900;
@@ -88,18 +126,40 @@
             align-items: center;
             gap: 8px;
         }
+
         .mc-section-title .icon {
-            width: 34px; height: 34px;
+            width: 34px;
+            height: 34px;
             border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 16px;
         }
-        .icon-pink { background: rgba(255,82,153,0.15); }
-        .icon-orange { background: rgba(255,157,92,0.15); }
-        .icon-blue { background: rgba(74,108,247,0.15); }
-        .icon-green { background: rgba(46,213,115,0.15); }
-        .icon-purple { background: rgba(162,100,255,0.15); }
-        .icon-gray { background: var(--input-bg); }
+
+        .icon-pink {
+            background: rgba(255, 82, 153, 0.15);
+        }
+
+        .icon-orange {
+            background: rgba(255, 157, 92, 0.15);
+        }
+
+        .icon-blue {
+            background: rgba(74, 108, 247, 0.15);
+        }
+
+        .icon-green {
+            background: rgba(46, 213, 115, 0.15);
+        }
+
+        .icon-purple {
+            background: rgba(162, 100, 255, 0.15);
+        }
+
+        .icon-gray {
+            background: var(--input-bg);
+        }
 
         .mc-link-btn {
             font-size: 13px;
@@ -111,7 +171,10 @@
             text-decoration: none;
             transition: opacity 0.2s;
         }
-        .mc-link-btn:hover { opacity: 0.7; }
+
+        .mc-link-btn:hover {
+            opacity: 0.7;
+        }
 
         /* ====== DEUDA WIDGET ====== */
         .debt-status {
@@ -122,21 +185,41 @@
             border-radius: 18px;
             padding: 16px 20px;
         }
+
         .debt-amount {
             font-size: 32px;
             font-weight: 900;
         }
-        .debt-amount.clear { color: #2ecc71; }
-        .debt-amount.has-debt { color: #ff5299; }
+
+        .debt-amount.clear {
+            color: #2ecc71;
+        }
+
+        .debt-amount.has-debt {
+            color: #ff5299;
+        }
+
         .debt-badge {
             font-size: 12px;
             padding: 5px 12px;
             border-radius: 20px;
             font-weight: 700;
         }
-        .debt-badge.clear { background: rgba(46,213,115,0.15); color: #2ecc71; }
-        .debt-badge.has-debt { background: rgba(255,82,153,0.15); color: #ff5299; }
-        .debt-badge.loading { background: var(--input-bg); color: var(--text-muted); }
+
+        .debt-badge.clear {
+            background: rgba(46, 213, 115, 0.15);
+            color: #2ecc71;
+        }
+
+        .debt-badge.has-debt {
+            background: rgba(255, 82, 153, 0.15);
+            color: #ff5299;
+        }
+
+        .debt-badge.loading {
+            background: var(--input-bg);
+            color: var(--text-muted);
+        }
 
         /* ====== ORDERS LIST ====== */
         .order-item {
@@ -146,29 +229,65 @@
             padding: 14px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .order-item:last-child { border-bottom: none; }
-        .order-id { font-weight: 900; font-size: 15px; font-family: monospace; color: var(--hp-pink); }
-        .order-meta { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-id {
+            font-weight: 900;
+            font-size: 15px;
+            font-family: monospace;
+            color: var(--hp-pink);
+        }
+
+        .order-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
         .order-status {
             font-size: 12px;
             padding: 4px 10px;
             border-radius: 20px;
             font-weight: 700;
         }
-        .status-pending { background: rgba(255,212,94,0.2); color: #f7a335; }
-        .status-preparing { background: rgba(74,108,247,0.2); color: #4a6cf7; }
-        .status-ready { background: rgba(162,100,255,0.2); color: #a264ff; }
-        .status-completed { background: rgba(46,213,115,0.2); color: #2ecc71; }
-        .status-cancelled { background: rgba(255,82,82,0.2); color: #ff5252; }
+
+        .status-pending {
+            background: rgba(255, 212, 94, 0.2);
+            color: #f7a335;
+        }
+
+        .status-preparing {
+            background: rgba(74, 108, 247, 0.2);
+            color: #4a6cf7;
+        }
+
+        .status-ready {
+            background: rgba(162, 100, 255, 0.2);
+            color: #a264ff;
+        }
+
+        .status-completed {
+            background: rgba(46, 213, 115, 0.2);
+            color: #2ecc71;
+        }
+
+        .status-cancelled {
+            background: rgba(255, 82, 82, 0.2);
+            color: #ff5252;
+        }
 
         /* ====== HAPPY POINTS WIDGET ====== */
         .points-widget {
-            background: linear-gradient(135deg, rgba(255,157,92,0.1), rgba(255,82,153,0.1));
-            border: 1px solid rgba(255,82,153,0.2);
+            background: linear-gradient(135deg, rgba(255, 157, 92, 0.1), rgba(255, 82, 153, 0.1));
+            border: 1px solid rgba(255, 82, 153, 0.2);
             border-radius: 18px;
             padding: 20px;
             text-align: center;
         }
+
         .points-number {
             font-size: 48px;
             font-weight: 900;
@@ -178,6 +297,7 @@
             background-clip: text;
             line-height: 1;
         }
+
         .points-equiv {
             font-size: 13px;
             color: var(--text-muted);
@@ -192,21 +312,50 @@
             padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .movement-item:last-child { border-bottom: none; }
+
+        .movement-item:last-child {
+            border-bottom: none;
+        }
+
         .movement-icon {
-            width: 40px; height: 40px;
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 18px;
             flex-shrink: 0;
             margin-right: 12px;
         }
-        .movement-info { flex: 1; }
-        .movement-desc { font-size: 14px; font-weight: 700; }
-        .movement-date { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-        .movement-amount { font-size: 16px; font-weight: 900; }
-        .movement-amount.positive { color: #2ecc71; }
-        .movement-amount.negative { color: #ff5299; }
+
+        .movement-info {
+            flex: 1;
+        }
+
+        .movement-desc {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .movement-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .movement-amount {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .movement-amount.positive {
+            color: #2ecc71;
+        }
+
+        .movement-amount.negative {
+            color: #ff5299;
+        }
 
         /* ====== PROFILE ====== */
         .profile-field {
@@ -216,9 +365,22 @@
             padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .profile-field:last-child { border-bottom: none; }
-        .profile-field-label { font-size: 13px; color: var(--text-muted); font-weight: 600; }
-        .profile-field-value { font-size: 14px; font-weight: 700; text-align: right; }
+
+        .profile-field:last-child {
+            border-bottom: none;
+        }
+
+        .profile-field-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .profile-field-value {
+            font-size: 14px;
+            font-weight: 700;
+            text-align: right;
+        }
 
         /* ====== SETTINGS BUTTONS ====== */
         .settings-btn {
@@ -240,9 +402,20 @@
             margin-bottom: 10px;
             text-decoration: none;
         }
-        .settings-btn:hover { border-color: var(--hp-pink); color: var(--hp-pink); }
-        .settings-btn.danger:hover { border-color: #ff5252; color: #ff5252; }
-        .settings-btn .icon { font-size: 20px; }
+
+        .settings-btn:hover {
+            border-color: var(--hp-pink);
+            color: var(--hp-pink);
+        }
+
+        .settings-btn.danger:hover {
+            border-color: #ff5252;
+            color: #ff5252;
+        }
+
+        .settings-btn .icon {
+            font-size: 20px;
+        }
 
         /* ====== CONTRACT STATUS ====== */
         .contract-status-row {
@@ -252,9 +425,22 @@
             padding: 14px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .contract-status-row:last-child { border-bottom: none; }
-        .contract-signed-badge { color: #2ecc71; font-weight: 700; font-size: 13px; }
-        .contract-unsigned-badge { color: #f7a335; font-weight: 700; font-size: 13px; }
+
+        .contract-status-row:last-child {
+            border-bottom: none;
+        }
+
+        .contract-signed-badge {
+            color: #2ecc71;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .contract-unsigned-badge {
+            color: #f7a335;
+            font-weight: 700;
+            font-size: 13px;
+        }
 
         /* ====== LOADING SKELETON ====== */
         .skeleton {
@@ -263,17 +449,31 @@
             animation: shimmer 1.5s infinite;
             border-radius: 10px;
         }
+
         @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
         }
-        .skeleton-text { height: 16px; margin-bottom: 8px; }
-        .skeleton-lg { height: 32px; }
+
+        .skeleton-text {
+            height: 16px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-lg {
+            height: 32px;
+        }
 
         /* ====== CONTRACT MODAL ====== */
         .mc-modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.6);
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(6px);
             z-index: 2000;
             display: none;
@@ -281,7 +481,11 @@
             justify-content: center;
             padding: 20px;
         }
-        .mc-modal-overlay.active { display: flex; }
+
+        .mc-modal-overlay.active {
+            display: flex;
+        }
+
         .mc-modal {
             background: var(--surface-color);
             border-radius: 28px;
@@ -292,16 +496,34 @@
             overflow-y: auto;
             position: relative;
         }
+
         .mc-modal-title {
-            font-size: 22px; font-weight: 900; margin-bottom: 6px;
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 6px;
         }
-        .mc-modal-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+
+        .mc-modal-subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
         .mc-modal-close {
-            position: absolute; top: 20px; right: 20px;
-            background: var(--input-bg); border: none; border-radius: 50%;
-            width: 36px; height: 36px; font-size: 18px;
-            cursor: pointer; color: var(--text-muted);
-            display: flex; align-items: center; justify-content: center;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--input-bg);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* ====== SIGNATURE CANVAS ====== */
@@ -322,68 +544,126 @@
             padding: 30px 0;
             color: var(--text-muted);
         }
-        .empty-state-icon { font-size: 40px; margin-bottom: 10px; }
-        .empty-state-text { font-size: 14px; }
+
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+        }
 
         /* ====== PHOTO UPLOAD ====== */
         .avatar-upload-btn {
             position: absolute;
-            bottom: -4px; right: -4px;
+            bottom: -4px;
+            right: -4px;
             background: white;
             border-radius: 50%;
-            width: 26px; height: 26px;
-            display: flex; align-items: center; justify-content: center;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             cursor: pointer;
             z-index: 2;
         }
 
         /* ====== EDIT PROFILE FIELDS ====== */
         .mc-input {
-            width: 100%; padding: 12px 14px;
+            width: 100%;
+            padding: 12px 14px;
             background: var(--input-bg);
             border: 2px solid var(--border-color);
             border-radius: 14px;
             color: var(--text-color);
-            font-size: 14px; font-weight: 600;
-            outline: none; font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            outline: none;
+            font-family: inherit;
             transition: all 0.2s;
             margin-bottom: 12px;
         }
-        .mc-input:focus { border-color: var(--hp-pink); box-shadow: 0 0 0 4px var(--hp-pink-glow); }
+
+        .mc-input:focus {
+            border-color: var(--hp-pink);
+            box-shadow: 0 0 0 4px var(--hp-pink-glow);
+        }
 
         .mc-btn-primary {
-            width: 100%; padding: 14px;
+            width: 100%;
+            padding: 14px;
             background: var(--hp-gradient);
-            color: white; font-weight: 900; font-size: 16px;
-            border: none; border-radius: 16px; cursor: pointer;
-            font-family: inherit; transition: all 0.2s;
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
         }
-        .mc-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--hp-pink-glow); }
-        .mc-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .mc-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--hp-pink-glow);
+        }
+
+        .mc-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
 
         .mc-btn-secondary {
-            width: 100%; padding: 14px;
+            width: 100%;
+            padding: 14px;
             background: var(--input-bg);
-            color: var(--text-color); font-weight: 700; font-size: 14px;
-            border: 1px solid var(--border-color); border-radius: 16px; cursor: pointer;
-            font-family: inherit; transition: all 0.2s; margin-top: 8px;
+            color: var(--text-color);
+            font-weight: 700;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            margin-top: 8px;
         }
-        .mc-btn-secondary:hover { border-color: var(--hp-pink); color: var(--hp-pink); }
+
+        .mc-btn-secondary:hover {
+            border-color: var(--hp-pink);
+            color: var(--hp-pink);
+        }
 
         /* PIN Input */
         .pin-display {
-            display: flex; gap: 10px; justify-content: center; margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
         }
+
         .pin-display input {
-            width: 50px; height: 60px;
-            text-align: center; font-size: 24px; font-weight: 900;
-            background: var(--input-bg); border: 2px solid var(--border-color);
-            border-radius: 14px; color: var(--text-color); font-family: inherit;
-            outline: none; transition: 0.2s;
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 900;
+            background: var(--input-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-color);
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
         }
-        .pin-display input:focus { border-color: var(--hp-pink); }
+
+        .pin-display input:focus {
+            border-color: var(--hp-pink);
+        }
 
         /* Contract Text */
         .contract-text {
@@ -398,22 +678,39 @@
             margin-bottom: 16px;
         }
 
-        .mc-step { display: none; }
-        .mc-step.active { display: block; }
+        .mc-step {
+            display: none;
+        }
+
+        .mc-step.active {
+            display: block;
+        }
 
         /* Notification Toast */
         .mc-toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #1a1b24; color: white;
-            padding: 12px 24px; border-radius: 30px;
-            font-weight: 700; font-size: 14px;
-            z-index: 9999; opacity: 0; transition: opacity 0.3s;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1b24;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s;
             border: 1px solid var(--border-color);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
-        .mc-toast.show { opacity: 1; }
+
+        .mc-toast.show {
+            opacity: 1;
+        }
     </style>
 </head>
+
 <body data-theme="dark">
 
     <!-- HEADER -->
@@ -431,8 +728,10 @@
             <button class="theme-toggle" onclick="toggleTheme()" title="Tema">
                 <span id="theme-icon">🌙</span>
             </button>
-            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a href="/login.html" id="auth-icon-desktop"
+                style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
@@ -453,7 +752,9 @@
     <!-- AUTH GATE - shown while loading -->
     <div id="auth-gate" style="display:none; text-align:center; padding: 80px 20px;">
         <p style="color: var(--text-muted); font-size: 16px;">Debes iniciar sesión para ver tu cuenta.</p>
-        <a href="/login.html" style="display:inline-block; margin-top: 20px; padding: 14px 30px; background: var(--hp-gradient); color:white; border-radius:16px; font-weight:900; text-decoration:none;">Iniciar Sesión</a>
+        <a href="/login.html"
+            style="display:inline-block; margin-top: 20px; padding: 14px 30px; background: var(--hp-gradient); color:white; border-radius:16px; font-weight:900; text-decoration:none;">Iniciar
+            Sesión</a>
     </div>
 
     <!-- MAIN CONTENT -->
@@ -484,7 +785,8 @@
             <div class="debt-status">
                 <div>
                     <div class="debt-amount loading" id="mc-debt-amount">$—</div>
-                    <div style="font-size:13px; color:var(--text-muted); margin-top:4px;" id="mc-debt-detail">Cargando...</div>
+                    <div style="font-size:13px; color:var(--text-muted); margin-top:4px;" id="mc-debt-detail">
+                        Cargando...</div>
                 </div>
                 <span class="debt-badge loading" id="mc-debt-badge">...</span>
             </div>
@@ -550,7 +852,8 @@
                 </div>
                 <div class="profile-field">
                     <span class="profile-field-label">HappyCódigo</span>
-                    <span class="profile-field-value" id="pf-codigo" style="font-family:monospace; color:var(--hp-pink);">—</span>
+                    <span class="profile-field-value" id="pf-codigo"
+                        style="font-family:monospace; color:var(--hp-pink);">—</span>
                 </div>
             </div>
         </div>
@@ -572,12 +875,14 @@
                 <span class="profile-field-label">Fecha de firma</span>
                 <span class="profile-field-value" id="mc-contract-date">—</span>
             </div>
-            <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px;">✍️ Firmar contrato ahora</button>
+            <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px;">✍️ Firmar contrato
+                ahora</button>
         </div>
 
         <!-- 8. CONFIGURACIÓN -->
         <div class="mc-section">
-            <div class="mc-section-title" style="margin-bottom:16px;"><span class="icon icon-gray">⚙️</span> Configuración</div>
+            <div class="mc-section-title" style="margin-bottom:16px;"><span class="icon icon-gray">⚙️</span>
+                Configuración</div>
             <button class="settings-btn" id="change-password-btn">
                 <span class="icon">🔑</span> Cambiar contraseña
             </button>
@@ -601,13 +906,21 @@
                 <div class="mc-modal-subtitle">Lee el contrato y luego procede a firmar</div>
                 <div class="contract-text">
                     <b>CONTRATO DE RESPONSABILIDAD DE DEUDA - HAPPY CORNER</b><br><br>
-                    Yo, el/la cliente, al registrarme y adquirir productos de Happy Corner a crédito, reconozco y acepto las siguientes condiciones:<br><br>
-                    <b>1. RECONOCIMIENTO DE DEUDA:</b> Acepto que cualquier saldo pendiente en mi cuenta representa una deuda real y exigible, que me comprometo a saldar en los plazos acordados con el administrador.<br><br>
-                    <b>2. TRANSPARENCIA:</b> Entiendo que mis movimientos de deuda y pagos son registrados en el sistema y puedo consultarlos en cualquier momento desde mi cuenta.<br><br>
-                    <b>3. COMPROMISO DE PAGO:</b> Me comprometo a no acumular deudas que superen mi capacidad de pago, y a comunicarme con el administrador si tengo dificultades para pagar.<br><br>
-                    <b>4. CONSECUENCIAS DE INCUMPLIMIENTO:</b> En caso de no pagar la deuda, entiendo que se me podrá negar el acceso a nuevas compras a crédito hasta que la deuda sea saldada.<br><br>
-                    <b>5. VOLUNTARIEDAD:</b> Confirmo que acepto este contrato de manera voluntaria y consciente.<br><br>
-                    Este contrato es para control interno de Happy Corner y no constituye un instrumento legal formal frente a terceros.
+                    Yo, el/la cliente, al registrarme y adquirir productos de Happy Corner a crédito, reconozco y acepto
+                    las siguientes condiciones:<br><br>
+                    <b>1. RECONOCIMIENTO DE DEUDA:</b> Acepto que cualquier saldo pendiente en mi cuenta representa una
+                    deuda real y exigible, que me comprometo a saldar en los plazos acordados con el
+                    administrador.<br><br>
+                    <b>2. TRANSPARENCIA:</b> Entiendo que mis movimientos de deuda y pagos son registrados en el sistema
+                    y puedo consultarlos en cualquier momento desde mi cuenta.<br><br>
+                    <b>3. COMPROMISO DE PAGO:</b> Me comprometo a no acumular deudas que superen mi capacidad de pago, y
+                    a comunicarme con el administrador si tengo dificultades para pagar.<br><br>
+                    <b>4. CONSECUENCIAS DE INCUMPLIMIENTO:</b> En caso de no pagar la deuda, entiendo que se me podrá
+                    negar el acceso a nuevas compras a crédito hasta que la deuda sea saldada.<br><br>
+                    <b>5. VOLUNTARIEDAD:</b> Confirmo que acepto este contrato de manera voluntaria y
+                    consciente.<br><br>
+                    Este contrato es para control interno de Happy Corner y no constituye un instrumento legal formal
+                    frente a terceros.
                 </div>
                 <button class="mc-btn-primary" onclick="goToStep(2)">Continuar a la firma ✍️</button>
             </div>
@@ -616,17 +929,21 @@
             <div class="mc-step" id="step-2">
                 <div class="mc-modal-title">✍️ Tu Firma</div>
                 <div class="mc-modal-subtitle">Escribe tu nombre completo y dibuja tu firma</div>
-                <input type="text" class="mc-input" id="contrato-nombre" placeholder="Tu nombre completo" autocomplete="name">
-                <label style="font-size:13px; color:var(--text-muted); margin-bottom:6px; display:block;">Firma (dibuja con el dedo o el cursor):</label>
+                <input type="text" class="mc-input" id="contrato-nombre" placeholder="Tu nombre completo"
+                    autocomplete="name">
+                <label style="font-size:13px; color:var(--text-muted); margin-bottom:6px; display:block;">Firma (dibuja
+                    con el dedo o el cursor):</label>
                 <canvas id="signature-canvas"></canvas>
-                <button class="mc-btn-secondary" onclick="clearSignature()" style="margin-bottom:12px;">🗑️ Borrar firma</button>
+                <button class="mc-btn-secondary" onclick="clearSignature()" style="margin-bottom:12px;">🗑️ Borrar
+                    firma</button>
                 <button class="mc-btn-primary" id="send-pin-btn" onclick="sendPin()">📧 Enviar PIN por correo</button>
             </div>
 
             <!-- Step 3: Verify PIN -->
             <div class="mc-step" id="step-3">
                 <div class="mc-modal-title">🔐 Verificar PIN</div>
-                <div class="mc-modal-subtitle" id="pin-subtitle">Ingresa el PIN que enviamos a tu correo. Expira en 10 minutos.</div>
+                <div class="mc-modal-subtitle" id="pin-subtitle">Ingresa el PIN que enviamos a tu correo. Expira en 10
+                    minutos.</div>
                 <div class="pin-display">
                     <input type="text" maxlength="1" class="pin-digit" id="p0">
                     <input type="text" maxlength="1" class="pin-digit" id="p1">
@@ -654,15 +971,18 @@
     <!-- EDIT PROFILE MODAL -->
     <div class="mc-modal-overlay" id="edit-profile-modal">
         <div class="mc-modal">
-            <button class="mc-modal-close" onclick="document.getElementById('edit-profile-modal').classList.remove('active')">✕</button>
+            <button class="mc-modal-close"
+                onclick="document.getElementById('edit-profile-modal').classList.remove('active')">✕</button>
             <div class="mc-modal-title">✏️ Editar Perfil</div>
             <div class="mc-modal-subtitle">Actualiza tu información personal</div>
             <input type="text" class="mc-input" id="edit-nombre" placeholder="Nombre completo">
             <input type="text" class="mc-input" id="edit-telefono" placeholder="Teléfono / WhatsApp">
             <input type="text" class="mc-input" id="edit-curso" placeholder="Curso (ej: 11A)">
             <div style="margin-bottom: 14px;">
-                <input type="email" class="mc-input" id="edit-email-display" placeholder="correo@ejemplo.com" readonly style="opacity:0.55; cursor:not-allowed;">
-                <p style="font-size:11px; color: var(--text-muted, #888); margin-top:4px; padding-left:2px;">📧 El correo está vinculado a tu cuenta y no se puede cambiar aquí.</p>
+                <input type="email" class="mc-input" id="edit-email-display" placeholder="correo@ejemplo.com" readonly
+                    style="opacity:0.55; cursor:not-allowed;">
+                <p style="font-size:11px; color: var(--text-muted, #888); margin-top:4px; padding-left:2px;">📧 El
+                    correo está vinculado a tu cuenta y no se puede cambiar aquí.</p>
             </div>
             <button class="mc-btn-primary" id="save-profile-btn" onclick="saveProfile()">Guardar Cambios</button>
         </div>
@@ -683,7 +1003,7 @@
         // Theme
         // ============================================================
         let isDark = true;
-        window.toggleTheme = function() {
+        window.toggleTheme = function () {
             isDark = !isDark;
             document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
             document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
@@ -705,7 +1025,7 @@
         // ============================================================
         // Toast
         // ============================================================
-        window.showToast = function(msg, duration = 3000) {
+        window.showToast = function (msg, duration = 3000) {
             const t = document.getElementById('mc-toast');
             t.textContent = msg;
             t.classList.add('show');
@@ -753,12 +1073,12 @@
         }
 
         function renderUserProfile(data, firebaseUser) {
-            const fullName = data.displayName || data.name || firebaseUser.displayName || 
+            const fullName = data.displayName || data.name || firebaseUser.displayName ||
                 `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Usuario';
-            
+
             document.getElementById('mc-user-name').textContent = fullName;
             document.getElementById('mc-user-code').textContent = data.customerCode ? `🏷️ ${data.customerCode}` : '🏷️ Sin HappyCódigo';
-            
+
             // Avatar
             const avatarBtn = document.getElementById('mc-avatar-btn');
             if (data.photoURL || firebaseUser.photoURL) {
@@ -802,7 +1122,7 @@
             // Points
             const points = data.happyPoints || 0;
             document.getElementById('mc-points').textContent = points.toLocaleString();
-            document.getElementById('mc-points-equiv').textContent = 
+            document.getElementById('mc-points-equiv').textContent =
                 points > 0 ? `Equivale a ~$${(points * 10).toLocaleString('es-CO')} en descuentos` : 'Aún no tienes puntos. ¡Empieza a comprar!';
         }
 
@@ -829,7 +1149,7 @@
                         cancelled: 'Cancelado'
                     };
                     const statusClass = `status-${o.status || 'pending'}`;
-                    const fecha = o.createdAt ? new Date(o.createdAt).toLocaleDateString('es-CO', { day:'numeric', month:'short' }) : '—';
+                    const fecha = o.createdAt ? new Date(o.createdAt).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) : '—';
                     container.innerHTML += `
                         <div class="order-item">
                             <div>
@@ -870,7 +1190,7 @@
                     const m = d.data();
                     const cfg = typeConfig[m.type] || { icon: '📌', bg: 'var(--input-bg)', label: m.type };
                     const isPositive = m.amount > 0;
-                    const fecha = m.createdAt ? new Date(m.createdAt).toLocaleDateString('es-CO', { day:'numeric', month:'short' }) : '—';
+                    const fecha = m.createdAt ? new Date(m.createdAt).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) : '—';
                     container.innerHTML += `
                         <div class="movement-item">
                             <div class="movement-icon" style="background:${cfg.bg}">${cfg.icon}</div>
@@ -901,8 +1221,8 @@
                     document.getElementById('mc-contract-status').textContent = '✅ Firmado';
                     document.getElementById('mc-contract-status').className = 'contract-signed-badge';
                     const signedAt = snap.data().signedAt;
-                    document.getElementById('mc-contract-date').textContent = signedAt 
-                        ? new Date(signedAt).toLocaleDateString('es-CO', { year:'numeric', month:'long', day:'numeric' })
+                    document.getElementById('mc-contract-date').textContent = signedAt
+                        ? new Date(signedAt).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })
                         : '—';
                     document.getElementById('firmar-contrato-btn').textContent = '📄 Ver contrato';
                 } else {
@@ -910,7 +1230,7 @@
                     document.getElementById('mc-contract-status').className = 'contract-unsigned-badge';
                     document.getElementById('mc-contract-date').textContent = 'N/A';
                 }
-            } catch(e) { console.error('Contract status error', e); }
+            } catch (e) { console.error('Contract status error', e); }
         }
 
         // ============================================================
@@ -919,24 +1239,25 @@
         let currentContractStep = 1;
         let signatureData = null;
 
-        window.goToStep = function(step) {
+        window.goToStep = function (step) {
             document.querySelectorAll('.mc-step').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${step}`).classList.add('active');
             currentContractStep = step;
         };
 
-        window.closeContractModal = function() {
+        window.closeContractModal = function () {
             document.getElementById('contract-modal').classList.remove('active');
             goToStep(1);
         };
 
         document.getElementById('ver-contrato-btn').onclick = () => {
             document.getElementById('contract-modal').classList.add('active');
+            setTimeout(initCanvas, 50);
         };
         document.getElementById('firmar-contrato-btn').onclick = () => {
             document.getElementById('contract-modal').classList.add('active');
+            setTimeout(initCanvas, 50);
         };
-
         // Signature Canvas
         const canvas = document.getElementById('signature-canvas');
         const ctx = canvas.getContext('2d');
@@ -964,33 +1285,33 @@
             ctx.lineCap = 'round';
         }
 
-        canvas.addEventListener('mousedown', (e) => { drawing = true; const {x,y} = getPos(e); ctx.beginPath(); ctx.moveTo(x,y); });
-        canvas.addEventListener('mousemove', (e) => { if (!drawing) return; const {x,y} = getPos(e); ctx.lineTo(x,y); ctx.stroke(); });
+        canvas.addEventListener('mousedown', (e) => { drawing = true; const { x, y } = getPos(e); ctx.beginPath(); ctx.moveTo(x, y); });
+        canvas.addEventListener('mousemove', (e) => { if (!drawing) return; const { x, y } = getPos(e); ctx.lineTo(x, y); ctx.stroke(); });
         canvas.addEventListener('mouseup', () => { drawing = false; signatureData = canvas.toDataURL('image/png'); });
-        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; const {x,y} = getPos(e); ctx.beginPath(); ctx.moveTo(x,y); }, { passive: false });
-        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!drawing) return; const {x,y} = getPos(e); ctx.lineTo(x,y); ctx.stroke(); }, { passive: false });
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; const { x, y } = getPos(e); ctx.beginPath(); ctx.moveTo(x, y); }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!drawing) return; const { x, y } = getPos(e); ctx.lineTo(x, y); ctx.stroke(); }, { passive: false });
         canvas.addEventListener('touchend', () => { drawing = false; signatureData = canvas.toDataURL('image/png'); });
 
-        setTimeout(initCanvas, 300);
 
-        window.clearSignature = function() {
+
+        window.clearSignature = function () {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             signatureData = null;
         };
 
         // Send PIN
-        window.sendPin = async function() {
+        window.sendPin = async function () {
             const nombre = document.getElementById('contrato-nombre').value.trim();
             if (!nombre) { showToast('⚠️ Escribe tu nombre completo'); return; }
             if (!signatureData) { showToast('⚠️ Por favor dibuja tu firma'); return; }
-            
+
             const btn = document.getElementById('send-pin-btn');
             btn.disabled = true;
             btn.textContent = 'Enviando...';
 
             const email = currentUser.email || (currentUserData && currentUserData.email);
             if (!email) { showToast('❌ No tienes correo registrado'); btn.disabled = false; btn.textContent = '📧 Enviar PIN por correo'; return; }
-            
+
             try {
                 const resp = await fetch('/api/contract', {
                     method: 'POST',
@@ -999,11 +1320,11 @@
                 });
                 const data = await resp.json();
                 if (!resp.ok) throw new Error(data.error || 'Error enviando PIN');
-                
+
                 document.getElementById('pin-subtitle').textContent = `Ingresa el PIN enviado a ${email}. Expira en 10 minutos.`;
                 goToStep(3);
                 document.getElementById('p0').focus();
-            } catch(e) {
+            } catch (e) {
                 showToast('❌ ' + e.message);
             } finally {
                 btn.disabled = false;
@@ -1015,19 +1336,19 @@
         document.querySelectorAll('.pin-digit').forEach((input, i) => {
             input.addEventListener('input', () => {
                 if (input.value.length === 1 && i < 5) {
-                    document.getElementById(`p${i+1}`).focus();
+                    document.getElementById(`p${i + 1}`).focus();
                 }
             });
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && !input.value && i > 0) {
-                    document.getElementById(`p${i-1}`).focus();
+                    document.getElementById(`p${i - 1}`).focus();
                 }
             });
         });
 
         // Verify PIN
-        window.verifyPin = async function() {
-            const pin = [0,1,2,3,4,5].map(i => document.getElementById(`p${i}`).value).join('');
+        window.verifyPin = async function () {
+            const pin = [0, 1, 2, 3, 4, 5].map(i => document.getElementById(`p${i}`).value).join('');
             if (pin.length !== 6) { showToast('⚠️ Ingresa el PIN de 6 dígitos completo'); return; }
 
             const btn = document.getElementById('verify-pin-btn');
@@ -1050,13 +1371,13 @@
                 });
                 const data = await resp.json();
                 if (!resp.ok) throw new Error(data.error || 'Error firmando contrato');
-                
+
                 showToast('✅ ¡Contrato firmado!');
                 closeContractModal();
                 if (currentUser) {
                     loadContractStatus(currentUser.uid);
                 }
-            } catch(e) {
+            } catch (e) {
                 showToast('❌ ' + e.message);
             } finally {
                 btn.disabled = false;
@@ -1093,7 +1414,7 @@
             }
         };
 
-        window.saveProfile = async function() {
+        window.saveProfile = async function () {
             const btn = document.getElementById('save-profile-btn');
             btn.disabled = true; btn.textContent = 'Guardando...';
             try {
@@ -1101,7 +1422,7 @@
                 const telefono = document.getElementById('edit-telefono').value.trim();
                 const curso = document.getElementById('edit-curso').value.trim();
                 const email = document.getElementById('edit-email-display').value.trim();
-                
+
                 const updatePayload = {
                     displayName: nombre,
                     name: nombre,
@@ -1109,7 +1430,7 @@
                     grade: curso,
                     updatedAt: new Date().toISOString()
                 };
-                
+
                 // If email was editable and entered, update it
                 const authEmail = currentUser?.email || currentUserData?.email || '';
                 if (!authEmail && email) {
@@ -1117,12 +1438,12 @@
                 }
 
                 await updateDoc(doc(db, 'users', currentUser.uid), updatePayload);
-                
+
                 if (nombre) await updateProfile(currentUser, { displayName: nombre });
-                
+
                 document.getElementById('edit-profile-modal').classList.remove('active');
                 showToast('✅ Perfil actualizado');
-            } catch(e) {
+            } catch (e) {
                 showToast('❌ Error: ' + e.message);
             } finally {
                 btn.disabled = false; btn.textContent = 'Guardar Cambios';
@@ -1132,11 +1453,11 @@
         // ============================================================
         // Photo upload
         // ============================================================
-        document.getElementById('avatar-file-input').addEventListener('change', async function() {
+        document.getElementById('avatar-file-input').addEventListener('change', async function () {
             const file = this.files[0];
             if (!file) return;
             if (file.size > 5 * 1024 * 1024) { showToast('❌ La imagen no debe superar 5MB'); return; }
-            
+
             showToast('📤 Subiendo foto...');
             try {
                 const reader = new FileReader();
@@ -1148,17 +1469,17 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ uid: currentUser.uid, imageData: base64Data })
                     });
-                    
+
                     const data = await res.json();
                     if (!res.ok) throw new Error(data.error || 'Error del servidor');
-                    
+
                     const downloadURL = data.url;
                     await updateProfile(currentUser, { photoURL: downloadURL });
                     document.getElementById('mc-avatar').src = downloadURL;
                     showToast('✅ Foto actualizada');
                 };
                 reader.onerror = () => { throw new Error('Error al leer el archivo'); };
-            } catch(e) {
+            } catch (e) {
                 showToast('❌ Error subiendo foto: ' + e.message);
             }
         });
@@ -1166,18 +1487,18 @@
         // ============================================================
         // Settings
         // ============================================================
-        document.getElementById('change-password-btn').onclick = async function() {
+        document.getElementById('change-password-btn').onclick = async function () {
             const email = currentUser.email;
             if (!email) { showToast('❌ No hay correo en tu cuenta'); return; }
             try {
                 await sendPasswordResetEmail(auth, email);
                 showToast('📧 Enviamos un enlace de restablecimiento a ' + email);
-            } catch(e) {
+            } catch (e) {
                 showToast('❌ Error: ' + e.message);
             }
         };
 
-        document.getElementById('logout-btn').onclick = async function() {
+        document.getElementById('logout-btn').onclick = async function () {
             await signOut(auth);
             window.location.href = '/login.html';
         };
@@ -1188,4 +1509,5 @@
 
     </script>
 </body>
+
 </html>
