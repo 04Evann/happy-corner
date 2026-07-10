@@ -236,8 +236,15 @@
         });
 
         async function checkAvailability(fullCode) {
-            try {
-                const snap = await getDoc(doc(db, 'customerCodes', fullCode));
+    if (!currentUser) {
+        availMsg.textContent = 'Esperando a verificar tu sesión...';
+        availMsg.className = 'availability-indicator checking';
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => checkAvailability(fullCode), 400);
+        return;
+    }
+    try {
+        const snap = await getDoc(doc(db, 'customerCodes', fullCode));
                 if (snap.exists()) {
                     availMsg.textContent = '❌ Ese código ya está tomado. Prueba otro.';
                     availMsg.className = 'availability-indicator unavailable';
