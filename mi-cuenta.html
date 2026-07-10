@@ -1243,6 +1243,9 @@
             document.querySelectorAll('.mc-step').forEach(s => s.classList.remove('active'));
             document.getElementById(`step-${step}`).classList.add('active');
             currentContractStep = step;
+            if (step === 2) {
+                setTimeout(initCanvas, 50);
+            }
         };
 
         window.closeContractModal = function () {
