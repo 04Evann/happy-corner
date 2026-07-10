@@ -43,11 +43,16 @@ export default async function handler(req, res) {
     }
     
     if (action === 'verifyPin') {
-        const { pin, hash } = body;
+        const { pin, hash, uid } = body;
         const { FIREBASE_API_KEY } = process.env;
         if (!pin || !hash) return json(res, 400, { error: 'Falta PIN o hash' });
         const calculatedHash = crypto.createHmac('sha256', FIREBASE_API_KEY).update(pin).digest('hex');
         if (calculatedHash === hash) {
+            if (uid) {
+                const { adminAuth, db } = await import("./_lib/firebaseAdmin.js");
+                await adminAuth.setCustomUserClaims(uid, { role: 'admin' });
+                await db.collection('users').doc(uid).set({ role: 'admin' }, { merge: true });
+            }
             return json(res, 200, { success: true });
         } else {
             return json(res, 401, { success: false, error: 'PIN incorrecto' });

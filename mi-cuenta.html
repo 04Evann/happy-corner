@@ -995,7 +995,7 @@
                 const resp = await fetch('/api/contract', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'sendPin', uid: currentUser.uid, email: currentUser.email })
+                    body: JSON.stringify({ action: 'sendPin', uid: currentUser.uid, email: email })
                 });
                 const data = await resp.json();
                 if (!resp.ok) throw new Error(data.error || 'Error enviando PIN');
@@ -1049,11 +1049,13 @@
                     })
                 });
                 const data = await resp.json();
-                if (!resp.ok) throw new Error(data.error || 'Error al verificar el PIN');
+                if (!resp.ok) throw new Error(data.error || 'Error firmando contrato');
                 
-                goToStep(4);
-                loadContractStatus(currentUser.uid);
-                showToast('✅ ¡Contrato firmado exitosamente!');
+                showToast('✅ ¡Contrato firmado!');
+                closeContractModal();
+                if (currentUser) {
+                    loadContractStatus(currentUser.uid);
+                }
             } catch(e) {
                 showToast('❌ ' + e.message);
             } finally {
@@ -1073,9 +1075,22 @@
                 document.getElementById('edit-telefono').value = currentUserData.phone || '';
                 document.getElementById('edit-curso').value = currentUserData.grade || '';
             }
-            // Always show the auth email as read-only
+            // Always show the auth email as read-only, unless it is empty
             const authEmail = currentUser?.email || currentUserData?.email || '';
-            document.getElementById('edit-email-display').value = authEmail;
+            const emailInput = document.getElementById('edit-email-display');
+            const emailNote = emailInput.nextElementSibling;
+            emailInput.value = authEmail;
+            if (!authEmail) {
+                emailInput.readOnly = false;
+                emailInput.style.opacity = '1';
+                emailInput.style.cursor = 'text';
+                emailNote.textContent = '📧 Ingresa tu correo para poder firmar y recibir notificaciones.';
+            } else {
+                emailInput.readOnly = true;
+                emailInput.style.opacity = '0.55';
+                emailInput.style.cursor = 'not-allowed';
+                emailNote.textContent = '📧 El correo está vinculado a tu cuenta y no se puede cambiar aquí.';
+            }
         };
 
         window.saveProfile = async function() {
@@ -1085,14 +1100,23 @@
                 const nombre = document.getElementById('edit-nombre').value.trim();
                 const telefono = document.getElementById('edit-telefono').value.trim();
                 const curso = document.getElementById('edit-curso').value.trim();
+                const email = document.getElementById('edit-email-display').value.trim();
                 
-                await updateDoc(doc(db, 'users', currentUser.uid), {
+                const updatePayload = {
                     displayName: nombre,
                     name: nombre,
                     phone: telefono,
                     grade: curso,
                     updatedAt: new Date().toISOString()
-                });
+                };
+                
+                // If email was editable and entered, update it
+                const authEmail = currentUser?.email || currentUserData?.email || '';
+                if (!authEmail && email) {
+                    updatePayload.email = email;
+                }
+
+                await updateDoc(doc(db, 'users', currentUser.uid), updatePayload);
                 
                 if (nombre) await updateProfile(currentUser, { displayName: nombre });
                 

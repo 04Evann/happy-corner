@@ -293,6 +293,10 @@
                 window.location.href = '/onboarding';
             } else {
                 const userData = userSnap.data();
+                // Auto-backfill email for legacy accounts
+                if (!userData.email && email) {
+                    await setDoc(userRef, { email: email }, { merge: true });
+                }
                 if (!userData.customerCode) {
                     window.location.href = '/onboarding';
                 } else {
@@ -325,7 +329,35 @@
             }
         });
 
-        // Email / Password Login
+        // Email / Password Login or Register
+        let isRegisterMode = false;
+        const accountNotice = document.getElementById('account-creation-notice');
+
+        // Toggle function
+        window.toggleAuthMode = function(register) {
+            isRegisterMode = register;
+            const loginEmailBtn = document.getElementById('loginEmailBtn');
+            const registerEmailBtn = document.getElementById('registerEmailBtn');
+            const dividerO = document.getElementById('divider-o');
+            
+            if (isRegisterMode) {
+                accountNotice.style.display = 'block';
+                loginEmailBtn.innerText = 'Registrarse y Crear Cuenta';
+                registerEmailBtn.innerText = '← Volver a Iniciar Sesión';
+                if (dividerO) dividerO.textContent = 'O crea tu cuenta con correo';
+            } else {
+                accountNotice.style.display = 'none';
+                loginEmailBtn.innerText = 'Iniciar Sesión';
+                registerEmailBtn.innerText = 'Crear Cuenta Nueva';
+                if (dividerO) dividerO.textContent = 'O con correo electrónico';
+            }
+        };
+
+        // Register button toggles mode
+        registerEmailBtn.addEventListener('click', () => {
+            toggleAuthMode(!isRegisterMode);
+        });
+
         emailLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = emailInput.value;
@@ -341,40 +373,19 @@
 
             try {
                 await initPromise;
-                const result = await signInWithEmailAndPassword(auth, email, password);
-                await handleUserDocument(result.user);
+                if (isRegisterMode) {
+                    // Registration
+                    const result = await createUserWithEmailAndPassword(auth, email, password);
+                    await handleUserDocument(result.user);
+                } else {
+                    // Login
+                    const result = await signInWithEmailAndPassword(auth, email, password);
+                    await handleUserDocument(result.user);
+                }
             } catch (error) {
-                console.error("Error signing in with email:", error);
-                let msg = "Error al iniciar sesión.";
+                console.error("Auth error:", error);
+                let msg = isRegisterMode ? "Error al crear la cuenta." : "Error al iniciar sesión.";
                 if (error.code === 'auth/invalid-credential') msg = "Correo o contraseña incorrectos.";
-                hideLoading(msg);
-            }
-        });
-
-        // Email / Password Register
-        const accountNotice = document.getElementById('account-creation-notice');
-        registerEmailBtn.addEventListener('click', async () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-
-            // If fields are empty, just show the creation notice as a hint
-            if (!email || !password) {
-                accountNotice.style.display = 'block';
-                if (!email) emailInput.focus();
-                else passwordInput.focus();
-                return;
-            }
-
-            accountNotice.style.display = 'block';
-            showLoading();
-
-            try {
-                await initPromise;
-                const result = await createUserWithEmailAndPassword(auth, email, password);
-                await handleUserDocument(result.user);
-            } catch (error) {
-                console.error("Error registering:", error);
-                let msg = "Error al crear la cuenta.";
                 if (error.code === 'auth/email-already-in-use') msg = "Ese correo ya está registrado. ¿Querías iniciar sesión?";
                 if (error.code === 'auth/weak-password') msg = "La contraseña debe tener al menos 6 caracteres.";
                 hideLoading(msg);

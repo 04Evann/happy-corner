@@ -7,14 +7,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const sideMenu = document.getElementById('sideMenu');
             
             if (user) {
-                // Usuario logueado: Mostrar inicial o iluminar el ícono
+                // Usuario logueado: Mostrar foto, inicial o iluminar el ícono
                 if (authIconDesktop) {
                     authIconDesktop.setAttribute('href', '/mi-cuenta');
-                    authIconDesktop.innerHTML = `
-                        <div style="background: var(--hp-pink); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">
-                            ${user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
-                        </div>
-                    `;
+                    if (user.photoURL) {
+                        authIconDesktop.innerHTML = `
+                            <img src="${user.photoURL}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--hp-pink);">
+                        `;
+                    } else {
+                        const initial = user.displayName ? user.displayName.charAt(0).toUpperCase() : 
+                                       (user.email ? user.email.charAt(0).toUpperCase() : 'U');
+                        authIconDesktop.innerHTML = `
+                            <div style="background: var(--hp-pink); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px;">
+                                ${initial}
+                            </div>
+                        `;
+                    }
                 }
 
                 // En el menú móvil podemos cambiar "Iniciar Sesión" por el Dashboard

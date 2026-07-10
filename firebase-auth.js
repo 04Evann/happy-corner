@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, RecaptchaVerifier, signInWithPhoneNumber, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, RecaptchaVerifier, signInWithPhoneNumber, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 let app, auth, db, provider;
@@ -10,14 +10,16 @@ const initPromise = fetch('/api/getConfig')
         if (!res.ok) throw new Error("No se pudo obtener la configuración de Firebase");
         return res.json();
     })
-    .then(config => {
-        // Validación básica
+    .then(async (config) => {
         if (!config.apiKey) throw new Error("API Key no definida en variables de entorno");
         
         app = initializeApp(config);
         auth = getAuth(app);
         db = getFirestore(app);
         provider = new GoogleAuthProvider();
+        
+        // Configurar persistencia local explícitamente
+        await setPersistence(auth, browserLocalPersistence);
     });
 
 export { initPromise, auth, db, provider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, RecaptchaVerifier, signInWithPhoneNumber, signOut, onAuthStateChanged, doc, getDoc, setDoc };

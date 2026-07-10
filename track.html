@@ -226,9 +226,12 @@
         <a href="/admin">Administración Empresarial</a>
     </div>
 
-    <script>
+    <script type="module">
+        import { initPromise, db } from './firebase-auth.js';
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
         let isDark = false;
-        function toggleTheme() {
+        window.toggleTheme = function() {
             isDark = !isDark;
             const themeBtn = document.getElementById('theme-icon');
             if (isDark) {
@@ -238,21 +241,25 @@
                 document.documentElement.removeAttribute('data-theme');
                 themeBtn.innerText = '🌙';
             }
-        }
+        };
 
         window.addEventListener('DOMContentLoaded', () => {
             const hour = new Date().getHours();
-            if (hour >= 18 || hour < 6) toggleTheme();
+            if (hour >= 18 || hour < 6) window.toggleTheme();
         });
 
         const menuBtn = document.getElementById('menuBtn');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
-        menuBtn.onclick = () => { sideMenu.classList.toggle('active'); overlay.classList.toggle('active'); };
-        overlay.onclick = () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); };
+        if (menuBtn) {
+            menuBtn.onclick = () => { sideMenu?.classList.toggle('active'); overlay?.classList.toggle('active'); };
+        }
+        if (overlay) {
+            overlay.onclick = () => { sideMenu?.classList.remove('active'); overlay?.classList.remove('active'); };
+        }
 
-        function checkOrder() {
-            const searchInput = document.getElementById('order-input').value.trim().toLowerCase();
+        window.checkOrder = async function() {
+            const searchInput = document.getElementById('order-input').value.trim();
             const resultBox = document.getElementById('result-container');
             const errorMsg = document.getElementById('error-msg');
             
@@ -261,30 +268,66 @@
 
             if (!searchInput) return;
 
+            const searchUpper = searchInput.toUpperCase();
+            const searchLower = searchInput.toLowerCase();
+
+            try {
+                await initPromise;
+                
+                // 1. Intentar buscar en Firestore por ID de orden exacto (acceso público Get)
+                const docRef = doc(db, 'orders', searchUpper);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    renderOrderResult(data, searchUpper);
+                    return;
+                }
+            } catch (err) {
+                console.error("Firestore lookup failed:", err);
+            }
+
+            // 2. Fallback a localStorage
             const storedData = localStorage.getItem('lastHappyOrder');
-            
             if (storedData) {
                 const data = JSON.parse(storedData);
-                const isMatch = data.orderId.toLowerCase() === searchInput || 
-                               (data.happyCode && data.happyCode.toLowerCase() === searchInput);
+                const isMatch = data.orderId.toLowerCase() === searchLower || 
+                               (data.happyCode && data.happyCode.toLowerCase() === searchLower);
 
                 if (isMatch) {
-                    const paymentMap = { 'nequi': 'Nequi', 'pse': 'PSE', 'tarjeta': 'Tarjeta', 'efectivo': 'Efectivo' };
-                    const deliveryMap = { 'colegio': 'Colegio', 'virtual': 'Virtual' };
-
-                    document.getElementById('r-order-id').innerText = data.happyCode || data.orderId;
-                    document.getElementById('r-name').innerText = data.customer?.nombre || '---';
-                    document.getElementById('r-payment').innerText = paymentMap[data.paymentMethod] || data.paymentMethod;
-                    document.getElementById('r-delivery').innerText = deliveryMap[data.deliveryType] || data.deliveryType;
-                    document.getElementById('r-total').innerText = data.total;
-                    document.getElementById('r-items').innerText = data.itemsSummary;
-
-                    resultBox.style.display = 'block';
+                    renderOrderResult(data, data.happyCode || data.orderId);
                     return;
                 }
             }
 
             errorMsg.style.display = 'block';
+        };
+
+        function renderOrderResult(data, orderId) {
+            const resultBox = document.getElementById('result-container');
+            const paymentMap = { 'nequi': 'Nequi', 'pse': 'PSE', 'tarjeta': 'Tarjeta', 'efectivo': 'Efectivo' };
+            const deliveryMap = { 'colegio': 'Colegio', 'virtual': 'Virtual' };
+            const statusLabels = {
+                pending: 'Pendiente',
+                preparing: 'Preparando',
+                ready: 'Listo para reclamar',
+                completed: 'Completado',
+                cancelled: 'Cancelado'
+            };
+
+            document.getElementById('r-order-id').innerText = orderId;
+            document.getElementById('r-name').innerText = data.customer?.nombre || '---';
+            document.getElementById('r-payment').innerText = paymentMap[data.paymentMethod] || data.paymentMethod || '---';
+            document.getElementById('r-delivery').innerText = deliveryMap[data.deliveryType] || data.deliveryType || '---';
+            document.getElementById('r-total').innerText = data.total || '$0';
+            document.getElementById('r-items').innerText = data.resumen || data.itemsSummary || '---';
+            
+            const statusBadge = document.getElementById('r-status');
+            if (statusBadge) {
+                statusBadge.innerText = statusLabels[data.status] || data.status || 'Recibido';
+            }
+
+            resultBox.style.display = 'block';
         }
     </script>
 </body>
