@@ -50,7 +50,7 @@ service cloud.firestore {
       allow get: if true;
       allow list: if isAdmin() || (request.auth != null && resource.data.customerUID == request.auth.uid);
       // Allow creation by logged-in user
-      allow create: if request.auth != null && request.resource.data.customerUID == request.auth.uid;
+      allow create: if request.auth != null && (request.resource.data.customerUID == request.auth.uid || isAdmin());
       allow update, delete: if isAdmin();
     }
 
