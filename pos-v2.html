@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Happy Corner | POS Terminal</title>
     <link rel="icon" type="image/png" href="/happyfavicon.png">
-    
+
     <!-- Google Fonts & Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    
+
     <style>
         :root {
             --bg-color: #060606;
@@ -197,7 +199,7 @@
             max-height: 180px;
             overflow-y: auto;
             z-index: 10;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
             display: none;
         }
 
@@ -205,7 +207,7 @@
             padding: 10px 14px;
             font-size: 13px;
             cursor: pointer;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             display: flex;
             justify-content: space-between;
         }
@@ -282,7 +284,9 @@
             justify-content: center;
         }
 
-        .qty-btn:active { background: #333; }
+        .qty-btn:active {
+            background: #333;
+        }
 
         /* --- Footer & Payout --- */
         .cart-summary-box {
@@ -390,13 +394,15 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- SECURE AUTH GATE OVERLAY -->
     <div id="auth-gate-overlay">
         <div class="gate-card">
             <h2 id="gate-status-title" style="margin-bottom: 12px; font-weight:900;">Verificando credenciales...</h2>
-            <p id="gate-status-text" style="color: var(--text-muted); font-size:14px; margin-bottom: 24px;">Por favor espera un momento mientras validamos tu sesión de administrador.</p>
+            <p id="gate-status-text" style="color: var(--text-muted); font-size:14px; margin-bottom: 24px;">Por favor
+                espera un momento mientras validamos tu sesión de administrador.</p>
             <div id="gate-action-btn-container" style="display:none;">
                 <a href="/login.html" class="admin-btn">Ir al Inicio de Sesión</a>
             </div>
@@ -414,7 +420,7 @@
 
     <!-- CONTENT -->
     <div class="pos-container">
-        
+
         <!-- LEFT: CATALOG -->
         <div class="pos-catalog-panel">
             <div class="category-filter">
@@ -423,7 +429,7 @@
                 <button class="category-btn" onclick="filterCategory('reposteria')">Repostería 🍪</button>
                 <button class="category-btn" onclick="filterCategory('combos')">Combos & Favoritos 🍕</button>
             </div>
-            
+
             <div class="products-grid" id="pos-products-list">
                 <!-- Loaded dynamically -->
             </div>
@@ -431,28 +437,36 @@
 
         <!-- RIGHT: CHECKOUT CART -->
         <div class="pos-cart-panel">
-            
+
             <!-- CUSTOMER SELECTOR -->
             <div class="customer-selector-box">
-                <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Asignar Cliente</label>
-                <input type="text" id="cust-search" class="admin-input" style="width:100%; margin-top:6px; padding:10px;" placeholder="Escribe Nombre o HappyCódigo..." autocomplete="off">
+                <label
+                    style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Asignar
+                    Cliente</label>
+                <input type="text" id="cust-search" class="admin-input"
+                    style="width:100%; margin-top:6px; padding:10px;" placeholder="Escribe Nombre o HappyCódigo..."
+                    autocomplete="off">
                 <div class="autocomplete-results" id="autocomplete-box">
                     <!-- Populated dynamically -->
                 </div>
-                
+
                 <!-- Display selected customer -->
                 <div class="selected-customer-card" id="selected-cust-card" style="display:none;">
                     <div>
                         <div id="sel-cust-name" style="font-weight:700; font-size:14px;">Cliente no asignado</div>
-                        <div id="sel-cust-details" style="font-size:12px; color:var(--text-muted); margin-top:2px;">Deuda: $0 · Puntos: 0</div>
+                        <div id="sel-cust-details" style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                            Deuda: $0 · Puntos: 0</div>
                     </div>
-                    <button class="qty-btn" style="background:rgba(255,255,255,0.05); font-size:12px;" onclick="unassignCustomer()">✕</button>
+                    <button class="qty-btn" style="background:rgba(255,255,255,0.05); font-size:12px;"
+                        onclick="unassignCustomer()">✕</button>
                 </div>
             </div>
 
             <!-- CART ITEMS -->
             <div class="cart-items-list" id="cart-list">
-                <div style="text-align:center; padding:60px 20px; color:var(--text-muted); font-size:13px; margin:auto 0;">El carrito está vacío. Toca un producto de la izquierda para añadirlo.</div>
+                <div
+                    style="text-align:center; padding:60px 20px; color:var(--text-muted); font-size:13px; margin:auto 0;">
+                    El carrito está vacío. Toca un producto de la izquierda para añadirlo.</div>
             </div>
 
             <!-- FOOTER SUMMARY -->
@@ -468,8 +482,10 @@
 
                 <!-- PAYMENT TOGGLE -->
                 <div class="payment-method-toggle">
-                    <button class="pay-toggle-btn active" id="pay-cash" onclick="setPaymentMethod('cash')">💵 EFECTIVO</button>
-                    <button class="pay-toggle-btn" id="pay-credit" onclick="setPaymentMethod('credit')">💳 CRÉDITO</button>
+                    <button class="pay-toggle-btn active" id="pay-cash" onclick="setPaymentMethod('cash')">💵
+                        EFECTIVO</button>
+                    <button class="pay-toggle-btn" id="pay-credit" onclick="setPaymentMethod('credit')">💳
+                        CRÉDITO</button>
                 </div>
 
                 <button class="btn-checkout" onclick="submitCheckout()">Confirmar Venta</button>
@@ -481,8 +497,8 @@
 
     <script type="module">
         import { initPromise, db, auth } from './firebase-auth.js';
-        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-        import { doc, getDoc, getDocs, collection, query, where, updateDoc, writeBatch, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { doc, getDoc, getDocs, collection, query, where, updateDoc, writeBatch, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
         // Static Catalog matching site items
         const PRODUCTS = [
@@ -607,7 +623,7 @@
         }
 
         // Filter products grid
-        window.filterCategory = function(cat) {
+        window.filterCategory = function (cat) {
             document.querySelectorAll('.category-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('onclick').includes(cat));
             });
@@ -630,7 +646,7 @@
         };
 
         // Assign client
-        window.assignCustomer = function(uid) {
+        window.assignCustomer = function (uid) {
             const customer = allCustomers.find(c => c.uid === uid);
             if (!customer) return;
 
@@ -638,18 +654,18 @@
             document.getElementById('cust-search').style.display = 'none';
             document.getElementById('autocomplete-box').style.display = 'none';
             document.getElementById('selected-cust-card').style.display = 'flex';
-            
+
             document.getElementById('sel-cust-name').textContent = customer.displayName || customer.name || 'Cliente';
             document.getElementById('sel-cust-details').textContent = `Deuda: $${(customer.activeDebt || 0).toLocaleString()} · Puntos: ${customer.happyPoints || 0}`;
         };
 
         // Remove client
-        window.unassignCustomer = function() {
+        window.unassignCustomer = function () {
             selectedCustomer = null;
             document.getElementById('cust-search').value = '';
             document.getElementById('cust-search').style.display = 'block';
             document.getElementById('selected-cust-card').style.display = 'none';
-            
+
             // If credit payment toggled, force switch to cash
             if (paymentMethod === 'credit') {
                 setPaymentMethod('cash');
@@ -657,7 +673,7 @@
         };
 
         // Toggle Cash vs Credit
-        window.setPaymentMethod = function(method) {
+        window.setPaymentMethod = function (method) {
             if (method === 'credit' && !selectedCustomer) {
                 alert('⚠️ Debes asignar un cliente para poder seleccionar pago a Crédito.');
                 return;
@@ -732,7 +748,7 @@
         // ==============================================
         // SUBMIT CHECKOUT TRANSACTION
         // ==============================================
-        window.submitCheckout = async function() {
+        window.submitCheckout = async function () {
             if (cart.length === 0) {
                 alert('El carrito está vacío.');
                 return;
@@ -749,7 +765,7 @@
             try {
                 if (paymentMethod === 'credit') {
                     if (!selectedCustomer) throw new Error('Cliente no asignado.');
-                    
+
                     // Verify if contract is signed
                     const contractSnap = await getDoc(doc(db, 'debtContracts', selectedCustomer.uid));
                     if (!contractSnap.exists() || !contractSnap.data().signed) {
@@ -764,7 +780,7 @@
                 }
 
                 alert(`🎉 ¡Venta procesada con éxito!\nTotal: $${total.toLocaleString()}\n${selectedCustomer ? `Puntos sumados: +${pointsEarned} pts` : ''}`);
-                
+
                 // Reset cart & view
                 cart = [];
                 renderCart();
@@ -815,7 +831,7 @@
                     customerUID: clientUid,
                     type: 'purchase',
                     amount: total,
-                    description: `Compra a crédito POS: ${cartItems.map(i=>`${i.name} (${i.qty}x)`).join(', ')}`,
+                    description: `Compra a crédito POS: ${cartItems.map(i => `${i.name} (${i.qty}x)`).join(', ')}`,
                     createdAt: now,
                     adminUid: adminUser.uid
                 });
@@ -827,7 +843,7 @@
                         customerUID: clientUid,
                         type: 'points',
                         amount: points,
-                        description: `Puntos ganados por compra POS #${orderRef.id.slice(0,5)}`,
+                        description: `Puntos ganados por compra POS #${orderRef.id.slice(0, 5)}`,
                         createdAt: now
                     });
                 }
@@ -836,12 +852,12 @@
                 const movementsSnap = await getDocs(query(collection(db, 'movements'), where('customerUID', '==', clientUid)));
                 const allMovements = [];
                 movementsSnap.forEach(d => allMovements.push(d.data()));
-                
+
                 // Append newly created ones manually for calculation
                 allMovements.push({ type: 'purchase', amount: total, createdAt: now });
                 if (points > 0) allMovements.push({ type: 'points', amount: points, createdAt: now });
 
-                allMovements.sort((a,b) => new Date(a.createdAt || '').getTime() - new Date(b.createdAt || '').getTime());
+                allMovements.sort((a, b) => new Date(a.createdAt || '').getTime() - new Date(b.createdAt || '').getTime());
 
                 let activeDebt = 0;
                 let happyPoints = 0;
@@ -879,7 +895,7 @@
                         paymentRemaining -= settled;
 
                         const diffDays = Math.max(0, Math.round((new Date(payment.date).getTime() - new Date(purchase.date).getTime()) / (1000 * 60 * 60 * 24)));
-                        
+
                         let delta = 0;
                         let reason = '';
                         if (diffDays <= 3) {
@@ -973,7 +989,7 @@
                     customerUID: clientUid,
                     type: 'points',
                     amount: points,
-                    description: `Puntos ganados por compra POS en efectivo #${orderRef.id.slice(0,5)}`,
+                    description: `Puntos ganados por compra POS en efectivo #${orderRef.id.slice(0, 5)}`,
                     createdAt: now
                 });
             }
@@ -984,7 +1000,7 @@
             if (clientUid) {
                 const userRef = doc(db, 'users', clientUid);
                 const movementsSnap = await getDocs(query(collection(db, 'movements'), where('customerUID', '==', clientUid)));
-                
+
                 let happyPoints = 0;
                 movementsSnap.forEach(d => {
                     const m = d.data();
@@ -1002,4 +1018,5 @@
 
     </script>
 </body>
+
 </html>
