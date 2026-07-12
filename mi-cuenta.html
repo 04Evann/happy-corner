@@ -12,9 +12,93 @@
     <style>
         /* ====== MI CUENTA LAYOUT ====== */
         .mc-wrapper {
-            max-width: 800px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px 16px 100px;
+        }
+
+        /* ====== MI CUENTA LAYOUT REDESIGN (GOOGLE ACCOUNT STYLE) ====== */
+        @media (min-width: 768px) {
+            .mc-wrapper {
+                display: grid;
+                grid-template-columns: 260px 1fr;
+                gap: 32px;
+                padding: 40px 24px 100px;
+            }
+
+            .mc-sidebar {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                height: fit-content;
+                position: sticky;
+                top: 100px;
+            }
+
+            .mc-main-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .mc-sidebar {
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 12px;
+                margin-bottom: 16px;
+                border-bottom: 1px solid var(--border-color);
+                scrollbar-width: none; /* Firefox */
+            }
+            .mc-sidebar::-webkit-scrollbar {
+                display: none; /* Safari and Chrome */
+            }
+            .mc-sidebar-item {
+                flex-shrink: 0;
+            }
+        }
+
+        .mc-sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            text-align: left;
+        }
+
+        .mc-sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+        }
+
+        .mc-sidebar-item.active {
+            background: linear-gradient(135deg, rgba(255, 82, 153, 0.15), rgba(255, 82, 153, 0.05));
+            color: var(--hp-pink);
+            border-color: rgba(255, 82, 153, 0.3);
+        }
+
+        .mc-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .mc-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ====== WELCOME HERO ====== */
@@ -760,173 +844,217 @@
     <!-- MAIN CONTENT -->
     <div class="mc-wrapper" id="mc-content" style="display:none;">
 
-        <!-- 1. BIENVENIDA -->
-        <div class="mc-hero" id="mc-hero">
-            <div class="mc-avatar" id="mc-avatar-btn" title="Cambiar foto" style="position:relative;">
-                <span id="mc-avatar-initial">?</span>
-                <span class="avatar-upload-btn" id="avatar-upload-trigger">📷</span>
-            </div>
-            <div class="mc-hero-text">
-                <div class="mc-hero-greeting">Bienvenido de vuelta 👋</div>
-                <div class="mc-hero-name" id="mc-user-name">Cargando...</div>
-                <div class="mc-hero-code" id="mc-user-code"></div>
-            </div>
+        <!-- SIDEBAR TABS (GOOGLE ACCOUNT STYLE) -->
+        <div class="mc-sidebar" id="mc-sidebar-menu">
+            <button class="mc-sidebar-item active" onclick="switchPane('pane-inicio')">🏠 Inicio</button>
+            <button class="mc-sidebar-item" onclick="switchPane('pane-perfil')">👤 Perfil</button>
+            <button class="mc-sidebar-item" onclick="switchPane('pane-deudas')">💳 Deuda y Contrato</button>
+            <button class="mc-sidebar-item" onclick="switchPane('pane-pedidos')">📦 Mis Pedidos</button>
+            <button class="mc-sidebar-item" onclick="switchPane('pane-credito')">📊 Historial Crediticio</button>
+            <button class="mc-sidebar-item" onclick="switchPane('pane-seguridad')">🔑 Seguridad</button>
+            <button class="mc-sidebar-item" id="sidebar-admin-btn" style="display:none;" onclick="switchPane('pane-admin')">🛠️ POS & Admin</button>
+            <button class="mc-sidebar-item" style="color: var(--accent-red);" id="logout-btn-sidebar">🚪 Cerrar Sesión</button>
         </div>
-        <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
 
-        <!-- 2. CONTRATO - at top, visible before debt -->
-        <!-- Unsigned warning banner (shown dynamically via JS) -->
-        <div id="contract-unsigned-banner" style="display:none; background: linear-gradient(135deg, rgba(255,82,153,0.12), rgba(255,82,153,0.04)); border: 1.5px solid rgba(255,82,153,0.35); border-radius: 18px; padding: 18px 20px; margin-bottom: 16px; display: none;">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:28px;">📄</span>
-                <div style="flex:1;">
-                    <div style="font-weight:800; color:var(--text-color); margin-bottom:4px;">Firma tu contrato de responsabilidad</div>
-                    <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Necesitas firmar el acuerdo de responsabilidad para poder realizar compras a crédito en Happy Corner.</div>
+        <!-- MAIN MAIN CONTENT PANEL -->
+        <div class="mc-main-panel">
+
+            <!-- PANE: INICIO -->
+            <div id="pane-inicio" class="mc-pane active">
+                <!-- Welcome greeting -->
+                <div class="mc-hero" id="mc-hero" style="margin-bottom: 20px;">
+                    <div class="mc-avatar" id="mc-avatar-btn" title="Cambiar foto" style="position:relative;">
+                        <span id="mc-avatar-initial">?</span>
+                        <span class="avatar-upload-btn" id="avatar-upload-trigger">📷</span>
+                    </div>
+                    <div class="mc-hero-text">
+                        <div class="mc-hero-greeting">Bienvenido de vuelta 👋</div>
+                        <div class="mc-hero-name" id="mc-user-name">Cargando...</div>
+                        <div class="mc-hero-code" id="mc-user-code"></div>
+                    </div>
+                </div>
+                <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
+
+                <!-- Contract unsigned banner -->
+                <div id="contract-unsigned-banner" style="display:none; background: linear-gradient(135deg, rgba(255,82,153,0.12), rgba(255,82,153,0.04)); border: 1.5px solid rgba(255,82,153,0.35); border-radius: 18px; padding: 18px 20px; margin-bottom: 16px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:28px;">📄</span>
+                        <div style="flex:1;">
+                            <div style="font-weight:800; color:var(--text-color); margin-bottom:4px;">Firma tu contrato de responsabilidad</div>
+                            <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Necesitas firmar el acuerdo de responsabilidad para poder realizar compras a crédito en Happy Corner.</div>
+                        </div>
+                    </div>
+                    <button id="firmar-ahora-banner-btn" style="margin-top:12px; width:100%; padding:12px; background:var(--hp-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit;">✍️ Firmar Ahora</button>
+                </div>
+
+                <!-- Debt & Points summary widgets grid -->
+                <div style="display:grid; grid-template-columns: 1fr; gap:16px; margin-bottom:20px;">
+                    <!-- Debt Summary card -->
+                    <div class="mc-section" style="margin-bottom:0;">
+                        <div class="mc-section-header">
+                            <div class="mc-section-title"><span class="icon icon-pink">💳</span> Deuda Actual</div>
+                        </div>
+                        <div class="debt-status">
+                            <div>
+                                <div class="debt-amount loading" id="mc-debt-amount">$—</div>
+                                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;" id="mc-debt-detail">Cargando...</div>
+                            </div>
+                            <span class="debt-badge loading" id="mc-debt-badge">...</span>
+                        </div>
+                    </div>
+
+                    <!-- Points Summary card -->
+                    <div class="mc-section" style="margin-bottom:0;">
+                        <div class="mc-section-header">
+                            <div class="mc-section-title"><span class="icon icon-purple">⭐</span> HappyPuntos</div>
+                        </div>
+                        <div class="points-widget">
+                            <div class="points-number" id="mc-points">—</div>
+                            <div class="points-equiv" id="mc-points-equiv">Cargando puntos...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <button id="firmar-ahora-banner-btn" style="margin-top:12px; width:100%; padding:12px; background:var(--hp-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit;">✍️ Firmar Ahora</button>
-        </div>
 
-        <div class="mc-section" id="mc-contract-section">
-            <div class="mc-section-header">
-                <div class="mc-section-title"><span class="icon icon-gray">📄</span> Acuerdo de Responsabilidad</div>
-            </div>
-            <div class="contract-status-row">
-                <span class="profile-field-label">Estado</span>
-                <span id="mc-contract-status" class="contract-unsigned-badge">Sin firma</span>
-            </div>
-            <div class="contract-status-row">
-                <span class="profile-field-label">Versión</span>
-                <span class="profile-field-value" id="mc-contract-version">—</span>
-            </div>
-            <div class="contract-status-row">
-                <span class="profile-field-label">Fecha de firma</span>
-                <span class="profile-field-value" id="mc-contract-date">—</span>
-            </div>
-            <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px;">✍️ Firmar contrato ahora</button>
-        </div>
-
-        <!-- 3. DEUDA -->
-        <div class="mc-section">
-            <div class="mc-section-header">
-                <div class="mc-section-title">
-                    <span class="icon icon-pink">💳</span> Deuda Actual
-                </div>
-                <button class="mc-link-btn" id="ver-contrato-btn">Ver contrato</button>
-            </div>
-            <div class="debt-status">
-                <div>
-                    <div class="debt-amount loading" id="mc-debt-amount">$—</div>
-                    <div style="font-size:13px; color:var(--text-muted); margin-top:4px;" id="mc-debt-detail">
-                        Cargando...</div>
-                </div>
-                <span class="debt-badge loading" id="mc-debt-badge">...</span>
-            </div>
-        </div>
-
-        <!-- 3. ÚLTIMOS PEDIDOS -->
-        <div class="mc-section">
-            <div class="mc-section-header">
-                <div class="mc-section-title"><span class="icon icon-orange">📦</span> Últimos Pedidos</div>
-                <button class="mc-link-btn" id="ver-mas-ordenes-btn">Ver todos</button>
-            </div>
-            <div id="mc-orders-list">
-                <div class="skeleton skeleton-text" style="width:60%; margin-bottom:12px;"></div>
-                <div class="skeleton skeleton-text" style="width:80%;"></div>
-            </div>
-        </div>
-
-        <!-- 4. HAPPYPUNTOS -->
-        <div class="mc-section">
-            <div class="mc-section-header">
-                <div class="mc-section-title"><span class="icon icon-purple">⭐</span> HappyPuntos</div>
-            </div>
-            <div class="points-widget">
-                <div class="points-number" id="mc-points">—</div>
-                <div class="points-equiv" id="mc-points-equiv">Cargando puntos...</div>
-            </div>
-        </div>
-
-        <!-- 5. MOVIMIENTOS -->
-        <div class="mc-section">
-            <div class="mc-section-header">
-                <div class="mc-section-title"><span class="icon icon-blue">📊</span> Movimientos</div>
-                <button class="mc-link-btn" id="ver-mas-movimientos-btn">Ver todos</button>
-            </div>
-            <div id="mc-movements-list">
-                <div class="skeleton skeleton-text" style="width:70%; margin-bottom:12px;"></div>
-                <div class="skeleton skeleton-text" style="width:50%;"></div>
-            </div>
-        </div>
-
-        <!-- 6. PERFIL -->
-        <div class="mc-section">
-            <div class="mc-section-header">
-                <div class="mc-section-title"><span class="icon icon-green">👤</span> Perfil</div>
-                <button class="mc-link-btn" id="editar-perfil-btn">Editar</button>
-            </div>
-            <div id="mc-profile-fields">
-                <div class="profile-field">
-                    <span class="profile-field-label">Nombre</span>
-                    <span class="profile-field-value" id="pf-nombre">—</span>
-                </div>
-                <div class="profile-field">
-                    <span class="profile-field-label">Correo</span>
-                    <span class="profile-field-value" id="pf-email">—</span>
-                </div>
-                <div class="profile-field">
-                    <span class="profile-field-label">Teléfono</span>
-                    <span class="profile-field-value" id="pf-telefono">—</span>
-                </div>
-                <div class="profile-field">
-                    <span class="profile-field-label">Curso</span>
-                    <span class="profile-field-value" id="pf-curso">—</span>
-                </div>
-                <div class="profile-field">
-                    <span class="profile-field-label">HappyCódigo</span>
-                    <span class="profile-field-value" id="pf-codigo"
-                        style="font-family:monospace; color:var(--hp-pink);">—</span>
+            <!-- PANE: PERFIL -->
+            <div id="pane-perfil" class="mc-pane">
+                <div class="mc-section">
+                    <div class="mc-section-header">
+                        <div class="mc-section-title"><span class="icon icon-green">👤</span> Detalles del Perfil</div>
+                        <button class="mc-link-btn" id="editar-perfil-btn">Editar Datos</button>
+                    </div>
+                    <div id="mc-profile-fields">
+                        <div class="profile-field">
+                            <span class="profile-field-label">Nombre</span>
+                            <span class="profile-field-value" id="pf-nombre">—</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-field-label">Correo</span>
+                            <span class="profile-field-value" id="pf-email">—</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-field-label">Teléfono</span>
+                            <span class="profile-field-value" id="pf-telefono">—</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-field-label">Curso</span>
+                            <span class="profile-field-value" id="pf-curso">—</span>
+                        </div>
+                        <div class="profile-field">
+                            <span class="profile-field-label">HappyCódigo</span>
+                            <span class="profile-field-value" id="pf-codigo" style="font-family:monospace; color:var(--hp-pink);">—</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 7. HISTORIAL CREDITICIO -->
-        <div class="mc-section" id="mc-credit-section">
-            <div class="mc-section-header">
-                <div class="mc-section-title"><span class="icon icon-purple">📊</span> Historial Crediticio</div>
-            </div>
-            <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
-                <div style="width:64px; height:64px; border-radius:50%; background:var(--hp-gradient); display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; color:white; flex-shrink:0;" id="mc-credit-tier">—</div>
-                <div>
-                    <div style="font-size:22px; font-weight:900; color:var(--text-color);" id="mc-credit-score">—/100</div>
-                    <div style="font-size:13px; color:var(--text-muted);" id="mc-credit-label">Cargando puntaje crediticio...</div>
+            <!-- PANE: DEUDAS & CONTRATO -->
+            <div id="pane-deudas" class="mc-pane">
+                <div class="mc-section" id="mc-contract-section">
+                    <div class="mc-section-header">
+                        <div class="mc-section-title"><span class="icon icon-gray">📄</span> Acuerdo de Responsabilidad</div>
+                        <button class="mc-link-btn" id="ver-contrato-btn" style="display:none;">Ver Contrato PDF</button>
+                    </div>
+                    <div class="contract-status-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                        <span class="profile-field-label">Estado</span>
+                        <span id="mc-contract-status" class="contract-unsigned-badge">Sin firma</span>
+                    </div>
+                    <div class="contract-status-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                        <span class="profile-field-label">Versión</span>
+                        <span class="profile-field-value" id="mc-contract-version">—</span>
+                    </div>
+                    <div class="contract-status-row" style="display:flex; justify-content:space-between; padding:12px 0;">
+                        <span class="profile-field-label">Fecha de firma</span>
+                        <span class="profile-field-value" id="mc-contract-date">—</span>
+                    </div>
+                    <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px; width:100%;">✍️ Firmar contrato ahora</button>
                 </div>
             </div>
-            <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">HISTORIAL DE CAMBIOS</div>
-            <div id="mc-credit-history" style="display:flex; flex-direction:column; gap:8px;">
-                <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px 0;">Sin historial todavía. Tu puntaje se irá construyendo con tus transacciones.</div>
+
+            <!-- PANE: MIS PEDIDOS -->
+            <div id="pane-pedidos" class="mc-pane">
+                <div class="mc-section">
+                    <div class="mc-section-header">
+                        <div class="mc-section-title"><span class="icon icon-orange">📦</span> Historial de Pedidos</div>
+                    </div>
+                    <div id="mc-orders-list">
+                        <div class="skeleton skeleton-text" style="width:60%; margin-bottom:12px;"></div>
+                        <div class="skeleton skeleton-text" style="width:80%;"></div>
+                    </div>
+                </div>
             </div>
+
+            <!-- PANE: CREDITO & MOVIMIENTOS -->
+            <div id="pane-credito" class="mc-pane">
+                <!-- Credit Score Widget -->
+                <div class="mc-section" id="mc-credit-section">
+                    <div class="mc-section-header">
+                        <div class="mc-section-title"><span class="icon icon-purple">📊</span> Historial Crediticio</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+                        <div style="width:64px; height:64px; border-radius:50%; background:var(--hp-gradient); display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; color:white; flex-shrink:0;" id="mc-credit-tier">—</div>
+                        <div>
+                            <div style="font-size:22px; font-weight:900; color:var(--text-color);" id="mc-credit-score">—/100</div>
+                            <div style="font-size:13px; color:var(--text-muted);" id="mc-credit-label">Cargando puntaje crediticio...</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">HISTORIAL DE CAMBIOS DE SCORE</div>
+                    <div id="mc-credit-history" style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px 0;">Sin historial todavía. Tu puntaje se irá construyendo con tus transacciones.</div>
+                    </div>
+                </div>
+
+                <!-- FIFO movements (max 30 days) -->
+                <div class="mc-section">
+                    <div class="mc-section-header">
+                        <div class="mc-section-title"><span class="icon icon-blue">📊</span> Movimientos de Deuda (Últimos 30 días)</div>
+                    </div>
+                    <div id="mc-movements-list">
+                        <div class="skeleton skeleton-text" style="width:70%; margin-bottom:12px;"></div>
+                        <div class="skeleton skeleton-text" style="width:50%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANE: SEGURIDAD -->
+            <div id="pane-seguridad" class="mc-pane">
+                <div class="mc-section">
+                    <div class="mc-section-header">
+                        <div class="mc-section-title"><span class="icon icon-gray">🔑</span> Cambiar Contraseña</div>
+                    </div>
+                    <form id="change-password-dashboard-form" style="display:flex; flex-direction:column; gap:14px; margin-top:10px;">
+                        <div class="input-group" style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:700;">Nueva Contraseña</label>
+                            <input type="password" id="dashboard-new-password" class="mc-input" required placeholder="Mínimo 6 caracteres" style="width:100%; box-sizing:border-box; padding:10px; background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:12px;">
+                        </div>
+                        <div class="input-group" style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:700;">Confirmar Nueva Contraseña</label>
+                            <input type="password" id="dashboard-confirm-password" class="mc-input" required placeholder="Repite la nueva contraseña" style="width:100%; box-sizing:border-box; padding:10px; background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:12px;">
+                        </div>
+                        <button type="submit" class="btn-primary" style="margin-top:8px;">Guardar Nueva Contraseña</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- PANE: ADMIN SHORTCUTS -->
+            <div id="pane-admin" class="mc-pane">
+                <div class="mc-section">
+                    <div class="mc-section-header">
+                        <div class="mc-section-title"><span class="icon icon-purple">🛠️</span> Herramientas Administrativas</div>
+                    </div>
+                    <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">Tienes privilegios de administrador en Happy Corner. Utiliza los siguientes accesos para gestionar pedidos, scores de crédito u operar ventas.</p>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+                        <a href="/pos-v2" class="mc-btn-secondary" style="text-align:center; padding:16px; text-decoration:none; display:block; border-color:var(--hp-pink); color:var(--hp-pink); font-weight:800; border-radius:14px;">🛍️ Operar POS Terminal</a>
+                        <a href="/admin-v2" class="mc-btn-secondary" style="text-align:center; padding:16px; text-decoration:none; display:block; border-color:var(--accent-purple); color:var(--accent-purple); font-weight:800; border-radius:14px;">📊 Panel de Control</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <!-- 8. CONFIGURACIÓN -->
-        <div class="mc-section">
-            <div class="mc-section-title" style="margin-bottom:16px;"><span class="icon icon-gray">⚙️</span>
-                Configuración</div>
-            <button class="settings-btn" id="change-password-btn">
-                <span class="icon">🔑</span> Cambiar contraseña
-            </button>
-            <button class="settings-btn danger" id="logout-btn">
-                <span class="icon">🚪</span> Cerrar sesión
-            </button>
-        </div>
-
-    </div>
-
     <!-- =============================== -->
     <!-- CONTRACT SIGNING MODAL -->
     <!-- =============================== -->
     <div class="mc-modal-overlay" id="contract-modal">
-        <div class="mc-modal">
             <button class="mc-modal-close" onclick="closeContractModal()">✕</button>
 
             <!-- Step 1: Read contract -->
@@ -1028,11 +1156,7 @@
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-        // ============================================================
-        // Theme
-        // ============================================================
-        let isDark = true;
-        window.toggleTheme = function () {
+         window.toggleTheme = function () {
             isDark = !isDark;
             document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
             document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
@@ -1040,6 +1164,29 @@
         window.onload = () => {
             const hour = new Date().getHours();
             if (hour < 6 || hour >= 18) { isDark = true; } else { isDark = false; document.documentElement.removeAttribute('data-theme'); }
+        };
+
+        // ============================================================
+        // Sidebar Navigation switch tabs (Google Account Style)
+        // ============================================================
+        window.switchPane = function (paneId) {
+            document.querySelectorAll('.mc-sidebar-item').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.mc-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+
+            // Find matching sidebar button
+            const targetBtn = Array.from(document.querySelectorAll('.mc-sidebar-item'))
+                .find(btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(paneId));
+            if (targetBtn) targetBtn.classList.add('active');
+
+            const targetPane = document.getElementById(paneId);
+            if (targetPane) targetPane.classList.add('active');
+        };
+
+        document.getElementById('logout-btn-sidebar').onclick = async function () {
+            await signOut(auth);
+            window.location.href = '/login.html';
         };
 
         // ============================================================
@@ -1158,7 +1305,14 @@
             const points = data.happyPoints || 0;
             document.getElementById('mc-points').textContent = points.toLocaleString();
             document.getElementById('mc-points-equiv').textContent =
-                points > 0 ? `Equivale a ~$${(points * 10).toLocaleString('es-CO')} en descuentos` : 'Aún no tienes puntos. ¡Empieza a comprar!';
+                'Los HappyPuntos acumulados se guardarán para futuras recompensas (uso temporalmente deshabilitado mientras se ajustan las tasas de descuento).';
+
+            // Show POS/Admin tab shortcut only for admins
+            if (data.role === 'admin') {
+                document.getElementById('sidebar-admin-btn').style.display = 'flex';
+            } else {
+                document.getElementById('sidebar-admin-btn').style.display = 'none';
+            }
         }
 
         // ============================================================
@@ -1206,11 +1360,25 @@
         // ============================================================
         function setupMovementsListener(uid) {
             const movRef = collection(db, 'movements');
-            const q = query(movRef, where('customerUID', '==', uid), orderBy('createdAt', 'desc'), limit(5));
+            // Fetch more, filter to last 30 days client-side
+            const q = query(movRef, where('customerUID', '==', uid), orderBy('createdAt', 'desc'), limit(50));
             const unsub = onSnapshot(q, (snap) => {
                 const container = document.getElementById('mc-movements-list');
-                if (snap.empty) {
-                    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-text">Sin movimientos registrados</div></div>`;
+
+                const now = Date.now();
+                const thirtyDaysAgo = now - (30 * 24 * 60 * 60 * 1000);
+                const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+
+                // Filter to last 30 days
+                const recentDocs = snap.docs.filter(d => {
+                    const m = d.data();
+                    if (!m.createdAt) return false;
+                    const ts = typeof m.createdAt === 'string' ? new Date(m.createdAt).getTime() : (m.createdAt.seconds ? m.createdAt.seconds * 1000 : Number(m.createdAt));
+                    return ts >= thirtyDaysAgo;
+                });
+
+                if (recentDocs.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📊</div><div class="empty-state-text">Sin movimientos en los últimos 30 días</div></div>`;
                     return;
                 }
                 const typeConfig = {
@@ -1221,16 +1389,24 @@
                     adjustment: { icon: '🔧', bg: 'rgba(255,212,94,0.1)', label: 'Ajuste' }
                 };
                 container.innerHTML = '';
-                snap.forEach(d => {
+                recentDocs.forEach(d => {
                     const m = d.data();
                     const cfg = typeConfig[m.type] || { icon: '📌', bg: 'var(--input-bg)', label: m.type };
                     const isPositive = m.amount > 0;
-                    const fecha = m.createdAt ? new Date(m.createdAt).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) : '—';
+                    const ts = typeof m.createdAt === 'string' ? new Date(m.createdAt).getTime() : (m.createdAt?.seconds ? m.createdAt.seconds * 1000 : Number(m.createdAt));
+                    const fecha = ts ? new Date(ts).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) : '—';
+
+                    // Priority: unpaid purchase older than 3 days
+                    const isPriority = m.type === 'purchase' && m.status !== 'paid' && (now - ts) > threeDaysMs;
+
+                    const priorityBadge = isPriority ? `<span style="font-size:10px; font-weight:800; color:#ff5252; background:rgba(255,82,82,0.12); padding:2px 8px; border-radius:8px; margin-left:8px;">🔴 Prioritario</span>` : '';
+                    const wrapperStyle = isPriority ? `background:rgba(255,82,82,0.06); border-radius:12px; margin:-4px; padding:4px;` : '';
+
                     container.innerHTML += `
-                        <div class="movement-item">
-                            <div class="movement-icon" style="background:${cfg.bg}">${cfg.icon}</div>
+                        <div class="movement-item" style="${wrapperStyle}">
+                            <div class="movement-icon" style="background:${isPriority ? 'rgba(255,82,82,0.15)' : cfg.bg}">${isPriority ? '🚨' : cfg.icon}</div>
                             <div class="movement-info">
-                                <div class="movement-desc">${m.description || cfg.label}</div>
+                                <div class="movement-desc">${m.description || cfg.label}${priorityBadge}</div>
                                 <div class="movement-date">${fecha}</div>
                             </div>
                             <div class="movement-amount ${isPositive ? 'negative' : 'positive'}">
@@ -1563,7 +1739,13 @@
 
                     const downloadURL = data.url;
                     await updateProfile(currentUser, { photoURL: downloadURL });
-                    document.getElementById('mc-avatar').src = downloadURL;
+                    
+                    // Redraw avatar button
+                    const avatarBtn = document.getElementById('mc-avatar-btn');
+                    if (avatarBtn) {
+                        avatarBtn.innerHTML = `<img src="${downloadURL}" alt="Avatar"><span class="avatar-upload-btn" id="avatar-upload-trigger">📷</span>`;
+                        document.getElementById('avatar-upload-trigger').onclick = () => document.getElementById('avatar-file-input').click();
+                    }
                     showToast('✅ Foto actualizada');
                 };
                 reader.onerror = () => { throw new Error('Error al leer el archivo'); };
@@ -1573,27 +1755,39 @@
         });
 
         // ============================================================
-        // Settings
+        // Settings & Password Form Submit
         // ============================================================
-        document.getElementById('change-password-btn').onclick = async function () {
-            const email = currentUser.email;
-            if (!email) { showToast('❌ No hay correo en tu cuenta'); return; }
-            try {
-                await sendPasswordResetEmail(auth, email);
-                showToast('📧 Enviamos un enlace de restablecimiento a ' + email);
-            } catch (e) {
-                showToast('❌ Error: ' + e.message);
-            }
-        };
+        const changePasswordForm = document.getElementById('change-password-dashboard-form');
+        if (changePasswordForm) {
+            changePasswordForm.onsubmit = async function (e) {
+                e.preventDefault();
+                const newPass = document.getElementById('dashboard-new-password').value;
+                const confirmPass = document.getElementById('dashboard-confirm-password').value;
 
-        document.getElementById('logout-btn').onclick = async function () {
-            await signOut(auth);
-            window.location.href = '/login.html';
-        };
+                if (newPass.length < 6) {
+                    showToast('⚠️ La contraseña debe tener al menos 6 caracteres');
+                    return;
+                }
+                if (newPass !== confirmPass) {
+                    showToast('⚠️ Las contraseñas no coinciden');
+                    return;
+                }
 
-        // "Ver todos" buttons
-        document.getElementById('ver-mas-ordenes-btn').onclick = () => showToast('📦 Historial completo: próximamente');
-        document.getElementById('ver-mas-movimientos-btn').onclick = () => showToast('📊 Historial completo: próximamente');
+                try {
+                    const { updatePassword } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+                    await updatePassword(auth.currentUser, newPass);
+                    showToast('✅ Contraseña actualizada con éxito');
+                    changePasswordForm.reset();
+                } catch (err) {
+                    console.error("Password update failed", err);
+                    if (err.code === 'auth/requires-recent-login') {
+                        showToast('🔒 Por seguridad, debes volver a iniciar sesión para cambiar tu contraseña.');
+                    } else {
+                        showToast('❌ Error: ' + err.message);
+                    }
+                }
+            };
+        }
 
     </script>
 <script src="/footer.js"></script>

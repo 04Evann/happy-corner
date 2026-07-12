@@ -25,5 +25,11 @@
     { "source": "/dashboard", "destination": "/mi-cuenta", "permanent": true },
     { "source": "/dashboard.html", "destination": "/mi-cuenta", "permanent": true },
     { "source": "/admin", "destination": "/admin-v2", "permanent": true }
+  ],
+  "crons": [
+    {
+      "path": "/api/checkDebtReminders",
+      "schedule": "0 8 * * *"
+    }
   ]
 }

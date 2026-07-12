@@ -423,6 +423,7 @@
         </div>
         <div class="admin-nav">
             <button class="nav-tab active" onclick="switchTab('tab-clients')">👥 Buscar Clientes</button>
+            <button class="nav-tab" onclick="switchTab('tab-orders')">📦 Pedidos</button>
             <button class="nav-tab" onclick="switchTab('tab-contracts')">📄 Contratos Firmados</button>
             <button class="nav-tab" onclick="switchTab('tab-credit')">📊 Dashboard & Score</button>
         </div>
@@ -445,6 +446,50 @@
             </div>
             <div class="clients-grid" id="clients-list-container">
                 <!-- Loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB: ORDERS -->
+        <!-- ============================================== -->
+        <div id="tab-orders" class="tab-content">
+            <h2 style="font-weight:900; margin-bottom: 16px;">Historial de Pedidos (1 Año)</h2>
+            <div style="display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
+                <input type="text" id="order-search-input" class="admin-input" style="flex:1; min-width:200px; padding:12px;" placeholder="Buscar por Nombre, ID, Resumen..." />
+                
+                <select id="order-status-filter" class="admin-input" style="width:200px; padding:12px; height:45px; background:var(--surface-color); color:var(--text-color); border:1px solid var(--border-color); border-radius:14px;">
+                    <option value="all">Todos los Pedidos</option>
+                    <option value="unpaid">Deber (Por pagar)</option>
+                    <option value="paid">Pagados / Entregados</option>
+                    <option value="cancelled">Cancelados</option>
+                </select>
+                
+                <select id="order-sort-filter" class="admin-input" style="width:250px; padding:12px; height:45px; background:var(--surface-color); color:var(--text-color); border:1px solid var(--border-color); border-radius:14px;">
+                    <option value="newest">Más recientes primero</option>
+                    <option value="most-expensive">Más caros</option>
+                    <option value="oldest-unpaid-priority">Antiguos sin pagar primero (Prioridad 🚨)</option>
+                </select>
+            </div>
+            <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; overflow:hidden;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID Orden</th>
+                            <th>Cliente</th>
+                            <th>WhatsApp</th>
+                            <th>Resumen del Pedido</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body">
+                        <tr>
+                            <td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Cargando pedidos...</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -741,9 +786,12 @@
         // ==============================================
         // CORE MODULE LOGIC
         // ==============================================
+        let allOrders = [];
+
         function initAdminPanel() {
             // Real-time setup
             setupClientsListener();
+            setupOrdersListener();
             setupContractsListener();
             setupLeaderboardListener();
 
@@ -751,6 +799,11 @@
             document.getElementById('client-search-input').addEventListener('input', (e) => {
                 renderClients(e.target.value);
             });
+
+            // Setup orders filters typing & change helpers
+            document.getElementById('order-search-input').addEventListener('input', () => renderOrders());
+            document.getElementById('order-status-filter').addEventListener('change', () => renderOrders());
+            document.getElementById('order-sort-filter').addEventListener('change', () => renderOrders());
         }
 
         // Users listener
@@ -784,12 +837,17 @@
                 const initial = (c.displayName || c.name || 'U').charAt(0).toUpperCase();
                 const points = c.happyPoints || 0;
                 const debt = c.activeDebt || 0;
+                
+                // Show profile picture if it exists
+                const avatarHTML = c.photoURL 
+                    ? `<img src="${c.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` 
+                    : initial;
 
                 const card = document.createElement('div');
                 card.className = 'client-card';
                 card.onclick = () => openClientModal(c.uid);
                 card.innerHTML = `
-                    <div class="client-avatar">${initial}</div>
+                    <div class="client-avatar">${avatarHTML}</div>
                     <div class="client-name">${c.displayName || c.name || 'Usuario'}</div>
                     <div class="client-code">${c.customerCode ? `🏷️ ${c.customerCode}` : 'Sin HappyCódigo'}</div>
                     <div style="font-size:14px; margin-bottom: 4px;">Deuda: <strong style="color:${debt > 0 ? 'var(--accent-red)' : 'var(--accent-green)'}">$${debt.toLocaleString()}</strong></div>
@@ -802,6 +860,165 @@
                 listContainer.appendChild(card);
             });
         }
+
+        // ==============================================
+        // ORDERS TAB MODULE LOGIC
+        // ==============================================
+        function setupOrdersListener() {
+            const oneYearAgo = new Date();
+            oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+            
+            const q = query(
+                collection(db, 'orders'),
+                where('createdAt', '>=', oneYearAgo.toISOString())
+            );
+            
+            onSnapshot(q, (snap) => {
+                const list = [];
+                snap.forEach(d => {
+                    list.push({ id: d.id, ...d.data() });
+                });
+                allOrders = list;
+                renderOrders();
+            }, (err) => {
+                console.error("Orders listener failed", err);
+            });
+        }
+
+        function parsePrice(val) {
+            if (typeof val === 'number') return val;
+            if (!val) return 0;
+            const cleaned = val.toString().replace(/[^0-9.-]/g, '');
+            const num = parseFloat(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function renderOrders() {
+            const tableBody = document.getElementById('orders-table-body');
+            tableBody.innerHTML = '';
+
+            const searchQuery = document.getElementById('order-search-input').value.toLowerCase().trim();
+            const statusFilter = document.getElementById('order-status-filter').value;
+            const sortFilter = document.getElementById('order-sort-filter').value;
+
+            // 1. Filter
+            let filtered = allOrders.filter(o => {
+                // Search match
+                const matchSearch = 
+                    o.id.toLowerCase().includes(searchQuery) ||
+                    (o.nombre || '').toLowerCase().includes(searchQuery) ||
+                    (o.resumen || '').toLowerCase().includes(searchQuery);
+
+                if (!matchSearch) return false;
+
+                // Status match
+                const isCompleted = o.status === 'completed';
+                const isCancelled = o.status === 'cancelled';
+                const isUnpaid = !isCompleted && !isCancelled;
+
+                if (statusFilter === 'unpaid' && !isUnpaid) return false;
+                if (statusFilter === 'paid' && !isCompleted) return false;
+                if (statusFilter === 'cancelled' && !isCancelled) return false;
+
+                return true;
+            });
+
+            // 2. Sort
+            if (sortFilter === 'newest') {
+                filtered.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+            } else if (sortFilter === 'most-expensive') {
+                filtered.sort((a, b) => parsePrice(b.total) - parsePrice(a.total));
+            } else if (sortFilter === 'oldest-unpaid-priority') {
+                // Unpaid orders first (oldest first), then the rest
+                filtered.sort((a, b) => {
+                    const isUnpaidA = a.status !== 'completed' && a.status !== 'cancelled';
+                    const isUnpaidB = b.status !== 'completed' && b.status !== 'cancelled';
+                    if (isUnpaidA && !isUnpaidB) return -1;
+                    if (!isUnpaidA && isUnpaidB) return 1;
+                    // Chronological for unpaid
+                    return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+                });
+            }
+
+            if (filtered.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding:30px;">No se encontraron pedidos.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(o => {
+                const date = o.createdAt ? new Date(o.createdAt).toLocaleString('es-CO') : '—';
+                const totalVal = o.total || '$0';
+                
+                // Determine if priority overdue (unpaid & older than 3 days)
+                const isUnpaid = o.status !== 'completed' && o.status !== 'cancelled';
+                const isOverdue = isUnpaid && (new Date() - new Date(o.createdAt)) > 3 * 24 * 60 * 60 * 1000;
+                
+                // Status badges
+                let badgeClass = 'badge badge-c';
+                let badgeText = o.status || 'pendiente';
+                if (o.status === 'completed') {
+                    badgeClass = 'badge badge-a';
+                    badgeText = 'Entregado (Pago)';
+                } else if (o.status === 'cancelled') {
+                    badgeClass = 'badge badge-d';
+                    badgeText = 'Cancelado';
+                } else if (isOverdue) {
+                    badgeClass = 'badge badge-d';
+                    badgeText = '🚨 Prioridad (3d+)';
+                }
+
+                // Row style
+                let rowStyle = '';
+                if (isOverdue) {
+                    rowStyle = 'style="background: rgba(235, 87, 87, 0.08); border-left: 4px solid var(--accent-red);"';
+                }
+
+                // Actions mapping
+                let actionsHTML = '';
+                if (isUnpaid) {
+                    actionsHTML = `
+                        <button class="admin-btn" style="padding: 6px 12px; font-size: 11px; background: var(--accent-green);" onclick="updateOrderStatus('${o.id}', 'completed')">✓ Entregar</button>
+                        <button class="admin-btn" style="padding: 6px 12px; font-size: 11px; background: var(--accent-red); margin-left: 6px;" onclick="updateOrderStatus('${o.id}', 'cancelled')">✕ Cancelar</button>
+                    `;
+                } else {
+                    actionsHTML = `<span style="font-size: 11px; color: var(--text-muted);">Sin acciones</span>`;
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <tr ${rowStyle}>
+                        <td style="font-weight:700; font-family:monospace;">${o.id}</td>
+                        <td>${o.nombre || 'Cliente'}</td>
+                        <td><a href="https://wa.me/57${o.whatsapp || ''}" target="_blank" style="color: var(--primary-color); text-decoration: none;">${o.whatsapp || '—'}</a></td>
+                        <td style="font-size:12px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${o.resumen || ''}">${o.resumen || '—'}</td>
+                        <td style="font-weight:700; color:var(--primary-color);">${totalVal}</td>
+                        <td><span class="${badgeClass}">${badgeText}</span></td>
+                        <td style="font-size:12px; color:var(--text-muted);">${date}</td>
+                        <td>${actionsHTML}</td>
+                    </tr>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        window.updateOrderStatus = async function(orderId, status) {
+            try {
+                const now = new Date().toISOString();
+                const updateData = {
+                    status,
+                    updatedAt: now
+                };
+                if (status === 'completed') {
+                    updateData.completedAt = now;
+                }
+                
+                await updateDoc(doc(db, 'orders', orderId), updateData);
+                alert(`Pedido ${orderId} actualizado con éxito.`);
+            } catch (err) {
+                console.error("Failed to update order status", err);
+                alert("Error al actualizar estado del pedido: " + err.message);
+            }
+        };
 
         // Render signed contracts tab
         function setupContractsListener() {
@@ -895,7 +1112,14 @@
             document.getElementById('modal-client-name').textContent = client.displayName || client.name || 'Usuario';
             document.getElementById('modal-client-code').textContent = client.customerCode ? `🏷️ ${client.customerCode}` : 'SIN HAPPYCÓDIGO';
             document.getElementById('modal-client-email').textContent = client.email || 'Sin correo electrónico';
-            document.getElementById('modal-avatar').textContent = (client.displayName || client.name || 'U').charAt(0).toUpperCase();
+            
+            const modalAvatar = document.getElementById('modal-avatar');
+            if (client.photoURL) {
+                modalAvatar.innerHTML = `<img src="${client.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            } else {
+                modalAvatar.innerHTML = '';
+                modalAvatar.textContent = (client.displayName || client.name || 'U').charAt(0).toUpperCase();
+            }
 
             // Clear inputs
             document.getElementById('adj-amount').value = '';

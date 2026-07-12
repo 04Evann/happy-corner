@@ -88,6 +88,7 @@ export default async function handler(req, res) {
             const payloadObj = {
                 n: pedidoData.nombre, o: orderCode, p: totalDisplay, w: cleanNumber, res: pedidoData.resumen
             };
+            const tokenBase64 = Buffer.from(JSON.stringify(payloadObj)).toString('base64');
             const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.lol';
             const verifyLinkRaw = `${siteUrl}/verify?auth=${encodeURIComponent(tokenBase64)}`;
 
@@ -192,6 +193,10 @@ export default async function handler(req, res) {
                 ordersQuery = ordersQuery
                     .where('createdAt', '>=', `${searchDate}T00:00:00`)
                     .where('createdAt', '<=', `${searchDate}T23:59:59`);
+            } else if (query.range === 'year') {
+                const oneYearAgo = new Date();
+                oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+                ordersQuery = ordersQuery.where('createdAt', '>=', oneYearAgo.toISOString());
             } else if (query.view === 'active') {
                 // Return non-completed and non-cancelled orders
                 // Firestore doesn't easily support multiple "not in" or != on fields without complex queries.
@@ -224,12 +229,15 @@ export default async function handler(req, res) {
                     whatsapp: data.whatsapp,
                     total: data.total,
                     estado,
-                    resumen: data.resumen
+                    status: data.status || 'pending',
+                    resumen: data.resumen,
+                    createdAt: data.createdAt || new Date().toISOString(),
+                    customerUID: data.customerUID || null
                 });
             });
 
             // Sort orders descending by creation date
-            orders.sort((a, b) => b.id.localeCompare(a.id));
+            orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
             return res.status(200).json(orders);
         }

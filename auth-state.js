@@ -1,18 +1,27 @@
-import { initPromise, auth, onAuthStateChanged } from './firebase-auth.js';
+import { initPromise, auth, onAuthStateChanged, db, doc, getDoc } from './firebase-auth.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     initPromise.then(() => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             const authIconDesktop = document.getElementById('auth-icon-desktop');
             const sideMenu = document.getElementById('sideMenu');
             
             if (user) {
+                // Try to get photoURL from Firestore (custom uploaded avatar takes priority)
+                let photoURL = user.photoURL;
+                try {
+                    const userSnap = await getDoc(doc(db, 'users', user.uid));
+                    if (userSnap.exists() && userSnap.data().photoURL) {
+                        photoURL = userSnap.data().photoURL;
+                    }
+                } catch (e) { /* silent - fallback to auth photoURL */ }
+
                 // Usuario logueado: Mostrar foto, inicial o iluminar el ícono
                 if (authIconDesktop) {
                     authIconDesktop.setAttribute('href', '/mi-cuenta');
-                    if (user.photoURL) {
+                    if (photoURL) {
                         authIconDesktop.innerHTML = `
-                            <img src="${user.photoURL}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--hp-pink);">
+                            <img src="${photoURL}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--hp-pink);">
                         `;
                     } else {
                         const initial = user.displayName ? user.displayName.charAt(0).toUpperCase() : 
