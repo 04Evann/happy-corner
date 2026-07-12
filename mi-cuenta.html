@@ -975,7 +975,6 @@
                 <div class="mc-section" id="mc-contract-section">
                     <div class="mc-section-header">
                         <div class="mc-section-title"><span class="icon icon-gray">📄</span> Acuerdo de Responsabilidad</div>
-                        <button class="mc-link-btn" id="ver-contrato-btn" style="display:none;">Ver Contrato PDF</button>
                     </div>
                     <div class="contract-status-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-color);">
                         <span class="profile-field-label">Estado</span>
@@ -990,6 +989,7 @@
                         <span class="profile-field-value" id="mc-contract-date">—</span>
                     </div>
                     <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px; width:100%;">✍️ Firmar contrato ahora</button>
+                    <button class="mc-btn-secondary" id="ver-contrato-btn" style="display:none; margin-top:12px; width:100%; border-color:var(--text-muted); color:var(--text-color);">📄 Ver Contrato PDF</button>
                 </div>
             </div>
 
@@ -1042,19 +1042,10 @@
             <div id="pane-seguridad" class="mc-pane">
                 <div class="mc-section">
                     <div class="mc-section-header">
-                        <div class="mc-section-title"><span class="icon icon-gray">🔑</span> Cambiar Contraseña</div>
+                        <div class="mc-section-title"><span class="icon icon-gray">🔑</span> Seguridad y Contraseña</div>
                     </div>
-                    <form id="change-password-dashboard-form" style="display:flex; flex-direction:column; gap:14px; margin-top:10px;">
-                        <div class="input-group" style="display:flex; flex-direction:column; gap:6px;">
-                            <label style="font-size:12px; color:var(--text-muted); font-weight:700;">Nueva Contraseña</label>
-                            <input type="password" id="dashboard-new-password" class="mc-input" required placeholder="Mínimo 6 caracteres" style="width:100%; box-sizing:border-box; padding:10px; background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:12px;">
-                        </div>
-                        <div class="input-group" style="display:flex; flex-direction:column; gap:6px;">
-                            <label style="font-size:12px; color:var(--text-muted); font-weight:700;">Confirmar Nueva Contraseña</label>
-                            <input type="password" id="dashboard-confirm-password" class="mc-input" required placeholder="Repite la nueva contraseña" style="width:100%; box-sizing:border-box; padding:10px; background:var(--input-bg); color:var(--text-color); border:1px solid var(--border-color); border-radius:12px;">
-                        </div>
-                        <button type="submit" class="btn-primary" style="margin-top:8px;">Guardar Nueva Contraseña</button>
-                    </form>
+                    <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:16px;">Para proteger tu cuenta, te enviaremos un enlace seguro a tu correo electrónico para restablecer tu contraseña.</p>
+                    <button id="send-password-reset-btn" class="mc-btn-secondary" style="width:100%; border-color:var(--text-muted); color:var(--text-color);">📧 Enviar correo de restablecimiento</button>
                 </div>
             </div>
 
@@ -1461,13 +1452,20 @@
                     document.getElementById('mc-contract-date').textContent = signedAt
                         ? new Date(signedAt).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })
                         : '—';
-                    document.getElementById('firmar-contrato-btn').textContent = '📄 Ver contrato';
-                    banner.style.display = 'none';
+                    
+                    document.getElementById('firmar-contrato-btn').style.display = 'none';
+                    document.getElementById('ver-contrato-btn').style.display = 'block';
+
+                    if(banner) banner.style.display = 'none';
                 } else {
                     document.getElementById('mc-contract-status').textContent = '⚠️ Sin firmar';
                     document.getElementById('mc-contract-status').className = 'contract-unsigned-badge';
                     document.getElementById('mc-contract-date').textContent = 'N/A';
-                    banner.style.display = 'block';
+                    
+                    document.getElementById('firmar-contrato-btn').style.display = 'block';
+                    document.getElementById('ver-contrato-btn').style.display = 'none';
+
+                    if(banner) banner.style.display = 'block';
                 }
             } catch (e) { console.error('Contract status error', e); }
         }
@@ -1780,36 +1778,26 @@
         });
 
         // ============================================================
-        // Settings & Password Form Submit
+        // Settings & Password Reset
         // ============================================================
-        const changePasswordForm = document.getElementById('change-password-dashboard-form');
-        if (changePasswordForm) {
-            changePasswordForm.onsubmit = async function (e) {
-                e.preventDefault();
-                const newPass = document.getElementById('dashboard-new-password').value;
-                const confirmPass = document.getElementById('dashboard-confirm-password').value;
-
-                if (newPass.length < 6) {
-                    showToast('⚠️ La contraseña debe tener al menos 6 caracteres');
+        const resetPasswordBtn = document.getElementById('send-password-reset-btn');
+        if (resetPasswordBtn) {
+            resetPasswordBtn.onclick = async function () {
+                if (!currentUser || !currentUser.email) {
+                    showToast('❌ No tienes un correo vinculado para restablecer.');
                     return;
                 }
-                if (newPass !== confirmPass) {
-                    showToast('⚠️ Las contraseñas no coinciden');
-                    return;
-                }
-
+                resetPasswordBtn.disabled = true;
+                resetPasswordBtn.textContent = 'Enviando...';
                 try {
-                    const { updatePassword } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
-                    await updatePassword(auth.currentUser, newPass);
-                    showToast('✅ Contraseña actualizada con éxito');
-                    changePasswordForm.reset();
+                    await sendPasswordResetEmail(auth, currentUser.email);
+                    showToast('✅ Correo de restablecimiento enviado');
                 } catch (err) {
-                    console.error("Password update failed", err);
-                    if (err.code === 'auth/requires-recent-login') {
-                        showToast('🔒 Por seguridad, debes volver a iniciar sesión para cambiar tu contraseña.');
-                    } else {
-                        showToast('❌ Error: ' + err.message);
-                    }
+                    console.error("Password reset failed", err);
+                    showToast('❌ Error al enviar correo: ' + err.message);
+                } finally {
+                    resetPasswordBtn.disabled = false;
+                    resetPasswordBtn.textContent = '📧 Enviar correo de restablecimiento';
                 }
             };
         }
