@@ -88,8 +88,9 @@ export default async function handler(req, res) {
             const payloadObj = {
                 n: pedidoData.nombre, o: orderCode, p: totalDisplay, w: cleanNumber, res: pedidoData.resumen
             };
-            const tokenBase64 = Buffer.from(JSON.stringify(payloadObj)).toString('base64');
-            const verifyLinkRaw = `https://happycorner.lol/verify?auth=${encodeURIComponent(tokenBase64)}`;
+            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.lol';
+            const verifyLinkRaw = `${siteUrl}/verify?auth=${encodeURIComponent(tokenBase64)}`;
+
 
             // Acortar el enlace para que WhatsApp se vea súper limpio
             let verifyLink = verifyLinkRaw;

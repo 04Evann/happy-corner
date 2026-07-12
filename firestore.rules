@@ -65,5 +65,17 @@ service cloud.firestore {
       allow read: if isOwner(uid) || isAdmin();
       allow write: if isAdmin();
     }
+
+    // creditScores collection rules (server-only write, client-read own)
+    match /creditScores/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if isAdmin(); // Only server (Admin SDK) may set scores
+    }
+
+    // verificationPins collection (server-only write, no client reads)
+    match /verificationPins/{uid} {
+      allow read: if false; // Never expose PIN hashes to client
+      allow write: if isAdmin();
+    }
   }
 }

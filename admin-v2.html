@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Corner | Admin v2</title>
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    
+    <!-- Google Fonts & Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        :root {
+            --bg-color: #080808;
+            --surface-color: #121212;
+            --surface-card: #181818;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-color: #f5f5f7;
+            --text-muted: #86868b;
+            --primary-color: #ff5299;
+            --primary-hover: #ff7bb5;
+            --accent-purple: #9b51e0;
+            --accent-orange: #f2994a;
+            --accent-green: #27ae60;
+            --accent-red: #eb5757;
+            --hp-gradient: linear-gradient(135deg, #b01e5a, #ff5299, #ff8c42);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* --- Header & Layout --- */
+        header.admin-header {
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: var(--hp-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab.active {
+            color: #fff;
+            background: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(255, 82, 153, 0.25);
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-logout-small {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-logout-small:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        /* --- Main Content Grid --- */
+        main.admin-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Search & Inputs --- */
+        .search-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .admin-input {
+            flex: 1;
+            padding: 14px 18px;
+            background: var(--surface-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+
+        .admin-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* --- Cards & Grid --- */
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .client-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .client-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 82, 153, 0.3);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .client-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--hp-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .client-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .client-code {
+            font-family: monospace;
+            color: var(--primary-color);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .client-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        /* --- Modals --- */
+        .admin-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .admin-modal-overlay.active {
+            display: flex;
+        }
+
+        .admin-modal {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: var(--surface-card);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* --- Auth Gate Overlay --- */
+        #auth-gate-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-color);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .gate-card {
+            max-width: 420px;
+            padding: 40px 32px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+        }
+
+        /* --- Badges --- */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-a { background: rgba(39, 174, 96, 0.15); color: var(--accent-green); }
+        .badge-b { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+        .badge-c { background: rgba(242, 153, 74, 0.15); color: var(--accent-orange); }
+        .badge-d { background: rgba(235, 87, 87, 0.15); color: var(--accent-red); }
+
+        /* --- Tables --- */
+        table.admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        table.admin-table th {
+            text-align: left;
+            padding: 14px 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.admin-table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- Buttons --- */
+        .admin-btn {
+            padding: 12px 24px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .admin-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .admin-btn-secondary {
+            padding: 12px 24px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .admin-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECURE AUTH GATE OVERLAY -->
+    <div id="auth-gate-overlay">
+        <div class="gate-card">
+            <h2 id="gate-status-title" style="margin-bottom: 12px; font-weight:900;">Verificando credenciales...</h2>
+            <p id="gate-status-text" style="color: var(--text-muted); font-size:14px; margin-bottom: 24px;">Por favor espera un momento mientras validamos tu sesión de administrador.</p>
+            <div id="gate-action-btn-container" style="display:none;">
+                <a href="/login.html" class="admin-btn" style="text-decoration:none; display:inline-block;">Ir al Inicio de Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PANEL LAYOUT -->
+    <header class="admin-header">
+        <div class="header-logo">
+            <img src="/happyfavicon.png" alt="Happy Corner Logo">
+            <span class="header-title">Happy Corner Admin</span>
+        </div>
+        <div class="admin-nav">
+            <button class="nav-tab active" onclick="switchTab('tab-clients')">👥 Buscar Clientes</button>
+            <button class="nav-tab" onclick="switchTab('tab-contracts')">📄 Contratos Firmados</button>
+            <button class="nav-tab" onclick="switchTab('tab-credit')">📊 Dashboard & Score</button>
+        </div>
+        <div class="admin-profile">
+            <span id="admin-display-name" style="font-size:14px; font-weight:600; color:var(--text-muted);">Administrador</span>
+            <button class="btn-logout-small" id="btn-logout">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        
+        <!-- ============================================== -->
+        <!-- TAB: CLIENTS -->
+        <!-- ============================================== -->
+        <div id="tab-clients" class="tab-content active">
+            <div class="search-container">
+                <input type="text" id="client-search-input" class="admin-input" placeholder="Buscar por Nombre, Correo, Teléfono o HappyCódigo..." />
+            </div>
+            <div class="clients-grid" id="clients-list-container">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB: CONTRACTS -->
+        <!-- ============================================== -->
+        <div id="tab-contracts" class="tab-content">
+            <h2 style="font-weight:900; margin-bottom: 16px;">Acuerdos de Responsabilidad Firmados</h2>
+            <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; overflow:hidden;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Firmado En</th>
+                            <th>IP / Dispositivo</th>
+                            <th>Ubicación</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contracts-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- TAB: CREDIT SCORE DASHBOARD -->
+        <!-- ============================================== -->
+        <div id="tab-credit" class="tab-content">
+            <h2 style="font-weight:900; margin-bottom: 24px;">Puntaje Crediticio Global</h2>
+            <div class="clients-grid" style="margin-bottom: 32px;">
+                <div class="client-card" style="cursor:default;">
+                    <div style="font-size:13px; color:var(--text-muted); font-weight:700;">PROMEDIO GLOBAL</div>
+                    <div style="font-size:40px; font-weight:900; margin-top:8px; color:var(--primary-color);" id="avg-credit-score">0/100</div>
+                </div>
+                <div class="client-card" style="cursor:default;">
+                    <div style="font-size:13px; color:var(--text-muted); font-weight:700;">TOTAL CLIENTES</div>
+                    <div style="font-size:40px; font-weight:900; margin-top:8px; color:var(--accent-purple);" id="total-clients-count">0</div>
+                </div>
+                <div class="client-card" style="cursor:default;">
+                    <div style="font-size:13px; color:var(--text-muted); font-weight:700;">EN RIESGO (TIER D)</div>
+                    <div style="font-size:40px; font-weight:900; margin-top:8px; color:var(--accent-red);" id="total-tier-d">0</div>
+                </div>
+            </div>
+            
+            <h3 style="font-weight:800; margin-bottom:16px;">Tabla de Clasificación</h3>
+            <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; overflow:hidden;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>HappyCódigo</th>
+                            <th>Puntaje</th>
+                            <th>Tier</th>
+                            <th>Última Actualización</th>
+                        </tr>
+                    </thead>
+                    <tbody id="credit-leaderboard-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ============================================== -->
+    <!-- MODAL: CLIENT DETAIL -->
+    <!-- ============================================== -->
+    <div class="admin-modal-overlay" id="client-detail-modal">
+        <div class="admin-modal">
+            <button class="modal-close" onclick="closeClientModal()">✕</button>
+            <div style="display:flex; align-items:center; gap:20px; margin-bottom:28px;">
+                <div class="client-avatar" id="modal-avatar" style="width:64px; height:64px; font-size:24px; margin-bottom:0;">?</div>
+                <div>
+                    <h2 id="modal-client-name" style="font-weight:900; margin-bottom:4px;">Nombre del Cliente</h2>
+                    <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-muted);">
+                        <span id="modal-client-code" style="font-family:monospace; color:var(--primary-color); font-weight:700;">LABEL</span>
+                        <span>•</span>
+                        <span id="modal-client-email">correo@correo.com</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard sections -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:32px;">
+                <!-- Debt & Points adjustment -->
+                <div style="background:var(--surface-card); padding:20px; border-radius:20px; border:1px solid var(--border-color);">
+                    <h3 style="font-weight:800; font-size:16px; margin-bottom:16px;">💳 Registrar Transacción</h3>
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <div>
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:600;">TIPO</label>
+                            <select id="adj-type" class="admin-input" style="width:100%; margin-top:4px; padding:10px;">
+                                <option value="purchase">Compra a Crédito (+)</option>
+                                <option value="payment">Abono / Pago (-)</option>
+                                <option value="refund">Reembolso / Ajuste de Deuda</option>
+                                <option value="points">Ajuste de HappyPuntos</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:600;">VALOR ($ o Puntos)</label>
+                            <input type="number" id="adj-amount" class="admin-input" style="width:100%; margin-top:4px; padding:10px;" placeholder="Ej: 5000" />
+                        </div>
+                        <div>
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:600;">DESCRIPCIÓN / MOTIVO</label>
+                            <input type="text" id="adj-desc" class="admin-input" style="width:100%; margin-top:4px; padding:10px;" placeholder="Ej: Pago de combo pizza" />
+                        </div>
+                        <button class="admin-btn" style="margin-top:8px;" onclick="submitTransactionAdjustment()">Aplicar Ajuste</button>
+                    </div>
+                </div>
+
+                <!-- Credit Score adjustment -->
+                <div style="background:var(--surface-card); padding:20px; border-radius:20px; border:1px solid var(--border-color);">
+                    <h3 style="font-weight:800; font-size:16px; margin-bottom:16px;">📊 Ajuste de Puntaje Crediticio</h3>
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px; border:1px solid var(--border-color);">
+                            <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Puntaje Actual</span>
+                            <span id="modal-score-badge" class="badge badge-c" style="font-size:14px; padding:6px 12px;">20/100</span>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:600;">NUEVO PUNTAJE (0-100)</label>
+                            <input type="number" id="manual-score" class="admin-input" style="width:100%; margin-top:4px; padding:10px;" placeholder="Ej: 80" min="0" max="100" />
+                        </div>
+                        <div>
+                            <label style="font-size:12px; color:var(--text-muted); font-weight:600;">MOTIVO DEL AJUSTE (MANDATORIO)</label>
+                            <input type="text" id="manual-score-reason" class="admin-input" style="width:100%; margin-top:4px; padding:10px;" placeholder="Ej: Excelente récord de pago offline" />
+                        </div>
+                        <button class="admin-btn" style="margin-top:8px; background:var(--accent-purple);" onclick="submitCreditScoreAdjustment()">Actualizar Score</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agreement Details -->
+            <div style="background:var(--surface-card); padding:20px; border-radius:20px; border:1px solid var(--border-color); margin-bottom:32px;">
+                <h3 style="font-weight:800; font-size:16px; margin-bottom:12px;">📄 Contrato de Responsabilidad</h3>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div id="modal-contract-status" style="font-weight:700; font-size:14px;">⚠️ Sin firmar</div>
+                        <div id="modal-contract-details" style="font-size:12px; color:var(--text-muted); margin-top:2px;">El cliente no ha aceptado el acuerdo.</div>
+                    </div>
+                    <div id="modal-contract-actions">
+                        <!-- Buttons added dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- History log sections -->
+            <h3 style="font-weight:800; font-size:16px; margin-bottom:12px;">📈 Historial de Movimientos</h3>
+            <div style="max-height:250px; overflow-y:auto; border:1px solid var(--border-color); border-radius:16px; margin-bottom:28px;">
+                <table class="admin-table" style="margin-top:0;">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-movements-tbody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="font-weight:800; font-size:16px; margin-bottom:12px;">📊 Historial Crediticio (Cambios de Score)</h3>
+            <div style="max-height:200px; overflow-y:auto; border:1px solid var(--border-color); border-radius:16px;">
+                <table class="admin-table" style="margin-top:0;">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Ajuste</th>
+                            <th>Razón</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-credit-tbody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- DATABASE & FIREBASE CONFIGURATION -->
+    <!-- ============================================== -->
+    <script type="module">
+        import { initPromise, db, auth } from './firebase-auth.js';
+        import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { doc, getDoc, getDocs, collection, query, where, updateDoc, writeBatch, runTransaction, onSnapshot, orderBy, limit, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        let adminUser = null;
+        let selectedClientUid = null;
+        let currentClientsList = [];
+
+        // Dynamic elements
+        const gateOverlay = document.getElementById('auth-gate-overlay');
+        const gateTitle = document.getElementById('gate-status-title');
+        const gateText = document.getElementById('gate-status-text');
+        const gateActionBtn = document.getElementById('gate-action-btn-container');
+
+        await initPromise;
+
+        // Verify authentication & Admin privilege securely
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                showAuthGateError("No has iniciado sesión", "Debes iniciar sesión con una cuenta autorizada para acceder a este panel.", true);
+                return;
+            }
+
+            try {
+                // Fetch the user document from Firestore to check the role
+                const userSnap = await getDoc(doc(db, 'users', user.uid));
+                if (!userSnap.exists()) {
+                    showAuthGateError("Usuario no encontrado", "Tu cuenta no está registrada en el sistema de Happy Corner.", true);
+                    return;
+                }
+
+                const userData = userSnap.data();
+                if (userData.role !== 'admin') {
+                    showAuthGateError("Acceso Restringido", "Tu cuenta no tiene privilegios de administrador. Si crees que esto es un error, contacta al soporte.", false);
+                    return;
+                }
+
+                // Authenticated successfully! Hide gate
+                adminUser = user;
+                document.getElementById('admin-display-name').textContent = user.displayName || user.email;
+                gateOverlay.style.display = 'none';
+
+                // Initialise modules
+                initAdminPanel();
+
+            } catch (err) {
+                console.error("Auth check failed", err);
+                showAuthGateError("Error de validación", "Ha ocurrido un error al verificar tus privilegios de administrador.", true);
+            }
+        });
+
+        function showAuthGateError(title, msg, showLoginBtn) {
+            gateTitle.textContent = title;
+            gateText.textContent = msg;
+            gateActionBtn.style.display = showLoginBtn ? 'block' : 'none';
+        }
+
+        // Logout
+        document.getElementById('btn-logout').onclick = () => {
+            signOut(auth).then(() => {
+                window.location.href = '/login.html';
+            });
+        };
+
+        // Tab switcher
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+            const targetBtn = Array.from(document.querySelectorAll('.nav-tab')).find(btn => btn.onclick.toString().includes(tabId));
+            if (targetBtn) targetBtn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        };
+
+        // ==============================================
+        // CORE MODULE LOGIC
+        // ==============================================
+        function initAdminPanel() {
+            // Real-time setup
+            setupClientsListener();
+            setupContractsListener();
+            setupLeaderboardListener();
+
+            // Setup search typing helper
+            document.getElementById('client-search-input').addEventListener('input', (e) => {
+                renderClients(e.target.value);
+            });
+        }
+
+        // Users listener
+        function setupClientsListener() {
+            onSnapshot(collection(db, 'users'), (snap) => {
+                const list = [];
+                snap.forEach(d => {
+                    list.push({ uid: d.id, ...d.data() });
+                });
+                currentClientsList = list;
+                renderClients();
+            });
+        }
+
+        // Render clients tab
+        function renderClients(queryStr = '') {
+            const listContainer = document.getElementById('clients-list-container');
+            listContainer.innerHTML = '';
+
+            const filtered = currentClientsList.filter(c => {
+                const target = `${c.name || ''} ${c.displayName || ''} ${c.email || ''} ${c.phone || ''} ${c.customerCode || ''}`.toLowerCase();
+                return target.includes(queryStr.toLowerCase());
+            });
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-muted);">No se encontraron clientes con esos parámetros.</div>`;
+                return;
+            }
+
+            filtered.forEach(c => {
+                const initial = (c.displayName || c.name || 'U').charAt(0).toUpperCase();
+                const points = c.happyPoints || 0;
+                const debt = c.activeDebt || 0;
+
+                const card = document.createElement('div');
+                card.className = 'client-card';
+                card.onclick = () => openClientModal(c.uid);
+                card.innerHTML = `
+                    <div class="client-avatar">${initial}</div>
+                    <div class="client-name">${c.displayName || c.name || 'Usuario'}</div>
+                    <div class="client-code">${c.customerCode ? `🏷️ ${c.customerCode}` : 'Sin HappyCódigo'}</div>
+                    <div style="font-size:14px; margin-bottom: 4px;">Deuda: <strong style="color:${debt > 0 ? 'var(--accent-red)' : 'var(--accent-green)'}">$${debt.toLocaleString()}</strong></div>
+                    <div style="font-size:14px;">Puntos: <strong style="color:var(--accent-purple)">${points}</strong></div>
+                    <div class="client-stats">
+                        <span>${c.phone || 'Sin tel'}</span>
+                        <span>${c.contractSigned ? '✅ Firmado' : '⚠️ Sin Firmar'}</span>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        // Render signed contracts tab
+        function setupContractsListener() {
+            onSnapshot(collection(db, 'debtContracts'), (snap) => {
+                const tableBody = document.getElementById('contracts-table-body');
+                tableBody.innerHTML = '';
+
+                if (snap.empty) {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No se han firmado acuerdos todavía.</td></tr>`;
+                    return;
+                }
+
+                snap.forEach(d => {
+                    const c = d.data();
+                    const date = c.signedAt ? new Date(c.signedAt).toLocaleString('es-CO') : '—';
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="font-weight:700;">${c.typedName || 'Cliente'}</td>
+                        <td>${date}</td>
+                        <td style="font-size:12px; color:var(--text-muted);">${c.ip || '—'}<br>${c.device || '—'} · ${c.browser || '—'}</td>
+                        <td style="font-size:12px;">${c.location || '—'}</td>
+                        <td>
+                            <button class="admin-btn-secondary" style="padding: 6px 12px; font-size:12px;" onclick="window.open('${c.pdfUrl}', '_blank')">📄 Ver PDF</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+        }
+
+        // Leaderboard & global dashboard metrics listener
+        function setupLeaderboardListener() {
+            onSnapshot(collection(db, 'creditScores'), (snap) => {
+                const tableBody = document.getElementById('credit-leaderboard-body');
+                tableBody.innerHTML = '';
+
+                let totalScore = 0;
+                let count = 0;
+                let tierDCount = 0;
+
+                const list = [];
+                snap.forEach(d => {
+                    const cs = d.data();
+                    list.push({ uid: d.id, ...cs });
+
+                    totalScore += cs.score || 0;
+                    count++;
+                    if (cs.tier === 'D') tierDCount++;
+                });
+
+                // Update leaderboard metrics
+                document.getElementById('total-clients-count').textContent = count;
+                document.getElementById('total-tier-d').textContent = tierDCount;
+                document.getElementById('avg-credit-score').textContent = count > 0 ? `${Math.round(totalScore / count)}/100` : '—';
+
+                if (list.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No hay registros de puntaje crediticio.</td></tr>`;
+                    return;
+                }
+
+                // Sort by score descending
+                list.sort((a,b) => (b.score || 0) - (a.score || 0));
+
+                list.forEach(item => {
+                    const client = currentClientsList.find(c => c.uid === item.uid) || {};
+                    const date = item.lastUpdated ? new Date(item.lastUpdated).toLocaleDateString('es-CO') : '—';
+                    const tierLower = (item.tier || 'C').toLowerCase();
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="font-weight:700;">${client.displayName || client.name || 'Usuario'}</td>
+                        <td style="font-family:monospace; color:var(--text-muted);">${client.customerCode || '—'}</td>
+                        <td style="font-weight:900;">${item.score || 20}/100</td>
+                        <td><span class="badge badge-${tierLower}">${item.tier || 'C'}</span></td>
+                        <td style="font-size:12px; color:var(--text-muted);">${date}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            });
+        }
+
+        // ==============================================
+        // CLIENT DETAIL MODAL & LEDGER TRANSACTION WRITER
+        // ==============================================
+        window.openClientModal = async function(uid) {
+            selectedClientUid = uid;
+            const client = currentClientsList.find(c => c.uid === uid);
+            if (!client) return;
+
+            document.getElementById('modal-client-name').textContent = client.displayName || client.name || 'Usuario';
+            document.getElementById('modal-client-code').textContent = client.customerCode ? `🏷️ ${client.customerCode}` : 'SIN HAPPYCÓDIGO';
+            document.getElementById('modal-client-email').textContent = client.email || 'Sin correo electrónico';
+            document.getElementById('modal-avatar').textContent = (client.displayName || client.name || 'U').charAt(0).toUpperCase();
+
+            // Clear inputs
+            document.getElementById('adj-amount').value = '';
+            document.getElementById('adj-desc').value = '';
+            document.getElementById('manual-score').value = '';
+            document.getElementById('manual-score-reason').value = '';
+
+            // Load Modal Subsections
+            loadModalContractInfo(uid);
+            loadModalCreditScore(uid);
+            loadModalMovements(uid);
+
+            document.getElementById('client-detail-modal').classList.add('active');
+        };
+
+        window.closeClientModal = function() {
+            document.getElementById('client-detail-modal').classList.remove('active');
+            selectedClientUid = null;
+        };
+
+        async function loadModalContractInfo(uid) {
+            const statusEl = document.getElementById('modal-contract-status');
+            const detailsEl = document.getElementById('modal-contract-details');
+            const actionEl = document.getElementById('modal-contract-actions');
+            actionEl.innerHTML = '';
+
+            const snap = await getDoc(doc(db, 'debtContracts', uid));
+            if (snap.exists() && snap.data().signed) {
+                const c = snap.data();
+                statusEl.textContent = '✅ Firmado';
+                statusEl.style.color = 'var(--accent-green)';
+                detailsEl.textContent = `Aceptado por ${c.typedName} el ${new Date(c.signedAt).toLocaleDateString('es-CO')}`;
+                
+                actionEl.innerHTML = `
+                    <button class="admin-btn-secondary" style="padding: 6px 12px; font-size:12px;" onclick="window.open('${c.pdfUrl}', '_blank')">📄 Ver PDF</button>
+                    <button class="admin-btn-secondary" style="padding: 6px 12px; font-size:12px; margin-left:8px;" onclick="window.open('${c.signatureUrl}', '_blank')">✍️ Firma R2</button>
+                `;
+            } else {
+                statusEl.textContent = '⚠️ Sin Firmar';
+                statusEl.style.color = 'var(--accent-red)';
+                detailsEl.textContent = 'El cliente todavía no ha completado la firma del acuerdo de responsabilidad.';
+            }
+        }
+
+        async function loadModalCreditScore(uid) {
+            const scoreEl = document.getElementById('modal-score-badge');
+            const tbody = document.getElementById('modal-credit-tbody');
+            tbody.innerHTML = '';
+
+            const snap = await getDoc(doc(db, 'creditScores', uid));
+            if (!snap.exists()) {
+                scoreEl.textContent = '20/100';
+                scoreEl.className = 'badge badge-c';
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); font-size:12px;">Sin registros.</td></tr>`;
+                return;
+            }
+
+            const cs = snap.data();
+            const tierLower = (cs.tier || 'C').toLowerCase();
+            scoreEl.textContent = `${cs.score || 20}/100 - Tier ${cs.tier || 'C'}`;
+            scoreEl.className = `badge badge-${tierLower}`;
+
+            const history = cs.history || [];
+            if (history.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); font-size:12px;">Sin historial de cambios de puntaje.</td></tr>`;
+                return;
+            }
+
+            // Display descending history (newest first)
+            [...history].reverse().forEach(h => {
+                const date = h.date ? new Date(h.date).toLocaleDateString('es-CO') : '—';
+                const delta = h.delta > 0 ? `+${h.delta}` : h.delta;
+                const color = h.delta > 0 ? 'var(--accent-green)' : h.delta < 0 ? 'var(--accent-red)' : 'var(--text-color)';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-size:12px;">${date}</td>
+                    <td style="font-weight:700; color:${color};">${delta} pts</td>
+                    <td style="font-size:12px; color:var(--text-muted);">${h.reason || 'Ajuste'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function loadModalMovements(uid) {
+            const tbody = document.getElementById('modal-movements-tbody');
+            tbody.innerHTML = '';
+
+            const snap = await getDocs(query(collection(db, 'movements'), where('customerUID', '==', uid), orderBy('createdAt', 'desc')));
+            if (snap.empty) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-size:12px;">No hay movimientos financieros registrados.</td></tr>`;
+                return;
+            }
+
+            snap.forEach(d => {
+                const m = d.data();
+                const date = m.createdAt ? new Date(m.createdAt).toLocaleDateString('es-CO') : '—';
+                const amt = Number(m.amount) || 0;
+                
+                let typeText = m.type;
+                let amtColor = 'var(--text-color)';
+                let formattedAmt = amt.toLocaleString();
+
+                if (m.type === 'purchase') {
+                    typeText = '🛍️ Compra';
+                    amtColor = 'var(--accent-red)';
+                    formattedAmt = `+$${formattedAmt}`;
+                } else if (m.type === 'payment') {
+                    typeText = '💳 Abono';
+                    amtColor = 'var(--accent-green)';
+                    formattedAmt = `-$${Math.abs(amt).toLocaleString()}`;
+                } else if (m.type === 'points') {
+                    typeText = '⭐ Puntos';
+                    amtColor = 'var(--accent-purple)';
+                    formattedAmt = `${amt > 0 ? '+' : ''}${amt}`;
+                } else if (m.type === 'refund') {
+                    typeText = '🔄 Reembolso';
+                    amtColor = 'var(--accent-orange)';
+                    formattedAmt = `$${formattedAmt}`;
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-size:12px;">${date}</td>
+                    <td><span style="font-size:12px; font-weight:600;">${typeText}</span></td>
+                    <td style="font-size:12px; color:var(--text-muted);">${m.description || ''}</td>
+                    <td style="font-weight:700; color:${amtColor};">${formattedAmt}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // ==============================================
+        // CLIENT-SIDE FINANCES & RATING LEDGER TRANSACTIONS
+        // ==============================================
+
+        // 1. Transaction Adjustment Submit
+        window.submitTransactionAdjustment = async function() {
+            if (!selectedClientUid) return;
+            const type = document.getElementById('adj-type').value;
+            const amountInput = document.getElementById('adj-amount').value;
+            const desc = document.getElementById('adj-desc').value.trim();
+
+            if (!amountInput || isNaN(amountInput)) {
+                alert('Escribe un monto numérico válido.');
+                return;
+            }
+            if (!desc) {
+                alert('Describe brevemente el motivo del ajuste.');
+                return;
+            }
+
+            let amount = Number(amountInput);
+            // Sign mapping: purchases increase debt (+), payments decrease debt (-).
+            if (type === 'payment' && amount > 0) {
+                amount = -amount; // Abono es negativo
+            }
+
+            try {
+                // Record the movement and execute the unified calculation
+                await applyLedgerMovement(selectedClientUid, type, amount, desc);
+                alert('Transacción registrada y balances actualizados con éxito.');
+                openClientModal(selectedClientUid); // reload modal content
+            } catch (err) {
+                console.error("Ledger transaction failed", err);
+                alert("Error al registrar movimiento: " + err.message);
+            }
+        };
+
+        // 2. Manual Credit Rating Adjustment Submit
+        window.submitCreditScoreAdjustment = async function() {
+            if (!selectedClientUid) return;
+            const manualScoreInput = document.getElementById('manual-score').value;
+            const reason = document.getElementById('manual-score-reason').value.trim();
+
+            if (!manualScoreInput || isNaN(manualScoreInput)) {
+                alert('Escribe un puntaje numérico (0-100).');
+                return;
+            }
+            const score = Number(manualScoreInput);
+            if (score < 0 || score > 100) {
+                alert('El puntaje debe estar comprendido entre 0 y 100.');
+                return;
+            }
+            if (!reason) {
+                alert('El motivo del ajuste es obligatorio para auditoría.');
+                return;
+            }
+
+            try {
+                // Record score_adjustment as a movement and recalculate
+                await applyLedgerMovement(selectedClientUid, 'adjustment', 0, `Ajuste manual del score a ${score}: ${reason}`, score);
+                alert('Puntaje crediticio actualizado con éxito.');
+                openClientModal(selectedClientUid);
+            } catch (err) {
+                console.error("Score adjustment failed", err);
+                alert("Error al ajustar puntaje: " + err.message);
+            }
+        };
+
+        /**
+         * Unified Client-Side Ledger Transaction
+         * Performs writing the movement and re-computing debt and credit score.
+         * Runs inside a single atomic transaction.
+         */
+        async function applyLedgerMovement(clientUid, mType, mAmount, mDesc, manualScoreTarget = null) {
+            const userRef = doc(db, 'users', clientUid);
+            const scoreRef = doc(db, 'creditScores', clientUid);
+            const movementRef = doc(collection(db, 'movements'));
+
+            await runTransaction(db, async (transaction) => {
+                // Get current state
+                const userSnap = await transaction.get(userRef);
+                if (!userSnap.exists()) throw new Error('Cliente no existe en la base de datos');
+
+                // 1. Record movement
+                const now = new Date().toISOString();
+                transaction.set(movementRef, {
+                    movementId: movementRef.id,
+                    customerUID: clientUid,
+                    type: mType,
+                    amount: mAmount,
+                    description: mDesc,
+                    createdAt: now,
+                    adminUid: adminUser.uid // Audit log
+                });
+
+                // 2. Get all movements to rebuild state
+                // Note: since firestore transactions require reading before writing, we'll execute a separate read of movements collection inside the transaction.
+                // Wait! Firestore transaction allow reading collection query.
+                const movementsSnap = await getDocs(query(collection(db, 'movements'), where('customerUID', '==', clientUid)));
+                
+                // Add the incoming movement to the array for calculation
+                const allMovements = [];
+                movementsSnap.forEach(d => allMovements.push(d.data()));
+                allMovements.push({
+                    type: mType,
+                    amount: mAmount,
+                    createdAt: now
+                });
+
+                // Sort chronologically
+                allMovements.sort((a,b) => new Date(a.createdAt || '').getTime() - new Date(b.createdAt || '').getTime());
+
+                // Calculate balances
+                let activeDebt = 0;
+                let happyPoints = 0;
+
+                const purchases = [];
+                const payments = [];
+
+                allMovements.forEach(m => {
+                    const amt = Number(m.amount) || 0;
+                    if (m.type === 'purchase' && amt > 0) {
+                        purchases.push({ amount: amt, date: m.createdAt, remaining: amt });
+                    }
+                    if (m.type === 'payment' || (m.type === 'adjustment' && amt < 0)) {
+                        payments.push({ amount: Math.abs(amt), date: m.createdAt });
+                    }
+
+                    if (['purchase', 'payment', 'refund', 'adjustment'].includes(m.type)) {
+                        activeDebt += amt;
+                    }
+                    if (m.type === 'points') {
+                        happyPoints += amt;
+                    }
+                });
+
+                // Calculate credit score FIFO
+                let score = 20; // Default starting score
+                const history = [];
+
+                for (const payment of payments) {
+                    let paymentRemaining = payment.amount;
+                    for (const purchase of purchases) {
+                        if (purchase.remaining <= 0 || paymentRemaining <= 0) continue;
+
+                        const settled = Math.min(purchase.remaining, paymentRemaining);
+                        purchase.remaining -= settled;
+                        paymentRemaining -= settled;
+
+                        const diffDays = Math.max(0, Math.round((new Date(payment.date).getTime() - new Date(purchase.date).getTime()) / (1000 * 60 * 60 * 24)));
+                        
+                        let delta = 0;
+                        let reason = '';
+                        if (diffDays <= 3) {
+                            delta = 5;
+                            reason = `Pago realizado en ${diffDays} días (+5 pts — Excelente)`;
+                        } else if (diffDays <= 7) {
+                            delta = 0;
+                            reason = `Pago realizado en ${diffDays} días (0 pts — A tiempo)`;
+                        } else if (diffDays <= 14) {
+                            delta = -5;
+                            reason = `Pago realizado en ${diffDays} días (-5 pts — Con retraso)`;
+                        } else if (diffDays <= 30) {
+                            delta = -10;
+                            reason = `Pago realizado en ${diffDays} días (-10 pts — Retraso significativo)`;
+                        } else {
+                            delta = -20;
+                            reason = `Pago realizado en ${diffDays} días (-20 pts — Mora)`;
+                        }
+
+                        score = Math.min(100, Math.max(0, score + delta));
+                        history.push({ date: payment.date, delta, reason });
+                    }
+                }
+
+                // Check default purchases > 30 days
+                const nowTime = Date.now();
+                for (const purchase of purchases) {
+                    if (purchase.remaining <= 0) continue;
+                    const diffDays = Math.round((nowTime - new Date(purchase.date).getTime()) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 30) {
+                        score = Math.min(100, Math.max(0, score - 20));
+                        history.push({
+                            date: new Date().toISOString(),
+                            delta: -20,
+                            reason: `Deuda sin pagar por más de ${diffDays} días (-20 pts — Impago)`
+                        });
+                    }
+                }
+
+                // Handle manual override
+                if (manualScoreTarget !== null) {
+                    const delta = manualScoreTarget - score;
+                    score = manualScoreTarget;
+                    history.push({
+                        date: now,
+                        delta,
+                        reason: `Ajuste manual del administrador: ${mDesc.split(':').slice(1).join(':').trim()}`,
+                        adminUid: adminUser.uid
+                    });
+                }
+
+                // Tier classification
+                let tier = 'D';
+                if (score >= 85) tier = 'A';
+                else if (score >= 65) tier = 'B';
+                else if (score >= 40) tier = 'C';
+
+                // Save calculations
+                transaction.update(userRef, {
+                    activeDebt: Math.max(0, activeDebt),
+                    happyPoints: Math.max(0, happyPoints),
+                    debtStatus: activeDebt > 0 ? 'pending_payment' : 'clear',
+                    updatedAt: now
+                });
+
+                transaction.set(scoreRef, {
+                    score,
+                    tier,
+                    lastUpdated: now,
+                    history
+                });
+            });
+        }
+
+    </script>
+</body>
+</html>

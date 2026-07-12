@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import { Resend } from 'resend';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
 import { db } from './_lib/firebaseAdmin.js';
 import { s3Client, bucketName, publicUrl } from './_lib/r2Client.js';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
@@ -47,59 +48,162 @@ async function getLocationFromIp(ip) {
     }
 }
 
-async function generarPdfContrato({ typedName, signatureImageBuffer, signedAt, ip, device, browser, location }) {
+async function generarPdfContrato({ typedName, signatureImageBuffer, signedAt, ip, device, browser, location, logoBuffer }) {
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([595, 842]); // A4
-    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-    const fontReg = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    pdfDoc.registerFontkit(fontkit);
 
-    let y = 790;
-    page.drawText('Happy Corner', { x: 50, y, size: 22, font: fontBold, color: rgb(0.97, 0.3, 0.6) });
-    y -= 26;
-    page.drawText('Contrato de Responsabilidad de Deuda', { x: 50, y, size: 13, font: fontBold });
-    y -= 30;
-
-    const contractText = [
-        '1. RECONOCIMIENTO DE DEUDA: El cliente acepta que cualquier saldo pendiente',
-        'en su cuenta representa una deuda real y exigible.',
-        '2. TRANSPARENCIA: Los movimientos de deuda y pagos quedan registrados en el sistema.',
-        '3. COMPROMISO DE PAGO: El cliente se compromete a no acumular deudas que superen',
-        'su capacidad de pago.',
-        '4. CONSECUENCIAS: En caso de incumplimiento, se podra negar el acceso a nuevas',
-        'compras a credito.',
-        '5. VOLUNTARIEDAD: El cliente confirma que acepta este contrato de forma voluntaria.',
-        '',
-        'Este documento es para control interno de Happy Corner.'
-    ];
-
-    for (const line of contractText) {
-        page.drawText(line, { x: 50, y, size: 10, font: fontReg });
-        y -= 15;
+    let fontReg, fontBold;
+    try {
+        const { readFileSync } = await import('fs');
+        const { join, dirname } = await import('path');
+        const { fileURLToPath } = await import('url');
+        const __dirname = dirname(fileURLToPath(import.meta.url));
+        
+        const fontRegBytes = readFileSync(join(__dirname, '_lib', 'Outfit-Regular.ttf'));
+        const fontBoldBytes = readFileSync(join(__dirname, '_lib', 'Outfit-Bold.ttf'));
+        
+        fontReg = await pdfDoc.embedFont(fontRegBytes);
+        fontBold = await pdfDoc.embedFont(fontBoldBytes);
+    } catch (e) {
+        console.log("Local Outfit fonts not found, attempting to fetch from CDN...");
+        try {
+            const resReg = await fetch("https://github.com/google/fonts/raw/main/ofl/outfit/static/Outfit-Regular.ttf");
+            const resBold = await fetch("https://github.com/google/fonts/raw/main/ofl/outfit/static/Outfit-Bold.ttf");
+            
+            if (resReg.ok && resBold.ok) {
+                const regBuffer = await resReg.arrayBuffer();
+                const boldBuffer = await resBold.arrayBuffer();
+                fontReg = await pdfDoc.embedFont(regBuffer);
+                fontBold = await pdfDoc.embedFont(boldBuffer);
+                console.log("Outfit fonts loaded successfully from CDN.");
+            } else {
+                throw new Error("CDN response not OK");
+            }
+        } catch (cdnErr) {
+            console.error("Failed to load Outfit fonts from CDN, falling back to Helvetica", cdnErr);
+            fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+            fontReg = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        }
     }
 
-    y -= 20;
-    page.drawText('Datos de la firma:', { x: 50, y, size: 12, font: fontBold });
-    y -= 20;
+    const pink = rgb(1, 0.322, 0.6);       // #ff5299
+    const darkGray = rgb(0.1, 0.1, 0.1);
+    const midGray = rgb(0.35, 0.35, 0.35);
+    const lightGray = rgb(0.88, 0.88, 0.88);
+    const width = 595;
+    const margin = 50;
 
-    const datos = [
-        `Firmado por: ${typedName}`,
-        `Fecha: ${signedAt}`,
-        `Direccion IP: ${ip}`,
-        `Dispositivo: ${device}`,
-        `Navegador: ${browser}`,
-        `Ubicacion aproximada: ${location}`
-    ];
-    for (const linea of datos) {
-        page.drawText(linea, { x: 50, y, size: 10, font: fontReg });
-        y -= 16;
+    const page = pdfDoc.addPage([width, 842]); // A4
+
+
+    // ——— Header band ———
+    page.drawRectangle({ x: 0, y: 792, width, height: 50, color: pink });
+
+    // Logo in header
+    if (logoBuffer) {
+        try {
+            const logoImg = await pdfDoc.embedPng(logoBuffer);
+            page.drawImage(logoImg, { x: margin, y: 800, width: 34, height: 34 });
+        } catch { /* skip if logo embed fails */ }
     }
 
-    y -= 20;
-    page.drawText('Firma:', { x: 50, y, size: 12, font: fontBold });
-    y -= 90;
+    // Brand name in header
+    page.drawText('Happy Corner', { x: 92, y: 810, size: 18, font: fontBold, color: rgb(1, 1, 1) });
+    page.drawText('Contrato de Responsabilidad', { x: 92, y: 796, size: 9, font: fontReg, color: rgb(1, 1, 1, 0.75) });
 
+    let y = 760;
+
+    // ——— Title ———
+    page.drawText('ACUERDO DE RESPONSABILIDAD DE DEUDA', {
+        x: margin, y, size: 13, font: fontBold, color: pink
+    });
+    y -= 6;
+    page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 1.5, color: pink });
+    y -= 20;
+
+    // ——— Contract clauses ———
+    const clauses = [
+        { num: '1.', title: 'RECONOCIMIENTO DE DEUDA', body: 'El cliente acepta que cualquier saldo pendiente en su cuenta representa una deuda real y exigible con Happy Corner.' },
+        { num: '2.', title: 'TRANSPARENCIA', body: 'Los movimientos de deuda y pagos quedan registrados en el sistema y son accesibles para el cliente en cualquier momento.' },
+        { num: '3.', title: 'COMPROMISO DE PAGO', body: 'El cliente se compromete a saldar sus deudas de forma oportuna y a no acumular saldos que superen su capacidad de pago.' },
+        { num: '4.', title: 'CONSECUENCIAS', body: 'En caso de incumplimiento reiterado, Happy Corner podrá negar el acceso a nuevas compras a crédito hasta que la deuda sea saldada.' },
+        { num: '5.', title: 'VOLUNTARIEDAD', body: 'El cliente confirma que acepta este contrato de manera voluntaria y consciente, sin haber sido presionado.' },
+    ];
+
+    for (const cl of clauses) {
+        page.drawText(`${cl.num} ${cl.title}`, { x: margin, y, size: 10, font: fontBold, color: darkGray });
+        y -= 14;
+        // Word-wrap body into chunks of ~80 chars
+        const words = cl.body.split(' ');
+        let line = '';
+        for (const w of words) {
+            if ((line + w).length > 82) {
+                page.drawText(line.trim(), { x: margin + 12, y, size: 9, font: fontReg, color: midGray });
+                y -= 13;
+                line = w + ' ';
+            } else { line += w + ' '; }
+        }
+        if (line.trim()) {
+            page.drawText(line.trim(), { x: margin + 12, y, size: 9, font: fontReg, color: midGray });
+            y -= 13;
+        }
+        y -= 8;
+    }
+
+    page.drawText('Este documento es para control interno de Happy Corner y no constituye un instrumento legal formal.', {
+        x: margin, y, size: 8, font: fontReg, color: lightGray
+    });
+    y -= 28;
+
+    // ——— Signature Data Table ———
+    page.drawText('DATOS DE LA FIRMA', { x: margin, y, size: 11, font: fontBold, color: pink });
+    y -= 6;
+    page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 1, color: pink });
+    y -= 16;
+
+    const tableData = [
+        ['Firmado por', typedName],
+        ['Fecha y hora', new Date(signedAt).toLocaleString('es-CO', { timeZone: 'America/Bogota' }) + ' (COT)'],
+        ['Dirección IP', ip],
+        ['Dispositivo', device],
+        ['Navegador', browser],
+        ['Ubicación aprox.', location],
+    ];
+
+    const col1 = margin;
+    const col2 = margin + 130;
+    const rowH = 18;
+    let rowY = y;
+
+    tableData.forEach(([label, value], i) => {
+        const bg = i % 2 === 0 ? rgb(0.97, 0.97, 0.97) : rgb(1, 1, 1);
+        page.drawRectangle({ x: col1 - 4, y: rowY - 4, width: width - margin * 2 + 8, height: rowH, color: bg });
+        page.drawText(label, { x: col1, y: rowY + 3, size: 9, font: fontBold, color: darkGray });
+        page.drawText(String(value).slice(0, 72), { x: col2, y: rowY + 3, size: 9, font: fontReg, color: midGray });
+        rowY -= rowH;
+    });
+
+    y = rowY - 20;
+
+    // ——— Signature image ———
+    page.drawText('FIRMA DEL CLIENTE', { x: margin, y, size: 11, font: fontBold, color: pink });
+    y -= 6;
+    page.drawLine({ start: { x: margin, y }, end: { x: width - margin, y }, thickness: 1, color: pink });
+    y -= 95;
+
+    page.drawRectangle({ x: margin - 2, y, width: 206, height: 84, borderColor: lightGray, borderWidth: 1 });
     const pngImage = await pdfDoc.embedPng(signatureImageBuffer);
-    page.drawImage(pngImage, { x: 50, y, width: 200, height: 80 });
+    page.drawImage(pngImage, { x: margin, y: y + 2, width: 200, height: 80 });
+    y -= 20;
+    page.drawLine({ start: { x: margin, y }, end: { x: margin + 200, y }, thickness: 0.5, color: lightGray });
+    page.drawText(typedName, { x: margin, y: y - 12, size: 9, font: fontReg, color: midGray });
+
+    // ——— Footer band ———
+    page.drawRectangle({ x: 0, y: 0, width, height: 28, color: rgb(0.06, 0.06, 0.06) });
+    const year = new Date().getFullYear();
+    page.drawText(`© ${year} Happy Corner · happycorner.lol · Contrato versión v1 · Generado el ${new Date().toLocaleDateString('es-CO')}`, {
+        x: margin, y: 9, size: 7.5, font: fontReg, color: rgb(0.5, 0.5, 0.5)
+    });
 
     const pdfBytes = await pdfDoc.save();
     return Buffer.from(pdfBytes);
@@ -157,14 +261,48 @@ export default async function handler(req, res) {
                 to: [email],
                 subject: 'Tu PIN para firmar el Contrato de Happy Corner',
                 html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
-                        <h2 style="color: #ff4d8b;">Happy Corner 🩷</h2>
-                        <p>Has solicitado firmar tu contrato digital.</p>
-                        <p>Tu PIN de verificacion es:</p>
-                        <h1 style="font-size: 36px; letter-spacing: 5px; color: #333;">${pin}</h1>
-                        <p>Este PIN expirara en 10 minutos. No lo compartas con nadie.</p>
-                    </div>
-                `
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#0d0d0d;font-family:'Outfit',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0d0d0d;">
+    <tr><td align="center" style="padding:32px 16px;">
+      <table width="100%" style="max-width:520px;background:#181818;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);">
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#b01e5a,#ff5299,#ff8c42);padding:28px 32px;text-align:center;">
+            <img src="https://happy-corner.vercel.app/happyfavicon.png" width="48" height="48" alt="Happy Corner" style="border-radius:10px;display:block;margin:0 auto 10px;">
+            <div style="font-family:'Outfit',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;">Happy Corner</div>
+            <div style="font-family:'Outfit',Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px;">Verificación de Identidad</div>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <p style="font-family:'Outfit',Arial,sans-serif;color:#ccc;font-size:15px;margin:0 0 12px;">Hola 👋</p>
+            <p style="font-family:'Outfit',Arial,sans-serif;color:#ccc;font-size:15px;margin:0 0 24px;">Has solicitado firmar tu <strong style="color:#fff;">contrato de responsabilidad</strong> en Happy Corner. Usa el siguiente PIN para continuar:</p>
+            <!-- PIN Box -->
+            <div style="background:#0d0d0d;border:2px solid rgba(255,82,153,0.4);border-radius:16px;padding:24px;text-align:center;margin:0 0 24px;">
+              <div style="font-family:'Outfit',Arial,monospace;font-size:40px;font-weight:900;color:#ff5299;letter-spacing:10px;">${pin}</div>
+              <div style="font-family:'Outfit',Arial,sans-serif;color:#666;font-size:12px;margin-top:8px;">Válido por 10 minutos · No lo compartas</div>
+            </div>
+            <p style="font-family:'Outfit',Arial,sans-serif;color:#555;font-size:12px;margin:0;">Si no solicitaste este PIN, ignora este correo. Nadie de Happy Corner te pedirá este código.</p>
+          </td>
+        </tr>
+        <!-- Footer -->
+        <tr>
+          <td style="padding:16px 32px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+            <div style="font-family:'Outfit',Arial,sans-serif;color:#444;font-size:11px;">
+              © ${new Date().getFullYear()} Happy Corner &nbsp;·&nbsp;
+              <a href="https://happy-corner.vercel.app/terminos" style="color:#ff5299;text-decoration:none;">Términos</a>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`
             });
 
             if (emailResult.error) {
@@ -235,11 +373,22 @@ export default async function handler(req, res) {
             }));
 
             // Generar PDF y subirlo a R2
+            // Load logo for PDF embedding
+            let logoBuffer = null;
+            try {
+                const { readFileSync } = await import('fs');
+                const { join, dirname } = await import('path');
+                const { fileURLToPath } = await import('url');
+                const __dirname = dirname(fileURLToPath(import.meta.url));
+                logoBuffer = readFileSync(join(__dirname, '..', 'loguito.png'));
+            } catch { /* logo not critical */ }
+
             const pdfBuffer = await generarPdfContrato({
                 typedName,
                 signatureImageBuffer: imageBuffer,
                 signedAt: timestamp,
-                ip, device, browser, location
+                ip, device, browser, location,
+                logoBuffer
             });
             const pdfFileName = `contracts/${uid}/contract_v1.pdf`;
             await s3Client.send(new PutObjectCommand({
@@ -285,16 +434,68 @@ export default async function handler(req, res) {
             await resend.emails.send({
                 from: 'Happy Corner <no-reply@alertas.happycorner.lol>',
                 to: destinatarios,
-                subject: `Contrato firmado - ${typedName}`,
+                subject: `✅ Contrato firmado · ${typedName}`,
                 html: `
-                    <div style="font-family: Arial, sans-serif;">
-                        <h2 style="color:#ff4d8b;">Happy Corner 🩷</h2>
-                        <p>Contrato firmado por <b>${typedName}</b> el ${timestamp}.</p>
-                        <p>IP: ${ip} · Dispositivo: ${device} · Navegador: ${browser}</p>
-                        <p>Ubicacion aproximada: ${location}</p>
-                        <p>Adjunto encontraras el PDF firmado.</p>
-                    </div>
-                `,
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#0d0d0d;font-family:'Outfit',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0d0d0d;">
+    <tr><td align="center" style="padding:32px 16px;">
+      <table width="100%" style="max-width:560px;background:#181818;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);">
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#b01e5a,#ff5299,#ff8c42);padding:28px 32px;text-align:center;">
+            <img src="https://happy-corner.vercel.app/happyfavicon.png" width="48" height="48" alt="" style="border-radius:10px;display:block;margin:0 auto 10px;">
+            <div style="font-family:'Outfit',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;">Contrato Firmado ✅</div>
+            <div style="font-family:'Outfit',Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px;">Happy Corner · Acuerdo de Responsabilidad</div>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <p style="font-family:'Outfit',Arial,sans-serif;color:#ccc;font-size:15px;margin:0 0 20px;">El siguiente contrato ha sido firmado exitosamente:</p>
+            <!-- Info table -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:24px;">
+              <tr style="background:#222;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;width:40%;">Firmado por</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#fff;">${typedName}</td>
+              </tr>
+              <tr style="background:#1a1a1a;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">Fecha</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${new Date(timestamp).toLocaleString('es-CO', { timeZone: 'America/Bogota' })}</td>
+              </tr>
+              <tr style="background:#222;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">IP</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${ip}</td>
+              </tr>
+              <tr style="background:#1a1a1a;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">Dispositivo</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${device} · ${browser}</td>
+              </tr>
+              <tr style="background:#222;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">Ubicación</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${location}</td>
+              </tr>
+            </table>
+            <p style="font-family:'Outfit',Arial,sans-serif;color:#777;font-size:13px;margin:0;">El PDF firmado se adjunta a este correo para tus registros.</p>
+          </td>
+        </tr>
+        <!-- Social footer -->
+        <tr>
+          <td style="padding:16px 32px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+            <div style="margin-bottom:8px;">
+              <a href="https://instagram.com/happycornerof" style="color:#ff5299;text-decoration:none;font-family:'Outfit',Arial,sans-serif;font-size:12px;margin:0 8px;">📸 Instagram</a>
+              <a href="https://wa.me/573000000000" style="color:#ff5299;text-decoration:none;font-family:'Outfit',Arial,sans-serif;font-size:12px;margin:0 8px;">💬 WhatsApp</a>
+            </div>
+            <div style="font-family:'Outfit',Arial,sans-serif;color:#444;font-size:11px;">© ${new Date().getFullYear()} Happy Corner</div>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
                 attachments: [{ filename: `contrato_${typedName}.pdf`, content: pdfBase64 }]
             });
 
@@ -306,6 +507,6 @@ export default async function handler(req, res) {
 
     } catch (error) {
         console.error("Error in contract API:", error);
-        return json(res, 500, { error: 'Internal Server Error' });
+        return json(res, 500, { error: 'Ha ocurrido un error interno. Por favor intenta de nuevo.' });
     }
 }

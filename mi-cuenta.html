@@ -774,7 +774,39 @@
         </div>
         <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
 
-        <!-- 2. DEUDA -->
+        <!-- 2. CONTRATO - at top, visible before debt -->
+        <!-- Unsigned warning banner (shown dynamically via JS) -->
+        <div id="contract-unsigned-banner" style="display:none; background: linear-gradient(135deg, rgba(255,82,153,0.12), rgba(255,82,153,0.04)); border: 1.5px solid rgba(255,82,153,0.35); border-radius: 18px; padding: 18px 20px; margin-bottom: 16px; display: none;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:28px;">📄</span>
+                <div style="flex:1;">
+                    <div style="font-weight:800; color:var(--text-color); margin-bottom:4px;">Firma tu contrato de responsabilidad</div>
+                    <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Necesitas firmar el acuerdo de responsabilidad para poder realizar compras a crédito en Happy Corner.</div>
+                </div>
+            </div>
+            <button id="firmar-ahora-banner-btn" style="margin-top:12px; width:100%; padding:12px; background:var(--hp-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit;">✍️ Firmar Ahora</button>
+        </div>
+
+        <div class="mc-section" id="mc-contract-section">
+            <div class="mc-section-header">
+                <div class="mc-section-title"><span class="icon icon-gray">📄</span> Acuerdo de Responsabilidad</div>
+            </div>
+            <div class="contract-status-row">
+                <span class="profile-field-label">Estado</span>
+                <span id="mc-contract-status" class="contract-unsigned-badge">Sin firma</span>
+            </div>
+            <div class="contract-status-row">
+                <span class="profile-field-label">Versión</span>
+                <span class="profile-field-value" id="mc-contract-version">—</span>
+            </div>
+            <div class="contract-status-row">
+                <span class="profile-field-label">Fecha de firma</span>
+                <span class="profile-field-value" id="mc-contract-date">—</span>
+            </div>
+            <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px;">✍️ Firmar contrato ahora</button>
+        </div>
+
+        <!-- 3. DEUDA -->
         <div class="mc-section">
             <div class="mc-section-header">
                 <div class="mc-section-title">
@@ -858,25 +890,22 @@
             </div>
         </div>
 
-        <!-- 7. CONTRATO -->
-        <div class="mc-section">
+        <!-- 7. HISTORIAL CREDITICIO -->
+        <div class="mc-section" id="mc-credit-section">
             <div class="mc-section-header">
-                <div class="mc-section-title"><span class="icon icon-gray">📄</span> Contratos</div>
+                <div class="mc-section-title"><span class="icon icon-purple">📊</span> Historial Crediticio</div>
             </div>
-            <div class="contract-status-row">
-                <span class="profile-field-label">Estado</span>
-                <span id="mc-contract-status" class="contract-unsigned-badge">Sin firma</span>
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+                <div style="width:64px; height:64px; border-radius:50%; background:var(--hp-gradient); display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; color:white; flex-shrink:0;" id="mc-credit-tier">—</div>
+                <div>
+                    <div style="font-size:22px; font-weight:900; color:var(--text-color);" id="mc-credit-score">—/100</div>
+                    <div style="font-size:13px; color:var(--text-muted);" id="mc-credit-label">Cargando puntaje crediticio...</div>
+                </div>
             </div>
-            <div class="contract-status-row">
-                <span class="profile-field-label">Versión</span>
-                <span class="profile-field-value" id="mc-contract-version">—</span>
+            <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">HISTORIAL DE CAMBIOS</div>
+            <div id="mc-credit-history" style="display:flex; flex-direction:column; gap:8px;">
+                <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px 0;">Sin historial todavía. Tu puntaje se irá construyendo con tus transacciones.</div>
             </div>
-            <div class="contract-status-row">
-                <span class="profile-field-label">Fecha de firma</span>
-                <span class="profile-field-value" id="mc-contract-date">—</span>
-            </div>
-            <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px;">✍️ Firmar contrato
-                ahora</button>
         </div>
 
         <!-- 8. CONFIGURACIÓN -->
@@ -1056,7 +1085,13 @@
             setupOrdersListener(user.uid);
             setupMovementsListener(user.uid);
             loadContractStatus(user.uid);
+            loadCreditScore(user.uid);
         });
+
+        // Banner button to open signing modal
+        document.getElementById('firmar-ahora-banner-btn').onclick = () => {
+            document.getElementById('contract-modal').classList.add('active');
+        };
 
         // ============================================================
         // Real-time user listener
@@ -1217,6 +1252,7 @@
                 const userData = userSnap.data() || {};
 
                 document.getElementById('mc-contract-version').textContent = userData.contractVersion || '—';
+                const banner = document.getElementById('contract-unsigned-banner');
                 if (snap.exists() && snap.data().signed) {
                     document.getElementById('mc-contract-status').textContent = '✅ Firmado';
                     document.getElementById('mc-contract-status').className = 'contract-signed-badge';
@@ -1225,12 +1261,58 @@
                         ? new Date(signedAt).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })
                         : '—';
                     document.getElementById('firmar-contrato-btn').textContent = '📄 Ver contrato';
+                    banner.style.display = 'none';
                 } else {
                     document.getElementById('mc-contract-status').textContent = '⚠️ Sin firmar';
                     document.getElementById('mc-contract-status').className = 'contract-unsigned-badge';
                     document.getElementById('mc-contract-date').textContent = 'N/A';
+                    banner.style.display = 'block';
                 }
             } catch (e) { console.error('Contract status error', e); }
+        }
+
+        // ============================================================
+        // Credit Score
+        // ============================================================
+        async function loadCreditScore(uid) {
+            try {
+                const snap = await getDoc(doc(db, 'creditScores', uid));
+                const tierEl = document.getElementById('mc-credit-tier');
+                const scoreEl = document.getElementById('mc-credit-score');
+                const labelEl = document.getElementById('mc-credit-label');
+                const historyEl = document.getElementById('mc-credit-history');
+
+                if (!snap.exists()) {
+                    tierEl.textContent = '?';
+                    scoreEl.textContent = '—/100';
+                    labelEl.textContent = 'Puntaje en construcción. Realiza transacciones para comenzar.';
+                    return;
+                }
+
+                const { score = 20, tier = 'C', history = [] } = snap.data();
+                const tierColors = { A: '#22c55e', B: '#3b82f6', C: '#f97316', D: '#ef4444' };
+                const tierLabels = { A: 'Excelente', B: 'Bueno', C: 'Regular', D: 'En riesgo' };
+
+                tierEl.textContent = tier;
+                tierEl.style.background = tierColors[tier] || 'var(--hp-gradient)';
+                scoreEl.textContent = `${score}/100`;
+                labelEl.textContent = tierLabels[tier] || 'Puntaje crediticio';
+
+                if (history.length === 0) return;
+
+                historyEl.innerHTML = history.slice(-10).reverse().map(h => {
+                    const delta = h.delta > 0 ? `+${h.delta}` : `${h.delta}`;
+                    const color = h.delta > 0 ? '#22c55e' : h.delta < 0 ? '#ef4444' : 'var(--text-muted)';
+                    const date = h.date ? new Date(h.date).toLocaleDateString('es-CO', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                    return `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--input-bg); border-radius:10px;">
+                        <div>
+                            <div style="font-size:13px; font-weight:600;">${h.reason || 'Ajuste crediticio'}</div>
+                            <div style="font-size:11px; color:var(--text-muted);">${date}</div>
+                        </div>
+                        <div style="font-weight:900; font-size:16px; color:${color};">${delta} pts</div>
+                    </div>`;
+                }).join('');
+            } catch (e) { console.error('Credit score error', e); }
         }
 
         // ============================================================
@@ -1514,6 +1596,7 @@
         document.getElementById('ver-mas-movimientos-btn').onclick = () => showToast('📊 Historial completo: próximamente');
 
     </script>
+<script src="/footer.js"></script>
 </body>
 
 </html>

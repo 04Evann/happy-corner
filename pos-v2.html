@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Happy Corner | POS Terminal</title>
+    <link rel="icon" type="image/png" href="/happyfavicon.png">
+    
+    <!-- Google Fonts & Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        :root {
+            --bg-color: #060606;
+            --surface-color: #0e0e0e;
+            --surface-card: #141414;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-color: #f5f5f7;
+            --text-muted: #86868b;
+            --primary-color: #ff5299;
+            --primary-hover: #ff7bb5;
+            --accent-green: #27ae60;
+            --accent-purple: #9b51e0;
+            --accent-red: #eb5757;
+            --hp-gradient: linear-gradient(135deg, #b01e5a, #ff5299, #ff8c42);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Header --- */
+        header.pos-header {
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 900;
+            background: var(--hp-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Main Layout --- */
+        .pos-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* --- Left Side: Catalog --- */
+        .pos-catalog-panel {
+            flex: 1.6;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            flex-shrink: 0;
+        }
+
+        .category-btn {
+            padding: 10px 16px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .category-btn.active {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(255, 82, 153, 0.2);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 16px;
+        }
+
+        .pos-product-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+            user-select: none;
+        }
+
+        .pos-product-card:active {
+            transform: scale(0.95);
+        }
+
+        .pos-product-card:hover {
+            border-color: var(--primary-color);
+        }
+
+        .pos-product-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .pos-product-name {
+            font-size: 13px;
+            font-weight: 700;
+            height: 36px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+
+        .pos-product-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        /* --- Right Side: Checkout Cart --- */
+        .pos-cart-panel {
+            flex: 1;
+            background: var(--surface-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .customer-selector-box {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .autocomplete-results {
+            position: absolute;
+            top: calc(100% - 4px);
+            left: 16px;
+            right: 16px;
+            background: #181818;
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 12px 12px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 10px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .autocomplete-item:hover {
+            background: var(--primary-color);
+            color: #fff;
+        }
+
+        .selected-customer-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-items-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cart-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cart-item-price {
+            font-size: 12px;
+            color: var(--primary-color);
+            margin-top: 2px;
+            font-weight: 700;
+        }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: #222;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:active { background: #333; }
+
+        /* --- Footer & Payout --- */
+        .cart-summary-box {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            background: var(--surface-color);
+            flex-shrink: 0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .total-row {
+            font-size: 20px;
+            font-weight: 900;
+            margin-top: 12px;
+            margin-bottom: 16px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 12px;
+        }
+
+        .payment-method-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .pay-toggle-btn {
+            padding: 12px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pay-toggle-btn.active {
+            border-color: var(--primary-color);
+            background: rgba(255, 82, 153, 0.08);
+            color: var(--primary-color);
+        }
+
+        .btn-checkout {
+            width: 100%;
+            padding: 16px;
+            background: var(--hp-gradient);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-family: inherit;
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 82, 153, 0.25);
+            transition: all 0.2s;
+        }
+
+        .btn-checkout:active {
+            transform: scale(0.98);
+        }
+
+        /* --- Secure Auth Gate Overlay --- */
+        #auth-gate-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-color);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .gate-card {
+            max-width: 420px;
+            padding: 40px 32px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+        }
+
+        .admin-btn {
+            padding: 12px 24px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECURE AUTH GATE OVERLAY -->
+    <div id="auth-gate-overlay">
+        <div class="gate-card">
+            <h2 id="gate-status-title" style="margin-bottom: 12px; font-weight:900;">Verificando credenciales...</h2>
+            <p id="gate-status-text" style="color: var(--text-muted); font-size:14px; margin-bottom: 24px;">Por favor espera un momento mientras validamos tu sesión de administrador.</p>
+            <div id="gate-action-btn-container" style="display:none;">
+                <a href="/login.html" class="admin-btn">Ir al Inicio de Sesión</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="pos-header">
+        <div class="header-logo">
+            <img src="/happyfavicon.png" alt="Happy Corner Logo">
+            <span class="header-title">POS Terminal</span>
+        </div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:600;" id="pos-admin-name">Cargando...</div>
+    </header>
+
+    <!-- CONTENT -->
+    <div class="pos-container">
+        
+        <!-- LEFT: CATALOG -->
+        <div class="pos-catalog-panel">
+            <div class="category-filter">
+                <button class="category-btn active" onclick="filterCategory('all')">Todos</button>
+                <button class="category-btn" onclick="filterCategory('dulces')">Dulces & Snacks 🍭</button>
+                <button class="category-btn" onclick="filterCategory('reposteria')">Repostería 🍪</button>
+                <button class="category-btn" onclick="filterCategory('combos')">Combos & Favoritos 🍕</button>
+            </div>
+            
+            <div class="products-grid" id="pos-products-list">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- RIGHT: CHECKOUT CART -->
+        <div class="pos-cart-panel">
+            
+            <!-- CUSTOMER SELECTOR -->
+            <div class="customer-selector-box">
+                <label style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Asignar Cliente</label>
+                <input type="text" id="cust-search" class="admin-input" style="width:100%; margin-top:6px; padding:10px;" placeholder="Escribe Nombre o HappyCódigo..." autocomplete="off">
+                <div class="autocomplete-results" id="autocomplete-box">
+                    <!-- Populated dynamically -->
+                </div>
+                
+                <!-- Display selected customer -->
+                <div class="selected-customer-card" id="selected-cust-card" style="display:none;">
+                    <div>
+                        <div id="sel-cust-name" style="font-weight:700; font-size:14px;">Cliente no asignado</div>
+                        <div id="sel-cust-details" style="font-size:12px; color:var(--text-muted); margin-top:2px;">Deuda: $0 · Puntos: 0</div>
+                    </div>
+                    <button class="qty-btn" style="background:rgba(255,255,255,0.05); font-size:12px;" onclick="unassignCustomer()">✕</button>
+                </div>
+            </div>
+
+            <!-- CART ITEMS -->
+            <div class="cart-items-list" id="cart-list">
+                <div style="text-align:center; padding:60px 20px; color:var(--text-muted); font-size:13px; margin:auto 0;">El carrito está vacío. Toca un producto de la izquierda para añadirlo.</div>
+            </div>
+
+            <!-- FOOTER SUMMARY -->
+            <div class="cart-summary-box">
+                <div class="summary-row">
+                    <span style="color:var(--text-muted);">Puntos a ganar:</span>
+                    <strong id="summary-points" style="color:var(--accent-purple);">0 pts</strong>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total:</span>
+                    <span id="summary-total" style="color:#fff;">$0</span>
+                </div>
+
+                <!-- PAYMENT TOGGLE -->
+                <div class="payment-method-toggle">
+                    <button class="pay-toggle-btn active" id="pay-cash" onclick="setPaymentMethod('cash')">💵 EFECTIVO</button>
+                    <button class="pay-toggle-btn" id="pay-credit" onclick="setPaymentMethod('credit')">💳 CRÉDITO</button>
+                </div>
+
+                <button class="btn-checkout" onclick="submitCheckout()">Confirmar Venta</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initPromise, db, auth } from './firebase-auth.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+        import { doc, getDoc, getDocs, collection, query, where, updateDoc, writeBatch, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+        // Static Catalog matching site items
+        const PRODUCTS = [
+            { id: 'bubbaloo', name: 'Bubbaloo', price: 400, img: 'Gomitas.png', cat: 'dulces' },
+            { id: 'bubbaloo-sparkies', name: 'Bubbaloo Sparkies', price: 2000, img: 'sparkies.png', cat: 'dulces' },
+            { id: 'quipitos', name: 'Quipitos', price: 1000, img: 'quipitos.png', cat: 'dulces' },
+            { id: 'piazza', name: 'Piazza', price: 800, img: 'Piazza.png', cat: 'dulces' },
+            { id: 'choco-disk', name: 'Choco Disk', price: 1500, img: 'chocodisk.png', cat: 'dulces' },
+            { id: 'bombombum-tajin', name: 'Bombombum Tajín', price: 2500, img: 'bt.png', cat: 'dulces' },
+            { id: 'ring-pop', name: 'Ring Pop', price: 3500, img: 'ringpop.png', cat: 'dulces' },
+            { id: 'cookie-chips', name: 'Cookie Chips', price: 5000, img: 'galletachocolate.png', cat: 'reposteria' },
+            { id: 'galleta-red-velvet', name: 'Galleta Red Velvet', price: 6000, img: 'redvelvet.png', cat: 'reposteria' },
+            { id: 'brownie-avellana', name: 'Brownie Avellana', price: 5000, img: 'browniea.png', cat: 'reposteria' },
+            { id: 'brownie-arequipe', name: 'Brownie Arequipe', price: 5000, img: 'browniear.png', cat: 'reposteria' },
+            { id: 'gomitas-trululu', name: 'Gomitas Trululu', price: 3000, img: 'Gomitas.png', cat: 'dulces' },
+            { id: 'pizza-normal', name: 'Pizza', price: 11000, img: 'pizza.png', cat: 'combos' }
+        ];
+
+        let adminUser = null;
+        let allCustomers = [];
+        let selectedCustomer = null;
+        let cart = [];
+        let paymentMethod = 'cash'; // 'cash' | 'credit'
+
+        // Gate Elements
+        const gateOverlay = document.getElementById('auth-gate-overlay');
+        const gateTitle = document.getElementById('gate-status-title');
+        const gateText = document.getElementById('gate-status-text');
+        const gateActionBtn = document.getElementById('gate-action-btn-container');
+
+        await initPromise;
+
+        // Security Validation
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                gateTitle.textContent = "No has iniciado sesión";
+                gateText.textContent = "Debes iniciar sesión con una cuenta autorizada para acceder a esta terminal POS.";
+                gateActionBtn.style.display = 'block';
+                return;
+            }
+
+            try {
+                const snap = await getDoc(doc(db, 'users', user.uid));
+                if (!snap.exists()) {
+                    gateTitle.textContent = "Usuario no registrado";
+                    gateText.textContent = "Tu cuenta no tiene datos registrados en Firestore.";
+                    return;
+                }
+
+                const data = snap.data();
+                if (data.role !== 'admin') {
+                    gateTitle.textContent = "Acceso Denegado";
+                    gateText.textContent = "Esta terminal POS requiere privilegios de administrador.";
+                    return;
+                }
+
+                // Authenticated admin
+                adminUser = user;
+                document.getElementById('pos-admin-name').textContent = `Operador: ${user.displayName || user.email}`;
+                gateOverlay.style.display = 'none';
+
+                // Initialise
+                initPOS();
+
+            } catch (err) {
+                console.error("Auth check failed", err);
+                gateTitle.textContent = "Error de validación";
+                gateText.textContent = "Ocurrió un error al verificar tu cuenta.";
+            }
+        });
+
+        function initPOS() {
+            // Load products grid
+            filterCategory('all');
+
+            // Autocomplete clients load
+            loadCustomersList();
+
+            // Client search typing
+            const searchInput = document.getElementById('cust-search');
+            const autoBox = document.getElementById('autocomplete-box');
+
+            searchInput.addEventListener('input', (e) => {
+                const val = e.target.value.toLowerCase().trim();
+                if (!val) {
+                    autoBox.style.display = 'none';
+                    return;
+                }
+
+                const matches = allCustomers.filter(c => {
+                    const matchStr = `${c.displayName || c.name || ''} ${c.customerCode || ''}`.toLowerCase();
+                    return matchStr.includes(val);
+                }).slice(0, 5);
+
+                if (matches.length === 0) {
+                    autoBox.style.display = 'none';
+                    return;
+                }
+
+                autoBox.innerHTML = matches.map(c => `
+                    <div class="autocomplete-item" onclick="assignCustomer('${c.uid}')">
+                        <span style="font-weight:700;">${c.displayName || c.name}</span>
+                        <span style="font-family:monospace; color:var(--primary-color);">${c.customerCode || '—'}</span>
+                    </div>
+                `).join('');
+                autoBox.style.display = 'block';
+            });
+
+            // Close suggestions on outside tap
+            document.addEventListener('click', (e) => {
+                if (e.target !== searchInput) autoBox.style.display = 'none';
+            });
+        }
+
+        async function loadCustomersList() {
+            const snap = await getDocs(collection(db, 'users'));
+            const list = [];
+            snap.forEach(d => {
+                list.push({ uid: d.id, ...d.data() });
+            });
+            allCustomers = list;
+        }
+
+        // Filter products grid
+        window.filterCategory = function(cat) {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick').includes(cat));
+            });
+
+            const grid = document.getElementById('pos-products-list');
+            grid.innerHTML = '';
+
+            const filtered = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.cat === cat);
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'pos-product-card';
+                card.onclick = () => addToCart(p);
+                card.innerHTML = `
+                    <img class="pos-product-img" src="/${p.img}" alt="${p.name}">
+                    <div class="pos-product-name">${p.name}</div>
+                    <div class="pos-product-price">$${p.price.toLocaleString()}</div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        // Assign client
+        window.assignCustomer = function(uid) {
+            const customer = allCustomers.find(c => c.uid === uid);
+            if (!customer) return;
+
+            selectedCustomer = customer;
+            document.getElementById('cust-search').style.display = 'none';
+            document.getElementById('autocomplete-box').style.display = 'none';
+            document.getElementById('selected-cust-card').style.display = 'flex';
+            
+            document.getElementById('sel-cust-name').textContent = customer.displayName || customer.name || 'Cliente';
+            document.getElementById('sel-cust-details').textContent = `Deuda: $${(customer.activeDebt || 0).toLocaleString()} · Puntos: ${customer.happyPoints || 0}`;
+        };
+
+        // Remove client
+        window.unassignCustomer = function() {
+            selectedCustomer = null;
+            document.getElementById('cust-search').value = '';
+            document.getElementById('cust-search').style.display = 'block';
+            document.getElementById('selected-cust-card').style.display = 'none';
+            
+            // If credit payment toggled, force switch to cash
+            if (paymentMethod === 'credit') {
+                setPaymentMethod('cash');
+            }
+        };
+
+        // Toggle Cash vs Credit
+        window.setPaymentMethod = function(method) {
+            if (method === 'credit' && !selectedCustomer) {
+                alert('⚠️ Debes asignar un cliente para poder seleccionar pago a Crédito.');
+                return;
+            }
+
+            paymentMethod = method;
+            document.getElementById('pay-cash').classList.toggle('active', method === 'cash');
+            document.getElementById('pay-credit').classList.toggle('active', method === 'credit');
+        };
+
+        // Cart Actions
+        function addToCart(product) {
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            renderCart();
+        }
+
+        function updateCartQty(prodId, delta) {
+            const idx = cart.findIndex(item => item.id === prodId);
+            if (idx === -1) return;
+
+            cart[idx].qty += delta;
+            if (cart[idx].qty <= 0) {
+                cart.splice(idx, 1);
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const cartList = document.getElementById('cart-list');
+            cartList.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartList.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text-muted); font-size:13px; margin:auto 0;">El carrito está vacío. Toca un producto de la izquierda para añadirlo.</div>`;
+                document.getElementById('summary-total').textContent = '$0';
+                document.getElementById('summary-points').textContent = '0 pts';
+                return;
+            }
+
+            let total = 0;
+            cart.forEach(item => {
+                const sub = item.price * item.qty;
+                total += sub;
+
+                const row = document.createElement('div');
+                row.className = 'cart-item-row';
+                row.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toLocaleString()} (${item.qty}x)</div>
+                    </div>
+                    <div class="cart-item-qty">
+                        <button class="qty-btn" onclick="updateCartQty('${item.id}', -1)">-</button>
+                        <span style="font-weight:700; width:16px; text-align:center;">${item.qty}</span>
+                        <button class="qty-btn" onclick="updateCartQty('${item.id}', 1)">+</button>
+                    </div>
+                `;
+                cartList.appendChild(row);
+            });
+
+            // Calculate points: 1 pt per $1000 pesos spent
+            const pointsEarned = Math.floor(total / 1000);
+
+            document.getElementById('summary-total').textContent = `$${total.toLocaleString()}`;
+            document.getElementById('summary-points').textContent = `${pointsEarned} pts`;
+        }
+
+        // ==============================================
+        // SUBMIT CHECKOUT TRANSACTION
+        // ==============================================
+        window.submitCheckout = async function() {
+            if (cart.length === 0) {
+                alert('El carrito está vacío.');
+                return;
+            }
+
+            let total = 0;
+            cart.forEach(item => total += item.price * item.qty);
+            const pointsEarned = Math.floor(total / 1000);
+
+            const checkoutBtn = document.querySelector('.btn-checkout');
+            checkoutBtn.disabled = true;
+            checkoutBtn.textContent = 'Procesando...';
+
+            try {
+                if (paymentMethod === 'credit') {
+                    if (!selectedCustomer) throw new Error('Cliente no asignado.');
+                    
+                    // Verify if contract is signed
+                    const contractSnap = await getDoc(doc(db, 'debtContracts', selectedCustomer.uid));
+                    if (!contractSnap.exists() || !contractSnap.data().signed) {
+                        throw new Error('El cliente no ha firmado el Acuerdo de Responsabilidad. Firma requerida antes de dar crédito.');
+                    }
+
+                    // Record credit sale movement & points
+                    await applyPOSLedgerTransaction(selectedCustomer.uid, total, pointsEarned, cart);
+                } else {
+                    // Cash sale: Just record standard order & add points to user if assigned
+                    await applyPOSCashTransaction(selectedCustomer ? selectedCustomer.uid : null, total, pointsEarned, cart);
+                }
+
+                alert(`🎉 ¡Venta procesada con éxito!\nTotal: $${total.toLocaleString()}\n${selectedCustomer ? `Puntos sumados: +${pointsEarned} pts` : ''}`);
+                
+                // Reset cart & view
+                cart = [];
+                renderCart();
+                unassignCustomer();
+                loadCustomersList(); // reload local copy
+
+            } catch (err) {
+                console.error("POS transaction failed", err);
+                alert("Error al procesar la venta: " + err.message);
+            } finally {
+                checkoutBtn.disabled = false;
+                checkoutBtn.textContent = 'Confirmar Venta';
+            }
+        };
+
+        /**
+         * Apply Credit Ledger Transaction
+         * Performs writing movements, updating users, and recalculating scores.
+         */
+        async function applyPOSLedgerTransaction(clientUid, total, points, cartItems) {
+            const userRef = doc(db, 'users', clientUid);
+            const scoreRef = doc(db, 'creditScores', clientUid);
+            const orderRef = doc(collection(db, 'orders'));
+            const debtMovRef = doc(collection(db, 'movements'));
+            const pointsMovRef = doc(collection(db, 'movements'));
+
+            await runTransaction(db, async (transaction) => {
+                const userSnap = await transaction.get(userRef);
+                if (!userSnap.exists()) throw new Error('Cliente no encontrado en Firestore.');
+
+                const now = new Date().toISOString();
+
+                // 1. Create order
+                transaction.set(orderRef, {
+                    orderId: orderRef.id,
+                    customerUID: clientUid,
+                    total,
+                    status: 'completed',
+                    items: cartItems,
+                    paymentMethod: 'credit',
+                    createdAt: now,
+                    completedAt: now
+                });
+
+                // 2. Create debt movement (+)
+                transaction.set(debtMovRef, {
+                    movementId: debtMovRef.id,
+                    customerUID: clientUid,
+                    type: 'purchase',
+                    amount: total,
+                    description: `Compra a crédito POS: ${cartItems.map(i=>`${i.name} (${i.qty}x)`).join(', ')}`,
+                    createdAt: now,
+                    adminUid: adminUser.uid
+                });
+
+                // 3. Create points movement (+)
+                if (points > 0) {
+                    transaction.set(pointsMovRef, {
+                        movementId: pointsMovRef.id,
+                        customerUID: clientUid,
+                        type: 'points',
+                        amount: points,
+                        description: `Puntos ganados por compra POS #${orderRef.id.slice(0,5)}`,
+                        createdAt: now
+                    });
+                }
+
+                // 4. Retrieve movements to recalculate
+                const movementsSnap = await getDocs(query(collection(db, 'movements'), where('customerUID', '==', clientUid)));
+                const allMovements = [];
+                movementsSnap.forEach(d => allMovements.push(d.data()));
+                
+                // Append newly created ones manually for calculation
+                allMovements.push({ type: 'purchase', amount: total, createdAt: now });
+                if (points > 0) allMovements.push({ type: 'points', amount: points, createdAt: now });
+
+                allMovements.sort((a,b) => new Date(a.createdAt || '').getTime() - new Date(b.createdAt || '').getTime());
+
+                let activeDebt = 0;
+                let happyPoints = 0;
+                const purchases = [];
+                const payments = [];
+
+                allMovements.forEach(m => {
+                    const amt = Number(m.amount) || 0;
+                    if (m.type === 'purchase' && amt > 0) {
+                        purchases.push({ amount: amt, date: m.createdAt, remaining: amt });
+                    }
+                    if (m.type === 'payment' || (m.type === 'adjustment' && amt < 0)) {
+                        payments.push({ amount: Math.abs(amt), date: m.createdAt });
+                    }
+
+                    if (['purchase', 'payment', 'refund', 'adjustment'].includes(m.type)) {
+                        activeDebt += amt;
+                    }
+                    if (m.type === 'points') {
+                        happyPoints += amt;
+                    }
+                });
+
+                // Credit score recalculation (FIFO)
+                let score = 20;
+                const history = [];
+
+                for (const payment of payments) {
+                    let paymentRemaining = payment.amount;
+                    for (const purchase of purchases) {
+                        if (purchase.remaining <= 0 || paymentRemaining <= 0) continue;
+
+                        const settled = Math.min(purchase.remaining, paymentRemaining);
+                        purchase.remaining -= settled;
+                        paymentRemaining -= settled;
+
+                        const diffDays = Math.max(0, Math.round((new Date(payment.date).getTime() - new Date(purchase.date).getTime()) / (1000 * 60 * 60 * 24)));
+                        
+                        let delta = 0;
+                        let reason = '';
+                        if (diffDays <= 3) {
+                            delta = 5;
+                            reason = `Pago realizado en ${diffDays} días (+5 pts — Excelente)`;
+                        } else if (diffDays <= 7) {
+                            delta = 0;
+                            reason = `Pago realizado en ${diffDays} días (0 pts — A tiempo)`;
+                        } else if (diffDays <= 14) {
+                            delta = -5;
+                            reason = `Pago realizado en ${diffDays} días (-5 pts — Con retraso)`;
+                        } else if (diffDays <= 30) {
+                            delta = -10;
+                            reason = `Pago realizado en ${diffDays} días (-10 pts — Retraso significativo)`;
+                        } else {
+                            delta = -20;
+                            reason = `Pago realizado en ${diffDays} días (-20 pts — Mora)`;
+                        }
+
+                        score = Math.min(100, Math.max(0, score + delta));
+                        history.push({ date: payment.date, delta, reason });
+                    }
+                }
+
+                // Check default purchases > 30 days
+                const nowTime = Date.now();
+                for (const purchase of purchases) {
+                    if (purchase.remaining <= 0) continue;
+                    const diffDays = Math.round((nowTime - new Date(purchase.date).getTime()) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 30) {
+                        score = Math.min(100, Math.max(0, score - 20));
+                        history.push({
+                            date: new Date().toISOString(),
+                            delta: -20,
+                            reason: `Deuda sin pagar por más de ${diffDays} días (-20 pts — Impago)`
+                        });
+                    }
+                }
+
+                let tier = 'D';
+                if (score >= 85) tier = 'A';
+                else if (score >= 65) tier = 'B';
+                else if (score >= 40) tier = 'C';
+
+                // Save
+                transaction.update(userRef, {
+                    activeDebt: Math.max(0, activeDebt),
+                    happyPoints: Math.max(0, happyPoints),
+                    debtStatus: activeDebt > 0 ? 'pending_payment' : 'clear',
+                    updatedAt: now
+                });
+
+                transaction.set(scoreRef, {
+                    score,
+                    tier,
+                    lastUpdated: now,
+                    history
+                });
+            });
+        }
+
+        /**
+         * Apply Cash Transaction
+         * Simple order submission. If user is assigned, records points movement.
+         */
+        async function applyPOSCashTransaction(clientUid, total, points, cartItems) {
+            const orderRef = doc(collection(db, 'orders'));
+            const now = new Date().toISOString();
+
+            const orderData = {
+                orderId: orderRef.id,
+                total,
+                status: 'completed',
+                items: cartItems,
+                paymentMethod: 'cash',
+                createdAt: now,
+                completedAt: now
+            };
+
+            if (clientUid) {
+                orderData.customerUID = clientUid;
+            }
+
+            const batch = writeBatch(db);
+            batch.set(orderRef, orderData);
+
+            if (clientUid && points > 0) {
+                const pointsMovRef = doc(collection(db, 'movements'));
+                batch.set(pointsMovRef, {
+                    movementId: pointsMovRef.id,
+                    customerUID: clientUid,
+                    type: 'points',
+                    amount: points,
+                    description: `Puntos ganados por compra POS en efectivo #${orderRef.id.slice(0,5)}`,
+                    createdAt: now
+                });
+            }
+
+            await batch.commit();
+
+            // Recalculate assigned client's points after write batch completes
+            if (clientUid) {
+                const userRef = doc(db, 'users', clientUid);
+                const movementsSnap = await getDocs(query(collection(db, 'movements'), where('customerUID', '==', clientUid)));
+                
+                let happyPoints = 0;
+                movementsSnap.forEach(d => {
+                    const m = d.data();
+                    if (m.type === 'points') {
+                        happyPoints += Number(m.amount) || 0;
+                    }
+                });
+
+                await updateDoc(userRef, {
+                    happyPoints: Math.max(0, happyPoints),
+                    updatedAt: now
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>
