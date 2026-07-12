@@ -9,18 +9,21 @@
     { "source": "/factura", "destination": "/factura.html" },
     { "source": "/puntos", "destination": "/puntos.html" },
     { "source": "/terminos", "destination": "/terminos.html" },
-    { "source": "/admin", "destination": "/admin.html" },
     { "source": "/loyalty", "destination": "/loyalty.html" },
+    { "source": "/wallet", "destination": "/wallet.html" },
     { "source": "/preorder", "destination": "/preorder.html" },
     { "source": "/verify", "destination": "/verify.html" },
-    { "source": "/deudores/:secret", "destination": "/deudores-admin.html" },
+    { "source": "/track", "destination": "/track.html" },
     { "source": "/mi-cuenta", "destination": "/mi-cuenta.html" },
     { "source": "/onboarding", "destination": "/onboarding.html" },
+    { "source": "/admin-v2", "destination": "/admin-v2.html" },
+    { "source": "/pos-v2", "destination": "/pos-v2.html" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" }
   ],
   "redirects": [
     { "source": "/dashboard", "destination": "/mi-cuenta", "permanent": true },
-    { "source": "/dashboard.html", "destination": "/mi-cuenta", "permanent": true }
+    { "source": "/dashboard.html", "destination": "/mi-cuenta", "permanent": true },
+    { "source": "/admin", "destination": "/admin-v2", "permanent": true }
   ]
 }
