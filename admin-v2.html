@@ -455,22 +455,26 @@
         <div id="tab-orders" class="tab-content">
             <h2 style="font-weight:900; margin-bottom: 16px;">Historial de Pedidos (1 Año)</h2>
             <div style="display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; align-items:center;">
-                <input type="text" id="order-search-input" class="admin-input" style="flex:1; min-width:200px; padding:12px;" placeholder="Buscar por Nombre, ID, Resumen..." />
-                
-                <select id="order-status-filter" class="admin-input" style="width:200px; padding:12px; height:45px; background:var(--surface-color); color:var(--text-color); border:1px solid var(--border-color); border-radius:14px;">
+                <input type="text" id="order-search-input" class="admin-input"
+                    style="flex:1; min-width:200px; padding:12px;" placeholder="Buscar por Nombre, ID, Resumen..." />
+
+                <select id="order-status-filter" class="admin-input"
+                    style="width:200px; padding:12px; height:45px; background:var(--surface-color); color:var(--text-color); border:1px solid var(--border-color); border-radius:14px;">
                     <option value="all">Todos los Pedidos</option>
                     <option value="unpaid">Deber (Por pagar)</option>
                     <option value="paid">Pagados / Entregados</option>
                     <option value="cancelled">Cancelados</option>
                 </select>
-                
-                <select id="order-sort-filter" class="admin-input" style="width:250px; padding:12px; height:45px; background:var(--surface-color); color:var(--text-color); border:1px solid var(--border-color); border-radius:14px;">
+
+                <select id="order-sort-filter" class="admin-input"
+                    style="width:250px; padding:12px; height:45px; background:var(--surface-color); color:var(--text-color); border:1px solid var(--border-color); border-radius:14px;">
                     <option value="newest">Más recientes primero</option>
                     <option value="most-expensive">Más caros</option>
                     <option value="oldest-unpaid-priority">Antiguos sin pagar primero (Prioridad 🚨)</option>
                 </select>
             </div>
-            <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; overflow:hidden;">
+            <div
+                style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; overflow:hidden;">
                 <table class="admin-table">
                     <thead>
                         <tr>
@@ -486,7 +490,8 @@
                     </thead>
                     <tbody id="orders-table-body">
                         <tr>
-                            <td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Cargando pedidos...</td>
+                            <td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Cargando
+                                pedidos...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -624,8 +629,10 @@
                     <div style="display:flex; flex-direction:column; gap:12px;">
                         <div
                             style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px; border:1px solid var(--border-color);">
-                            <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Puntaje Actual</span>
-                            <div id="credit-gauge-container" style="width: 150px; height: 90px; overflow: hidden;"></div>
+                            <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Puntaje
+                                Actual</span>
+                            <div id="credit-gauge-container" style="width: 150px; height: 90px; overflow: hidden;">
+                            </div>
                         </div>
                         <div>
                             <label style="font-size:12px; color:var(--text-muted); font-weight:600;">NUEVO PUNTAJE
@@ -836,10 +843,10 @@
                 const initial = (c.displayName || c.name || 'U').charAt(0).toUpperCase();
                 const points = c.happyPoints || 0;
                 const debt = c.activeDebt || 0;
-                
+
                 // Show profile picture if it exists
-                const avatarHTML = c.photoURL 
-                    ? `<img src="${c.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">` 
+                const avatarHTML = c.photoURL
+                    ? `<img src="${c.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`
                     : initial;
 
                 const card = document.createElement('div');
@@ -866,12 +873,12 @@
         function setupOrdersListener() {
             const oneYearAgo = new Date();
             oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-            
+
             const q = query(
                 collection(db, 'orders'),
                 where('createdAt', '>=', oneYearAgo.toISOString())
             );
-            
+
             onSnapshot(q, (snap) => {
                 const list = [];
                 snap.forEach(d => {
@@ -903,7 +910,7 @@
             // 1. Filter
             let filtered = allOrders.filter(o => {
                 // Search match
-                const matchSearch = 
+                const matchSearch =
                     o.id.toLowerCase().includes(searchQuery) ||
                     (o.nombre || '').toLowerCase().includes(searchQuery) ||
                     (o.resumen || '').toLowerCase().includes(searchQuery);
@@ -947,11 +954,11 @@
             filtered.forEach(o => {
                 const date = o.createdAt ? new Date(o.createdAt).toLocaleString('es-CO') : '—';
                 const totalVal = o.total || '$0';
-                
+
                 // Determine if priority overdue (unpaid & older than 3 days)
                 const isUnpaid = o.status !== 'completed' && o.status !== 'cancelled';
                 const isOverdue = isUnpaid && (new Date() - new Date(o.createdAt)) > 3 * 24 * 60 * 60 * 1000;
-                
+
                 // Status badges
                 let badgeClass = 'badge badge-c';
                 let badgeText = o.status || 'pendiente';
@@ -1000,7 +1007,7 @@
             });
         }
 
-        window.updateOrderStatus = async function(orderId, status) {
+        window.updateOrderStatus = async function (orderId, status) {
             try {
                 const now = new Date().toISOString();
                 const updateData = {
@@ -1010,9 +1017,9 @@
                 if (status === 'completed') {
                     updateData.completedAt = now;
                 }
-                
+
                 await updateDoc(doc(db, 'orders', orderId), updateData);
-                
+
                 // Sync to Telegram
                 try {
                     // Send auth token if we require it for requireAdmin, though requireAdmin might check cookies or headers.
@@ -1020,13 +1027,13 @@
                     const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
                     await fetch('/api/syncTelegramStatus', {
                         method: 'POST',
-                        headers: { 
+                        headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}` 
+                            'Authorization': `Bearer ${token}`
                         },
                         body: JSON.stringify({ orderId, newStatus: status })
                     });
-                } catch(tgErr) {
+                } catch (tgErr) {
                     console.error("Telegram sync failed:", tgErr);
                 }
 
@@ -1129,7 +1136,7 @@
             document.getElementById('modal-client-name').textContent = client.displayName || client.name || 'Usuario';
             document.getElementById('modal-client-code').textContent = client.customerCode ? `🏷️ ${client.customerCode}` : 'SIN HAPPYCÓDIGO';
             document.getElementById('modal-client-email').textContent = client.email || 'Sin correo electrónico';
-            
+
             const modalAvatar = document.getElementById('modal-avatar');
             if (client.photoURL) {
                 modalAvatar.innerHTML = `<img src="${client.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
@@ -1197,13 +1204,12 @@
 
             const cs = snap.data();
             const history = cs.history || [];
-            
+
             // Render the SVG gauge in the container
             if (window.renderCreditGauge) {
                 renderCreditGauge('credit-gauge-container', cs.score || 20, history);
             }
 
-            const history = cs.history || [];
             if (history.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); font-size:12px;">Sin historial de cambios de puntaje.</td></tr>`;
                 return;
