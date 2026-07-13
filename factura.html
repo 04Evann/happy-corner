@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,7 +20,7 @@
       border-radius: 25px;
       box-shadow: var(--shadow);
       overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.06);
+      border: 1px solid rgba(0, 0, 0, 0.06);
     }
 
     .invoice-header {
@@ -73,7 +74,9 @@
       line-height: 1.4;
     }
 
-    .kv b { font-weight: 800; }
+    .kv b {
+      font-weight: 800;
+    }
 
     .items {
       grid-column: 1 / -1;
@@ -96,15 +99,22 @@
       border-top: 2px dashed #eee;
     }
 
-    .totalRow .label { font-weight: 800; }
-    .totalRow .value { font-weight: 900; font-size: 18px; color: #ff5299; }
+    .totalRow .label {
+      font-weight: 800;
+    }
+
+    .totalRow .value {
+      font-weight: 900;
+      font-size: 18px;
+      color: #ff5299;
+    }
 
     .actions {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
       padding: 16px 20px 20px;
-      border-top: 1px solid rgba(0,0,0,0.06);
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
       background: #fff9f5;
       justify-content: space-between;
     }
@@ -131,57 +141,86 @@
     }
 
     @media (max-width: 820px) {
-      .invoice-body { grid-template-columns: 1fr; }
-      .invoice-meta { text-align: left; }
-      .kv { grid-template-columns: 120px 1fr; }
-      .actions { justify-content: center; }
+      .invoice-body {
+        grid-template-columns: 1fr;
+      }
+
+      .invoice-meta {
+        text-align: left;
+      }
+
+      .kv {
+        grid-template-columns: 120px 1fr;
+      }
+
+      .actions {
+        justify-content: center;
+      }
     }
 
     @media print {
-      header, .actions { display: none !important; }
-      body { background: white; }
-      .page { padding: 0; }
-      .invoice { box-shadow: none; border: none; }
+
+      header,
+      .actions {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .page {
+        padding: 0;
+      }
+
+      .invoice {
+        box-shadow: none;
+        border: none;
+      }
     }
   </style>
 </head>
-<body onload="loadInvoice()">
-      <header>
-        <a href="/index" class="logo">
-            <img src="loguito.png" alt="HappyCorner" class="logo-img">
-        </a>
-        <nav class="nav-desktop">
-            <a href="/index">Inicio</a>
-            <a href="/catalogo">Catálogo</a>
-            <a href="/order">HappyOrder</a>
-            <a href="/track">Rastrear Pedido</a>
-        </nav>
-        <div style="display:flex; align-items:center; gap:10px;">
-            <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
-                <span id="theme-icon">🌙</span>
-            </button>
-            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-            </a>
-            <div class="menu-btn" id="menuBtn">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-    </header>
 
-      <div class="overlay" id="overlay"></div>
-    <nav class="side-menu" id="sideMenu">
-        <a href="/index">Inicio</a>
-        <a href="/catalogo">Catálogo</a>
-        <a href="/order">HappyOrder</a>
-        <a href="/track">Rastrear Pedido</a>
-        <a href="/terminos">Términos</a>
-        <a href="/wallet">Happy Passes</a>
-        <a href="/login.html" class="login-mobile-link" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
+<body onload="loadInvoice()">
+  <header>
+    <a href="/index" class="logo">
+      <img src="loguito.png" alt="HappyCorner" class="logo-img">
+    </a>
+    <nav class="nav-desktop">
+      <a href="/index">Inicio</a>
+      <a href="/catalogo">Catálogo</a>
+      <a href="/order">HappyOrder</a>
+      <a href="/track">Rastrear Pedido</a>
     </nav>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
+        <span id="theme-icon">🌙</span>
+      </button>
+      <a href="/login.html" id="auth-icon-desktop"
+        style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </a>
+      <div class="menu-btn" id="menuBtn">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="overlay" id="overlay"></div>
+  <nav class="side-menu" id="sideMenu">
+    <a href="/index">Inicio</a>
+    <a href="/catalogo">Catálogo</a>
+    <a href="/order">HappyOrder</a>
+    <a href="/track">Rastrear Pedido</a>
+    <a href="/terminos">Términos</a>
+    <a href="/wallet">Happy Passes</a>
+    <a href="/login.html" class="login-mobile-link"
+      style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
+  </nav>
 
   <div class="page">
     <div class="invoice" id="invoice">
@@ -267,8 +306,8 @@
       }
 
       const data = JSON.parse(raw);
-      const paymentMap = { nequi:'Nequi', pse:'PSE', tarjeta:'Tarjeta', efectivo:'Efectivo' };
-      const deliveryMap = { colegio:'Colegio', virtual:'Virtual' };
+      const paymentMap = { nequi: 'Nequi', pse: 'PSE', tarjeta: 'Tarjeta', efectivo: 'Efectivo' };
+      const deliveryMap = { colegio: 'Colegio', virtual: 'Virtual' };
 
       const code = data.happyCode || 'HO-XXXXXX';
       const num = `HC-${code}`;
@@ -288,14 +327,15 @@
 
       // Generar código QR de verificación
       new QRCode(document.getElementById("qrcode"), {
-        text: `https://happycorner.lol/verificar-pedido?order=${num}`,
+        text: `https://happycorner.lol/verificar-pedido?order=${code}`,
         width: 100,
         height: 100,
-        colorDark : "#2d3436",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
+        colorDark: "#2d3436",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
       });
     }
   </script>
 </body>
+
 </html>

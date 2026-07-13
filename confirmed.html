@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pedido Confirmado | Happy Corner</title>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    
+
     <style>
         .confirmation-box {
             background: var(--surface-color);
@@ -44,13 +45,13 @@
             box-shadow: 0 10px 25px var(--hp-pink-glow);
             width: 80%;
         }
-        
+
         #confirmed-happy-code {
             font-size: 28px;
             font-weight: 900;
             letter-spacing: 2px;
             margin: 0;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .order-details-table {
@@ -63,25 +64,27 @@
             overflow: hidden;
             border: 1px solid var(--border-color);
         }
-        
-        .order-details-table th, .order-details-table td {
+
+        .order-details-table th,
+        .order-details-table td {
             padding: 15px;
             border-bottom: 1px dashed var(--border-color);
             font-size: 14px;
         }
-        
+
         .order-details-table th {
             color: var(--text-color);
             font-weight: 800;
             width: 40%;
         }
-        
+
         .order-details-table td {
             color: var(--text-muted);
             font-weight: 500;
         }
-        
-        .order-details-table .total-row th, .order-details-table .total-row td {
+
+        .order-details-table .total-row th,
+        .order-details-table .total-row td {
             border-bottom: none;
             border-top: 2px solid var(--border-color);
             font-size: 16px;
@@ -129,6 +132,7 @@
             color: white;
             box-shadow: 0 5px 15px var(--hp-pink-glow);
         }
+
         .action-btn.primary:hover {
             transform: scale(1.05);
             color: white;
@@ -144,8 +148,9 @@
         }
     </style>
 </head>
+
 <body onload="displayOrderDetails()">
-        <header>
+    <header>
         <a href="/index" class="logo">
             <img src="loguito.png" alt="HappyCorner" class="logo-img">
         </a>
@@ -159,8 +164,10 @@
             <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
                 <span id="theme-icon">🌙</span>
             </button>
-            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a href="/login.html" id="auth-icon-desktop"
+                style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
@@ -171,7 +178,7 @@
         </div>
     </header>
 
-        <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
@@ -179,7 +186,8 @@
         <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
         <a href="/wallet">Happy Passes</a>
-        <a href="/login.html" class="login-mobile-link" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
+        <a href="/login.html" class="login-mobile-link"
+            style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
     </nav>
 
     <div class="showcase-container">
@@ -191,23 +199,43 @@
                 <p style="margin:0; font-size:12px; opacity:0.95; font-weight:700;">TU CÓDIGO</p>
                 <h2 id="confirmed-happy-code">HO-XXXXXX</h2>
             </div>
-            
-            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Menciona este código al pagar o recibir tu pedido.</div>
+
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Menciona este código al pagar o
+                recibir tu pedido.</div>
 
             <table class="order-details-table">
                 <tbody>
-                    <tr><th>Método de Pago:</th><td id="detail-payment-method">N/A</td></tr>
-                    <tr><th>Tipo de Entrega:</th><td id="detail-delivery-type">N/A</td></tr>
-                    <tr><th>Ítems Pedidos:</th><td id="detail-items-summary">N/A</td></tr>
-                    <tr><th>Subtotal:</th><td id="detail-subtotal">N/A</td></tr>
-                    <tr><th>Envío / Recargo:</th><td id="detail-shipping">N/A</td></tr>
-                    <tr class="total-row"><th>TOTAL COMPRA:</th><td id="detail-total">N/A</td></tr>
+                    <tr>
+                        <th>Método de Pago:</th>
+                        <td id="detail-payment-method">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>Tipo de Entrega:</th>
+                        <td id="detail-delivery-type">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>Ítems Pedidos:</th>
+                        <td id="detail-items-summary">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>Subtotal:</th>
+                        <td id="detail-subtotal">N/A</td>
+                    </tr>
+                    <tr>
+                        <th>Envío / Recargo:</th>
+                        <td id="detail-shipping">N/A</td>
+                    </tr>
+                    <tr class="total-row">
+                        <th>TOTAL COMPRA:</th>
+                        <td id="detail-total">N/A</td>
+                    </tr>
                 </tbody>
             </table>
 
             <div style="text-align: center;">
                 <div id="qrcode"></div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px; font-weight: 600;">Escanea para verificar validez</div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px; font-weight: 600;">Escanea para
+                    verificar validez</div>
             </div>
 
             <div class="actions">
@@ -217,9 +245,14 @@
         </div>
     </div>
 
-    
+
     <a href="https://wa.me/573112871046" target="_blank" class="wa-fixed">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+            </path>
+        </svg>
     </a>
 
     <div class="footer-admin">
@@ -254,7 +287,7 @@
 
         function displayOrderDetails() {
             const orderDataRaw = localStorage.getItem('lastHappyOrder');
-            
+
             if (!orderDataRaw) {
                 document.querySelector('.confirmation-box').innerHTML = `
                     <h1>Ups… 😵</h1>
@@ -275,33 +308,34 @@
                 'tarjeta': 'Tarjeta Crédito/Débito 💳',
                 'efectivo': 'Efectivo 💵'
             };
-            
+
             const deliveryMap = {
                 'colegio': 'Entrega Colegio 🏫',
                 'virtual': 'Entrega Virtual 💻'
             };
-            
+
             document.getElementById('confirmed-happy-code').textContent = data.happyCode || 'HO-XXXXXX';
             document.getElementById('detail-total').textContent = data.total || '$0';
             document.getElementById('detail-subtotal').textContent = data.subtotal || '$0';
             document.getElementById('detail-shipping').textContent = data.shipping || 'Gratis';
-            
+
             document.getElementById('detail-payment-method').textContent = paymentMap[data.paymentMethod] || 'En tienda';
             document.getElementById('detail-delivery-type').textContent = deliveryMap[data.deliveryType] || 'Presencial';
             document.getElementById('detail-items-summary').textContent = data.itemsSummary || 'Sin resumen';
-            
+
             const code = data.happyCode || 'HO-XXXXXX';
             const num = `HC-${code}`;
 
             new QRCode(document.getElementById("qrcode"), {
-                text: `https://happycorner.lol/verificar-pedido?order=${num}`,
+                text: `https://happycorner.lol/verificar-pedido?order=${code}`,
                 width: 120,
                 height: 120,
-                colorDark : "#2d3436",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+                colorDark: "#2d3436",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
         }
     </script>
 </body>
+
 </html>

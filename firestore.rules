@@ -77,5 +77,9 @@ service cloud.firestore {
       allow read: if false; // Never expose PIN hashes to client
       allow write: if isAdmin();
     }
+    match /shortlinks/{code} {
+  allow get: if true;
+  allow write: if false;
+}
   }
 }

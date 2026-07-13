@@ -5,7 +5,7 @@ import { signToken } from './_lib/token.js';
 
 export default async function handler(req, res) {
     // Configuración de CORS
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
@@ -24,25 +24,25 @@ export default async function handler(req, res) {
 
                 const orderId = query.id;
                 const estado = query.estado; // 'Entregado' | 'Cancelado' | 'Confirmado'
-                
+
                 const statusMap = {
                     'Entregado': 'completed',
                     'Cancelado': 'cancelled',
                     'Confirmado': 'preparing'
                 };
-                
+
                 const status = statusMap[estado] || 'pending';
                 const now = new Date().toISOString();
-                
+
                 const updateData = {
                     status,
                     updatedAt: now
                 };
-                
+
                 if (status === 'completed') {
                     updateData.completedAt = now;
                 }
-                
+
                 await db.collection('orders').doc(orderId).update(updateData);
                 return res.status(200).json({ ok: true });
             }
@@ -72,36 +72,35 @@ export default async function handler(req, res) {
             }
 
             const msg = `🍭 *NUEVO PEDIDO: ${orderCode}* 🍭\n\n` +
-                        `👤 *Cliente:* ${pedidoData.nombre}\n` +
-                        `📱 *WhatsApp:* [${pedidoData.whatsapp}](${waLink})\n` +
-                        `🎟️ *Loyalty:* \`${pedidoData.happycodigo || "No registrado"}\`\n` +
-                        `📍 *Entrega:* ${pedidoData.tipo_entrega || "No especificada"}\n` +
-                        `💳 *Pago:* ${pedidoData.metodo_pago || "No especificado"}\n` +
-                        `🛒 *Pedido:* ${pedidoData.resumen}\n` +
-                        `💖 *Propina:* ${pedidoData.propina || "Sin propina"}\n` +
-                        `💰 *TOTAL FINAL:* ${totalDisplay}${note}`;
+                `👤 *Cliente:* ${pedidoData.nombre}\n` +
+                `📱 *WhatsApp:* [${pedidoData.whatsapp}](${waLink})\n` +
+                `🎟️ *Loyalty:* \`${pedidoData.happycodigo || "No registrado"}\`\n` +
+                `📍 *Entrega:* ${pedidoData.tipo_entrega || "No especificada"}\n` +
+                `💳 *Pago:* ${pedidoData.metodo_pago || "No especificado"}\n` +
+                `🛒 *Pedido:* ${pedidoData.resumen}\n` +
+                `💖 *Propina:* ${pedidoData.propina || "Sin propina"}\n` +
+                `💰 *TOTAL FINAL:* ${totalDisplay}${note}`;
 
             // Preparar mensajes para WhatsApp
             const waApproval = `Hola ${pedidoData.nombre}! 🎉 Tu pedido de Happy Corner está confirmado.\n\n📦 Orden: ${orderCode}\n🛍️ Resumen: ${pedidoData.resumen}\n💰 Total: ${totalDisplay}\n\n¡Gracias por preferirnos!`;
             const waPending = `Hola ${pedidoData.nombre}, tu pedido ${orderCode} por ${totalDisplay} está pendiente de pago. ⏳\n\n🛍️ Resumen: ${pedidoData.resumen}\n\nPor favor envía tu comprobante aquí para procesarlo rápido!`;
             const waCancel = `Hola ${pedidoData.nombre}. Lamentablemente tu pedido ${orderCode} ha sido cancelado por el siguiente motivo: `;
-            
+
             const payloadObj = {
                 n: pedidoData.nombre, o: orderCode, p: totalDisplay, w: cleanNumber, res: pedidoData.resumen
             };
             const tokenBase64 = signToken(payloadObj, process.env.ORDER_VERIFY_SECRET, { expiresInSeconds: 60 * 60 * 24 });
             const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.lol';
             const verifyLinkRaw = `${siteUrl}/verify?auth=${encodeURIComponent(tokenBase64)}`;
+            // Crear link corto bajo el dominio de Happy Corner
+            const shortCode = Math.random().toString(36).substring(2, 8); // 6 caracteres random
+            await db.collection('shortlinks').doc(shortCode).set({
+                target: verifyLinkRaw,
+                createdAt: new Date().toISOString()
+            });
+            const verifyLink = `${siteUrl}/s/${shortCode}`;
 
-
-            // Acortar el enlace para que WhatsApp se vea súper limpio
-            let verifyLink = verifyLinkRaw;
-            try {
-                const tinyRes = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(verifyLinkRaw)}`);
-                if (tinyRes.ok) verifyLink = await tinyRes.text();
-            } catch(e) {
-                console.error("Error acortando URL");
-            }
+    
 
             // Save to Firestore
             try {
@@ -119,15 +118,15 @@ export default async function handler(req, res) {
                     updatedAt: new Date().toISOString(),
                     completedAt: null
                 });
-            } catch(e) { 
+            } catch (e) {
                 console.error('Firestore orders save failed:', e);
             }
 
             const waPreorder = `¡Hola ${pedidoData.nombre}! 👋\n\n` +
-                               `📝 Registramos tu pre-orden de:\n*${pedidoData.resumen}*\n\n` +
-                               `💰 *Total a pagar:* ${totalDisplay}\n\n` +
-                               `👉 Por favor ingresa a este enlace seguro para *CONFIRMAR* tu pedido para el día de mañana:\n${verifyLink}\n\n` +
-                               `¡Mil gracias por ser parte de Happy Corner! ✨ Recuerda tener tu dinero físico o transferencia listos.`;
+                `📝 Registramos tu pre-orden de:\n*${pedidoData.resumen}*\n\n` +
+                `💰 *Total a pagar:* ${totalDisplay}\n\n` +
+                `👉 Por favor ingresa a este enlace seguro para *CONFIRMAR* tu pedido para el día de mañana:\n${verifyLink}\n\n` +
+                `¡Mil gracias por ser parte de Happy Corner! ✨ Recuerda tener tu dinero físico o transferencia listos.`;
 
             // ENVIAR SOLO A TELEGRAM
             const tgRes = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`, {
@@ -170,7 +169,7 @@ export default async function handler(req, res) {
                         telegramMessageId: tgData.result.message_id
                     });
                 }
-            } catch(e) {
+            } catch (e) {
                 console.error('Firestore order update with TG data failed:', e);
             }
 
@@ -189,7 +188,7 @@ export default async function handler(req, res) {
                     .where('phone', '==', cleanPhone)
                     .limit(1)
                     .get();
-                
+
                 let points = 0;
                 if (!usersSnap.empty) {
                     points = usersSnap.docs[0].data().happyPoints || 0;
@@ -223,7 +222,7 @@ export default async function handler(req, res) {
 
             snapshot.forEach(doc => {
                 const data = doc.data();
-                
+
                 // Map status to Spanish display status
                 let estado = 'pendiente';
                 if (data.status === 'completed') estado = 'Entregado';

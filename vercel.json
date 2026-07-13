@@ -13,6 +13,7 @@
     { "source": "/wallet", "destination": "/wallet.html" },
     { "source": "/preorder", "destination": "/preorder.html" },
     { "source": "/verify", "destination": "/verify.html" },
+    { "source": "/s/:code", "destination": "/s.html?code=:code" },
     { "source": "/track", "destination": "/track.html" },
     { "source": "/mi-cuenta", "destination": "/mi-cuenta.html" },
     { "source": "/onboarding", "destination": "/onboarding.html" },
