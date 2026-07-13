@@ -104,7 +104,7 @@
     </div>
 
     <script type="module">
-        import { db, doc, getDoc } from './firebase-auth.js';
+        import { initPromise, db, doc, getDoc } from './firebase-auth.js';
 
         // Tema Nocturno automatico
         const hour = new Date().getHours();
@@ -141,7 +141,7 @@
         function showSuccess(data, orderId) {
             const card = document.getElementById('verifyCard');
             const date = data.timestamp ? new Date(data.timestamp.toMillis()).toLocaleString('es-CO') : 'N/A';
-            
+
             const statusMap = {
                 'pending': '⏳ Pendiente',
                 'paid': '✅ Pagado',
@@ -197,7 +197,8 @@
             `;
         }
 
-        init();
+        initPromise.then(init);
     </script>
 </body>
+
 </html>
