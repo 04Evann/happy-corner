@@ -30,8 +30,8 @@ function renderCreditGauge(containerId, score, history) {
     const largeArcFill = (180 - needleAngle) > 180 ? 1 : 0;
 
     let html = `
-        <div style="position: relative; width: 100%; max-width: 230px; margin: 0 auto;">
-            <svg viewBox="0 0 200 118" style="width: 100%; height: auto; overflow: visible;">
+      <div style="position: relative; width: 100%; max-width: 230px; margin: 0 auto; padding-bottom: 8px;">
+           <svg viewBox="0 0 200 118" style="width: 100%; height: auto; overflow: visible; display:block; margin-bottom: -10px;">
                 <defs>
                     <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stop-color="#f2735c" />
