@@ -1,4 +1,6 @@
 import fetch from 'node-fetch';
+import { db } from './_lib/firebaseAdmin.js';
+import { verifyToken } from './_lib/token.js';
 
 export default async function handler(req, res) {
     // CORS
@@ -15,7 +17,19 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { orderId, nombre, resumen, status, whatsapp } = req.body;
+        const { orderId, nombre, resumen, status, whatsapp, token } = req.body;
+        
+        if (!token) return res.status(401).json({ error: 'Token missing.' });
+        
+        const v = verifyToken(token, process.env.ORDER_VERIFY_SECRET);
+        if (!v.ok) return res.status(401).json({ error: 'Token inválido o vencido.' });
+        if (v.payload.o !== orderId) return res.status(401).json({ error: 'Token no coincide con el pedido.' });
+
+        // Confirmar contra Firestore que el orderId realmente existe en la colección orders
+        const orderSnap = await db.collection('orders').doc(orderId).get();
+        if (!orderSnap.exists) {
+            return res.status(404).json({ error: 'Pedido no encontrado en la base de datos.' });
+        }
         
         let emoji = '✅';
         let actionStr = 'CONFIRMADO';

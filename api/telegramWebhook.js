@@ -20,6 +20,14 @@ export default async function handler(req, res) {
 
   res.status(200).send("OK"); // Responder siempre
 
+  res.status(200).send("OK"); // Responder siempre
+
+  // Handle Callback Query (Inline Buttons)
+  if (req.body?.callback_query) {
+    await handleCallbackQuery(req.body.callback_query);
+    return;
+  }
+
   if (!req.body?.message?.text) return;
 
   const text = req.body.message.text;
@@ -124,4 +132,82 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error("Error Webhook:", err?.message || err);
   }
+}
+
+async function handleCallbackQuery(cbQuery) {
+    const data = cbQuery.data;
+    const chatId = cbQuery.message.chat.id;
+    const messageId = cbQuery.message.message_id;
+    const callbackQueryId = cbQuery.id;
+    
+    // Always answer the callback query to remove the loading clock on the button
+    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/answerCallbackQuery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ callback_query_id: callbackQueryId })
+    });
+
+    // Parse the data (e.g. "accept_h-XXXXX")
+    const parts = data.split('_');
+    if (parts.length < 2) return;
+    const action = parts[0];
+    const orderId = parts.slice(1).join('_'); // support multiple underscores if needed
+
+    // Map action to status
+    const statusMap = {
+        'accept': 'ready',
+        'pending': 'pending',
+        'cancel': 'cancelled'
+    };
+    const newStatus = statusMap[action];
+    if (!newStatus) return;
+
+    try {
+        requireEnv("TELEGRAM_TOKEN");
+
+        // 1. Update Firestore
+        const orderRef = db.collection('orders').doc(orderId);
+        const orderDoc = await orderRef.get();
+        
+        if (orderDoc.exists) {
+            await orderRef.update({
+                status: newStatus,
+                updatedAt: new Date().toISOString(),
+                ...(newStatus === 'cancelled' || newStatus === 'delivered' ? { completedAt: new Date().toISOString() } : {})
+            });
+        }
+
+        // 2. Edit Telegram Message
+        const orderData = orderDoc.data() || {};
+        let statusEmoji = '🛍️';
+        if (newStatus === 'cancelled') statusEmoji = '❌';
+        if (newStatus === 'pending') statusEmoji = '⏳';
+        
+        const newText = cbQuery.message.text.replace(/⏳ \*NUEVO PEDIDO\*|🛍️ \*NUEVO PEDIDO\*/, `${statusEmoji} *PEDIDO ACTUALIZADO*`);
+        
+        // Clean phone number for WhatsApp
+        const cleanNumber = (orderData.whatsapp || '').replace(/\D/g, '');
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.lol';
+        
+        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/editMessageText`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: chatId,
+                message_id: messageId,
+                text: `${newText}\n\n*Estado actual:* ${newStatus}`,
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "📲 Enviar WhatsApp al cliente", url: `https://wa.me/57${cleanNumber}?text=Hola!` }
+                        ]
+                    ]
+                }
+            })
+        });
+
+    } catch (e) {
+        console.error("Callback query error:", e);
+    }
 }

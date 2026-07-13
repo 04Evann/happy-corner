@@ -624,10 +624,8 @@
                     <div style="display:flex; flex-direction:column; gap:12px;">
                         <div
                             style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:12px; border:1px solid var(--border-color);">
-                            <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Puntaje
-                                Actual</span>
-                            <span id="modal-score-badge" class="badge badge-c"
-                                style="font-size:14px; padding:6px 12px;">20/100</span>
+                            <span style="font-size:14px; font-weight:600; color:var(--text-muted);">Puntaje Actual</span>
+                            <div id="credit-gauge-container" style="width: 150px; height: 90px; overflow: hidden;"></div>
                         </div>
                         <div>
                             <label style="font-size:12px; color:var(--text-muted); font-weight:600;">NUEVO PUNTAJE
@@ -708,6 +706,7 @@
     <!-- ============================================== -->
     <!-- DATABASE & FIREBASE CONFIGURATION -->
     <!-- ============================================== -->
+    <script src="/credit-gauge.js"></script>
     <script type="module">
         import { initPromise, db, auth } from './firebase-auth.js';
         import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -1013,6 +1012,24 @@
                 }
                 
                 await updateDoc(doc(db, 'orders', orderId), updateData);
+                
+                // Sync to Telegram
+                try {
+                    // Send auth token if we require it for requireAdmin, though requireAdmin might check cookies or headers.
+                    // Assuming token is available as await auth.currentUser.getIdToken()
+                    const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+                    await fetch('/api/syncTelegramStatus', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}` 
+                        },
+                        body: JSON.stringify({ orderId, newStatus: status })
+                    });
+                } catch(tgErr) {
+                    console.error("Telegram sync failed:", tgErr);
+                }
+
                 alert(`Pedido ${orderId} actualizado con éxito.`);
             } catch (err) {
                 console.error("Failed to update order status", err);
@@ -1171,16 +1188,20 @@
 
             const snap = await getDoc(doc(db, 'creditScores', uid));
             if (!snap.exists()) {
-                scoreEl.textContent = '20/100';
-                scoreEl.className = 'badge badge-c';
+                if (window.renderCreditGauge) {
+                    renderCreditGauge('credit-gauge-container', 20, []);
+                }
                 tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); font-size:12px;">Sin registros.</td></tr>`;
                 return;
             }
 
             const cs = snap.data();
-            const tierLower = (cs.tier || 'C').toLowerCase();
-            scoreEl.textContent = `${cs.score || 20}/100 - Tier ${cs.tier || 'C'}`;
-            scoreEl.className = `badge badge-${tierLower}`;
+            const history = cs.history || [];
+            
+            // Render the SVG gauge in the container
+            if (window.renderCreditGauge) {
+                renderCreditGauge('credit-gauge-container', cs.score || 20, history);
+            }
 
             const history = cs.history || [];
             if (history.length === 0) {

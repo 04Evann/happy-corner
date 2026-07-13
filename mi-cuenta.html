@@ -1013,12 +1013,9 @@
                     <div class="mc-section-header">
                         <div class="mc-section-title"><span class="icon icon-purple">📊</span> Historial Crediticio</div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
-                        <div style="width:64px; height:64px; border-radius:50%; background:var(--hp-gradient); display:flex; align-items:center; justify-content:center; font-size:24px; font-weight:900; color:white; flex-shrink:0;" id="mc-credit-tier">—</div>
-                        <div>
-                            <div style="font-size:22px; font-weight:900; color:var(--text-color);" id="mc-credit-score">—/100</div>
-                            <div style="font-size:13px; color:var(--text-muted);" id="mc-credit-label">Cargando puntaje crediticio...</div>
-                        </div>
+                    <div style="display:flex; justify-content:center; align-items:center; flex-direction:column; gap:16px; margin-bottom:16px;">
+                        <div id="credit-gauge-container" style="width: 250px; height: 130px; overflow: hidden; margin-top:10px;"></div>
+                        <div style="font-size:13px; color:var(--text-muted); text-align:center;" id="mc-credit-label">Cargando puntaje crediticio...</div>
                     </div>
                     <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">HISTORIAL DE CAMBIOS DE SCORE</div>
                     <div id="mc-credit-history" style="display:flex; flex-direction:column; gap:8px;">
@@ -1482,20 +1479,18 @@
                 const historyEl = document.getElementById('mc-credit-history');
 
                 if (!snap.exists()) {
-                    tierEl.textContent = '?';
-                    scoreEl.textContent = '—/100';
+                    if (window.renderCreditGauge) renderCreditGauge('credit-gauge-container', 20, []);
                     labelEl.textContent = 'Puntaje en construcción. Realiza transacciones para comenzar.';
                     return;
                 }
 
                 const { score = 20, tier = 'C', history = [] } = snap.data();
-                const tierColors = { A: '#22c55e', B: '#3b82f6', C: '#f97316', D: '#ef4444' };
                 const tierLabels = { A: 'Excelente', B: 'Bueno', C: 'Regular', D: 'En riesgo' };
-
-                tierEl.textContent = tier;
-                tierEl.style.background = tierColors[tier] || 'var(--hp-gradient)';
-                scoreEl.textContent = `${score}/100`;
                 labelEl.textContent = tierLabels[tier] || 'Puntaje crediticio';
+
+                if (window.renderCreditGauge) {
+                    renderCreditGauge('credit-gauge-container', score, history);
+                }
 
                 if (history.length === 0) return;
 
@@ -1803,6 +1798,7 @@
         }
 
     </script>
+<script src="/credit-gauge.js"></script>
 <script src="/footer.js"></script>
 </body>
 

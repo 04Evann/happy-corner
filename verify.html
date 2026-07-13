@@ -184,7 +184,11 @@
         const token = params.get('auth');
         if (token) {
             try {
-                const decoded = atob(decodeURIComponent(token));
+                // El token ahora tiene el formato payloadB64.signatureB64 (base64url)
+                const payloadPart = token.split('.')[0];
+                // Convertir base64url a base64 estandar para atob
+                const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+                const decoded = atob(base64);
                 const data = JSON.parse(decoded);
                 uNombre = data.n || uNombre;
                 uOrder = data.o || uOrder;
@@ -307,7 +311,8 @@
                         nombre: uNombre,
                         resumen: uResumen,
                         status: status,
-                        whatsapp: uWa
+                        whatsapp: uWa,
+                        token: token // Enviamos el token completo para validacion en el servidor
                     })
                 });
 
