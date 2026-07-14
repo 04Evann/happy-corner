@@ -52,8 +52,7 @@
     {
       "source": "/s/:code",
       "destination": "/api/s?code=:code"
-    }
-   
+    },
     {
       "source": "/track",
       "destination": "/track.html"
