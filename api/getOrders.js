@@ -140,13 +140,13 @@ export default async function handler(req, res) {
                     reply_markup: {
                         inline_keyboard: [
                             [
-                                { text: "✅ Aprobar Pedido", callback_data: `accept_${orderCode}` }
+                                { text: "✅ Aprobar Pedido", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waApproval)}` }
                             ],
                             [
-                                { text: "⏳ Pago Pendiente", callback_data: `pending_${orderCode}` }
+                                { text: "⏳ Pago Pendiente", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waPending)}` }
                             ],
                             [
-                                { text: "❌ Cancelar Pedido", callback_data: `cancel_${orderCode}` }
+                                { text: "❌ Cancelar Pedido", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waCancel)}` }
                             ],
                             [
                                 { text: "📩 Enviar WA Pre-Orden", url: `https://wa.me/57${cleanNumber}?text=${encodeURIComponent(waPreorder)}` }
@@ -160,17 +160,6 @@ export default async function handler(req, res) {
 
             if (!tgData.ok) {
                 throw new Error('Error en Telegram: ' + tgData.description);
-            }
-
-            try {
-                if (tgData.result) {
-                    await db.collection('orders').doc(orderCode).update({
-                        telegramChatId: tgData.result.chat.id,
-                        telegramMessageId: tgData.result.message_id
-                    });
-                }
-            } catch (e) {
-                console.error('Firestore order update with TG data failed:', e);
             }
 
             return res.status(200).json({ ok: true, orderId: orderCode, message: "Telegram enviado" });

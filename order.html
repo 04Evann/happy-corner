@@ -206,7 +206,7 @@
                             if (fullName) document.getElementById('nombre').value = fullName;
                             if (data.email) document.getElementById('email').value = data.email;
                             if (data.phone) document.getElementById('celular').value = data.phone;
-                            if (data.customerCode) document.getElementById('puntos_code').value = data.customerCode;
+                             if (data.customerCode) document.getElementById('puntos_code').value = data.customerCode.replace(/^HC/i, '');
                         }
                     } catch (err) {
                         console.error("Error loading user profile in checkout:", err);
@@ -424,7 +424,7 @@
 
         // --- FETCH PUNTOS ---
         document.getElementById('consultar-puntos-btn').onclick = async function () {
-            const code = document.getElementById('puntos_code').value.trim();
+             const code = document.getElementById('puntos_code').value.trim() ? 'HC' + document.getElementById('puntos_code').value.trim().toUpperCase() : '';
             if (!code) return alert("Escribe tu código");
             this.innerText = "...";
             try {
@@ -457,10 +457,10 @@
                 total: document.getElementById('hidden-total').value,
                 metodo_pago: document.getElementById('metodo_pago').value,
                 tipo_entrega: document.getElementById('tipo_entrega').value,
-                happycodigo: document.getElementById('puntos_code').value || null,
-                propina: document.getElementById('hidden-total').getAttribute('data-propina') || "$0",
-                customerUID: auth.currentUser ? auth.currentUser.uid : null,
-                customerCode: document.getElementById('puntos_code').value || null
+                 happycodigo: document.getElementById('puntos_code').value ? 'HC' + document.getElementById('puntos_code').value.trim().toUpperCase() : null,
+                 propina: document.getElementById('hidden-total').getAttribute('data-propina') || "$0",
+                 customerUID: auth.currentUser ? auth.currentUser.uid : null,
+                 customerCode: document.getElementById('puntos_code').value ? 'HC' + document.getElementById('puntos_code').value.trim().toUpperCase() : null
             };
 
             const btn = e.target.querySelector('button[type="submit"]');

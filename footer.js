@@ -249,6 +249,7 @@
               <a href="/mi-cuenta">👤 Mi Cuenta</a>
               <a href="/loyalty">⭐ Happy Passes</a>
               <a href="/terminos">📄 Términos y Condiciones</a>
+              <a href="/privacidad">🔒 Política de Privacidad</a>
             </div>
           </div>
         </div>
@@ -313,7 +314,7 @@
         </div>
         <div class="hcf-bottom-right">
           <a href="/terminos">Términos y Condiciones</a>
-          <a href="/terminos#privacidad">Privacidad</a>
+<a href="/privacidad">Política de Privacidad</a>
         </div>
       </div>
     </div>
