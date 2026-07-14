@@ -97,11 +97,6 @@
       "source": "/admin",
       "destination": "/admin-v2",
       "permanent": true
-    },
-    {
-      "source": "/privacidad",
-      "destination": "/privacidad.html",
-      "permanent": true
     }
   ],
   "crons": [
