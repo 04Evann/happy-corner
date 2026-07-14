@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -9,7 +10,7 @@
     <!-- Fonts and CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    
+
     <!-- Confetti & SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -21,7 +22,7 @@
     <audio id="sadViolin" src="https://www.myinstants.com/media/sounds/sad-violin.mp3" preload="auto"></audio>
 
     <!-- HEADER NUEVO -->
-        <header>
+    <header>
         <a href="/index" class="logo">
             <img src="loguito.png" alt="HappyCorner" class="logo-img">
         </a>
@@ -35,8 +36,10 @@
             <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
                 <span id="theme-icon">🌙</span>
             </button>
-            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a href="/login.html" id="auth-icon-desktop"
+                style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
@@ -47,7 +50,7 @@
         </div>
     </header>
 
-        <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
@@ -55,7 +58,8 @@
         <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
         <a href="/wallet">Happy Passes</a>
-        <a href="/login.html" class="login-mobile-link" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
+        <a href="/login.html" class="login-mobile-link"
+            style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
     </nav>
 
     <main class="showcase-container">
@@ -63,36 +67,48 @@
         <p class="section-subtitle">Revisa tus productos y asegura tus datos de entrega.</p>
 
         <div class="order-layout">
-            
+
             <!-- CAJA 1: RESUMEN DEL CARRITO -->
             <div class="checkout-box">
                 <h3 style="font-size: 18px; margin-bottom: 20px;">Tu Carrito</h3>
-                
+
                 <div id="cart-items-list">
                     <!-- Javascript listará esto -->
                 </div>
 
-                <div id="empty-cart-msg" style="display:none; text-align:center; padding:20px; color:var(--text-muted);">
-                    <p>Carrito vacío. <br><br> <a href="/index" class="btn-secondary" style="text-decoration:none;">Ver productos</a></p>
+                <div id="empty-cart-msg"
+                    style="display:none; text-align:center; padding:20px; color:var(--text-muted);">
+                    <p>Carrito vacío. <br><br> <a href="/index" class="btn-secondary" style="text-decoration:none;">Ver
+                            productos</a></p>
                 </div>
 
                 <!-- UPSELL BANNER DINÁMICO -->
                 <div id="upsell-container" style="display:none;">
-                    <div class="upsell-banner" style="background: linear-gradient(135deg, rgba(255,157,92,0.1), rgba(255,82,153,0.1)); border: 1px solid var(--hp-orange); border-radius: 16px; padding: 15px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px; animation: slideIn 0.5s ease;">
+                    <div class="upsell-banner"
+                        style="background: linear-gradient(135deg, rgba(255,157,92,0.1), rgba(255,82,153,0.1)); border: 1px solid var(--hp-orange); border-radius: 16px; padding: 15px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px; animation: slideIn 0.5s ease;">
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <img id="upsell-img" src="" alt="Upsell" style="width: 40px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); border-radius: 8px;">
+                            <img id="upsell-img" src="" alt="Upsell"
+                                style="width: 40px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); border-radius: 8px;">
                             <div>
-                                <div style="color: var(--hp-orange); font-weight: 900; font-size: 13px;">¿TE FALTA ALGO MÁS?</div>
-                                <div id="upsell-text" style="font-size: 11px; font-weight: 600; color: var(--text-color);">Añade X por solo $Y</div>
+                                <div style="color: var(--hp-orange); font-weight: 900; font-size: 13px;">¿TE FALTA ALGO
+                                    MÁS?</div>
+                                <div id="upsell-text"
+                                    style="font-size: 11px; font-weight: 600; color: var(--text-color);">Añade X por
+                                    solo $Y</div>
                             </div>
                         </div>
-                        <button class="nav-btn" style="background: var(--hp-orange); color: white; padding: 6px 15px; font-size: 12px;" onclick="addUpsell(event)">+ Añadir</button>
+                        <button class="nav-btn"
+                            style="background: var(--hp-orange); color: white; padding: 6px 15px; font-size: 12px;"
+                            onclick="addUpsell(event)">+ Añadir</button>
                     </div>
                 </div>
 
                 <div id="total-container" style="margin-top: 30px; display:none;">
-                    <div class="total-row"><span>Subtotal</span> <span style="font-weight: 900;" id="subtotal-price">$0</span></div>
-                    <div class="total-row" id="propina-row" style="display:none; color: var(--text-muted); font-size: 13px;"><span>Propina</span> <span id="propina-price">$0</span></div>
+                    <div class="total-row"><span>Subtotal</span> <span style="font-weight: 900;"
+                            id="subtotal-price">$0</span></div>
+                    <div class="total-row" id="propina-row"
+                        style="display:none; color: var(--text-muted); font-size: 13px;"><span>Propina</span> <span
+                            id="propina-price">$0</span></div>
                     <div class="total-row total-final"><span>Total</span> <span id="total-price">$0</span></div>
                 </div>
             </div>
@@ -104,18 +120,27 @@
 
                     <label class="input-label">¿Tienes HappyCódigo?</label>
                     <div style="display:flex; gap:10px;">
-                        <input type="text" id="puntos_code" class="input-text" placeholder="Tu código" style="margin-bottom: 15px;">
-                        <button type="button" id="consultar-puntos-btn" class="btn-secondary" style="width:auto; padding:0 20px; height: 50px;">Consultar</button>
+                        <div style="position:relative; flex:1;">
+                            <span
+                                style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-weight:900; color:var(--hp-pink); pointer-events:none; z-index:1;">HC</span>
+                            <input type="text" id="puntos_code" class="input-text" placeholder="TUCODE" maxlength="6"
+                                style="margin-bottom: 15px; padding-left: 42px; text-transform:uppercase;">
+                        </div>
+                        <button type="button" id="consultar-puntos-btn" class="btn-secondary"
+                            style="width:auto; padding:0 20px; height: 50px;">Consultar</button>
                     </div>
-
+                    
                     <label class="input-label">Nombre Completo</label>
-                    <input type="text" name="Nombre" id="nombre" class="input-text" required placeholder="Ej: Juan Pérez">
+                    <input type="text" name="Nombre" id="nombre" class="input-text" required
+                        placeholder="Ej: Juan Pérez">
 
                     <label class="input-label">Correo</label>
-                    <input type="email" name="Email" id="email" class="input-text" required placeholder="correo@ejemplo.com">
+                    <input type="email" name="Email" id="email" class="input-text" required
+                        placeholder="correo@ejemplo.com">
 
                     <label class="input-label">WhatsApp</label>
-                    <input type="tel" name="WhatsApp" id="celular" class="input-text" required placeholder="Número para contactarte">
+                    <input type="tel" name="WhatsApp" id="celular" class="input-text" required
+                        placeholder="Número para contactarte">
 
                     <label class="input-label">Tipo de Entrega</label>
                     <select id="tipo_entrega" class="input-select" name="Tipo_Entrega" required>
@@ -147,9 +172,14 @@
         </div>
     </main>
 
-    
+
     <a href="https://wa.me/573112871046" target="_blank" class="wa-fixed">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+            </path>
+        </svg>
     </a>
 
     <div class="footer-admin">
@@ -178,7 +208,7 @@
                             if (data.phone) document.getElementById('celular').value = data.phone;
                             if (data.customerCode) document.getElementById('puntos_code').value = data.customerCode;
                         }
-                    } catch(err) {
+                    } catch (err) {
                         console.error("Error loading user profile in checkout:", err);
                     }
                 }
@@ -187,7 +217,7 @@
 
         // --- THEME & NAV ---
         let isDark = false;
-        window.toggleTheme = function() {
+        window.toggleTheme = function () {
             isDark = !isDark;
             const themeBtn = document.getElementById('theme-icon');
             if (isDark) {
@@ -215,7 +245,7 @@
 
         // --- CART LOGIC ---
         let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
-        
+
         // Catálogo para Upselling Dinámico y Rendereo de Carrito
         const catalogItems = [
             { id: 'bubbaloo', name: 'Bubbaloo', price: 400, img: 'bb.png' },
@@ -235,17 +265,17 @@
 
         let currentUpsellItem = null;
 
-        window.checkPizzaLimit = function(newCart) {
+        window.checkPizzaLimit = function (newCart) {
             let currentPizzas = 0;
             newCart.forEach(item => {
-                if(item.name.toLowerCase().includes('pizza')) {
+                if (item.name.toLowerCase().includes('pizza')) {
                     currentPizzas += item.qty;
                 }
             });
             return currentPizzas <= 5;
         };
 
-        window.updateQty = function(index, delta) {
+        window.updateQty = function (index, delta) {
             let tempCart = JSON.parse(JSON.stringify(cart));
             tempCart[index].qty += delta;
 
@@ -260,7 +290,7 @@
             if (tempCart[index].qty <= 0) {
                 tempCart.splice(index, 1);
             }
-            
+
             cart = tempCart;
             localStorage.setItem('hc_cart', JSON.stringify(cart));
             renderCart();
@@ -292,7 +322,7 @@
                 // Intentar sacar imagen del catálogo o usar logo por defecto
                 let imgSource = 'loguito.png';
                 const catItem = catalogItems.find(c => c.id === item.id || item.name.toLowerCase().includes(c.name.toLowerCase()));
-                if(catItem) imgSource = catItem.img;
+                if (catItem) imgSource = catItem.img;
 
                 const row = document.createElement('div');
                 row.className = 'cart-item';
@@ -333,13 +363,13 @@
             propinaAmount = Math.round(subtotal * (parseInt(propinaSelect) / 100));
 
             const total = subtotal + propinaAmount;
-            
+
             // Caso especial si tiene robux genérico o items sin precio definido (poco probable)
             const isCustomRobux = cart.some(item => item.isCustomRobux);
             const totalTxtDisplay = isCustomRobux ? 'Por definir' : `$${total.toLocaleString()}`;
-            
+
             document.getElementById('subtotal-price').textContent = `$${subtotal.toLocaleString()}`;
-            
+
             const propinaRow = document.getElementById('propina-row');
             if (propinaAmount > 0) {
                 propinaRow.style.display = 'flex';
@@ -355,10 +385,10 @@
         }
 
         // Action when UPSELL button clicked
-        window.addUpsell = function(event) {
-            if(!currentUpsellItem) return;
+        window.addUpsell = function (event) {
+            if (!currentUpsellItem) return;
             const btn = event.currentTarget;
-            
+
             // Animation and confetti ONLY on ADD
             btn.style.transform = 'scale(0.9)';
             setTimeout(() => { btn.style.transform = 'scale(1.05)'; setTimeout(() => btn.style.transform = 'scale(1)', 150); }, 100);
@@ -382,7 +412,7 @@
         };
 
         // --- EASTER EGG SAD VIOLIN ---
-        window.checkPropina = function(selectEl) {
+        window.checkPropina = function (selectEl) {
             if (selectEl.value === "0") {
                 const sadAudio = document.getElementById('sadViolin');
                 sadAudio.volume = 0.5;
@@ -404,7 +434,7 @@
                     if (confirm(`¡Hola ${data.nombre}! ¿Usamos tus datos?`)) {
                         document.getElementById('nombre').value = data.nombre;
                         document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
-                        document.getElementById('celular').value = String(data.telefono || '').replace(/\s+/g,'');
+                        document.getElementById('celular').value = String(data.telefono || '').replace(/\s+/g, '');
                     }
                 } else { alert("Código no válido"); }
             } catch (e) { alert("Error al conectar"); }
@@ -470,7 +500,7 @@
                         return; // Bloquear ejecución
                     }
                 }
-            } catch(e) {
+            } catch (e) {
                 console.log("Error verificando deudas: ", e);
             }
 
@@ -514,6 +544,7 @@
             }
         });
     </script>
-<script src="/footer.js"></script>
+    <script src="/footer.js"></script>
 </body>
+
 </html>
