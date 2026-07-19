@@ -3,15 +3,11 @@ import { db } from './_lib/firebaseAdmin.js';
 import { requireAdmin } from './_lib/adminAuth.js';
 import { signToken } from './_lib/token.js';
 
-export default async function handler(req, res) {
-    // Configuración de CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+import { applyCors } from './_lib/http.js';
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+export default async function handler(req, res) {
+    if (applyCors(req, res, { methods: ['GET', 'POST', 'OPTIONS'] })) return;
+
 
     const { method, body, query } = req;
 

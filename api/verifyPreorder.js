@@ -2,19 +2,15 @@ import fetch from 'node-fetch';
 import { db } from './_lib/firebaseAdmin.js';
 import { verifyToken } from './_lib/token.js';
 
-export default async function handler(req, res) {
-    // CORS
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+import { applyCors } from './_lib/http.js';
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+export default async function handler(req, res) {
+    if (applyCors(req, res, { methods: ['POST', 'OPTIONS'] })) return;
 
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+
 
     try {
         const { orderId, nombre, resumen, status, whatsapp, token } = req.body;

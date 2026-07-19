@@ -272,11 +272,16 @@
             saveCodeBtn.innerText = 'Reservando...';
 
             try {
+                const token = await currentUser.getIdToken();
                 const resp = await fetch('/api/verifyOnboardingCode', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify({ customerUID: currentUser.uid, customerCode: fullCode })
                 });
+
                 const data = await resp.json();
 
                 if (!resp.ok || !data.ok) {

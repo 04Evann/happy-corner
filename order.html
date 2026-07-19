@@ -182,9 +182,7 @@
         </svg>
     </a>
 
-    <div class="footer-admin">
-        <a href="/admin">Administración Empresarial</a>
-    </div>
+
 
     <!-- SCRIPT PRINCIPAL DEL CARRITO -->
     <script type="module">
@@ -426,17 +424,27 @@
         document.getElementById('consultar-puntos-btn').onclick = async function () {
              const code = document.getElementById('puntos_code').value.trim() ? 'HC' + document.getElementById('puntos_code').value.trim().toUpperCase() : '';
             if (!code) return alert("Escribe tu código");
+
+            if (!auth.currentUser) {
+                return alert("Debes iniciar sesión para consultar tus puntos.");
+            }
+
             this.innerText = "...";
             try {
-                const res = await fetch(`https://happy-corner.vercel.app/api/getPoints?codigo=${code}`);
+                const token = await auth.currentUser.getIdToken();
+                const res = await fetch(`https://happy-corner.vercel.app/api/getPoints?codigo=${code}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await res.json();
                 if (data.nombre) {
                     if (confirm(`¡Hola ${data.nombre}! ¿Usamos tus datos?`)) {
                         document.getElementById('nombre').value = data.nombre;
-                        document.getElementById('email').value = data.correo !== 'No registrado' ? data.correo : '';
+                        document.getElementById('email').value = data.correo && data.correo !== 'No registrado' ? data.correo : '';
                         document.getElementById('celular').value = String(data.telefono || '').replace(/\s+/g, '');
                     }
-                } else { alert("Código no válido"); }
+                } else { alert(data.error || "Código no válido"); }
             } catch (e) { alert("Error al conectar"); }
             this.innerText = "Consultar";
         };
@@ -470,34 +478,41 @@
 
             // ===== WALL OF SHAME (CHECK DEUDAS) =====
             try {
-                const checkRes = await fetch(`https://happy-corner.vercel.app/api/checkDeuda?nombre=${encodeURIComponent(payload.nombre)}`);
-                const checkData = await checkRes.json();
-
-                if (checkData.hasDeuda) {
-                    const result = await Swal.fire({
-                        title: '⚠️ Aviso del Sistema',
-                        html: `Hemos detectado un registro con un nombre parecido.<br><br><b>¿Eres ${checkData.deudorData.nombre}?</b>`,
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Sí, soy yo',
-                        cancelButtonText: 'No, soy otra persona',
-                        confirmButtonColor: '#e74c3c',
-                        background: 'var(--surface-color)',
-                        color: 'var(--text-color)'
+                if (auth.currentUser) {
+                    const token = await auth.currentUser.getIdToken();
+                    const checkRes = await fetch(`https://happy-corner.vercel.app/api/checkDeuda`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
                     });
+                    const checkData = await checkRes.json();
 
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: '⛔ Acceso Restringido',
-                            html: `No puedes hacer compras en HappyCorner.<br><br>Estás en una deuda activa de <b style="color:red;">$${checkData.deudorData.monto}</b> por comprar: <b>${checkData.deudorData.detalle}</b>.<br><br>Por favor liquida tu deuda con el administrador primero.`,
-                            icon: 'error',
-                            confirmButtonColor: 'var(--hp-pink)',
+                    if (checkData.hasDeuda) {
+                        const result = await Swal.fire({
+                            title: '⚠️ Aviso del Sistema',
+                            html: `Hemos detectado un registro con un nombre parecido.<br><br><b>¿Eres ${checkData.deudorData.nombre}?</b>`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, soy yo',
+                            cancelButtonText: 'No, soy otra persona',
+                            confirmButtonColor: '#e74c3c',
                             background: 'var(--surface-color)',
                             color: 'var(--text-color)'
                         });
-                        btn.innerText = originalText;
-                        btn.disabled = false;
-                        return; // Bloquear ejecución
+
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: '⛔ Acceso Restringido',
+                                html: `No puedes hacer compras en HappyCorner.<br><br>Estás en una deuda activa de <b style="color:red;">$${checkData.deudorData.monto}</b> por comprar: <b>${checkData.deudorData.detalle}</b>.<br><br>Por favor liquida tu deuda con el administrador primero.`,
+                                icon: 'error',
+                                confirmButtonColor: 'var(--hp-pink)',
+                                background: 'var(--surface-color)',
+                                color: 'var(--text-color)'
+                            });
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                            return; // Bloquear ejecución
+                        }
                     }
                 }
             } catch (e) {

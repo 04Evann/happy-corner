@@ -1,7 +1,7 @@
 import { s3Client, bucketName, publicUrl } from './_lib/r2Client.js';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { applyCors, json } from './_lib/http.js';
-import { db } from './_lib/firebaseAdmin.js';
+import { db, auth } from './_lib/firebaseAdmin.js';
 
 export default async function handler(req, res) {
     if (applyCors(req, res, { methods: ['POST', 'OPTIONS'] })) return;
@@ -11,14 +11,25 @@ export default async function handler(req, res) {
     }
 
     try {
+        const idToken = (req.headers.authorization || '').replace('Bearer ', '');
+        if (!idToken) return json(res, 401, { error: 'No autenticado.' });
+
+        let decoded;
+        try {
+            decoded = await auth.verifyIdToken(idToken);
+        } catch {
+            return json(res, 401, { error: 'Token inválido.' });
+        }
+
         const { uid, imageData } = req.body;
         if (!uid || !imageData) {
             return json(res, 400, { error: 'Missing uid or imageData' });
         }
 
-        // Ideally we would verify the user token here via headers, 
-        // but since we only have uid, we trust the client request for this MVP.
-        // In a strict production environment, use admin.auth().verifyIdToken()
+        if (decoded.uid !== uid) {
+            return json(res, 403, { error: 'No autorizado para esta cuenta.' });
+        }
+
 
         const match = imageData.match(/^data:image\/(png|jpeg|jpg);base64,(.+)$/);
         if (!match) return json(res, 400, { error: 'Invalid image format.' });

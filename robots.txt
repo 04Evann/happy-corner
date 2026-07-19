@@ -14,8 +14,7 @@ Disallow: /dashboard
 Disallow: /dashboard.html
 Disallow: /deudores-admin
 Disallow: /deudores-admin.html
-Disallow: /manager
-Disallow: /manager.html
+
 Disallow: /wallet
 Disallow: /wallet.html
 Disallow: /api/

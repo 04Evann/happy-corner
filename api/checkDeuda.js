@@ -1,67 +1,41 @@
-import { db } from './_lib/firebaseAdmin.js';
+import { db, auth } from './_lib/firebaseAdmin.js';
+import { applyCors } from './_lib/http.js';
 
 export default async function handler(req, res) {
-    // CORS
-    res.setHeader('Access-Control-Allow-Origin', '*'); 
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (applyCors(req, res, { methods: ['GET', 'OPTIONS'] })) return;
 
     if (req.method !== 'GET') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const { nombre } = req.query;
-        if (!nombre) return res.status(200).json({ hasDeuda: false });
+        const idToken = (req.headers.authorization || '').replace('Bearer ', '');
+        if (!idToken) return res.status(401).json({ error: 'No autenticado.' });
 
-        let searchName = nombre.trim().toLowerCase();
+        let decoded;
+        try {
+            decoded = await auth.verifyIdToken(idToken);
+        } catch {
+            return res.status(401).json({ error: 'Token inválido.' });
+        }
 
-        // Get all users with active debt
-        const snapshot = await db.collection('users')
-            .where('activeDebt', '>', 0)
-            .get();
+        const userSnap = await db.collection('users').doc(decoded.uid).get();
+        if (!userSnap.exists) return res.status(200).json({ hasDeuda: false });
 
-        const deudores = [];
-        snapshot.forEach(doc => {
-            const u = doc.data();
-            const fullName = u.displayName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Estudiante';
-            deudores.push({
-                nombre: fullName,
+        const u = userSnap.data();
+        if (!u.activeDebt || u.activeDebt <= 0) return res.status(200).json({ hasDeuda: false });
+
+        return res.status(200).json({
+            hasDeuda: true,
+            deudorData: {
+                nombre: u.displayName || u.name || 'Estudiante',
                 monto: u.activeDebt,
-                detalle: u.debtStatus || "Pendientes"
-            });
+                detalle: u.debtStatus || 'Pendiente en tienda'
+            }
         });
-
-        if (deudores.length === 0) {
-            return res.status(200).json({ hasDeuda: false });
-        }
-
-        // Search for matching name (similarity check)
-        let match = deudores.find(d => {
-            let n = d.nombre.toLowerCase();
-            return searchName.includes(n) || n.includes(searchName);
-        });
-
-        if (match) {
-            // Capitalize first letter of each word
-            let capitalizedName = match.nombre.split(' ')
-                .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-                .join(' ');
-            return res.status(200).json({ 
-                hasDeuda: true, 
-                deudorData: {
-                    nombre: capitalizedName,
-                    monto: match.monto,
-                    detalle: match.detalle || "Pendiente en tienda"
-                }
-            });
-        }
-
-        return res.status(200).json({ hasDeuda: false });
     } catch (e) {
         console.error("Error checkDeuda:", e.message);
         res.status(500).json({ error: e.message });
     }
 }
+

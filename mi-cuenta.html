@@ -1746,11 +1746,16 @@
                 reader.readAsDataURL(file);
                 reader.onload = async () => {
                     const base64Data = reader.result;
+                    const token = await currentUser.getIdToken();
                     const res = await fetch('/api/uploadAvatar', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
                         body: JSON.stringify({ uid: currentUser.uid, imageData: base64Data })
                     });
+
 
                     const data = await res.json();
                     if (!res.ok) throw new Error(data.error || 'Error del servidor');

@@ -1,4 +1,4 @@
-import { db } from './_lib/firebaseAdmin.js';
+import { db, auth } from './_lib/firebaseAdmin.js';
 import { applyCors, json } from './_lib/http.js';
 
 export default async function handler(req, res) {
@@ -9,11 +9,26 @@ export default async function handler(req, res) {
     }
 
     try {
+        const idToken = (req.headers.authorization || '').replace('Bearer ', '');
+        if (!idToken) return json(res, 401, { error: 'No autenticado.' });
+
+        let decoded;
+        try {
+            decoded = await auth.verifyIdToken(idToken);
+        } catch {
+            return json(res, 401, { error: 'Token inválido.' });
+        }
+
         const { customerUID, customerCode } = req.body;
 
         if (!customerUID || !customerCode) {
             return json(res, 400, { error: 'Falta customerUID o customerCode' });
         }
+
+        if (decoded.uid !== customerUID) {
+            return json(res, 403, { error: 'No autorizado para esta cuenta.' });
+        }
+
 
         const cleanCode = customerCode.trim().toUpperCase();
 

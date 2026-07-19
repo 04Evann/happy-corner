@@ -170,14 +170,15 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
     </a>
 
-    <div class="footer-admin">
-      <a href="/admin">Administración Empresarial</a>
-  </div>
 
-  <script>
+
+  <script type="module">
+    import { initPromise, auth } from './firebase-auth.js';
+    import './auth-state.js';
+
     // Theme & Navigation
     let isDark = false;
-    function toggleTheme() {
+    window.toggleTheme = function() {
         isDark = !isDark;
         const themeBtn = document.getElementById('theme-icon');
         if (isDark) {
@@ -206,7 +207,17 @@
       btn.disabled = true; btn.innerText = "Cargando...";
 
       try {
-        const response = await fetch(`https://happy-corner.vercel.app/api/getPoints?codigo=${encodeURIComponent(codigo)}`);
+        await initPromise;
+        if (!auth.currentUser) {
+            throw new Error("Debes iniciar sesión para consultar tus puntos.");
+        }
+
+        const token = await auth.currentUser.getIdToken();
+        const response = await fetch(`https://happy-corner.vercel.app/api/getPoints?codigo=${encodeURIComponent(codigo)}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         const data = await response.json();
 
         if (!response.ok) throw new Error(data.error);
@@ -216,7 +227,7 @@
           const localOrderRaw = localStorage.getItem('lastHappyOrder');
           if (localOrderRaw) {
             const localOrder = JSON.parse(localOrderRaw);
-            if (localOrder.happyCode && (localOrder.happyCode.toUpperCase() === data.happyCodigo.toUpperCase() || localOrder.happyCode.toUpperCase() === codigo.toUpperCase())) {
+            if (localOrder.happyCode && (localOrder.happyCode.toUpperCase() === (data.happyCodigo || '').toUpperCase() || localOrder.happyCode.toUpperCase() === codigo.toUpperCase())) {
               const d = new Date(localOrder.createdAt);
               const fecha = d.toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
               localTxHtml = `<li style="background:var(--input-bg); border:1px solid var(--border-color); border-radius:12px; padding:10px; margin-bottom:6px; font-size:12px; color:var(--text-color);"><b>Recibo #${localOrder.orderId} (Orden Local)</b><br><span style="opacity:0.7;">${fecha} · ${localOrder.total}</span></li>`;
@@ -235,8 +246,8 @@
           <div class="result" style="animation: slideIn 0.3s ease;">
             <div style="font-weight:900; font-size:16px; color:var(--text-color);">Hola, ${data.nombre}</div>
             <div style="margin-top:10px;" class="kv">
-              <b>HappyCódigo</b><span>${data.happyCodigo}</span>
-              <b>Correo</b><span>${data.correo}</span>
+              <b>HappyCódigo</b><span>${data.happyCodigo || codigo.trim().toUpperCase()}</span>
+              <b>Correo</b><span>${data.correo || 'No visible (consulta tu propia cuenta)'}</span>
               <b>Puntos</b><span><b style="color:var(--hp-pink);">${Number(data.puntos).toLocaleString()} HC</b></span>
             </div>
             ${txHtml}
