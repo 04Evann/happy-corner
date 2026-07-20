@@ -151,10 +151,11 @@ export default async function handler(req, res) {
             return json(res, 401, { error: 'Token inválido.' });
         }
 
-        // Obtener datos del llamador
+        // Obtener datos del llamador (solo para email bodies donde se necesite el nombre)
         const callerSnap = await db.collection('users').doc(decoded.uid).get();
         const callerData = callerSnap.data() || {};
-        const isCallerAdmin = callerData.role === 'admin';
+        // Admin check via JWT custom claim — not via Firestore field (cannot be spoofed)
+        const isCallerAdmin = decoded.role === 'admin';
 
         // --- 3. ACCIÓN: deleteAccount (ACCESIBLE POR EL PROPIO USUARIO O POR ADMIN) ---
         if (action === 'deleteAccount') {

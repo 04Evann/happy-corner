@@ -260,8 +260,24 @@ export default async function handler(req, res) {
         // ACCION: sendPin (sin cambios respecto a tu version original)
         // ============================================================
         if (action === 'sendPin') {
+            // Require authenticated caller and confirm they own the UID
+            const sendPinToken = (req.headers.authorization || '').replace('Bearer ', '');
+            if (!sendPinToken) return json(res, 401, { error: 'No autenticado.' });
+
+            let sendPinDecoded;
+            try {
+                sendPinDecoded = await auth.verifyIdToken(sendPinToken);
+            } catch {
+                return json(res, 401, { error: 'Token inválido.' });
+            }
+
             const { uid, email } = req.body;
             if (!uid || !email) return json(res, 400, { error: 'Falta uid o correo electronico.' });
+
+            // Ownership check: the caller must be the user whose PIN is being sent
+            if (sendPinDecoded.uid !== uid) {
+                return json(res, 403, { error: 'No autorizado para solicitar PIN de este usuario.' });
+            }
 
             const resendKey = process.env.RESEND_API_KEY;
             if (!resendKey) return json(res, 500, { error: 'El servicio de correos no esta configurado.' });
@@ -351,9 +367,25 @@ export default async function handler(req, res) {
         // ACCION: sign (ACTUALIZADA con PDF + metadata real)
         // ============================================================
         if (action === 'sign') {
+            // Require authenticated caller and confirm they own the UID
+            const signToken = (req.headers.authorization || '').replace('Bearer ', '');
+            if (!signToken) return json(res, 401, { error: 'No autenticado.' });
+
+            let signDecoded;
+            try {
+                signDecoded = await auth.verifyIdToken(signToken);
+            } catch {
+                return json(res, 401, { error: 'Token inválido.' });
+            }
+
             const { uid, typedName, signatureImage, pin, userAgent } = req.body;
             if (!uid || !typedName || !signatureImage || !pin) {
                 return json(res, 400, { error: 'Faltan campos requeridos para firmar el contrato.' });
+            }
+
+            // Ownership check: caller must be the user whose contract is being signed
+            if (signDecoded.uid !== uid) {
+                return json(res, 403, { error: 'No autorizado para firmar el contrato de este usuario.' });
             }
 
             const pinRef = db.collection('verificationPins').doc(uid);
@@ -555,12 +587,14 @@ export default async function handler(req, res) {
                 return json(res, 401, { error: 'Token inválido.' });
             }
 
-            // Verify caller is admin
-            const callerSnap = await db.collection('users').doc(decoded.uid).get();
-            const callerData = callerSnap.data() || {};
-            if (callerData.role !== 'admin') {
+            // Verify caller is admin via custom claim (JWT-level — cannot be spoofed via Firestore)
+            if (decoded.role !== 'admin') {
                 return json(res, 403, { error: 'Acción permitida solo para administradores.' });
             }
+
+            // Still fetch caller display name for the email body
+            const callerSnap = await db.collection('users').doc(decoded.uid).get();
+            const callerData = callerSnap.data() || {};
 
             const { uid, typedName, signatureImage, userAgent, screenWidth, screenHeight, language } = req.body;
             if (!uid || !typedName || !signatureImage) {
