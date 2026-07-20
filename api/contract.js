@@ -271,7 +271,7 @@ export default async function handler(req, res) {
         <!-- Header -->
         <tr>
           <td style="background:linear-gradient(135deg,#b01e5a,#ff5299,#ff8c42);padding:28px 32px;text-align:center;">
-            <img src="https://happy-corner.vercel.app/happyfavicon.png" width="48" height="48" alt="Happy Corner" style="border-radius:10px;display:block;margin:0 auto 10px;">
+            <img src="https://happycorner.top/happyfavicon.png" width="48" height="48" alt="Happy Corner" style="border-radius:10px;display:block;margin:0 auto 10px;">
             <div style="font-family:'Outfit',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;">Happy Corner</div>
             <div style="font-family:'Outfit',Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px;">Verificación de Identidad</div>
           </td>
@@ -294,7 +294,7 @@ export default async function handler(req, res) {
           <td style="padding:16px 32px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
             <div style="font-family:'Outfit',Arial,sans-serif;color:#444;font-size:11px;">
               © ${new Date().getFullYear()} Happy Corner &nbsp;·&nbsp;
-              <a href="https://happy-corner.vercel.app/terminos" style="color:#ff5299;text-decoration:none;">Términos</a>
+              <a href="https://happycorner.top/terminos" style="color:#ff5299;text-decoration:none;">Términos</a>
             </div>
           </td>
         </tr>
@@ -446,7 +446,7 @@ export default async function handler(req, res) {
         <!-- Header -->
         <tr>
           <td style="background:linear-gradient(135deg,#b01e5a,#ff5299,#ff8c42);padding:28px 32px;text-align:center;">
-            <img src="https://happy-corner.vercel.app/happyfavicon.png" width="48" height="48" alt="" style="border-radius:10px;display:block;margin:0 auto 10px;">
+            <img src="https://happycorner.top/happyfavicon.png" width="48" height="48" alt="" style="border-radius:10px;display:block;margin:0 auto 10px;">
             <div style="font-family:'Outfit',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;">Contrato Firmado ✅</div>
             <div style="font-family:'Outfit',Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px;">Happy Corner · Acuerdo de Responsabilidad</div>
           </td>

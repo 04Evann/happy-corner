@@ -159,7 +159,7 @@
             const totalStr = document.getElementById('total-view').innerText;
 
             try {
-                const res = await fetch('https://happy-corner.vercel.app/api/getOrders', {
+                const res = await fetch('/api/getOrders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ nombre, whatsapp: tel, resumen, total: totalStr })

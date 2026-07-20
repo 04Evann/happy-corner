@@ -432,7 +432,7 @@
             this.innerText = "...";
             try {
                 const token = await auth.currentUser.getIdToken();
-                const res = await fetch(`https://happy-corner.vercel.app/api/getPoints?codigo=${code}`, {
+                const res = await fetch(`/api/getPoints?codigo=${code}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -480,7 +480,7 @@
             try {
                 if (auth.currentUser) {
                     const token = await auth.currentUser.getIdToken();
-                    const checkRes = await fetch(`https://happy-corner.vercel.app/api/checkDeuda`, {
+                    const checkRes = await fetch(`/api/checkDeuda`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -522,7 +522,7 @@
             btn.innerText = "Enviando...";
 
             try {
-                const resp = await fetch('https://happy-corner.vercel.app/api/getOrders', {
+                const resp = await fetch('/api/getOrders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)

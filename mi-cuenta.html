@@ -38,14 +38,15 @@
                 border: 1px solid var(--border-color);
                 border-radius: 20px;
                 padding: 14px 10px;
-                box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+                box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
             }
 
             .mc-main-panel {
                 display: flex;
                 flex-direction: column;
                 gap: 0;
-                min-width: 0; /* prevent grid blowout */
+                min-width: 0;
+                /* prevent grid blowout */
             }
         }
 
@@ -60,7 +61,11 @@
                 border-bottom: 1px solid var(--border-color);
                 scrollbar-width: none;
             }
-            .mc-sidebar::-webkit-scrollbar { display: none; }
+
+            .mc-sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
             .mc-sidebar-item {
                 flex-shrink: 0;
                 white-space: nowrap;
@@ -69,7 +74,10 @@
                 font-size: 13px !important;
                 width: auto !important;
             }
-            .mc-sidebar-divider { display: none; }
+
+            .mc-sidebar-divider {
+                display: none;
+            }
         }
 
         .mc-sidebar-item {
@@ -118,8 +126,15 @@
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ====== WELCOME HERO ====== */
@@ -873,7 +888,8 @@
             <button class="mc-sidebar-item" onclick="switchPane('pane-pedidos')">📦 Mis Pedidos</button>
             <button class="mc-sidebar-item" onclick="switchPane('pane-credito')">📊 Historial Crediticio</button>
             <button class="mc-sidebar-item" onclick="switchPane('pane-seguridad')">🔑 Seguridad</button>
-            <button class="mc-sidebar-item" id="sidebar-admin-btn" style="display:none;" onclick="switchPane('pane-admin')">🛠️ POS &amp; Admin</button>
+            <button class="mc-sidebar-item" id="sidebar-admin-btn" style="display:none;"
+                onclick="switchPane('pane-admin')">🛠️ POS &amp; Admin</button>
             <div class="mc-sidebar-divider"></div>
             <button class="mc-sidebar-item" style="color:#ff5252;" id="logout-btn-sidebar">🚪 Cerrar Sesión</button>
         </div>
@@ -898,15 +914,20 @@
                 <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
 
                 <!-- Contract unsigned banner -->
-                <div id="contract-unsigned-banner" style="display:none; background: linear-gradient(135deg, rgba(255,82,153,0.12), rgba(255,82,153,0.04)); border: 1.5px solid rgba(255,82,153,0.35); border-radius: 18px; padding: 18px 20px; margin-bottom: 16px;">
+                <div id="contract-unsigned-banner"
+                    style="display:none; background: linear-gradient(135deg, rgba(255,82,153,0.12), rgba(255,82,153,0.04)); border: 1.5px solid rgba(255,82,153,0.35); border-radius: 18px; padding: 18px 20px; margin-bottom: 16px;">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <span style="font-size:28px;">📄</span>
                         <div style="flex:1;">
-                            <div style="font-weight:800; color:var(--text-color); margin-bottom:4px;">Firma tu contrato de responsabilidad</div>
-                            <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Necesitas firmar el acuerdo de responsabilidad para poder realizar compras a crédito en Happy Corner.</div>
+                            <div style="font-weight:800; color:var(--text-color); margin-bottom:4px;">Firma tu contrato
+                                de responsabilidad</div>
+                            <div style="font-size:13px; color:var(--text-muted); line-height:1.5;">Necesitas firmar el
+                                acuerdo de responsabilidad para poder realizar compras a crédito en Happy Corner.</div>
                         </div>
                     </div>
-                    <button id="firmar-ahora-banner-btn" style="margin-top:12px; width:100%; padding:12px; background:var(--hp-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit;">✍️ Firmar Ahora</button>
+                    <button id="firmar-ahora-banner-btn"
+                        style="margin-top:12px; width:100%; padding:12px; background:var(--hp-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:14px; cursor:pointer; font-family:inherit;">✍️
+                        Firmar Ahora</button>
                 </div>
 
                 <!-- Debt & Points summary widgets grid -->
@@ -919,7 +940,8 @@
                         <div class="debt-status">
                             <div>
                                 <div class="debt-amount loading" id="mc-debt-amount">$—</div>
-                                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;" id="mc-debt-detail">Cargando...</div>
+                                <div style="font-size:13px; color:var(--text-muted); margin-top:4px;"
+                                    id="mc-debt-detail">Cargando...</div>
                             </div>
                             <span class="debt-badge loading" id="mc-debt-badge">...</span>
                         </div>
@@ -964,7 +986,8 @@
                         </div>
                         <div class="profile-field">
                             <span class="profile-field-label">HappyCódigo</span>
-                            <span class="profile-field-value" id="pf-codigo" style="font-family:monospace; color:var(--hp-pink);">—</span>
+                            <span class="profile-field-value" id="pf-codigo"
+                                style="font-family:monospace; color:var(--hp-pink);">—</span>
                         </div>
                     </div>
                 </div>
@@ -974,22 +997,29 @@
             <div id="pane-deudas" class="mc-pane">
                 <div class="mc-section" id="mc-contract-section">
                     <div class="mc-section-header">
-                        <div class="mc-section-title"><span class="icon icon-gray">📄</span> Acuerdo de Responsabilidad</div>
+                        <div class="mc-section-title"><span class="icon icon-gray">📄</span> Acuerdo de Responsabilidad
+                        </div>
                     </div>
-                    <div class="contract-status-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                    <div class="contract-status-row"
+                        style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-color);">
                         <span class="profile-field-label">Estado</span>
                         <span id="mc-contract-status" class="contract-unsigned-badge">Sin firma</span>
                     </div>
-                    <div class="contract-status-row" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-color);">
+                    <div class="contract-status-row"
+                        style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-color);">
                         <span class="profile-field-label">Versión</span>
                         <span class="profile-field-value" id="mc-contract-version">—</span>
                     </div>
-                    <div class="contract-status-row" style="display:flex; justify-content:space-between; padding:12px 0;">
+                    <div class="contract-status-row"
+                        style="display:flex; justify-content:space-between; padding:12px 0;">
                         <span class="profile-field-label">Fecha de firma</span>
                         <span class="profile-field-value" id="mc-contract-date">—</span>
                     </div>
-                    <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px; width:100%;">✍️ Firmar contrato ahora</button>
-                    <button class="mc-btn-secondary" id="ver-contrato-btn" style="display:none; margin-top:12px; width:100%; border-color:var(--text-muted); color:var(--text-color);">📄 Ver Contrato PDF</button>
+                    <button class="mc-btn-secondary" id="firmar-contrato-btn" style="margin-top:12px; width:100%;">✍️
+                        Firmar contrato ahora</button>
+                    <button class="mc-btn-secondary" id="ver-contrato-btn"
+                        style="display:none; margin-top:12px; width:100%; border-color:var(--text-muted); color:var(--text-color);">📄
+                        Ver Contrato PDF</button>
                 </div>
             </div>
 
@@ -997,7 +1027,8 @@
             <div id="pane-pedidos" class="mc-pane">
                 <div class="mc-section">
                     <div class="mc-section-header">
-                        <div class="mc-section-title"><span class="icon icon-orange">📦</span> Historial de Pedidos</div>
+                        <div class="mc-section-title"><span class="icon icon-orange">📦</span> Historial de Pedidos
+                        </div>
                     </div>
                     <div id="mc-orders-list">
                         <div class="skeleton skeleton-text" style="width:60%; margin-bottom:12px;"></div>
@@ -1011,22 +1042,30 @@
                 <!-- Credit Score Widget -->
                 <div class="mc-section" id="mc-credit-section">
                     <div class="mc-section-header">
-                        <div class="mc-section-title"><span class="icon icon-purple">📊</span> Historial Crediticio</div>
+                        <div class="mc-section-title"><span class="icon icon-purple">📊</span> Historial Crediticio
+                        </div>
                     </div>
-                    <div style="display:flex; justify-content:center; align-items:center; flex-direction:column; gap:16px; margin-bottom:16px;">
-                        <div id="credit-gauge-container" style="width: 250px; height: 130px; overflow: hidden; margin-top:10px;"></div>
-                        <div style="font-size:13px; color:var(--text-muted); text-align:center;" id="mc-credit-label">Cargando puntaje crediticio...</div>
+                    <div
+                        style="display:flex; justify-content:center; align-items:center; flex-direction:column; gap:16px; margin-bottom:16px;">
+                        <div id="credit-gauge-container"
+                            style="width: 250px; height: 130px; overflow: hidden; margin-top:10px;"></div>
+                        <div style="font-size:13px; color:var(--text-muted); text-align:center;" id="mc-credit-label">
+                            Cargando puntaje crediticio...</div>
                     </div>
-                    <div style="margin-top:8px; font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">HISTORIAL DE CAMBIOS DE SCORE</div>
+                    <div
+                        style="margin-top:8px; font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">
+                        HISTORIAL DE CAMBIOS DE SCORE</div>
                     <div id="mc-credit-history" style="display:flex; flex-direction:column; gap:8px;">
-                        <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px 0;">Sin historial todavía. Tu puntaje se irá construyendo con tus transacciones.</div>
+                        <div style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px 0;">Sin
+                            historial todavía. Tu puntaje se irá construyendo con tus transacciones.</div>
                     </div>
                 </div>
 
                 <!-- FIFO movements (max 30 days) -->
                 <div class="mc-section">
                     <div class="mc-section-header">
-                        <div class="mc-section-title"><span class="icon icon-blue">📊</span> Movimientos de Deuda (Últimos 30 días)</div>
+                        <div class="mc-section-title"><span class="icon icon-blue">📊</span> Movimientos de Deuda
+                            (Últimos 30 días)</div>
                     </div>
                     <div id="mc-movements-list">
                         <div class="skeleton skeleton-text" style="width:70%; margin-bottom:12px;"></div>
@@ -1039,10 +1078,15 @@
             <div id="pane-seguridad" class="mc-pane">
                 <div class="mc-section">
                     <div class="mc-section-header">
-                        <div class="mc-section-title"><span class="icon icon-gray">🔑</span> Seguridad y Contraseña</div>
+                        <div class="mc-section-title"><span class="icon icon-gray">🔑</span> Seguridad y Contraseña
+                        </div>
                     </div>
-                    <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:16px;">Para proteger tu cuenta, te enviaremos un enlace seguro a tu correo electrónico para restablecer tu contraseña.</p>
-                    <button id="send-password-reset-btn" class="mc-btn-secondary" style="width:100%; border-color:var(--text-muted); color:var(--text-color);">📧 Enviar correo de restablecimiento</button>
+                    <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:16px;">Para
+                        proteger tu cuenta, te enviaremos un enlace seguro a tu correo electrónico para restablecer tu
+                        contraseña.</p>
+                    <button id="send-password-reset-btn" class="mc-btn-secondary"
+                        style="width:100%; border-color:var(--text-muted); color:var(--text-color);">📧 Enviar correo de
+                        restablecimiento</button>
                 </div>
             </div>
 
@@ -1050,12 +1094,19 @@
             <div id="pane-admin" class="mc-pane">
                 <div class="mc-section">
                     <div class="mc-section-header">
-                        <div class="mc-section-title"><span class="icon icon-purple">🛠️</span> Herramientas Administrativas</div>
+                        <div class="mc-section-title"><span class="icon icon-purple">🛠️</span> Herramientas
+                            Administrativas</div>
                     </div>
-                    <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">Tienes privilegios de administrador en Happy Corner. Utiliza los siguientes accesos para gestionar pedidos, scores de crédito u operar ventas.</p>
+                    <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px;">Tienes
+                        privilegios de administrador en Happy Corner. Utiliza los siguientes accesos para gestionar
+                        pedidos, scores de crédito u operar ventas.</p>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
-                        <a href="/pos-v2" class="mc-btn-secondary" style="text-align:center; padding:16px; text-decoration:none; display:block; border-color:var(--hp-pink); color:var(--hp-pink); font-weight:800; border-radius:14px;">🛍️ Operar POS Terminal</a>
-                        <a href="/admin-v2" class="mc-btn-secondary" style="text-align:center; padding:16px; text-decoration:none; display:block; border-color:var(--accent-purple); color:var(--accent-purple); font-weight:800; border-radius:14px;">📊 Panel de Control</a>
+                        <a href="/pos-v2" class="mc-btn-secondary"
+                            style="text-align:center; padding:16px; text-decoration:none; display:block; border-color:var(--hp-pink); color:var(--hp-pink); font-weight:800; border-radius:14px;">🛍️
+                            Operar POS Terminal</a>
+                        <a href="/admin-v2" class="mc-btn-secondary"
+                            style="text-align:center; padding:16px; text-decoration:none; display:block; border-color:var(--accent-purple); color:var(--accent-purple); font-weight:800; border-radius:14px;">📊
+                            Panel de Control</a>
                     </div>
                 </div>
             </div>
@@ -1169,7 +1220,9 @@
         } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-         window.toggleTheme = function () {
+        let isDark = false;
+
+        window.toggleTheme = function () {
             isDark = !isDark;
             document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
             document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
@@ -1449,20 +1502,20 @@
                     document.getElementById('mc-contract-date').textContent = signedAt
                         ? new Date(signedAt).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' })
                         : '—';
-                    
+
                     document.getElementById('firmar-contrato-btn').style.display = 'none';
                     document.getElementById('ver-contrato-btn').style.display = 'block';
 
-                    if(banner) banner.style.display = 'none';
+                    if (banner) banner.style.display = 'none';
                 } else {
                     document.getElementById('mc-contract-status').textContent = '⚠️ Sin firmar';
                     document.getElementById('mc-contract-status').className = 'contract-unsigned-badge';
                     document.getElementById('mc-contract-date').textContent = 'N/A';
-                    
+
                     document.getElementById('firmar-contrato-btn').style.display = 'block';
                     document.getElementById('ver-contrato-btn').style.display = 'none';
 
-                    if(banner) banner.style.display = 'block';
+                    if (banner) banner.style.display = 'block';
                 }
             } catch (e) { console.error('Contract status error', e); }
         }
@@ -1749,7 +1802,7 @@
                     const token = await currentUser.getIdToken();
                     const res = await fetch('/api/uploadAvatar', {
                         method: 'POST',
-                        headers: { 
+                        headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         },
@@ -1762,7 +1815,7 @@
 
                     const downloadURL = data.url;
                     await updateProfile(currentUser, { photoURL: downloadURL });
-                    
+
                     // Redraw avatar button
                     const avatarBtn = document.getElementById('mc-avatar-btn');
                     if (avatarBtn) {
@@ -1803,8 +1856,8 @@
         }
 
     </script>
-<script src="/credit-gauge.js"></script>
-<script src="/footer.js"></script>
+    <script src="/credit-gauge.js"></script>
+    <script src="/footer.js"></script>
 </body>
 
 </html>
