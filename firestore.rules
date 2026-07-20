@@ -22,8 +22,8 @@ service cloud.firestore {
       allow read: if isOwner(uid) || isAdmin();
 allow create: if request.auth != null && request.auth.uid == uid &&
               (!('role' in request.resource.data) || request.resource.data.role == 'user') &&
-              !('activeDebt' in request.resource.data) &&
-              !('happyPoints' in request.resource.data);
+              (!('activeDebt' in request.resource.data) || request.resource.data.activeDebt == 0) &&
+              (!('happyPoints' in request.resource.data) || request.resource.data.happyPoints == 0);
       
       // Updates: owner can update, but cannot touch activeDebt, happyPoints, or role,
       // and customerCode is immutable once set. Admin has full rights.
