@@ -28,7 +28,11 @@ Instead, follow these steps:
 
 Contact:
 - Instagram: @happycornerca
+<<<<<<< HEAD
 - E-mail:security@happycorner.top, somos@happycorner.top (PLEASE FORWARD TO BOTH OF THEM!!)
+=======
+- E-mail:happycorner.com@gmail.com
+>>>>>>> c97bc41e339e400de970b2b065e4853fdde2606f
 - Or through a private communication channel agreed with the maintainer.
 
 You can expect an initial response within a reasonable timeframe.
