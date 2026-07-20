@@ -20,4 +20,4 @@ Disallow: /wallet.html
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://happycorner.lol/sitemap.xml
+Sitemap: https://happycorner.top/sitemap.xml

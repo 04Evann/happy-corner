@@ -86,7 +86,7 @@ export default async function handler(req, res) {
                 n: pedidoData.nombre, o: orderCode, p: totalDisplay, w: cleanNumber, res: pedidoData.resumen
             };
             const tokenBase64 = signToken(payloadObj, process.env.ORDER_VERIFY_SECRET, { expiresInSeconds: 60 * 60 * 24 });
-            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.lol';
+            const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.top';
             const verifyLinkRaw = `${siteUrl}/verify?auth=${encodeURIComponent(tokenBase64)}`;
             // Crear link corto bajo el dominio de Happy Corner
             const shortCode = Math.random().toString(36).substring(2, 8); // 6 caracteres random

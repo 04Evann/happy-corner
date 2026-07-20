@@ -93,7 +93,7 @@ export default async function handler(req, res) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
-        text: `📊 [ABRIR PANEL ADMIN](${process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.lol'}/admin-v2)`,
+        text: `📊 [ABRIR PANEL ADMIN](${process.env.NEXT_PUBLIC_SITE_URL || 'https://happycorner.top'}/admin-v2)`,
         parse_mode: "Markdown",
       }),
     });

@@ -201,7 +201,7 @@ async function generarPdfContrato({ typedName, signatureImageBuffer, signedAt, i
     // ——— Footer band ———
     page.drawRectangle({ x: 0, y: 0, width, height: 28, color: rgb(0.06, 0.06, 0.06) });
     const year = new Date().getFullYear();
-    page.drawText(`© ${year} Happy Corner · happycorner.lol · Contrato versión v1 · Generado el ${new Date().toLocaleDateString('es-CO')}`, {
+    page.drawText(`© ${year} Happy Corner · happycorner.top · Contrato versión v1 · Generado el ${new Date().toLocaleDateString('es-CO')}`, {
         x: margin, y: 9, size: 7.5, font: fontReg, color: rgb(0.5, 0.5, 0.5)
     });
 
@@ -257,7 +257,7 @@ export default async function handler(req, res) {
             });
 
             const emailResult = await resend.emails.send({
-                from: 'Happy Corner <no-reply@alertas.happycorner.lol>',
+                from: 'Happy Corner <no-reply@alertas.happycorner.top>',
                 to: [email],
                 subject: 'Tu PIN para firmar el Contrato de Happy Corner',
                 html: `
@@ -432,7 +432,7 @@ export default async function handler(req, res) {
             if (clienteEmail) destinatarios.push(clienteEmail);
 
             await resend.emails.send({
-                from: 'Happy Corner <no-reply@alertas.happycorner.lol>',
+                from: 'Happy Corner <no-reply@alertas.happycorner.top>',
                 to: destinatarios,
                 subject: `✅ Contrato firmado · ${typedName}`,
                 html: `

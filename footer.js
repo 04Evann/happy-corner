@@ -274,9 +274,9 @@
                 <span class="hcf-social-icon">💬</span>
                 WhatsApp
               </a>
-              <a class="hcf-social-link" href="mailto:somos@happycorner.lol">
+              <a class="hcf-social-link" href="mailto:somos@happycorner.top">
                 <span class="hcf-social-icon">✉️</span>
-                somos@happycorner.lol
+                somos@happycorner.top
               </a>
             </div>
           </div>
