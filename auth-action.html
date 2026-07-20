@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Acciones de Cuenta | Happy Corner</title>
+    <link rel="icon" href="/happyfavicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background-color: #0d0d0d;
+            font-family: 'Outfit', sans-serif;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .action-container {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(24, 24, 24, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-sizing: border-box;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+        }
+
+        .action-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #b01e5a, #ff5299, #ff8c42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .action-subtitle {
+            font-size: 14px;
+            color: #a0a0a0;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .action-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff5299;
+        }
+
+        .form-input {
+            background-color: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .form-input:focus {
+            border-color: #ff5299;
+            box-shadow: 0 0 0 3px rgba(255, 82, 153, 0.2);
+            background-color: #222;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ff5299, #ff8c42);
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 1;
+        }
+
+        .state-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .state-icon {
+            font-size: 48px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .state-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .link-secondary {
+            display: inline-block;
+            margin-top: 20px;
+            color: #a0a0a0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .link-secondary:hover {
+            color: #ff5299;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="action-container" id="content-card">
+        <img src="/happyfavicon.png" alt="Happy Corner Logo" class="action-logo">
+        <div class="action-title" id="page-title">Procesando petición...</div>
+        <div class="action-subtitle" id="page-subtitle">Verificando código de seguridad en los servidores de Firebase...</div>
+
+        <!-- Vista 1: Cargando/Estado genérico -->
+        <div id="view-state" class="state-message">
+            <div class="state-icon" id="state-icon">⏳</div>
+            <div class="state-text" id="state-text">Un momento por favor, validando tus datos...</div>
+        </div>
+
+        <!-- Vista 2: Restablecer Contraseña -->
+        <form id="view-reset-password" class="action-form" style="display: none;">
+            <div style="font-size:14px; color:#ccc; margin-bottom:12px; text-align:center;">
+                Estás cambiando la contraseña de: <b style="color:#fff;" id="reset-email-label">...</b>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="new-password">Nueva Contraseña</label>
+                <input type="password" id="new-password" class="form-input" placeholder="Mínimo 6 caracteres" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="confirm-password">Confirmar Contraseña</label>
+                <input type="password" id="confirm-password" class="form-input" placeholder="Escribe la contraseña otra vez" required minlength="6">
+            </div>
+            <button type="submit" class="action-btn" id="reset-submit-btn">🔑 Restablecer Contraseña</button>
+        </form>
+
+        <a href="/login" class="link-secondary">Volver al inicio de sesión</a>
+    </div>
+
+    <script type="module">
+        import { initPromise, auth } from './firebase-auth.js';
+        import { verifyPasswordResetCode, confirmPasswordReset, applyActionCode, checkActionCode } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+        // Obtener parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode');
+        const oobCode = urlParams.get('oobCode');
+
+        const pageTitle = document.getElementById('page-title');
+        const pageSubtitle = document.getElementById('page-subtitle');
+        const viewState = document.getElementById('view-state');
+        const stateIcon = document.getElementById('state-icon');
+        const stateText = document.getElementById('state-text');
+        const viewResetPassword = document.getElementById('view-reset-password');
+        const resetEmailLabel = document.getElementById('reset-email-label');
+
+        async function initAction() {
+            if (!mode || !oobCode) {
+                showError("Parámetros de acción inválidos o ausentes. Si seguiste un enlace, asegúrate de que esté completo.");
+                return;
+            }
+
+            try {
+                // Esperar a que Firebase se inicialice
+                await initPromise;
+
+                switch (mode) {
+                    case 'resetPassword':
+                        await handleResetPassword();
+                        break;
+                    case 'verifyEmail':
+                        await handleVerifyEmail();
+                        break;
+                    case 'recoverEmail':
+                        await handleRecoverEmail();
+                        break;
+                    default:
+                        showError("Acción de autenticación no soportada o inválida.");
+                }
+            } catch (err) {
+                console.error("Firebase init error:", err);
+                showError("No se pudo conectar con el servidor de autenticación. Intenta nuevamente.");
+            }
+        }
+
+        // --- MANEJADORES DE ACCIONES ---
+
+        async function handleResetPassword() {
+            pageTitle.innerText = "Nueva Contraseña";
+            pageSubtitle.innerText = "Define tu nueva clave para acceder a tu cuenta.";
+
+            try {
+                // Verificar código y obtener correo asociado
+                const email = await verifyPasswordResetCode(auth, oobCode);
+                resetEmailLabel.innerText = email;
+
+                // Ocultar cargando y mostrar formulario
+                viewState.style.display = 'none';
+                viewResetPassword.style.display = 'flex';
+
+                // Submit del formulario
+                document.getElementById('view-reset-password').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const newPassword = document.getElementById('new-password').value;
+                    const confirmPassword = document.getElementById('confirm-password').value;
+                    const submitBtn = document.getElementById('reset-submit-btn');
+
+                    if (newPassword !== confirmPassword) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Las contraseñas ingresadas no coinciden.',
+                            icon: 'error',
+                            background: '#181818',
+                            color: '#fff',
+                            confirmButtonColor: '#ff5299'
+                        });
+                        return;
+                    }
+
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = "Guardando...";
+
+                    try {
+                        await confirmPasswordReset(auth, oobCode, newPassword);
+                        
+                        Swal.fire({
+                            title: '¡Clave cambiada!',
+                            text: 'Tu contraseña ha sido actualizada con éxito.',
+                            icon: 'success',
+                            background: '#181818',
+                            color: '#fff',
+                            confirmButtonColor: '#ff5299'
+                        }).then(() => {
+                            window.location.href = '/login';
+                        });
+
+                    } catch (err) {
+                        console.error(err);
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "🔑 Restablecer Contraseña";
+                        Swal.fire({
+                            title: 'Error al cambiar clave',
+                            text: getFirebaseErrorMessage(err.code) || err.message,
+                            icon: 'error',
+                            background: '#181818',
+                            color: '#fff',
+                            confirmButtonColor: '#ff5299'
+                        });
+                    }
+                });
+
+            } catch (err) {
+                console.error(err);
+                showError("El código de restablecimiento de contraseña ha expirado o ya ha sido utilizado.");
+            }
+        }
+
+        async function handleVerifyEmail() {
+            pageTitle.innerText = "Verificando Correo";
+            pageSubtitle.innerText = "Confirmando tu dirección de correo electrónico...";
+
+            try {
+                await applyActionCode(auth, oobCode);
+                
+                stateIcon.innerText = "✅";
+                stateText.innerText = "¡Tu correo electrónico ha sido verificado con éxito! Ahora puedes acceder a todas las funciones de tu cuenta.";
+                
+                Swal.fire({
+                    title: '¡Correo verificado!',
+                    text: 'Dirección confirmada exitosamente.',
+                    icon: 'success',
+                    background: '#181818',
+                    color: '#fff',
+                    confirmButtonColor: '#ff5299'
+                }).then(() => {
+                    window.location.href = '/mi-cuenta';
+                });
+
+            } catch (err) {
+                console.error(err);
+                showError("El enlace de verificación ha expirado o ya ha sido utilizado.");
+            }
+        }
+
+        async function handleRecoverEmail() {
+            pageTitle.innerText = "Recuperar Cuenta";
+            pageSubtitle.innerText = "Revirtiendo cambio de correo electrónico no autorizado...";
+
+            try {
+                // Obtener detalles del cambio
+                const checkInfo = await checkActionCode(auth, oobCode);
+                const restoredEmail = checkInfo.data.email;
+
+                // Aplicar cambio de recuperación
+                await applyActionCode(auth, oobCode);
+
+                stateIcon.innerText = "🛡️";
+                stateText.innerHTML = `Hemos restaurado tu correo electrónico original: <b style="color:#ff5299;">${restoredEmail}</b>.<br><br>Por seguridad, te recomendamos cambiar tu contraseña de inmediato.`;
+
+                Swal.fire({
+                    title: 'Correo restaurado',
+                    text: `Tu dirección de correo ha sido reestablecida a ${restoredEmail}.`,
+                    icon: 'success',
+                    background: '#181818',
+                    color: '#fff',
+                    confirmButtonColor: '#ff5299'
+                }).then(() => {
+                    window.location.href = '/login';
+                });
+
+            } catch (err) {
+                console.error(err);
+                showError("El enlace de recuperación de cuenta ha expirado o ya ha sido utilizado.");
+            }
+        }
+
+        // --- AUXILIARES ---
+
+        function showError(msg) {
+            pageTitle.innerText = "¡Opps! Error";
+            pageSubtitle.innerText = "No pudimos completar la acción solicitada.";
+            stateIcon.innerText = "❌";
+            stateText.innerText = msg;
+        }
+
+        function getFirebaseErrorMessage(code) {
+            switch (code) {
+                case 'auth/weak-password':
+                    return 'La contraseña debe tener al menos 6 caracteres.';
+                case 'auth/expired-action-code':
+                    return 'El código de seguridad ha expirado. Por favor, solicita uno nuevo.';
+                case 'auth/invalid-action-code':
+                    return 'El código de seguridad es inválido o ya fue utilizado.';
+                case 'auth/user-disabled':
+                    return 'La cuenta de usuario asociada ha sido deshabilitada.';
+                case 'auth/user-not-found':
+                    return 'No se encontró ningún usuario asociado a esta petición.';
+                default:
+                    return null;
+            }
+        }
+
+        // Inicializar al cargar
+        initAction();
+    </script>
+</body>
+</html>

@@ -81,8 +81,14 @@ allow create: if request.auth != null && request.auth.uid == uid &&
       allow write: if isAdmin();
     }
     match /shortlinks/{code} {
-  allow get: if true;
-  allow write: if false;
-}
+      allow get: if true;
+      allow write: if false;
+    }
+
+    // loginHistory - written server-side only; readable only by admins
+    match /loginHistory/{id} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
   }
 }

@@ -18,18 +18,52 @@ function getClientIp(req) {
 
 function parseUserAgent(ua) {
     if (!ua) return { device: 'Desconocido', browser: 'Desconocido' };
+
     let device = 'Computador';
-    if (/iPhone/i.test(ua)) device = 'iPhone';
-    else if (/iPad/i.test(ua)) device = 'iPad';
-    else if (/Android/i.test(ua)) device = 'Android';
-    else if (/Macintosh/i.test(ua)) device = 'Mac';
-    else if (/Windows/i.test(ua)) device = 'Windows';
+    let osVersion = '';
+
+    if (/iPhone/i.test(ua)) {
+        device = 'iPhone';
+        const m = ua.match(/iPhone OS (\d+[_.]\d+(?:[_.]\d+)?)/i);
+        if (m) osVersion = ` (iOS ${m[1].replace(/_/g, '.')})`;
+    } else if (/iPad/i.test(ua)) {
+        device = 'iPad';
+        const m = ua.match(/OS (\d+[_.]\d+(?:[_.]\d+)?)/i);
+        if (m) osVersion = ` (iPadOS ${m[1].replace(/_/g, '.')})`;
+    } else if (/Android/i.test(ua)) {
+        device = 'Android';
+        const m = ua.match(/Android\s+([^;)]+)/i);
+        if (m) osVersion = ` (Android ${m[1].trim()})`;
+    } else if (/Macintosh/i.test(ua)) {
+        device = 'Mac';
+        const m = ua.match(/Mac OS X (\d+[_.]\d+(?:[_.]\d+)?)/i);
+        if (m) osVersion = ` (macOS ${m[1].replace(/_/g, '.')})`;
+    } else if (/Windows/i.test(ua)) {
+        device = 'Windows';
+        const m = ua.match(/Windows NT (\d+\.\d+)/i);
+        if (m) {
+            const vmap = { '10.0': '10/11', '6.3': '8.1', '6.2': '8', '6.1': '7' };
+            osVersion = ` (Windows ${vmap[m[1]] || m[1]})`;
+        }
+    }
+
+    device = device + osVersion;
 
     let browser = 'Desconocido';
-    if (/Edg\//i.test(ua)) browser = 'Edge';
-    else if (/Chrome\//i.test(ua) && !/Chromium/i.test(ua)) browser = 'Chrome';
-    else if (/Safari\//i.test(ua) && !/Chrome/i.test(ua)) browser = 'Safari';
-    else if (/Firefox\//i.test(ua)) browser = 'Firefox';
+    let bm;
+    if (/Edg\/(\d+)/i.test(ua)) {
+        bm = ua.match(/Edg\/(\d+)/i);
+        browser = `Edge ${bm[1]}`;
+    } else if (/Chrome\/(\d+)/i.test(ua) && !/Chromium/i.test(ua)) {
+        bm = ua.match(/Chrome\/(\d+)/i);
+        browser = `Chrome ${bm[1]}`;
+    } else if (/Safari\/(\d+)/i.test(ua) && !/Chrome/i.test(ua)) {
+        bm = ua.match(/Version\/(\d+)/i) || ua.match(/Safari\/(\d+)/i);
+        browser = `Safari ${bm[1]}`;
+    } else if (/Firefox\/(\d+)/i.test(ua)) {
+        bm = ua.match(/Firefox\/(\d+)/i);
+        browser = `Firefox ${bm[1]}`;
+    }
 
     return { device, browser };
 }
@@ -413,7 +447,10 @@ export default async function handler(req, res) {
                 device,
                 browser,
                 location,
-                userAgent: userAgent || 'unknown'
+                userAgent: userAgent || 'unknown',
+                screenWidth: req.body.screenWidth || null,
+                screenHeight: req.body.screenHeight || null,
+                language: req.body.language || null
             });
 
             await db.collection('users').doc(uid).update({

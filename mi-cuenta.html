@@ -1087,6 +1087,12 @@
                     <button id="send-password-reset-btn" class="mc-btn-secondary"
                         style="width:100%; border-color:var(--text-muted); color:var(--text-color);">📧 Enviar correo de
                         restablecimiento</button>
+
+                    <div style="margin-top:24px; padding-top:20px; border-top:1px solid rgba(255,82,82,0.2);">
+                        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#ff5252; margin-bottom:10px;">Zona de Peligro</div>
+                        <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:14px;">Esta acción es permanente e irreversible. Tu cuenta, puntos y datos personales serán eliminados. No es posible si tienes deuda activa.</p>
+                        <button id="delete-account-btn" style="width:100%; padding:12px; background:transparent; border:1.5px solid #ff5252; color:#ff5252; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:background 0.2s;">🗑️ Eliminar mi cuenta permanentemente</button>
+                    </div>
                 </div>
             </div>
 
@@ -1701,7 +1707,10 @@
                         signatureImage: signatureData,
                         pin,
                         ip: null,
-                        userAgent: navigator.userAgent
+                        userAgent: navigator.userAgent,
+                        screenWidth: window.screen.width,
+                        screenHeight: window.screen.height,
+                        language: navigator.language
                     })
                 });
                 const data = await resp.json();
@@ -1855,7 +1864,45 @@
             };
         }
 
-    </script>
+        // ============================================================
+        // Delete Account
+        // ============================================================
+        const deleteAccountBtn = document.getElementById('delete-account-btn');
+        if (deleteAccountBtn) {
+            deleteAccountBtn.onclick = async function () {
+                const confirmed = window.confirm(
+                    '⚠️ ¿Estás seguro que quieres eliminar tu cuenta?\n\nEsta acción es PERMANENTE e irreversible. Perderás todos tus puntos y datos. Si tienes deuda activa, la eliminación será bloqueada.'
+                );
+                if (!confirmed) return;
+
+                deleteAccountBtn.disabled = true;
+                deleteAccountBtn.textContent = 'Eliminando...';
+
+                try {
+                    const token = await currentUser.getIdToken();
+                    const resp = await fetch('/api/account?action=deleteAccount', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok) throw new Error(data.error || 'Error eliminando cuenta');
+
+                    showToast('✅ Cuenta eliminada. ¡Hasta luego!');
+                    await signOut(auth);
+                    setTimeout(() => { window.location.href = '/'; }, 2000);
+                } catch (err) {
+                    console.error('Delete account error:', err);
+                    showToast('❌ ' + err.message);
+                    deleteAccountBtn.disabled = false;
+                    deleteAccountBtn.textContent = '🗑️ Eliminar mi cuenta permanentemente';
+                }
+            };
+        }
+
+</script>
     <script src="/credit-gauge.js"></script>
     <script src="/footer.js"></script>
 </body>

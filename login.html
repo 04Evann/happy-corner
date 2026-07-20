@@ -234,6 +234,16 @@
             }
         }
 
+        async function logLoginSession(user) {
+            try {
+                const token = await user.getIdToken();
+                fetch('/api/account?action=logLogin', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).catch(() => {}); // fire-and-forget; never block login
+            } catch (e) { /* silently ignore */ }
+        }
+
         async function handleUserDocument(user) {
             const userRef = doc(db, 'users', user.uid);
             const userSnap = await getDoc(userRef);
@@ -257,6 +267,7 @@
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 });
+                logLoginSession(user);
                 window.location.href = '/onboarding';
             } else {
                 const userData = userSnap.data();
@@ -264,6 +275,7 @@
                 if (!userData.email && email) {
                     await setDoc(userRef, { email: email }, { merge: true });
                 }
+                logLoginSession(user);
                 if (!userData.customerCode) {
                     window.location.href = '/onboarding';
                 } else {

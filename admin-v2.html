@@ -430,6 +430,7 @@
         <div class="admin-profile">
             <span id="admin-display-name"
                 style="font-size:14px; font-weight:600; color:var(--text-muted);">Administrador</span>
+            <a href="/pos-v2" class="btn-logout-small" style="text-decoration:none; display:inline-flex; align-items:center; background:#ff5299; color:white; margin-right:10px;">🛒 Ir al POS</a>
             <button class="btn-logout-small" id="btn-logout">Cerrar Sesión</button>
         </div>
     </header>
@@ -440,9 +441,10 @@
         <!-- TAB: CLIENTS -->
         <!-- ============================================== -->
         <div id="tab-clients" class="tab-content active">
-            <div class="search-container">
-                <input type="text" id="client-search-input" class="admin-input"
+            <div class="search-container" style="display:flex; gap:16px; align-items:center; margin-bottom:20px;">
+                <input type="text" id="client-search-input" class="admin-input" style="flex:1;"
                     placeholder="Buscar por Nombre, Correo, Teléfono o HappyCódigo..." />
+                <button class="admin-btn" style="white-space:nowrap; background:var(--accent-green); height:45px;" onclick="openCreateClientModal()">➕ Crear Cliente</button>
             </div>
             <div class="clients-grid" id="clients-list-container">
                 <!-- Loaded dynamically -->
@@ -662,11 +664,42 @@
                     <div>
                         <div id="modal-contract-status" style="font-weight:700; font-size:14px;">⚠️ Sin firmar</div>
                         <div id="modal-contract-details"
-                            style="font-size:12px; color:var(--text-muted); margin-top:2px;">El cliente no ha aceptado
+                    style="font-size:12px; color:var(--text-muted); margin-top:2px;">El cliente no ha aceptado
                             el acuerdo.</div>
                     </div>
                     <div id="modal-contract-actions">
                         <!-- Buttons added dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Security Actions -->
+            <div
+                style="background:var(--surface-card); padding:20px; border-radius:20px; border:1px solid var(--border-color); margin-bottom:32px;">
+                <h3 style="font-weight:800; font-size:16px; margin-bottom:12px;">🔒 Seguridad y Cuenta</h3>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <div>
+                            <div style="font-weight:700; font-size:14px;">Contraseña del Cliente</div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Genera un enlace temporal para restablecer la contraseña.</div>
+                        </div>
+                        <div>
+                            <button class="admin-btn" style="padding: 8px 16px; font-size:12px; background:var(--accent-purple);" onclick="sendPasswordResetLink()">Restablecer Contraseña</button>
+                        </div>
+                    </div>
+                    <div id="password-reset-link-container" style="display:none; background:rgba(255,255,255,0.03); padding:10px; border-radius:12px; border:1px solid var(--border-color); word-break:break-all;">
+                        <span style="font-size:12px; font-weight:700; display:block; margin-bottom:4px; color:var(--accent-purple);">Enlace generado:</span>
+                        <input type="text" id="generated-reset-link" class="admin-input" style="width:100%; font-size:11px; padding:6px; background:rgba(255,255,255,0.05); color:white;" readonly onclick="this.select(); document.execCommand('copy'); alert('¡Copiado!');">
+                    </div>
+                    
+                    <div style="border-top: 1px solid var(--border-color); margin-top:8px; padding-top:16px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <div>
+                            <div style="font-weight:700; font-size:14px; color:var(--accent-red);">Eliminar Cuenta Permanentemente</div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Borra todos sus datos, contrato y puntos. No permitido si tiene deuda.</div>
+                        </div>
+                        <div>
+                            <button class="admin-btn" style="padding: 8px 16px; font-size:12px; background:var(--accent-red);" id="admin-delete-user-btn" onclick="deleteClientAccount()">Eliminar Cuenta</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -692,7 +725,7 @@
 
             <h3 style="font-weight:800; font-size:16px; margin-bottom:12px;">📊 Historial Crediticio (Cambios de Score)
             </h3>
-            <div style="max-height:200px; overflow-y:auto; border:1px solid var(--border-color); border-radius:16px;">
+            <div style="max-height:200px; overflow-y:auto; border:1px solid var(--border-color); border-radius:16px; margin-bottom:28px;">
                 <table class="admin-table" style="margin-top:0;">
                     <thead>
                         <tr>
@@ -707,6 +740,77 @@
                 </table>
             </div>
 
+            <h3 style="font-weight:800; font-size:16px; margin-bottom:12px;">🔑 Historial de Inicios de Sesión</h3>
+            <div style="max-height:200px; overflow-y:auto; border:1px solid var(--border-color); border-radius:16px;">
+                <table class="admin-table" style="margin-top:0;">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>IP</th>
+                            <th>Ubicación</th>
+                            <th>Navegador/Dispositivo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modal-logins-tbody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: CREATE CLIENT -->
+    <!-- ============================================== -->
+    <div class="admin-modal-overlay" id="create-client-modal">
+        <div class="admin-modal" style="max-width:500px;">
+            <button class="modal-close" onclick="closeCreateClientModal()">✕</button>
+            <h2 style="font-weight:900; margin-bottom:20px;">👤 Crear Cliente en Persona</h2>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700;">NOMBRE COMPLETO (Obligatorio)</label>
+                    <input type="text" id="create-name" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ej: John Doe" required>
+                </div>
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700;">CORREO ELECTRÓNICO (Obligatorio)</label>
+                    <input type="email" id="create-email" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ej: john@example.com" required>
+                </div>
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700;">TELÉFONO / WHATSAPP (Obligatorio)</label>
+                    <input type="tel" id="create-phone" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ej: 3001234567" required>
+                </div>
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700;">HAPPYCÓDIGO PERSONALIZADO (Opcional)</label>
+                    <input type="text" id="create-code" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ej: HC1234 (HC + 4-6 alfanuméricos)" style="text-transform:uppercase;">
+                </div>
+                
+                <div style="border-top:1px solid var(--border-color); padding-top:16px;">
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700; display:block; margin-bottom:8px;">CONFIGURACIÓN DE ACCESO</label>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <label style="font-size:13px; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="radio" name="access-type" value="reset-link" checked onchange="togglePasswordInput()">
+                            Enviar enlace de restablecimiento (Recomendado)
+                        </label>
+                        <label style="font-size:13px; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                            <input type="radio" name="access-type" value="manual" onchange="togglePasswordInput()">
+                            Establecer contraseña manual
+                        </label>
+                    </div>
+                </div>
+
+                <div id="manual-password-container" style="display:none;">
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700;">CONTRASEÑA MANUAL (Mín. 6 caracteres)</label>
+                    <input type="password" id="create-password" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Contraseña secreta">
+                </div>
+
+                <button class="admin-btn" style="background:var(--accent-green); margin-top:8px;" onclick="submitCreateClient()">Crear y Registrar Cliente</button>
+                
+                <div id="create-client-result" style="display:none; margin-top:12px; padding:12px; border-radius:12px; border:1.5px solid var(--accent-green); background:rgba(76,175,80,0.1); word-break:break-all;">
+                    <strong style="color:var(--accent-green); display:block; margin-bottom:4px;">✅ Cliente Creado Exitosamente</strong>
+                    <div id="create-result-details" style="font-size:13px; color:var(--text-muted); margin-top:4px; line-height:1.4;"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -990,11 +1094,17 @@
                     actionsHTML = `<span style="font-size: 11px; color: var(--text-muted);">Sin acciones</span>`;
                 }
 
+                let nameHTML = o.nombre || 'Cliente';
+                if (o.accountDeleted) {
+                    const uidDisp = o.customerUID ? (o.customerUID.length > 10 ? o.customerUID.substring(0, 10) + '...' : o.customerUID) : 'DELETED';
+                    nameHTML = `<span style="color: #ff5252; font-weight: bold;">${o.nombre || 'Cliente'} (@${uidDisp}) - ELIMINADO</span>`;
+                }
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <tr ${rowStyle}>
                         <td style="font-weight:700; font-family:monospace;">${o.id}</td>
-                        <td>${o.nombre || 'Cliente'}</td>
+                        <td>${nameHTML}</td>
                         <td><a href="https://wa.me/57${o.whatsapp || ''}" target="_blank" style="color: var(--primary-color); text-decoration: none;">${o.whatsapp || '—'}</a></td>
                         <td style="font-size:12px; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${o.resumen || ''}">${o.resumen || '—'}</td>
                         <td style="font-weight:700; color:var(--primary-color);">${totalVal}</td>
@@ -1150,11 +1260,14 @@
             document.getElementById('adj-desc').value = '';
             document.getElementById('manual-score').value = '';
             document.getElementById('manual-score-reason').value = '';
+            document.getElementById('password-reset-link-container').style.display = 'none';
+            document.getElementById('generated-reset-link').value = '';
 
             // Load Modal Subsections
             loadModalContractInfo(uid);
             loadModalCreditScore(uid);
             loadModalMovements(uid);
+            loadModalLoginHistory(uid);
 
             document.getElementById('client-detail-modal').classList.add('active');
         };
@@ -1503,6 +1616,227 @@
                 });
             });
         }
+
+        // ==============================================
+        // LOGIN HISTORY & SECURITY LOGS
+        // ==============================================
+        async function loadModalLoginHistory(uid) {
+            const tbody = document.getElementById('modal-logins-tbody');
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-size:12px;">Cargando historial de sesión...</td></tr>';
+
+            try {
+                const snap = await getDocs(query(
+                    collection(db, 'loginHistory'),
+                    where('uid', '==', uid),
+                    orderBy('timestamp', 'desc'),
+                    limit(20)
+                ));
+
+                if (snap.empty) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-size:12px;">No se registraron inicios de sesión recientes.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                snap.forEach(d => {
+                    const data = d.data();
+                    const date = data.timestamp ? new Date(data.timestamp).toLocaleString('es-CO') : '—';
+                    const ip = data.ip || '—';
+                    const loc = data.location || '—';
+                    
+                    let uaDisp = 'Desconocido';
+                    if (data.userAgent) {
+                        const ua = data.userAgent;
+                        if (/iPhone/i.test(ua)) uaDisp = 'iPhone';
+                        else if (/iPad/i.test(ua)) uaDisp = 'iPad';
+                        else if (/Android/i.test(ua)) uaDisp = 'Android';
+                        else if (/Macintosh/i.test(ua)) uaDisp = 'Mac';
+                        else if (/Windows/i.test(ua)) uaDisp = 'Windows';
+                        
+                        let br = '';
+                        if (/Chrome/i.test(ua)) br = 'Chrome';
+                        else if (/Safari/i.test(ua)) br = 'Safari';
+                        else if (/Firefox/i.test(ua)) br = 'Firefox';
+                        else if (/Edg/i.test(ua)) br = 'Edge';
+
+                        if (br) uaDisp += ` (${br})`;
+                    }
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="font-size:12px;">${date}</td>
+                        <td style="font-size:12px; font-family:monospace;">${ip}</td>
+                        <td style="font-size:12px;">${loc}</td>
+                        <td style="font-size:12px; color:var(--text-muted);">${uaDisp}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (err) {
+                console.error("Error loading login history:", err);
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--accent-red); font-size:12px;">Error al cargar historial.</td></tr>';
+            }
+        }
+
+        window.sendPasswordResetLink = async function () {
+            if (!selectedClientUid) return;
+            const container = document.getElementById('password-reset-link-container');
+            const input = document.getElementById('generated-reset-link');
+            
+            container.style.display = 'none';
+            
+            if (!confirm('¿Seguro que deseas generar un enlace de restablecimiento de contraseña para este cliente?')) return;
+
+            try {
+                const token = await auth.currentUser.getIdToken();
+                const res = await fetch('/api/account?action=adminSendPasswordReset', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ uid: selectedClientUid })
+                });
+                
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al generar enlace');
+
+                input.value = data.resetLink;
+                container.style.display = 'block';
+                alert('¡Enlace de restablecimiento generado con éxito! Copia el enlace de abajo.');
+            } catch (err) {
+                console.error(err);
+                alert('Error: ' + err.message);
+            }
+        };
+
+        window.deleteClientAccount = async function () {
+            if (!selectedClientUid) return;
+            const client = currentClientsList.find(c => c.uid === selectedClientUid);
+            if (!client) return;
+
+            if (client.activeDebt && client.activeDebt > 0) {
+                alert('No se puede eliminar la cuenta porque el cliente tiene una deuda activa de $' + client.activeDebt.toLocaleString() + '.');
+                return;
+            }
+
+            if (!confirm(`⚠️ ¡ALERTA CRÍTICA!\n\n¿Estás seguro que deseas eliminar permanentemente la cuenta de ${client.displayName || client.name || 'este usuario'}?\n\nEsta acción es irreversible y borrará su contrato, firma, score y puntos. Los pedidos se anonimizarán.`)) {
+                return;
+            }
+
+            const btn = document.getElementById('admin-delete-user-btn');
+            btn.disabled = true;
+            btn.textContent = 'Eliminando...';
+
+            try {
+                const token = await auth.currentUser.getIdToken();
+                const res = await fetch('/api/account?action=deleteAccount', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ uid: selectedClientUid })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al eliminar cuenta');
+
+                alert('✅ Cuenta eliminada permanentemente.');
+                closeClientModal();
+                // refresh list
+                location.reload();
+            } catch (err) {
+                console.error(err);
+                alert('Error al eliminar cuenta: ' + err.message);
+                btn.disabled = false;
+                btn.textContent = 'Eliminar Cuenta';
+            }
+        };
+
+        // ==============================================
+        // CREATE CLIENT MODULE
+        // ==============================================
+        window.openCreateClientModal = function () {
+            document.getElementById('create-name').value = '';
+            document.getElementById('create-email').value = '';
+            document.getElementById('create-phone').value = '';
+            document.getElementById('create-code').value = '';
+            document.getElementById('create-password').value = '';
+            document.querySelectorAll('input[name="access-type"]').forEach(r => {
+                if (r.value === 'reset-link') r.checked = true;
+            });
+            togglePasswordInput();
+            document.getElementById('create-client-result').style.display = 'none';
+            document.getElementById('create-client-modal').classList.add('active');
+        };
+
+        window.closeCreateClientModal = function () {
+            document.getElementById('create-client-modal').classList.remove('active');
+        };
+
+        window.togglePasswordInput = function () {
+            const isManual = document.querySelector('input[name="access-type"]:checked').value === 'manual';
+            document.getElementById('manual-password-container').style.display = isManual ? 'block' : 'none';
+        };
+
+        window.submitCreateClient = async function () {
+            const nombre = document.getElementById('create-name').value.trim();
+            const email = document.getElementById('create-email').value.trim();
+            const telefono = document.getElementById('create-phone').value.trim();
+            const customerCode = document.getElementById('create-code').value.trim();
+            
+            const accessType = document.querySelector('input[name="access-type"]:checked').value;
+            const password = accessType === 'manual' ? document.getElementById('create-password').value : '';
+
+            if (!nombre || !email || !telefono) {
+                alert('Nombre, correo y teléfono son obligatorios.');
+                return;
+            }
+            if (accessType === 'manual' && password.length < 6) {
+                alert('La contraseña manual debe tener al menos 6 caracteres.');
+                return;
+            }
+
+            const resultContainer = document.getElementById('create-client-result');
+            const resultDetails = document.getElementById('create-result-details');
+            resultContainer.style.display = 'none';
+
+            try {
+                const token = await auth.currentUser.getIdToken();
+                const res = await fetch('/api/account?action=adminCreateClient', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ nombre, email, telefono, customerCode, password })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error creando cliente');
+
+                let detailsHtml = `<strong>ID del Cliente:</strong> ${data.uid}<br>`;
+                if (data.resetLink) {
+                    detailsHtml += `<strong>Enlace de acceso/restablecimiento:</strong><br><textarea class="admin-input" style="width:100%; font-size:11px; margin-top:6px; height:60px; background:rgba(255,255,255,0.05); color:white;" readonly onclick="this.select(); document.execCommand('copy'); alert('¡Copiado!');">${data.resetLink}</textarea><br><span style="font-size:11px; color:var(--text-muted);">Copia y comparte este enlace con el cliente para que configure su contraseña.</span>`;
+                } else {
+                    detailsHtml += `<strong>Contraseña establecida manualmente:</strong> ${password}`;
+                }
+
+                resultDetails.innerHTML = detailsHtml;
+                resultContainer.style.display = 'block';
+                
+                // Clear inputs except result
+                document.getElementById('create-name').value = '';
+                document.getElementById('create-email').value = '';
+                document.getElementById('create-phone').value = '';
+                document.getElementById('create-code').value = '';
+                document.getElementById('create-password').value = '';
+                
+            } catch (err) {
+                console.error(err);
+                alert('Error al crear cliente: ' + err.message);
+            }
+        };
 
     </script>
 </body>

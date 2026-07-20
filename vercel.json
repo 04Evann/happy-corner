@@ -93,6 +93,10 @@
       "destination": "/onboarding.html"
     },
     {
+      "source": "/auth/action",
+      "destination": "/auth-action.html"
+    },
+    {
       "source": "/admin-v2",
       "destination": "/admin-v2.html"
     },
