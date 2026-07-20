@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+    <meta name="google-site-verification" content="P1G6VnRCEnz_ZII5OWspd7bClPNv9W9qyPpUmbpg0D8" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Corner | Dulces, Snacks y Combos en Cali</title>
-    <meta name="description" content="Happy Corner: la tienda de snacks, dulces, pizzas y combos favorita de Cali. Pide en línea y recibe en tu campus. ¡Puntos y recompensas en cada compra!">
+    <meta name="description"
+        content="Happy Corner: la tienda de snacks, dulces, pizzas y combos favorita de Cali. Pide en línea y recibe en tu campus. ¡Puntos y recompensas en cada compra!">
     <link rel="canonical" href="https://happycorner.top/">
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Happy Corner | Dulces, Snacks y Combos">
-    <meta property="og:description" content="Snacks, dulces, pizzas y combos. Pide en línea con Happy Corner en Cali. ¡Puntos en cada compra!">
+    <meta property="og:description"
+        content="Snacks, dulces, pizzas y combos. Pide en línea con Happy Corner en Cali. ¡Puntos en cada compra!">
     <meta property="og:image" content="https://happycorner.top/happyshop.png">
     <meta property="og:url" content="https://happycorner.top/">
     <meta property="og:type" content="website">
@@ -41,11 +45,12 @@
     <!-- Librería Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
+
 <body>
 
     <audio id="clinkSound" src="https://www.soundjay.com/buttons/sounds/button-37a.mp3" preload="auto"></audio>
 
-        <header>
+    <header>
         <a href="/index" class="logo">
             <img src="loguito.png" alt="HappyCorner" class="logo-img">
         </a>
@@ -59,8 +64,10 @@
             <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
                 <span id="theme-icon">🌙</span>
             </button>
-            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a href="/login.html" id="auth-icon-desktop"
+                style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
@@ -71,7 +78,7 @@
         </div>
     </header>
 
-        <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
@@ -79,7 +86,8 @@
         <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
         <a href="/wallet">Happy Passes</a>
-        <a href="/login.html" class="login-mobile-link" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
+        <a href="/login.html" class="login-mobile-link"
+            style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
     </nav>
 
     <div class="carousel-container">
@@ -140,16 +148,37 @@
     <!-- TOAST (Notificación pequeña abajo en el centro) -->
     <style>
         #toast {
-            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
-            background: var(--surface-color); padding: 12px 25px; border-radius: 50px;
-            box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 10px;
-            z-index: 2000; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid var(--border-color); color: var(--text-color);
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface-color);
+            padding: 12px 25px;
+            border-radius: 50px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
         }
-        #toast.show { bottom: 30px; }
+
+        #toast.show {
+            bottom: 30px;
+        }
+
         .toast-check {
-            background: #2ecc71; color: white; width: 20px; height: 20px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px;
+            background: #2ecc71;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
         }
     </style>
     <div id="toast">
@@ -157,14 +186,19 @@
         <span id="toast-text"></span>
     </div>
 
-    
+
     <a href="/order" class="cart-fixed">
         🛒<div class="badge" id="cart-count">0</div>
     </a>
 
-    
+
     <a href="https://wa.me/573112871046" target="_blank" class="wa-fixed">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+            </path>
+        </svg>
     </a>
 
 
@@ -228,7 +262,7 @@
             let currentPizzas = 0;
             // Sumamos la cantidad actual de pizzas en el carrito
             cart.forEach(item => {
-                if(item.name.toLowerCase().includes('pizza')) {
+                if (item.name.toLowerCase().includes('pizza')) {
                     currentPizzas += item.qty;
                 }
             });
@@ -246,7 +280,7 @@
             const qtyVal = parseInt(card.querySelector('.qty-num').innerText);
 
             let cart = JSON.parse(localStorage.getItem('hc_cart')) || [];
-            
+
             // Verificación del límite de pizzas (Máximo 5)
             if (name.toLowerCase().includes('pizza')) {
                 if (!checkPizzaLimit(cart, qtyVal)) {
@@ -256,7 +290,7 @@
             }
 
             // Si pasa todo, reproducimos el sonido
-            document.getElementById('clinkSound').play().catch(() => {});
+            document.getElementById('clinkSound').play().catch(() => { });
 
             // Lógica de Confeti
             const btn = event.currentTarget;
@@ -265,10 +299,12 @@
             const rect = btn.getBoundingClientRect();
             const x = (rect.left + (rect.width / 2)) / window.innerWidth;
             const y = (rect.top + (rect.height / 2)) / window.innerHeight;
-            try { confetti({
-                particleCount: 50, spread: 60, origin: { x: x, y: y },
-                colors: ['#ff5299', '#ff9d5c', '#ffd45e', '#ffffff']
-            }); } catch(e){ console.error(e); }
+            try {
+                confetti({
+                    particleCount: 50, spread: 60, origin: { x: x, y: y },
+                    colors: ['#ff5299', '#ff9d5c', '#ffd45e', '#ffffff']
+                });
+            } catch (e) { console.error(e); }
 
             // Añadir al Carrito
             const existingIndex = cart.findIndex(item => item.id === id);
@@ -296,6 +332,7 @@
     <!-- State Management para Firebase Auth -->
     <script type="module" src="auth-state.js"></script>
     <script src="cookie-notice.js"></script>
-<script src="/footer.js"></script>
+    <script src="/footer.js"></script>
 </body>
+
 </html>
