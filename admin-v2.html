@@ -267,6 +267,30 @@
             position: relative;
         }
 
+        #create-signature-canvas {
+            width: 100%;
+            height: 150px;
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            cursor: crosshair;
+            touch-action: none;
+            background: rgba(255, 255, 255, 0.02);
+            margin: 12px 0;
+        }
+
+        .contract-text {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.01);
+            color: var(--text-muted);
+            margin: 12px 0;
+        }
+
         .modal-close {
             position: absolute;
             top: 24px;
@@ -767,7 +791,9 @@
         <div class="admin-modal" style="max-width:500px;">
             <button class="modal-close" onclick="closeCreateClientModal()">✕</button>
             <h2 style="font-weight:900; margin-bottom:20px;">👤 Crear Cliente en Persona</h2>
-            <div style="display:flex; flex-direction:column; gap:16px;">
+            
+            <!-- STEP 1: Form details -->
+            <div id="create-client-form-step" style="display:flex; flex-direction:column; gap:16px;">
                 <div>
                     <label style="font-size:12px; color:var(--text-muted); font-weight:700;">NOMBRE COMPLETO (Obligatorio)</label>
                     <input type="text" id="create-name" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Ej: John Doe" required>
@@ -810,6 +836,44 @@
                     <strong style="color:var(--accent-green); display:block; margin-bottom:4px;">✅ Cliente Creado Exitosamente</strong>
                     <div id="create-result-details" style="font-size:13px; color:var(--text-muted); margin-top:4px; line-height:1.4;"></div>
                 </div>
+            </div>
+
+            <!-- STEP 2: Agreement signing in person -->
+            <div id="create-client-sign-step" style="display:none; flex-direction:column; gap:16px;">
+                <h3 style="font-weight:800; font-size:16px; margin-bottom:4px;">✍️ Acuerdo de Responsabilidad</h3>
+                <div style="font-size:12px; color:var(--text-muted);">Por favor, haz que el cliente firme el acuerdo en persona.</div>
+                
+                <div class="contract-text">
+                    <b>CONTRATO DE RESPONSABILIDAD DE DEUDA - HAPPY CORNER</b><br><br>
+                    Yo, el/la cliente, al registrarme y adquirir productos de Happy Corner a crédito, reconozco y acepto
+                    las siguientes condiciones:<br><br>
+                    <b>1. RECONOCIMIENTO DE DEUDA:</b> Acepto que cualquier saldo pendiente en mi cuenta representa una
+                    deuda real y exigible, que me comprometo a saldar en los plazos acordados con el
+                    administrador.<br><br>
+                    <b>2. TRANSPARENCIA:</b> Entiendo que mis movimientos de deuda y pagos son registrados en el sistema
+                    y puedo consultarlos en cualquier momento desde mi cuenta.<br><br>
+                    <b>3. COMPROMISO DE PAGO:</b> Me comprometo a no acumular deudas que superen mi capacidad de pago, y
+                    a comunicarme con el administrador si tengo dificultades para pagar.<br><br>
+                    <b>4. CONSECUENCIAS DE INCUMPLIMIENTO:</b> En caso de no pagar la deuda, entiendo que se me podrá
+                    negar el acceso a nuevas compras a crédito hasta que la deuda sea saldada.<br><br>
+                    <b>5. VOLUNTARIEDAD:</b> Confirmo que acepto este contrato de manera voluntaria y
+                    consciente.<br><br>
+                    Este contrato es para control interno de Happy Corner y no constituye un instrumento legal formal
+                    frente a terceros.
+                </div>
+
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700;">NOMBRE COMPLETO PARA LA FIRMA</label>
+                    <input type="text" id="sign-create-name" class="admin-input" style="width:100%; margin-top:4px;" placeholder="Nombre completo">
+                </div>
+
+                <div>
+                    <label style="font-size:12px; color:var(--text-muted); font-weight:700;">FIRMA (Dibuja con el dedo o el cursor)</label>
+                    <canvas id="create-signature-canvas" style="width:100%; height:150px; border:2px dashed var(--border-color); border-radius:16px; cursor:crosshair; touch-action:none; background:rgba(255,255,255,0.02); margin:12px 0;"></canvas>
+                    <button class="admin-btn-secondary" style="width:100%; margin-bottom:8px; padding:8px;" onclick="clearCreateSignature()">🗑️ Borrar Firma</button>
+                </div>
+
+                <button class="admin-btn" style="background:var(--accent-purple);" id="btn-submit-person-signature" onclick="submitCreateSignature()">Firmar y Confirmar Contrato</button>
             </div>
         </div>
     </div>
@@ -1756,16 +1820,79 @@
         // ==============================================
         // CREATE CLIENT MODULE
         // ==============================================
+        let createdUserUid = null;
+        let createdUserResetLink = null;
+        let createdUserPassword = null;
+        let createDrawing = false;
+        let createSignatureData = null;
+        let createCanvasInited = false;
+
+        function initCreateCanvas() {
+            const canvas = document.getElementById('create-signature-canvas');
+            const ctx = canvas.getContext('2d');
+            createSignatureData = null;
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+
+                if (e.touches && e.touches.length > 0) {
+                    return {
+                        x: (e.touches[0].clientX - rect.left) * scaleX,
+                        y: (e.touches[0].clientY - rect.top) * scaleY
+                    };
+                }
+                return {
+                    x: (e.clientX - rect.left) * scaleX,
+                    y: (e.clientY - rect.top) * scaleY
+                };
+            }
+
+            function resizeCanvas() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = 150;
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#ffffff';
+            }
+
+            resizeCanvas();
+
+            if (!createCanvasInited) {
+                canvas.addEventListener('mousedown', (e) => { createDrawing = true; const { x, y } = getPos(e); ctx.beginPath(); ctx.moveTo(x, y); });
+                canvas.addEventListener('mousemove', (e) => { if (!createDrawing) return; const { x, y } = getPos(e); ctx.lineTo(x, y); ctx.stroke(); });
+                canvas.addEventListener('mouseup', () => { createDrawing = false; createSignatureData = canvas.toDataURL('image/png'); });
+                canvas.addEventListener('touchstart', (e) => { e.preventDefault(); createDrawing = true; const { x, y } = getPos(e); ctx.beginPath(); ctx.moveTo(x, y); }, { passive: false });
+                canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!createDrawing) return; const { x, y } = getPos(e); ctx.lineTo(x, y); ctx.stroke(); }, { passive: false });
+                canvas.addEventListener('touchend', () => { createDrawing = false; createSignatureData = canvas.toDataURL('image/png'); });
+                createCanvasInited = true;
+            }
+
+            window.clearCreateSignature = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                createSignatureData = null;
+            };
+        }
+
         window.openCreateClientModal = function () {
+            createdUserUid = null;
+            createdUserResetLink = null;
+            createdUserPassword = null;
+            
             document.getElementById('create-name').value = '';
             document.getElementById('create-email').value = '';
             document.getElementById('create-phone').value = '';
             document.getElementById('create-code').value = '';
             document.getElementById('create-password').value = '';
+            
             document.querySelectorAll('input[name="access-type"]').forEach(r => {
                 if (r.value === 'reset-link') r.checked = true;
             });
             togglePasswordInput();
+
+            document.getElementById('create-client-form-step').style.display = 'flex';
+            document.getElementById('create-client-sign-step').style.display = 'none';
             document.getElementById('create-client-result').style.display = 'none';
             document.getElementById('create-client-modal').classList.add('active');
         };
@@ -1797,10 +1924,6 @@
                 return;
             }
 
-            const resultContainer = document.getElementById('create-client-result');
-            const resultDetails = document.getElementById('create-result-details');
-            resultContainer.style.display = 'none';
-
             try {
                 const token = await auth.currentUser.getIdToken();
                 const res = await fetch('/api/account?action=adminCreateClient', {
@@ -1815,26 +1938,88 @@
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'Error creando cliente');
 
-                let detailsHtml = `<strong>ID del Cliente:</strong> ${data.uid}<br>`;
-                if (data.resetLink) {
-                    detailsHtml += `<strong>Enlace de acceso/restablecimiento:</strong><br><textarea class="admin-input" style="width:100%; font-size:11px; margin-top:6px; height:60px; background:rgba(255,255,255,0.05); color:white;" readonly onclick="this.select(); document.execCommand('copy'); alert('¡Copiado!');">${data.resetLink}</textarea><br><span style="font-size:11px; color:var(--text-muted);">Copia y comparte este enlace con el cliente para que configure su contraseña.</span>`;
-                } else {
-                    detailsHtml += `<strong>Contraseña establecida manualmente:</strong> ${password}`;
-                }
+                // Save created user info for signature phase
+                createdUserUid = data.uid;
+                createdUserResetLink = data.resetLink || null;
+                createdUserPassword = password || null;
 
-                resultDetails.innerHTML = detailsHtml;
-                resultContainer.style.display = 'block';
+                // Fill name in signature form
+                document.getElementById('sign-create-name').value = nombre;
+
+                // Transition to contract signature step
+                document.getElementById('create-client-form-step').style.display = 'none';
+                document.getElementById('create-client-sign-step').style.display = 'flex';
                 
-                // Clear inputs except result
-                document.getElementById('create-name').value = '';
-                document.getElementById('create-email').value = '';
-                document.getElementById('create-phone').value = '';
-                document.getElementById('create-code').value = '';
-                document.getElementById('create-password').value = '';
+                // Init canvas drawing area
+                initCreateCanvas();
                 
             } catch (err) {
                 console.error(err);
                 alert('Error al crear cliente: ' + err.message);
+            }
+        };
+
+        window.submitCreateSignature = async function () {
+            if (!createdUserUid) {
+                alert('No hay ningún cliente creado en esta sesión.');
+                return;
+            }
+
+            const typedName = document.getElementById('sign-create-name').value.trim();
+            if (!typedName) {
+                alert('Escribe el nombre completo del cliente para firmar.');
+                return;
+            }
+
+            if (!createSignatureData) {
+                alert('Por favor, haz que el cliente dibuje su firma en el canvas.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-submit-person-signature');
+            btn.disabled = true;
+            btn.textContent = 'Firmando contrato...';
+
+            try {
+                const token = await auth.currentUser.getIdToken();
+                const res = await fetch('/api/contract', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'adminSign',
+                        uid: createdUserUid,
+                        typedName,
+                        signatureImage: createSignatureData,
+                        userAgent: navigator.userAgent,
+                        screenWidth: window.screen.width,
+                        screenHeight: window.screen.height,
+                        language: navigator.language
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error firmando contrato');
+
+                alert('✅ ¡Cliente creado y acuerdo de responsabilidad firmado exitosamente!');
+
+                if (createdUserResetLink) {
+                    window.prompt("Copia el enlace de acceso / restablecimiento de contraseña para el cliente:", createdUserResetLink);
+                } else if (createdUserPassword) {
+                    alert(`Cuenta creada con la contraseña establecida: ${createdUserPassword}`);
+                }
+
+                closeCreateClientModal();
+                // reload current list
+                location.reload();
+            } catch (err) {
+                console.error(err);
+                alert('Error al registrar firma del contrato: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Firmar y Confirmar Contrato';
             }
         };
 

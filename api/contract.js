@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import { Resend } from 'resend';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-import { db } from './_lib/firebaseAdmin.js';
+import { db, auth } from './_lib/firebaseAdmin.js';
 import { s3Client, bucketName, publicUrl } from './_lib/r2Client.js';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { applyCors, json } from './_lib/http.js';
@@ -538,6 +538,189 @@ export default async function handler(req, res) {
 
             await pinRef.delete();
             return json(res, 200, { success: true, message: 'Contrato firmado correctamente.', pdfUrl });
+        }
+
+        // ============================================================
+        // ACCION: adminSign (Firma en persona sin PIN)
+        // ============================================================
+        if (action === 'adminSign') {
+            const authHeader = req.headers.authorization || '';
+            const idToken = authHeader.replace('Bearer ', '');
+            if (!idToken) return json(res, 401, { error: 'No autenticado.' });
+
+            let decoded;
+            try {
+                decoded = await auth.verifyIdToken(idToken);
+            } catch (e) {
+                return json(res, 401, { error: 'Token inválido.' });
+            }
+
+            // Verify caller is admin
+            const callerSnap = await db.collection('users').doc(decoded.uid).get();
+            const callerData = callerSnap.data() || {};
+            if (callerData.role !== 'admin') {
+                return json(res, 403, { error: 'Acción permitida solo para administradores.' });
+            }
+
+            const { uid, typedName, signatureImage, userAgent, screenWidth, screenHeight, language } = req.body;
+            if (!uid || !typedName || !signatureImage) {
+                return json(res, 400, { error: 'Faltan campos requeridos para firmar el contrato.' });
+            }
+
+            const match = signatureImage.match(/^data:image\/(png|jpeg);base64,(.+)$/);
+            if (!match) return json(res, 400, { error: 'Formato de imagen de firma no valido.' });
+            const imageBuffer = Buffer.from(match[2], 'base64');
+
+            const ip = getClientIp(req);
+            const { device, browser } = parseUserAgent(userAgent);
+            const location = await getLocationFromIp(ip);
+            const timestamp = new Date().toISOString();
+
+            if (!s3Client) {
+                return json(res, 500, { error: 'R2 Storage no esta configurado.' });
+            }
+
+            // Subir imagen de firma a R2
+            const signatureFileName = `signatures/${uid}/contract_v1.png`;
+            await s3Client.send(new PutObjectCommand({
+                Bucket: bucketName,
+                Key: signatureFileName,
+                Body: imageBuffer,
+                ContentType: `image/${match[1]}`
+            }));
+
+            // Generar PDF y subirlo a R2
+            let logoBuffer = null;
+            try {
+                const { readFileSync } = await import('fs');
+                const { join, dirname } = await import('path');
+                const { fileURLToPath } = await import('url');
+                const __dirname = dirname(fileURLToPath(import.meta.url));
+                logoBuffer = readFileSync(join(__dirname, '..', 'loguito.png'));
+            } catch { /* logo not critical */ }
+
+            const pdfBuffer = await generarPdfContrato({
+                typedName,
+                signatureImageBuffer: imageBuffer,
+                signedAt: timestamp,
+                ip, device, browser, location,
+                logoBuffer
+            });
+            const pdfFileName = `contracts/${uid}/contract_v1.pdf`;
+            await s3Client.send(new PutObjectCommand({
+                Bucket: bucketName,
+                Key: pdfFileName,
+                Body: pdfBuffer,
+                ContentType: 'application/pdf'
+            }));
+            const pdfUrl = `${publicUrl}/${pdfFileName}`;
+
+            // Guardar contrato en Firestore con metadata de firma en persona
+            await db.collection('debtContracts').doc(uid).set({
+                uid,
+                customerUID: uid,
+                signed: true,
+                typedName,
+                signatureUrl: `${publicUrl}/${signatureFileName}`,
+                pdfUrl,
+                version: 'v1',
+                signedAt: timestamp,
+                ip,
+                device,
+                browser,
+                location,
+                userAgent: userAgent || 'unknown',
+                screenWidth: screenWidth || null,
+                screenHeight: screenHeight || null,
+                language: language || null,
+                signedInPerson: true,
+                witnessedByAdmin: decoded.uid
+            });
+
+            await db.collection('users').doc(uid).update({
+                contractSigned: true,
+                contractVersion: 'v1',
+                contractSignedAt: timestamp
+            });
+
+            // Enviar PDF por correo (al admin y al cliente)
+            const userSnap = await db.collection('users').doc(uid).get();
+            const clienteEmail = userSnap.data()?.email;
+            const resend = new Resend(process.env.RESEND_API_KEY);
+            const pdfBase64 = pdfBuffer.toString('base64');
+
+            const destinatarios = ['happycorner.com@gmail.com'];
+            if (clienteEmail) destinatarios.push(clienteEmail);
+
+            await resend.emails.send({
+                from: 'Happy Corner <no-reply@alertas.happycorner.top>',
+                to: destinatarios,
+                subject: `✅ Contrato firmado en persona · ${typedName}`,
+                html: `
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#0d0d0d;font-family:'Outfit',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0d0d0d;">
+    <tr><td align="center" style="padding:32px 16px;">
+      <table width="100%" style="max-width:560px;background:#181818;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);">
+        <!-- Header -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#b01e5a,#ff5299,#ff8c42);padding:28px 32px;text-align:center;">
+            <img src="https://happycorner.top/happyfavicon.png" width="48" height="48" alt="" style="border-radius:10px;display:block;margin:0 auto 10px;">
+            <div style="font-family:'Outfit',Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;">Contrato Firmado en Persona ✅</div>
+            <div style="font-family:'Outfit',Arial,sans-serif;font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px;">Happy Corner · Testigo: ${callerData.displayName || callerData.name || 'Administrador'}</div>
+          </td>
+        </tr>
+        <!-- Body -->
+        <tr>
+          <td style="padding:32px;">
+            <p style="font-family:'Outfit',Arial,sans-serif;color:#ccc;font-size:15px;margin:0 0 20px;">El siguiente contrato ha sido firmado exitosamente en persona con presencia del administrador:</p>
+            <!-- Info table -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:24px;">
+              <tr style="background:#222;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;width:40%;">Firmado por</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#fff;">${typedName}</td>
+              </tr>
+              <tr style="background:#1a1a1a;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">Fecha</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${new Date(timestamp).toLocaleString('es-CO', { timeZone: 'America/Bogota' })}</td>
+              </tr>
+              <tr style="background:#222;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">IP del Servidor</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${ip}</td>
+              </tr>
+              <tr style="background:#1a1a1a;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">Dispositivo Administrador</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${device} · ${browser}</td>
+              </tr>
+              <tr style="background:#222;">
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:12px;font-weight:700;color:#888;">Ubicación de Firma</td>
+                <td style="padding:10px 14px;font-family:'Outfit',Arial,sans-serif;font-size:13px;color:#eee;">${location}</td>
+              </tr>
+            </table>
+            <p style="font-family:'Outfit',Arial,sans-serif;color:#777;font-size:13px;margin:0;">El PDF firmado se adjunta a este correo para tus registros.</p>
+          </td>
+        </tr>
+        <!-- Social footer -->
+        <tr>
+          <td style="padding:16px 32px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+            <div style="margin-bottom:8px;">
+              <a href="https://instagram.com/happycornerof" style="color:#ff5299;text-decoration:none;font-family:'Outfit',Arial,sans-serif;font-size:12px;margin:0 8px;">📸 Instagram</a>
+              <a href="https://wa.me/573000000000" style="color:#ff5299;text-decoration:none;font-family:'Outfit',Arial,sans-serif;font-size:12px;margin:0 8px;">💬 WhatsApp</a>
+            </div>
+            <div style="font-family:'Outfit',Arial,sans-serif;color:#444;font-size:11px;">© ${new Date().getFullYear()} Happy Corner</div>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`,
+                attachments: [{ filename: `contrato_${typedName}.pdf`, content: pdfBase64 }]
+            });
+
+            return json(res, 200, { success: true, message: 'Contrato firmado en persona correctamente.', pdfUrl });
         }
 
         return json(res, 400, { error: 'Accion no valida.' });

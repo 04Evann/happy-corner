@@ -200,16 +200,15 @@ export default async function handler(req, res) {
             await movementsBatch.commit();
 
             // 5. Anonimizar Pedidos
+            const userFullName = (targetData.displayName || targetData.name || '').trim();
+            const firstSpace = userFullName.indexOf(' ');
+            const firstName = firstSpace !== -1 ? userFullName.substring(0, firstSpace) : userFullName;
+
             const ordersSnap = await db.collection('orders').where('customerUID', '==', targetUid).get();
             const ordersBatch = db.batch();
             ordersSnap.forEach(doc => {
-                const data = doc.data();
-                const fullName = data.nombre || '';
-                const firstSpace = fullName.trim().indexOf(' ');
-                const firstName = firstSpace !== -1 ? fullName.trim().substring(0, firstSpace) : fullName.trim();
-
                 ordersBatch.update(doc.ref, {
-                    nombre: firstName,
+                    nombre: firstName || 'Cliente',
                     whatsapp: null,
                     email: null,
                     customerCode: null,
