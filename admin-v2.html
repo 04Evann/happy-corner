@@ -598,8 +598,30 @@
         <!-- TAB: ANALYTICS                                -->
         <!-- ============================================== -->
         <div id="tab-analytics" class="tab-content">
-            <h2 style="font-weight:900; margin-bottom:8px;">📈 Analíticas de Negocio</h2>
-            <p style="color:var(--text-muted); font-size:13px; margin-bottom:24px;">Basado en órdenes del último año.</p>
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+                <div>
+                    <h2 style="font-weight:900; margin-bottom:2px;">📈 Analíticas de Negocio</h2>
+                    <p style="color:var(--text-muted); font-size:12px; margin:0;" id="analytics-range-label">Últimos 30 días</p>
+                </div>
+                <!-- Range selector -->
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                    <button id="range-btn-7" class="analytics-range-btn" onclick="setAnalyticsRange(7)" style="padding:6px 12px; border-radius:20px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text-color); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;">7 días</button>
+                    <button id="range-btn-30" class="analytics-range-btn active" onclick="setAnalyticsRange(30)" style="padding:6px 12px; border-radius:20px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text-color); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;">30 días</button>
+                    <button id="range-btn-90" class="analytics-range-btn" onclick="setAnalyticsRange(90)" style="padding:6px 12px; border-radius:20px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text-color); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;">90 días</button>
+                    <button id="range-btn-0" class="analytics-range-btn" onclick="setAnalyticsRange(0)" style="padding:6px 12px; border-radius:20px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text-color); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;">Todo</button>
+                    <span style="color:var(--text-muted); font-size:12px; margin:0 4px;">|</span>
+                    <input type="date" id="analytics-date-start" class="admin-input" style="padding:5px 8px; font-size:12px; width:130px;" onchange="setAnalyticsRange('custom')">
+                    <span style="color:var(--text-muted); font-size:12px;">→</span>
+                    <input type="date" id="analytics-date-end" class="admin-input" style="padding:5px 8px; font-size:12px; width:130px;" onchange="setAnalyticsRange('custom')">
+                </div>
+            </div>
+            <style>
+                .analytics-range-btn.active {
+                    background: var(--hp-pink) !important;
+                    color: white !important;
+                    border-color: var(--hp-pink) !important;
+                }
+            </style>
 
             <!-- KPI cards row -->
             <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:28px;">
@@ -1373,9 +1395,46 @@
         // ANALYTICS TAB
         // ==============================================
         let _analyticsCharts = {};
+        let _analyticsRange = { days: 30, start: null, end: null }; // default: last 30 days
+
+        /** Called by preset buttons and custom date pickers */
+        window.setAnalyticsRange = function (days, customStart, customEnd) {
+            if (days === 'custom') {
+                const s = document.getElementById('analytics-date-start').value;
+                const e = document.getElementById('analytics-date-end').value;
+                if (!s || !e) return;
+                _analyticsRange = { days: 'custom', start: new Date(s + 'T00:00:00'), end: new Date(e + 'T23:59:59') };
+            } else {
+                _analyticsRange = { days, start: null, end: null };
+            }
+            // Highlight active preset button
+            document.querySelectorAll('.analytics-range-btn').forEach(b => b.classList.remove('active'));
+            const active = document.getElementById(`range-btn-${days}`);
+            if (active) active.classList.add('active');
+            refreshAnalytics();
+        };
 
         window.refreshAnalytics = function () {
-            const orders = allOrders.filter(o => o.status !== 'cancelled');
+            // ---- Date range filter ----
+            let rangeStart, rangeEnd;
+            if (_analyticsRange.days === 'custom') {
+                rangeStart = _analyticsRange.start;
+                rangeEnd   = _analyticsRange.end;
+            } else if (_analyticsRange.days === 0) {
+                rangeStart = null; rangeEnd = null; // "Todo"
+            } else {
+                rangeEnd   = new Date();
+                rangeStart = new Date(Date.now() - _analyticsRange.days * 86400000);
+            }
+
+            const orders = allOrders.filter(o => {
+                if (o.status === 'cancelled') return false;
+                if (!rangeStart) return true;
+                const ts = typeof o.createdAt === 'string'
+                    ? new Date(o.createdAt)
+                    : (o.createdAt?.seconds ? new Date(o.createdAt.seconds * 1000) : new Date(Number(o.createdAt)));
+                return ts >= rangeStart && ts <= rangeEnd;
+            });
 
             // ---- KPIs ----
             const totalRevenue = orders.reduce((sum, o) => {

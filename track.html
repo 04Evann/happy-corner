@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    
+
     <style>
         .page-container {
             max-width: 600px;
@@ -134,9 +135,10 @@
         }
     </style>
 </head>
+
 <body>
 
-        <header>
+    <header>
         <a href="/index" class="logo">
             <img src="loguito.png" alt="HappyCorner" class="logo-img">
         </a>
@@ -150,8 +152,10 @@
             <button class="theme-toggle" onclick="toggleTheme()" title="Night Mode">
                 <span id="theme-icon">🌙</span>
             </button>
-            <a href="/login.html" id="auth-icon-desktop" style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a href="/login.html" id="auth-icon-desktop"
+                style="color: var(--text-color); margin-left: 10px; display: flex; align-items: center; text-decoration: none;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
@@ -164,12 +168,13 @@
 
     <!-- Domain change banner -->
     <div class="domain-banner" id="domain-banner">
-        <span>🌐 ¡Ahora también en <a href="https://happycorner.top" target="_blank">happycorner.top</a>! Guarda el nuevo dominio.</span>
+        <span>🌐 ¡Ahora también en <a href="https://happycorner.top" target="_blank">happycorner.top</a>! Guarda el
+            nuevo dominio.</span>
         <button class="domain-banner-close" onclick="dismissDomainBanner()" aria-label="Cerrar">✕</button>
     </div>
-    <script>(function(){if(localStorage.getItem('hc_domain_banner_v1')==='1'){var b=document.getElementById('domain-banner');if(b)b.style.display='none';}})();window.dismissDomainBanner=function(){localStorage.setItem('hc_domain_banner_v1','1');var b=document.getElementById('domain-banner');if(b)b.style.display='none';};</script>
+    <script>(function () { if (localStorage.getItem('hc_domain_banner_v1') === '1') { var b = document.getElementById('domain-banner'); if (b) b.style.display = 'none'; } })(); window.dismissDomainBanner = function () { localStorage.setItem('hc_domain_banner_v1', '1'); var b = document.getElementById('domain-banner'); if (b) b.style.display = 'none'; };</script>
 
-        <div class="overlay" id="overlay"></div>
+    <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
         <a href="/catalogo">Catálogo</a>
@@ -177,7 +182,8 @@
         <a href="/track">Rastrear Pedido</a>
         <a href="/terminos">Términos</a>
         <a href="/wallet">Happy Passes</a>
-        <a href="/login.html" class="login-mobile-link" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
+        <a href="/login.html" class="login-mobile-link"
+            style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px;">Iniciar Sesión</a>
     </nav>
 
     <div class="page-container showcase-container">
@@ -196,7 +202,7 @@
 
                     <!-- Status stepper -->
                     <div id="r-stepper" style="margin-bottom:12px;"></div>
-                    
+
                     <div class="info-row">
                         <span>Receptor:</span>
                         <span id="r-name">---</span>
@@ -209,7 +215,8 @@
                         <span>Tipo de Entrega:</span>
                         <span id="r-delivery">---</span>
                     </div>
-                    <div class="info-row" style="margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border-color);">
+                    <div class="info-row"
+                        style="margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--border-color);">
                         <span>Total:</span>
                         <span id="r-total" style="font-weight: 800; color: var(--hp-pink); font-size: 15px;">$0</span>
                     </div>
@@ -221,15 +228,21 @@
                 </div>
             </div>
 
-            <div id="error-msg" style="display: none; color: #ff3333; font-size: 14px; font-weight: 600; margin-top: 15px;">
+            <div id="error-msg"
+                style="display: none; color: #ff3333; font-size: 14px; font-weight: 600; margin-top: 15px;">
                 <i class="fas fa-exclamation-circle"></i> Orden no encontrada en este dispositivo.
             </div>
         </div>
     </div>
-    
-    
+
+
     <a href="https://wa.me/573112871046" target="_blank" class="wa-fixed">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+            </path>
+        </svg>
     </a>
 
 
@@ -239,7 +252,7 @@
         import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
         let isDark = false;
-        window.toggleTheme = function() {
+        window.toggleTheme = function () {
             isDark = !isDark;
             const themeBtn = document.getElementById('theme-icon');
             if (isDark) {
@@ -266,26 +279,29 @@
             overlay.onclick = () => { sideMenu?.classList.remove('active'); overlay?.classList.remove('active'); };
         }
 
-        window.checkOrder = async function() {
+        window.checkOrder = async function () {
             const searchInput = document.getElementById('order-input').value.trim();
             const resultBox = document.getElementById('result-container');
             const errorMsg = document.getElementById('error-msg');
-            
+
             errorMsg.style.display = 'none';
             resultBox.style.display = 'none';
 
             if (!searchInput) return;
 
-            const searchUpper = searchInput.toUpperCase();
+            let searchUpper = searchInput.trim();
+            if (/^h-/i.test(searchUpper)) {
+                searchUpper = 'h-' + searchUpper.slice(2).toUpperCase();
+            }
             const searchLower = searchInput.toLowerCase();
 
             try {
                 await initPromise;
-                
+
                 // 1. Intentar buscar en Firestore por ID de orden exacto (acceso público Get)
                 const docRef = doc(db, 'orders', searchUpper);
                 const docSnap = await getDoc(docRef);
-                
+
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     renderOrderResult(data, searchUpper);
@@ -299,8 +315,8 @@
             const storedData = localStorage.getItem('lastHappyOrder');
             if (storedData) {
                 const data = JSON.parse(storedData);
-                const isMatch = data.orderId.toLowerCase() === searchLower || 
-                               (data.happyCode && data.happyCode.toLowerCase() === searchLower);
+                const isMatch = data.orderId.toLowerCase() === searchLower ||
+                    (data.happyCode && data.happyCode.toLowerCase() === searchLower);
 
                 if (isMatch) {
                     renderOrderResult(data, data.happyCode || data.orderId);
@@ -313,12 +329,12 @@
 
         function buildOrderStepper(status) {
             const STEPS = [
-                { key: 'pending',   icon: '🧾', label: 'Recibido' },
+                { key: 'pending', icon: '🧾', label: 'Recibido' },
                 { key: 'preparing', icon: '👨\u200D🍳', label: 'Preparando' },
-                { key: 'ready',     icon: '📦', label: 'Listo' },
+                { key: 'ready', icon: '📦', label: 'Listo' },
                 { key: 'completed', icon: '✅', label: 'Entregado' },
             ];
-            const ORDER = ['pending','preparing','ready','completed'];
+            const ORDER = ['pending', 'preparing', 'ready', 'completed'];
             const currentIdx = ORDER.indexOf(status);
 
             if (status === 'cancelled') {
@@ -361,6 +377,7 @@
             resultBox.style.display = 'block';
         }
     </script>
-<script src="/footer.js"></script>
+    <script src="/footer.js"></script>
 </body>
+
 </html>
