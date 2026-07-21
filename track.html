@@ -162,6 +162,13 @@
         </div>
     </header>
 
+    <!-- Domain change banner -->
+    <div class="domain-banner" id="domain-banner">
+        <span>🌐 ¡Ahora también en <a href="https://happycorner.top" target="_blank">happycorner.top</a>! Guarda el nuevo dominio.</span>
+        <button class="domain-banner-close" onclick="dismissDomainBanner()" aria-label="Cerrar">✕</button>
+    </div>
+    <script>(function(){if(localStorage.getItem('hc_domain_banner_v1')==='1'){var b=document.getElementById('domain-banner');if(b)b.style.display='none';}})();window.dismissDomainBanner=function(){localStorage.setItem('hc_domain_banner_v1','1');var b=document.getElementById('domain-banner');if(b)b.style.display='none';};</script>
+
         <div class="overlay" id="overlay"></div>
     <nav class="side-menu" id="sideMenu">
         <a href="/index">Inicio</a>
@@ -185,7 +192,10 @@
 
             <div class="result-container" id="result-container">
                 <div class="result-card">
-                    <h3>Orden: <span id="r-order-id">---</span> <span class="status-badge" id="r-status">Recibido</span></h3>
+                    <h3>Orden: <span id="r-order-id">---</span></h3>
+
+                    <!-- Status stepper -->
+                    <div id="r-stepper" style="margin-bottom:12px;"></div>
                     
                     <div class="info-row">
                         <span>Receptor:</span>
@@ -301,17 +311,42 @@
             errorMsg.style.display = 'block';
         };
 
+        function buildOrderStepper(status) {
+            const STEPS = [
+                { key: 'pending',   icon: '🧾', label: 'Recibido' },
+                { key: 'preparing', icon: '👨\u200D🍳', label: 'Preparando' },
+                { key: 'ready',     icon: '📦', label: 'Listo' },
+                { key: 'completed', icon: '✅', label: 'Entregado' },
+            ];
+            const ORDER = ['pending','preparing','ready','completed'];
+            const currentIdx = ORDER.indexOf(status);
+
+            if (status === 'cancelled') {
+                return `<div class="order-stepper" style="justify-content:center;">
+                    <div class="stepper-step cancelled">
+                        <div class="stepper-dot">❌</div>
+                        <div class="stepper-label">Cancelado</div>
+                    </div>
+                </div>`;
+            }
+
+            const stepsHtml = STEPS.map((s, i) => {
+                let cls = '';
+                if (i < currentIdx) cls = 'done';
+                else if (i === currentIdx) cls = 'active';
+                return `<div class="stepper-step ${cls}">
+                    <div class="stepper-dot">${s.icon}</div>
+                    <div class="stepper-label">${s.label}</div>
+                </div>`;
+            }).join('');
+
+            return `<div class="order-stepper">${stepsHtml}</div>`;
+        }
+
         function renderOrderResult(data, orderId) {
             const resultBox = document.getElementById('result-container');
             const paymentMap = { 'nequi': 'Nequi', 'pse': 'PSE', 'tarjeta': 'Tarjeta', 'efectivo': 'Efectivo' };
             const deliveryMap = { 'colegio': 'Colegio', 'virtual': 'Virtual' };
-            const statusLabels = {
-                pending: 'Pendiente',
-                preparing: 'Preparando',
-                ready: 'Listo para reclamar',
-                completed: 'Completado',
-                cancelled: 'Cancelado'
-            };
 
             document.getElementById('r-order-id').innerText = orderId;
             document.getElementById('r-name').innerText = data.customer?.nombre || '---';
@@ -319,11 +354,9 @@
             document.getElementById('r-delivery').innerText = deliveryMap[data.deliveryType] || data.deliveryType || '---';
             document.getElementById('r-total').innerText = data.total || '$0';
             document.getElementById('r-items').innerText = data.resumen || data.itemsSummary || '---';
-            
-            const statusBadge = document.getElementById('r-status');
-            if (statusBadge) {
-                statusBadge.innerText = statusLabels[data.status] || data.status || 'Recibido';
-            }
+
+            const stepperEl = document.getElementById('r-stepper');
+            if (stepperEl) stepperEl.innerHTML = buildOrderStepper(data.status || 'pending');
 
             resultBox.style.display = 'block';
         }

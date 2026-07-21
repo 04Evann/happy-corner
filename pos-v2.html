@@ -314,8 +314,8 @@
 
         .payment-method-toggle {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+            gap: 8px;
             margin-bottom: 16px;
         }
 
@@ -391,6 +391,50 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
+        }
+
+        /* ---- Mobile: stack layout ---- */
+        @media (max-width: 768px) {
+            body { overflow: auto; height: auto; }
+
+            .pos-container {
+                flex-direction: column;
+                overflow: visible;
+                height: auto;
+            }
+
+            .pos-catalog-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                flex: none;
+                overflow: visible;
+                padding: 16px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+
+            .pos-product-img { width: 60px; height: 60px; }
+            .pos-product-name { font-size: 11px; height: 28px; }
+            .pos-product-price { font-size: 12px; }
+
+            .pos-cart-panel {
+                flex: none;
+                min-height: 340px;
+                border-top: 3px solid var(--primary-color);
+                box-shadow: 0 -8px 30px rgba(255,82,153,0.12);
+                overflow: visible;
+            }
+
+            .cart-items-list { max-height: 220px; }
+
+            .payment-method-toggle {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .pay-toggle-btn { font-size: 11px; padding: 10px 6px; }
         }
     </style>
 </head>
@@ -485,10 +529,11 @@
 
                 <!-- PAYMENT TOGGLE -->
                 <div class="payment-method-toggle">
-                    <button class="pay-toggle-btn active" id="pay-cash" onclick="setPaymentMethod('cash')">💵
-                        EFECTIVO</button>
-                    <button class="pay-toggle-btn" id="pay-credit" onclick="setPaymentMethod('credit')">💳
-                        CRÉDITO</button>
+                    <button class="pay-toggle-btn active" id="pay-cash" onclick="setPaymentMethod('cash')">💵 EFECTIVO</button>
+                    <button class="pay-toggle-btn" id="pay-nequi" onclick="setPaymentMethod('nequi')">📱 NEQUI</button>
+                    <button class="pay-toggle-btn" id="pay-bancolombia" onclick="setPaymentMethod('bancolombia')">🏦 BANCO</button>
+                    <button class="pay-toggle-btn" id="pay-tarjeta" onclick="setPaymentMethod('tarjeta')">💳 TARJETA</button>
+                    <button class="pay-toggle-btn" id="pay-credit" onclick="setPaymentMethod('credit')">📒 CRÉDITO</button>
                 </div>
 
                 <button class="btn-checkout" onclick="submitCheckout()">Confirmar Venta</button>
@@ -675,7 +720,8 @@
             }
         };
 
-        // Toggle Cash vs Credit
+        // Toggle payment method
+        const ALL_PAY_METHODS = ['cash', 'nequi', 'bancolombia', 'tarjeta', 'credit'];
         window.setPaymentMethod = function (method) {
             if (method === 'credit' && !selectedCustomer) {
                 alert('⚠️ Debes asignar un cliente para poder seleccionar pago a Crédito.');
@@ -683,8 +729,10 @@
             }
 
             paymentMethod = method;
-            document.getElementById('pay-cash').classList.toggle('active', method === 'cash');
-            document.getElementById('pay-credit').classList.toggle('active', method === 'credit');
+            ALL_PAY_METHODS.forEach(m => {
+                const btn = document.getElementById(`pay-${m}`);
+                if (btn) btn.classList.toggle('active', m === method);
+            });
         };
 
         // Cart Actions
@@ -778,8 +826,8 @@
                     // Record credit sale movement & points
                     await applyPOSLedgerTransaction(selectedCustomer.uid, total, pointsEarned, cart);
                 } else {
-                    // Cash sale: Just record standard order & add points to user if assigned
-                    await applyPOSCashTransaction(selectedCustomer ? selectedCustomer.uid : null, total, pointsEarned, cart);
+                    // Cash / digital payment: record order with actual method
+                    await applyPOSCashTransaction(selectedCustomer ? selectedCustomer.uid : null, total, pointsEarned, cart, paymentMethod);
                 }
 
                 alert(`🎉 ¡Venta procesada con éxito!\nTotal: $${total.toLocaleString()}\n${selectedCustomer ? `Puntos sumados: +${pointsEarned} pts` : ''}`);
@@ -964,7 +1012,7 @@
          * Apply Cash Transaction
          * Simple order submission. If user is assigned, records points movement.
          */
-        async function applyPOSCashTransaction(clientUid, total, points, cartItems) {
+        async function applyPOSCashTransaction(clientUid, total, points, cartItems, method = 'cash') {
             const orderRef = doc(collection(db, 'orders'));
             const now = new Date().toISOString();
 
@@ -973,7 +1021,7 @@
                 total,
                 status: 'completed',
                 items: cartItems,
-                paymentMethod: 'cash',
+                paymentMethod: method,
                 createdAt: now,
                 completedAt: now
             };
@@ -992,7 +1040,7 @@
                     customerUID: clientUid,
                     type: 'points',
                     amount: points,
-                    description: `Puntos ganados por compra POS en efectivo #${orderRef.id.slice(0, 5)}`,
+                    description: `Puntos ganados por compra POS (${method}) #${orderRef.id.slice(0, 5)}`,
                     createdAt: now
                 });
             }

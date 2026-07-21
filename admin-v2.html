@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- Chart.js for Analytics tab -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 
     <style>
         :root {
@@ -450,6 +452,7 @@
             <button class="nav-tab" onclick="switchTab('tab-orders')">📦 Pedidos</button>
             <button class="nav-tab" onclick="switchTab('tab-contracts')">📄 Contratos Firmados</button>
             <button class="nav-tab" onclick="switchTab('tab-credit')">📊 Dashboard & Score</button>
+            <button class="nav-tab" onclick="switchTab('tab-analytics'); refreshAnalytics();">📈 Analíticas</button>
         </div>
         <div class="admin-profile">
             <span id="admin-display-name"
@@ -591,6 +594,51 @@
             </div>
         </div>
 
+        <!-- ============================================== -->
+        <!-- TAB: ANALYTICS                                -->
+        <!-- ============================================== -->
+        <div id="tab-analytics" class="tab-content">
+            <h2 style="font-weight:900; margin-bottom:8px;">📈 Analíticas de Negocio</h2>
+            <p style="color:var(--text-muted); font-size:13px; margin-bottom:24px;">Basado en órdenes del último año.</p>
+
+            <!-- KPI cards row -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:28px;">
+                <div class="client-card" style="cursor:default;">
+                    <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Ingresos Totales</div>
+                    <div style="font-size:26px; font-weight:900; margin-top:6px; color:var(--hp-pink);" id="kpi-revenue">—</div>
+                </div>
+                <div class="client-card" style="cursor:default;">
+                    <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Pedidos</div>
+                    <div style="font-size:26px; font-weight:900; margin-top:6px; color:var(--accent-purple);" id="kpi-orders">—</div>
+                </div>
+                <div class="client-card" style="cursor:default;">
+                    <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Ticket Promedio</div>
+                    <div style="font-size:26px; font-weight:900; margin-top:6px; color:var(--hp-orange);" id="kpi-avg-ticket">—</div>
+                </div>
+                <div class="client-card" style="cursor:default;">
+                    <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Clientes Únicos</div>
+                    <div style="font-size:26px; font-weight:900; margin-top:6px; color:var(--accent-green);" id="kpi-unique-clients">—</div>
+                </div>
+            </div>
+
+            <!-- Charts row -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
+                <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; padding:20px;">
+                    <h3 style="font-weight:800; font-size:14px; margin-bottom:16px;">💰 Ingresos por Mes</h3>
+                    <canvas id="chart-revenue" height="220"></canvas>
+                </div>
+                <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; padding:20px;">
+                    <h3 style="font-weight:800; font-size:14px; margin-bottom:16px;">🏆 Top Productos</h3>
+                    <canvas id="chart-products" height="220"></canvas>
+                </div>
+            </div>
+
+            <div style="background:var(--surface-color); border:1px solid var(--border-color); border-radius:20px; padding:20px; margin-bottom:24px;">
+                <h3 style="font-weight:800; font-size:14px; margin-bottom:16px;">👤 Top Clientes (por gasto)</h3>
+                <canvas id="chart-clients" height="120"></canvas>
+            </div>
+        </div>
+
     </main>
 
     <!-- ============================================== -->
@@ -604,11 +652,12 @@
                     style="width:64px; height:64px; font-size:24px; margin-bottom:0;">?</div>
                 <div>
                     <h2 id="modal-client-name" style="font-weight:900; margin-bottom:4px;">Nombre del Cliente</h2>
-                    <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-muted);">
+                    <div style="display:flex; align-items:center; gap:12px; font-size:13px; color:var(--text-muted); flex-wrap:wrap;">
                         <span id="modal-client-code"
                             style="font-family:monospace; color:var(--primary-color); font-weight:700;">LABEL</span>
                         <span>•</span>
                         <span id="modal-client-email">correo@correo.com</span>
+                        <span id="modal-trust-badge"></span>
                     </div>
                 </div>
             </div>
@@ -890,6 +939,7 @@
         let adminUser = null;
         let selectedClientUid = null;
         let currentClientsList = [];
+        let creditScoresMap = {}; // uid → { tier, score }
 
         // Dynamic elements
         const gateOverlay = document.getElementById('auth-gate-overlay');
@@ -1017,6 +1067,9 @@
                     ? `<img src="${c.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`
                     : initial;
 
+                const cs = creditScoresMap[c.uid];
+                const trustBadge = getTrustBadgeHtml(cs?.tier);
+
                 const card = document.createElement('div');
                 card.className = 'client-card';
                 card.onclick = () => openClientModal(c.uid);
@@ -1024,6 +1077,7 @@
                     <div class="client-avatar">${avatarHTML}</div>
                     <div class="client-name">${c.displayName || c.name || 'Usuario'}</div>
                     <div class="client-code">${c.customerCode ? `🏷️ ${c.customerCode}` : 'Sin HappyCódigo'}</div>
+                    ${trustBadge ? `<div style="margin:4px 0;">${trustBadge}</div>` : ''}
                     <div style="font-size:14px; margin-bottom: 4px;">Deuda: <strong style="color:${debt > 0 ? 'var(--accent-red)' : 'var(--accent-green)'}">$${debt.toLocaleString()}</strong></div>
                     <div style="font-size:14px;">Puntos: <strong style="color:var(--accent-purple)">${points}</strong></div>
                     <div class="client-stats">
@@ -1248,6 +1302,18 @@
             });
         }
 
+        /**
+         * Returns a trust badge HTML snippet based on creditScore tier.
+         * A/B → Confiable (green), C → Vigilar (yellow), D → Bloqueado (red)
+         */
+        function getTrustBadgeHtml(tier) {
+            if (!tier) return '';
+            if (tier === 'A' || tier === 'B') return `<span class="trust-badge confiable">✅ Confiable</span>`;
+            if (tier === 'C') return `<span class="trust-badge vigilar">⚠️ Vigilar</span>`;
+            if (tier === 'D') return `<span class="trust-badge bloqueado">🚫 Bloqueado</span>`;
+            return '';
+        }
+
         // Leaderboard & global dashboard metrics listener
         function setupLeaderboardListener() {
             onSnapshot(collection(db, 'creditScores'), (snap) => {
@@ -1258,9 +1324,13 @@
                 let count = 0;
                 let tierDCount = 0;
 
+                // Rebuild the map so renderClients can read trust tier
+                creditScoresMap = {};
+
                 const list = [];
                 snap.forEach(d => {
                     const cs = d.data();
+                    creditScoresMap[d.id] = { tier: cs.tier, score: cs.score };
                     list.push({ uid: d.id, ...cs });
 
                     totalScore += cs.score || 0;
@@ -1300,8 +1370,131 @@
         }
 
         // ==============================================
+        // ANALYTICS TAB
+        // ==============================================
+        let _analyticsCharts = {};
+
+        window.refreshAnalytics = function () {
+            const orders = allOrders.filter(o => o.status !== 'cancelled');
+
+            // ---- KPIs ----
+            const totalRevenue = orders.reduce((sum, o) => {
+                const raw = String(o.total || '0').replace(/[^0-9.]/g, '');
+                return sum + (parseFloat(raw) || 0);
+            }, 0);
+            const uniqueClients = new Set(orders.map(o => o.customerUID || o.customer?.uid).filter(Boolean)).size;
+            const avgTicket = orders.length > 0 ? totalRevenue / orders.length : 0;
+
+            document.getElementById('kpi-revenue').textContent = `$${Math.round(totalRevenue).toLocaleString('es-CO')}`;
+            document.getElementById('kpi-orders').textContent = orders.length;
+            document.getElementById('kpi-avg-ticket').textContent = `$${Math.round(avgTicket).toLocaleString('es-CO')}`;
+            document.getElementById('kpi-unique-clients').textContent = uniqueClients;
+
+            // ---- Monthly Revenue (last 12 months) ----
+            const now = new Date();
+            const months = [];
+            const revenueByMonth = {};
+            for (let i = 11; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                const label = d.toLocaleDateString('es-CO', { month: 'short', year: '2-digit' });
+                months.push({ key, label });
+                revenueByMonth[key] = 0;
+            }
+            orders.forEach(o => {
+                if (!o.createdAt) return;
+                const ts = typeof o.createdAt === 'string' ? new Date(o.createdAt) : (o.createdAt.seconds ? new Date(o.createdAt.seconds*1000) : new Date(Number(o.createdAt)));
+                const key = `${ts.getFullYear()}-${String(ts.getMonth()+1).padStart(2,'0')}`;
+                if (revenueByMonth[key] !== undefined) {
+                    const raw = String(o.total || '0').replace(/[^0-9.]/g, '');
+                    revenueByMonth[key] += parseFloat(raw) || 0;
+                }
+            });
+
+            // ---- Top Products ----
+            const productCount = {};
+            orders.forEach(o => {
+                const summary = o.resumen || o.itemsSummary || '';
+                // Extract product names heuristically: comma-separated list before "$"
+                const parts = summary.split(',');
+                parts.forEach(p => {
+                    const name = p.replace(/\d+x?\s*/i,'').replace(/\$[\d,.]+/g,'').trim();
+                    if (name) productCount[name] = (productCount[name] || 0) + 1;
+                });
+            });
+            const topProducts = Object.entries(productCount).sort((a,b) => b[1]-a[1]).slice(0,8);
+
+            // ---- Top Clients ----
+            const clientSpend = {};
+            orders.forEach(o => {
+                const uid = o.customerUID || o.customer?.uid;
+                if (!uid) return;
+                const raw = String(o.total || '0').replace(/[^0-9.]/g, '');
+                clientSpend[uid] = (clientSpend[uid] || 0) + (parseFloat(raw) || 0);
+            });
+            const topClients = Object.entries(clientSpend).sort((a,b) => b[1]-a[1]).slice(0,8).map(([uid, spend]) => {
+                const c = currentClientsList.find(x => x.uid === uid);
+                return { name: c?.displayName || c?.name || uid.slice(0,8), spend };
+            });
+
+            // ---- Chart colors ----
+            const accent = getComputedStyle(document.documentElement).getPropertyValue('--hp-pink').trim() || '#ff5299';
+            const orange = getComputedStyle(document.documentElement).getPropertyValue('--hp-orange').trim() || '#ff9d5c';
+            const purple = '#a264ff';
+            const doughnutPalette = ['#ff5299','#ff9d5c','#a264ff','#2ed573','#ffd45e','#4a6cf7','#ff6b81','#1abc9c'];
+
+            // Destroy previous chart instances if they exist
+            if (_analyticsCharts.revenue) { _analyticsCharts.revenue.destroy(); }
+            if (_analyticsCharts.products) { _analyticsCharts.products.destroy(); }
+            if (_analyticsCharts.clients) { _analyticsCharts.clients.destroy(); }
+
+            const gridColor = 'rgba(128,128,128,0.12)';
+            const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#888';
+
+            // Revenue bar chart
+            _analyticsCharts.revenue = new Chart(document.getElementById('chart-revenue'), {
+                type: 'bar',
+                data: {
+                    labels: months.map(m => m.label),
+                    datasets: [{ label: 'Ingresos ($)', data: months.map(m => Math.round(revenueByMonth[m.key])), backgroundColor: accent, borderRadius: 8, borderSkipped: false }]
+                },
+                options: {
+                    responsive: true, plugins: { legend: { display: false } },
+                    scales: { x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }, y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 }, callback: v => `$${v.toLocaleString()}` } } }
+                }
+            });
+
+            // Products doughnut
+            _analyticsCharts.products = new Chart(document.getElementById('chart-products'), {
+                type: 'doughnut',
+                data: {
+                    labels: topProducts.map(p => p[0].slice(0,20)),
+                    datasets: [{ data: topProducts.map(p => p[1]), backgroundColor: doughnutPalette, borderWidth: 2, borderColor: 'transparent' }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'right', labels: { color: textColor, font: { size: 11 }, boxWidth: 12 } } }
+                }
+            });
+
+            // Clients horizontal bar
+            _analyticsCharts.clients = new Chart(document.getElementById('chart-clients'), {
+                type: 'bar',
+                data: {
+                    labels: topClients.map(c => c.name),
+                    datasets: [{ label: 'Gasto Total ($)', data: topClients.map(c => Math.round(c.spend)), backgroundColor: purple, borderRadius: 6, borderSkipped: false }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, plugins: { legend: { display: false } },
+                    scales: { x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 }, callback: v => `$${v.toLocaleString()}` } }, y: { grid: { display: false }, ticks: { color: textColor, font: { size: 11 } } } }
+                }
+            });
+        };
+
+        // ==============================================
         // CLIENT DETAIL MODAL & LEDGER TRANSACTION WRITER
         // ==============================================
+
         window.openClientModal = async function (uid) {
             selectedClientUid = uid;
             const client = currentClientsList.find(c => c.uid === uid);
@@ -1310,6 +1503,13 @@
             document.getElementById('modal-client-name').textContent = client.displayName || client.name || 'Usuario';
             document.getElementById('modal-client-code').textContent = client.customerCode ? `🏷️ ${client.customerCode}` : 'SIN HAPPYCÓDIGO';
             document.getElementById('modal-client-email').textContent = client.email || 'Sin correo electrónico';
+
+            // Trust badge based on cached creditScore tier
+            const trustBadgeEl = document.getElementById('modal-trust-badge');
+            if (trustBadgeEl) {
+                const cs = creditScoresMap[uid];
+                trustBadgeEl.innerHTML = getTrustBadgeHtml(cs?.tier);
+            }
 
             const modalAvatar = document.getElementById('modal-avatar');
             if (client.photoURL) {
